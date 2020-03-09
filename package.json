@@ -41,6 +41,7 @@
     "@brightspace-ui/core": "^1",
     "@webcomponents/webcomponentsjs": "^2",
     "d2l-outcomes-level-of-achievements": "github:Brightspace/outcomes-level-of-achievement-ui#semver:^2",
+    "d2l-tooltip": "github:BrightspaceUI/tooltip#semver:^3",
     "lit-element": "^2",
     "mobx": "^5.15.4"
   }
