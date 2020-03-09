@@ -22,24 +22,32 @@
 				<d2l-grade-result href="href" token="abc123"></d2l-grade-result>
 			</d2l-demo-snippet>
 
+			<span>Note: With tooltips</span>
 			<d2l-demo-snippet>
 				<d2l-grade-result-presentational
-					labelText="Overall Grades"
+					labelText="Overall Grade"
 					scoreNumerator="5"
 					scoreDenominator="20"
 					gradeButtonTooltip="Assignment 1 Grade Item Attached"
 					reportsButtonTooltip="Class and user statistics"
 				></d2l-grade-result-presentational>
-				<div>Note: With tooltips</div>
 			</d2l-demo-snippet>
 
+			<span>Note: Without tooltips</span>
 			<d2l-demo-snippet>
 				<d2l-grade-result-presentational
-					labelText="Overall Grades"
+					labelText="Overall Grade"
 					scoreNumerator="5"
 					scoreDenominator="20"
 				></d2l-grade-result-presentational>
-				<div>Note: Without tooltips</div>
+			</d2l-demo-snippet>
+
+			<span>Note: No grade given without tooltips</span>
+			<d2l-demo-snippet>
+				<d2l-grade-result-presentational
+					labelText="Overall Grade"
+					scoreDenominator="20"
+				></d2l-grade-result-presentational>
 			</d2l-demo-snippet>
 
 		</d2l-demo-page>

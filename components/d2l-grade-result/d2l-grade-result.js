@@ -1,5 +1,5 @@
 import './d2l-grade-result-presentational.js';
-import { css, html, LitElement } from 'lit-element';
+import { html, LitElement } from 'lit-element';
 
 export class D2LGradeResult extends LitElement {
 	static get properties() {
