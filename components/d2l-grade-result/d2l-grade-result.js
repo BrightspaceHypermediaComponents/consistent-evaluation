@@ -5,38 +5,48 @@ export class D2LGradeResult extends LitElement {
 	static get properties() {
 		return {
 			href: { type: String },
-			token: { type: String }
+			token: { type: String },
+			_labeltext: { type: String },
+			_scorenumerator: { type: String },
+			_scoredenominator: { type: String },
+			_gradebuttontooltip: { type: String },
+			_reportsbuttontooltip: { type: String }
 		};
 	}
 
-	static get styles() {
-		return css``;
+	constructor() {
+		super();
+		this._labeltext = 'Overall Grade';
+		this._scorenumerator = '5';
+		this._scoredenominator = '20';
+		this._gradebuttontooltip = 'Assignment 1 Grade Item Attached';
+		this._reportsbuttontooltip = 'Class and user statistics';
 	}
 
 	render() {
 		return html`
 			<d2l-grade-result-presentational
-				labeltext="Overall Grades"
-				scorenumerator="5"
-				scoredenominator="20"
-				gradebuttontooltip="Assignment 1 Grade Item Attached"
-				reportsbuttontooltip="Class and user statistics"
-				@d2l-grade-result-grade-change=${this.handleGradeChange}
-				@d2l-grade-result-grade-button-click=${this.handleGradeButtonClick}
-				@d2l-grade-result-reports-button-click=${this.handleReportsButtonClick}
+				labeltext=${this._labeltext}
+				scorenumerator=${this._scorenumerator}
+				scoredenominator=${this._scoredenominator}
+				gradebuttontooltip=${this._gradebuttontooltip}
+				reportsbuttontooltip=${this._reportsbuttontooltip}
+				@d2l-grade-result-grade-change=${this._handleGradeChange}
+				@d2l-grade-result-grade-button-click=${this._handleGradeButtonClick}
+				@d2l-grade-result-reports-button-click=${this._handleReportsButtonClick}
 			></d2l-grade-result-presentational>
 		`;
 	}
 
-	handleGradeChange(e) {
+	_handleGradeChange(e) {
 		console.log(e);
 	}
 
-	handleGradeButtonClick(e) {
+	_handleGradeButtonClick(e) {
 		console.log(e);
 	}
 
-	handleReportsButtonClick(e) {
+	_handleReportsButtonClick(e) {
 		console.log(e);
 	}
 }

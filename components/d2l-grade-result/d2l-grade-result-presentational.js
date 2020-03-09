@@ -65,7 +65,7 @@ export class D2LGradeResultPresentational extends LitElement {
 					${this.gradeButtonTooltip ? html`
 						<d2l-tooltip
 							for="d2l-grade-result-presentational-grade-button"
-							position="top"
+							position="bottom"
 						>
 							${this.gradeButtonTooltip}
 						</d2l-tooltip>
@@ -82,7 +82,7 @@ export class D2LGradeResultPresentational extends LitElement {
 					${this.reportsButtonTooltip ? html`
 						<d2l-tooltip
 							for="d2l-grade-result-presentational-reports-button"
-							position="top"
+							position="bottom"
 						>
 							${this.reportsButtonTooltip}
 						</d2l-tooltip>
