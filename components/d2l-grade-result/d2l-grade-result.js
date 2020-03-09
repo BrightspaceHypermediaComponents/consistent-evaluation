@@ -17,8 +17,8 @@ export class D2LGradeResult extends LitElement {
 	constructor() {
 		super();
 		this._labeltext = 'Overall Grade';
-		this._scorenumerator = '5';
-		this._scoredenominator = '20';
+		this._scorenumerator = 5;
+		this._scoredenominator = 20;
 		this._gradebuttontooltip = 'Assignment 1 Grade Item Attached';
 		this._reportsbuttontooltip = 'Class and user statistics';
 	}
