@@ -53,7 +53,7 @@
 						labelText="Overall Grade"
 						scoreNumerator="5"
 						scoreDenominator="20"
-						doesUserHavePermissionToEvaluation="true"
+						doesUserHavePermissionToEvaluation
 					></d2l-grade-result-presentational>
 				</d2l-demo-snippet>
 
@@ -64,7 +64,7 @@
 						labelText="Overall Grade"
 						scoreNumerator="5"
 						scoreDenominator="20"
-						doesUserHavePermissionToEvaluation="true"
+						doesUserHavePermissionToEvaluation
 						includeGradeButton
 						includeReportsButton
 					></d2l-grade-result-presentational>
@@ -77,7 +77,7 @@
 						labelText="Overall Grade"
 						scoreNumerator="5"
 						scoreDenominator="20"
-						doesUserHavePermissionToEvaluation="true"
+						doesUserHavePermissionToEvaluation
 						includeGradeButton
 						includeReportsButton
 						gradeButtonTooltip="Assignment 1 Grade Item Attached"
@@ -90,7 +90,7 @@
 					<d2l-grade-result-presentational
 						gradeType="letter"
 						labelText="Overall Grade"
-						doesUserHavePermissionToEvaluation="true"
+						doesUserHavePermissionToEvaluation
 						letterGradeOptions='["A", "B", "C"]'
 						selectedLetterGrade="C"
 					></d2l-grade-result-presentational>
@@ -101,7 +101,7 @@
 					<d2l-grade-result-presentational
 						gradeType="letter"
 						labelText="Overall Grade"
-						doesUserHavePermissionToEvaluation="true"
+						doesUserHavePermissionToEvaluation
 						letterGradeOptions='["A", "B", "C"]'
 						includeGradeButton
 						includeReportsButton
@@ -113,7 +113,7 @@
 					<d2l-grade-result-presentational
 						gradeType="letter"
 						labelText="Overall Grade"
-						doesUserHavePermissionToEvaluation="true"
+						doesUserHavePermissionToEvaluation
 						letterGradeOptions='["A", "B", "C"]'
 						includeGradeButton
 						includeReportsButton
@@ -122,7 +122,6 @@
 					></d2l-grade-result-presentational>
 				</d2l-demo-snippet>
 			</div>
-
 
 			<!-- Write permissions disabled -->
 
@@ -208,20 +207,180 @@
 				<h2>Autograde Provided with Write Permissions</h2>
 
 				<h6>number grade, basic, no icons, manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>number grade, basic, icons, manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+						includeGradeButton
+						includeReportsButton
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>number grade, basic, icons, tooltips, manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+						includeGradeButton
+						includeReportsButton
+						gradeButtonTooltip="Assignment 1 Grade Item Attached"
+						reportsButtonTooltip="Class and user statistics"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
 
 				<h6>letter grade, basic, no icons, manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						letterGradeOptions='["A", "B", "C"]'
+						selectedLetterGrade="C"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>letter grade, basic, icons, manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						letterGradeOptions='["A", "B", "C"]'
+						selectedLetterGrade="C"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+						includeGradeButton
+						includeReportsButton
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>letter grade, basic, icons, tooltips, manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						letterGradeOptions='["A", "B", "C"]'
+						selectedLetterGrade="C"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+						includeGradeButton
+						includeReportsButton
+						gradeButtonTooltip="Assignment 1 Grade Item Attached"
+						reportsButtonTooltip="Class and user statistics"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
 
 				<h6>number grade, basic, no icons, clear manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+						isManualOverrideActive
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>number grade, basic, icons, clear manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+						isManualOverrideActive
+						includeGradeButton
+						includeReportsButton
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>number grade, basic, icons, tooltips, clear manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+						isManualOverrideActive
+						includeGradeButton
+						includeReportsButton
+						gradeButtonTooltip="Assignment 1 Grade Item Attached"
+						reportsButtonTooltip="Class and user statistics"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 
 				<h6>letter grade, basic, no icons, clear manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						letterGradeOptions='["A", "B", "C"]'
+						selectedLetterGrade="C"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+						isManualOverrideActive
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>letter grade, basic, icons, clear manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						letterGradeOptions='["A", "B", "C"]'
+						selectedLetterGrade="C"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+						isManualOverrideActive
+						includeGradeButton
+						includeReportsButton
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>letter grade, basic, icons, tooltips, clear manual override option</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						letterGradeOptions='["A", "B", "C"]'
+						selectedLetterGrade="C"
+						doesUserHavePermissionToEvaluation
+						isGradeAutoCompleted
+						isManualOverrideActive
+						includeGradeButton
+						includeReportsButton
+						gradeButtonTooltip="Assignment 1 Grade Item Attached"
+						reportsButtonTooltip="Class and user statistics"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 			</div>
 
 		</d2l-demo-page>

@@ -16,25 +16,24 @@ export class D2LGradeResult extends LitElement {
 			_doesUserHavePermissionToEvaluation: { type: Boolean },
 			_gradeType: { type: String },
 			_letterGradeOptions: { type: Array },
-			_selectedLetterGrade: { type: String }
+			_selectedLetterGrade: { type: String },
+			_isGradeAutoCompleted: { type: Boolean },
+			_isManualOverrideActive: { type: Boolean }
 		};
 	}
 
 	constructor() {
 		super();
+
+		this._gradeType = GradeType.Number;
 		this._labeltext = 'Overall Grade';
 		this._scorenumerator = 5;
 		this._scoredenominator = 20;
 		this._gradebuttontooltip = 'Assignment 1 Grade Item Attached';
 		this._reportsbuttontooltip = 'Class and user statistics';
 		this._doesUserHavePermissionToEvaluation = true;
-		this._gradeType = GradeType.Number;
-
-		this._labeltext = 'Overall Grade';
-		this._gradebuttontooltip = 'Assignment 1 Grade Item Attached';
-		this._reportsbuttontooltip = 'Class and user statistics';
-		this._doesUserHavePermissionToEvaluation = true;
-
+		this._isGradeAutoCompleted = true;
+		this._isManualOverrideActive = false;
 		this._letterGradeOptions = ['A', 'B', 'C'];
 		this._selectedLetterGrade = 'C';
 	}
@@ -53,6 +52,8 @@ export class D2LGradeResult extends LitElement {
 					@d2l-grade-result-grade-change=${this._handleGradeChange}
 					@d2l-grade-result-grade-button-click=${this._handleGradeButtonClick}
 					@d2l-grade-result-reports-button-click=${this._handleReportsButtonClick}
+					@d2l-grade-result-manual-override-button-manual-override-click=${this._handleManualOverrideClick}
+					@d2l-grade-result-manual-override-button-manual-override-clear-click=${this._handleManualOverrideClearClick}
 				></d2l-grade-result-presentational>
 			`;
 
@@ -66,9 +67,13 @@ export class D2LGradeResult extends LitElement {
 					gradebuttontooltip=${this._gradebuttontooltip}
 					reportsbuttontooltip=${this._reportsbuttontooltip}
 					doesUserHavePermissionToEvaluation=${this._doesUserHavePermissionToEvaluation}
+					.isGradeAutoCompleted=${this._isGradeAutoCompleted}
+					.isManualOverrideActive=${this._isManualOverrideActive}
 					@d2l-grade-result-grade-button-click=${this._handleGradeButtonClick}
 					@d2l-grade-result-reports-button-click=${this._handleReportsButtonClick}
 					@d2l-grade-result-letter-score-selected=${this._handleLetterGradeSelected}
+					@d2l-grade-result-manual-override-button-manual-override-click=${this._handleManualOverrideClick}
+					@d2l-grade-result-manual-override-button-manual-override-clear-click=${this._handleManualOverrideClearClick}
 				></d2l-grade-result-presentational>
 			`;
 		}
@@ -90,6 +95,16 @@ export class D2LGradeResult extends LitElement {
 	_handleLetterGradeSelected(e) {
 		console.log(e);
 		this._selectedLetterGrade = e.detail.option;
+	}
+
+	_handleManualOverrideClick(e) {
+		console.log(e);
+		this._isManualOverrideActive = true;
+	}
+
+	_handleManualOverrideClearClick(e) {
+		console.log(e);
+		this._isManualOverrideActive = false;
 	}
 }
 

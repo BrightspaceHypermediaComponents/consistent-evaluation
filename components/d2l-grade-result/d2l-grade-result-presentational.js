@@ -1,6 +1,7 @@
 import './d2l-grade-result-icon-button.js';
 import './d2l-grade-result-numeric-score.js';
 import './d2l-grade-result-letter-score.js';
+import './d2l-grade-result-manual-override-button.js';
 import { css, html, LitElement } from 'lit-element';
 
 export const GradeType = {
@@ -22,6 +23,8 @@ export class D2LGradeResultPresentational extends LitElement {
 			gradeButtonTooltip: { type: String },
 			reportsButtonTooltip: { type: String },
 			doesUserHavePermissionToEvaluation: { type: Boolean },
+			isGradeAutoCompleted: { type: Boolean },
+			isManualOverrideActive: { type: Boolean }
 		};
 	}
 
@@ -42,6 +45,8 @@ export class D2LGradeResultPresentational extends LitElement {
 		this.includeReportsButton = false;
 		this.letterGradeOptions = [];
 		this.selectedLetterGrade = undefined;
+		this.isGradeAutoCompleted = false;
+		this.isManualOverrideActive = false;
 	}
 
 	_onGradeButtonClick() {
@@ -117,6 +122,12 @@ export class D2LGradeResultPresentational extends LitElement {
 				` : html``}
 
 			</div>
+
+			${this.isGradeAutoCompleted ? html`
+				<d2l-grade-result-manual-override-button
+					.isManualOverrideActive=${this.isManualOverrideActive}
+				></d2l-grade-result-manual-override-button>
+			` : html``}
 		`;
 	}
 }
