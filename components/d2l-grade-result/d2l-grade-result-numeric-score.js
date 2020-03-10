@@ -59,12 +59,12 @@ export class D2LGradeResultNumericScore extends LitElement {
 
 					<div id="d2l-grade-result-numeric-score-score-text">
 						${this.scoreDenominator ? html`
-							<div id="d2l-body-standard">/ ${this.scoreDenominator}</div>
+							<span class="d2l-body-standard">/ ${this.scoreDenominator}</span>
 						` : html``}
 					</div>
 				` : html`
 					<div id="d2l-grade-result-numeric-score-score-read-only">
-						<div id="d2l-body-standard">${this.scoreNumerator ? this.scoreNumerator : 0} / ${this.scoreDenominator}</div>
+						<span class="d2l-body-standard">${this.scoreNumerator ? this.scoreNumerator : 0} / ${this.scoreDenominator}</span>
 					</div>
 				`}
 

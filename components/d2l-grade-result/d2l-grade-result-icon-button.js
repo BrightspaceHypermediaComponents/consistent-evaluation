@@ -31,7 +31,7 @@ export class D2LGradeResultIconButton extends LitElement {
 					icon=${this.icon}
 					@click=${this._onClick}
 				></d2l-button-icon>
-				
+
 				${this.tooltipText && this.tooltipText !== '' ? html`
 					<d2l-tooltip
 						for="d2l-grade-result-icon-button-${this._id}"

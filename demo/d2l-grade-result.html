@@ -30,8 +30,14 @@
 			<h2>Top level web component</h2>
 
 			<div class="section">
+				<h6>number grade</h6>
 				<d2l-demo-snippet>
 					<d2l-grade-result href="href" token="abc123"></d2l-grade-result>
+				</d2l-demo-snippet>
+
+				<h6>letter grade</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result href="href" token="abc123" _gradeType="letter"></d2l-grade-result>
 				</d2l-demo-snippet>
 			</div>
 
@@ -80,8 +86,41 @@
 				</d2l-demo-snippet>
 
 				<h6>letter grade, basic, no icons</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						doesUserHavePermissionToEvaluation="true"
+						letterGradeOptions='["A", "B", "C"]'
+						selectedLetterGrade="C"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>letter grade, basic, icons</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						doesUserHavePermissionToEvaluation="true"
+						letterGradeOptions='["A", "B", "C"]'
+						includeGradeButton
+						includeReportsButton
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>letter grade, basic, icons, tooltips</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						doesUserHavePermissionToEvaluation="true"
+						letterGradeOptions='["A", "B", "C"]'
+						includeGradeButton
+						includeReportsButton
+						gradeButtonTooltip="Assignment 1 Grade Item Attached"
+						reportsButtonTooltip="Class and user statistics"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
 			</div>
 
 
@@ -91,12 +130,76 @@
 				<h2>Write Permissions Disabled</h2>
 
 				<h6>number grade, basic, no icons</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>number grade, basic, icons</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+						includeGradeButton
+						includeReportsButton
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>number grade, basic, icons, tooltips</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+						includeGradeButton
+						includeReportsButton
+						gradeButtonTooltip="Assignment 1 Grade Item Attached"
+						reportsButtonTooltip="Class and user statistics"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
 
 				<h6>letter grade, basic, no icons</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						letterGradeOptions='["A", "B", "C"]'
+						selectedLetterGrade="C"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>letter grade, basic, icons</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						letterGradeOptions='["A", "B", "C"]'
+						selectedLetterGrade="C"
+						includeGradeButton
+						includeReportsButton
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
 				<h6>letter grade, basic, icons, tooltips</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="letter"
+						labelText="Overall Grade"
+						letterGradeOptions='["A", "B", "C"]'
+						selectedLetterGrade="C"
+						includeGradeButton
+						includeReportsButton
+						gradeButtonTooltip="Assignment 1 Grade Item Attached"
+						reportsButtonTooltip="Class and user statistics"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
 			</div>
 
 			<!-- Autograde provided -->

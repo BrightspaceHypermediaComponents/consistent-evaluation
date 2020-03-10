@@ -3,9 +3,6 @@ import './d2l-grade-result-numeric-score.js';
 import './d2l-grade-result-letter-score.js';
 import { css, html, LitElement } from 'lit-element';
 
-// is grade autocalculated -> show manually override option -> clear manual override -> dialogue
-// gradeType -> ['letter', 'number'] -> on letter change to select box
-
 export const GradeType = {
 	Letter: 'letter',
 	Number: 'number'
@@ -18,6 +15,8 @@ export class D2LGradeResultPresentational extends LitElement {
 			labelText: { type: String },
 			scoreDenominator: { type: Number },
 			scoreNumerator: { type: Number },
+			letterGradeOptions: { type: Array },
+			selectedLetterGrade: { type: String },
 			includeGradeButton: { type: Boolean },
 			includeReportsButton: { type: Boolean },
 			gradeButtonTooltip: { type: String },
@@ -41,6 +40,8 @@ export class D2LGradeResultPresentational extends LitElement {
 		this.doesUserHavePermissionToEvaluation = false;
 		this.includeGradeButton = false;
 		this.includeReportsButton = false;
+		this.letterGradeOptions = [];
+		this.selectedLetterGrade = undefined;
 	}
 
 	_onGradeButtonClick() {
@@ -70,6 +71,9 @@ export class D2LGradeResultPresentational extends LitElement {
 	getLetterScoreComponent() {
 		return html`
 			<d2l-grade-result-letter-score
+				.options=${this.letterGradeOptions}
+				selectedOption=${this.selectedLetterGrade}
+				.doesUserHavePermissionToEvaluation=${this.doesUserHavePermissionToEvaluation}
 			></d2l-grade-result-letter-score>
 		`;
 	}
