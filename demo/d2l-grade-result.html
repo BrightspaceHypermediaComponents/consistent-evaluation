@@ -14,41 +14,112 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<meta charset="UTF-8">
+		<style>
+			.section {
+				padding: 1rem;
+				margin: 1rem;
+				background-color: #dee7ed;
+				border-radius: 25px;
+			}
+		</style>
 	</head>
+
 	<body class="d2l-typography">
 		<d2l-demo-page page-title="d2l-grade-result">
 
-			<d2l-demo-snippet>
-				<d2l-grade-result href="href" token="abc123"></d2l-grade-result>
-			</d2l-demo-snippet>
+			<h2>Top level web component</h2>
 
-			<span>Note: With tooltips</span>
-			<d2l-demo-snippet>
-				<d2l-grade-result-presentational
-					labelText="Overall Grade"
-					scoreNumerator="5"
-					scoreDenominator="20"
-					gradeButtonTooltip="Assignment 1 Grade Item Attached"
-					reportsButtonTooltip="Class and user statistics"
-				></d2l-grade-result-presentational>
-			</d2l-demo-snippet>
+			<div class="section">
+				<d2l-demo-snippet>
+					<d2l-grade-result href="href" token="abc123"></d2l-grade-result>
+				</d2l-demo-snippet>
+			</div>
 
-			<span>Note: Without tooltips</span>
-			<d2l-demo-snippet>
-				<d2l-grade-result-presentational
-					labelText="Overall Grade"
-					scoreNumerator="5"
-					scoreDenominator="20"
-				></d2l-grade-result-presentational>
-			</d2l-demo-snippet>
+			<!-- Write permissions enabled -->
 
-			<span>Note: No grade given without tooltips</span>
-			<d2l-demo-snippet>
-				<d2l-grade-result-presentational
-					labelText="Overall Grade"
-					scoreDenominator="20"
-				></d2l-grade-result-presentational>
-			</d2l-demo-snippet>
+			<div class="section">
+				<h2>Write Permissions Enabled</h2>
+
+				<h6>number grade, basic, no icons</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+						doesUserHavePermissionToEvaluation="true"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
+				<h6>number grade, basic, icons</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+						doesUserHavePermissionToEvaluation="true"
+						includeGradeButton
+						includeReportsButton
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
+				<h6>number grade, basic, icons, tooltips</h6>
+				<d2l-demo-snippet>
+					<d2l-grade-result-presentational
+						gradeType="number"
+						labelText="Overall Grade"
+						scoreNumerator="5"
+						scoreDenominator="20"
+						doesUserHavePermissionToEvaluation="true"
+						includeGradeButton
+						includeReportsButton
+						gradeButtonTooltip="Assignment 1 Grade Item Attached"
+						reportsButtonTooltip="Class and user statistics"
+					></d2l-grade-result-presentational>
+				</d2l-demo-snippet>
+
+				<h6>letter grade, basic, no icons</h6>
+				<h6>letter grade, basic, icons</h6>
+				<h6>letter grade, basic, icons, tooltips</h6>
+			</div>
+
+
+			<!-- Write permissions disabled -->
+
+			<div class="section">
+				<h2>Write Permissions Disabled</h2>
+
+				<h6>number grade, basic, no icons</h6>
+				<h6>number grade, basic, icons</h6>
+				<h6>number grade, basic, icons, tooltips</h6>
+
+				<h6>letter grade, basic, no icons</h6>
+				<h6>letter grade, basic, icons</h6>
+				<h6>letter grade, basic, icons, tooltips</h6>
+			</div>
+
+			<!-- Autograde provided -->
+
+			<div class="section">
+				<h2>Autograde Provided with Write Permissions</h2>
+
+				<h6>number grade, basic, no icons, manual override option</h6>
+				<h6>number grade, basic, icons, manual override option</h6>
+				<h6>number grade, basic, icons, tooltips, manual override option</h6>
+
+				<h6>letter grade, basic, no icons, manual override option</h6>
+				<h6>letter grade, basic, icons, manual override option</h6>
+				<h6>letter grade, basic, icons, tooltips, manual override option</h6>
+
+				<h6>number grade, basic, no icons, clear manual override option</h6>
+				<h6>number grade, basic, icons, clear manual override option</h6>
+				<h6>number grade, basic, icons, tooltips, clear manual override option</h6>
+
+				<h6>letter grade, basic, no icons, clear manual override option</h6>
+				<h6>letter grade, basic, icons, clear manual override option</h6>
+				<h6>letter grade, basic, icons, tooltips, clear manual override option</h6>
+			</div>
 
 		</d2l-demo-page>
 	</body>
