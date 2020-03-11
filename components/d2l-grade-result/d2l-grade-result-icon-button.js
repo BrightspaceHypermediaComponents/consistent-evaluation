@@ -33,7 +33,7 @@ export class D2LGradeResultIconButton extends LitElement {
 					@click=${this._onClick}
 				></d2l-button-icon>
 
-				${this.tooltipText && this.tooltipText !== '' ? html`
+				${this.tooltipText ? html`
 					<d2l-tooltip
 						for="d2l-grade-result-icon-button-${this._id}"
 						position="bottom"
