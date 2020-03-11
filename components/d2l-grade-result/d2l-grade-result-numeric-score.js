@@ -14,19 +14,19 @@ export class D2LGradeResultNumericScore extends LitElement {
 
 	static get styles() {
 		return [bodyStandardStyles, labelStyles, inputLabelStyles, css`
-			#d2l-grade-result-numeric-score-container {
+			.d2l-grade-result-numeric-score-container {
 				display: flex;
 				flex-direction: row;
 				align-items: center;
 			}
-			#d2l-grade-result-numeric-score-score {
+			.d2l-grade-result-numeric-score-score {
 				max-width: 5.25rem;
 			}
-			#d2l-grade-result-numeric-score-score-read-only {
+			.d2l-grade-result-numeric-score-score-read-only {
 				max-width: 5.25rem;
 				margin-right: 0.5rem;
 			}
-			#d2l-grade-result-numeric-score-score-text {
+			.d2l-grade-result-numeric-score-score-text {
 				width: 2.8rem;
 				text-align: center;
 			}
@@ -45,10 +45,10 @@ export class D2LGradeResultNumericScore extends LitElement {
 
 	render() {
 		return html`
-			<div id="d2l-grade-result-numeric-score-container">
+			<div class="d2l-grade-result-numeric-score-container">
 
 				${this.doesUserHavePermissionToEvaluation ? html`
-					<div id="d2l-grade-result-numeric-score-score">
+					<div class="d2l-grade-result-numeric-score-score">
 						<d2l-input-text
 							type="number"
 							value="${this.scoreNumerator}"
@@ -57,13 +57,13 @@ export class D2LGradeResultNumericScore extends LitElement {
 						></d2l-input-text>
 					</div>
 
-					<div id="d2l-grade-result-numeric-score-score-text">
+					<div class="d2l-grade-result-numeric-score-score-text">
 						${this.scoreDenominator ? html`
 							<span class="d2l-body-standard">/ ${this.scoreDenominator}</span>
 						` : html``}
 					</div>
 				` : html`
-					<div id="d2l-grade-result-numeric-score-score-read-only">
+					<div class="d2l-grade-result-numeric-score-score-read-only">
 						<span class="d2l-body-standard">${this.scoreNumerator ? this.scoreNumerator : 0} / ${this.scoreDenominator}</span>
 					</div>
 				`}

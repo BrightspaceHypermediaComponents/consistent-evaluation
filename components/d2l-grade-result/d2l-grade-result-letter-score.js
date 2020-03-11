@@ -14,14 +14,14 @@ export class D2LGradeResultLetterScore extends LitElement {
 
 	static get styles() {
 		return [selectStyles, bodyStandardStyles, css`
-			#d2l-grade-result-letter-score-container {
+			.d2l-grade-result-letter-score-container {
 				width: 8rem;
 				margin-right: 0.5rem;
 			}
-			#d2l-grade-result-letter-score-select {
+			.d2l-grade-result-letter-score-select {
 				width: 100%;
 			}
-			#d2l-grade-result-letter-score-score-read-only {
+			.d2l-grade-result-letter-score-score-read-only {
 				margin-right: 0.5rem;
 			}
 		`];
@@ -56,10 +56,9 @@ export class D2LGradeResultLetterScore extends LitElement {
 	render() {
 		if (this.doesUserHavePermissionToEvaluation === true) {
 			return html`
-				<div id="d2l-grade-result-letter-score-container">
+				<div class="d2l-grade-result-letter-score-container">
 					<select
-						id="d2l-grade-result-letter-score-select"
-						class="d2l-input-select"
+						class="d2l-input-select d2l-grade-result-letter-score-select"
 						@change=${this._onOptionSelected}
 					>
 						${this._renderOptions()}
@@ -68,7 +67,7 @@ export class D2LGradeResultLetterScore extends LitElement {
 			`;
 		} else {
 			return html`
-				<div id="d2l-grade-result-letter-score-score-read-only">
+				<div class="d2l-grade-result-letter-score-score-read-only">
 					<span class="d2l-body-standard">${this.selectedOption}</span>
 				</div>
 			`;

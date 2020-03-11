@@ -44,9 +44,4 @@ export class D2LGradeResultManualOverrideButton extends LitElement {
 	}
 }
 
-// tier1:close-default
-// tier1:close-small
-
-// tier1:edit
-
 customElements.define('d2l-grade-result-manual-override-button', D2LGradeResultManualOverrideButton);

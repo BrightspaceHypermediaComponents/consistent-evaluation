@@ -30,7 +30,7 @@ export class D2LGradeResultPresentational extends LitElement {
 
 	static get styles() {
 		return css`
-			#d2l-grade-result-presentational-container {
+			.d2l-grade-result-presentational-container {
 				display: flex;
 				flex-direction: row;
 				align-items: center;
@@ -98,7 +98,7 @@ export class D2LGradeResultPresentational extends LitElement {
 				${this.labelText ? html`${this.labelText}` : html``}
 			</span>
 
-			<div id="d2l-grade-result-presentational-container">
+			<div class="d2l-grade-result-presentational-container">
 
 				${this.getScoreComponent()}
 
