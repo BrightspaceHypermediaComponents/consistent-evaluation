@@ -8,7 +8,7 @@ export class D2LGradeResultNumericScore extends LitElement {
 		return {
 			scoreNumerator: { type: Number },
 			scoreDenominator: { type: Number },
-			doesUserHavePermissionToEvaluation: { type: Boolean }
+			readOnly: { type: Boolean }
 		};
 	}
 
@@ -47,7 +47,7 @@ export class D2LGradeResultNumericScore extends LitElement {
 		return html`
 			<div class="d2l-grade-result-numeric-score-container">
 
-				${this.doesUserHavePermissionToEvaluation ? html`
+				${!this.readOnly ? html`
 					<div class="d2l-grade-result-numeric-score-score">
 						<d2l-input-text
 							type="number"

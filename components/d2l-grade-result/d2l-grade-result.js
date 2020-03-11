@@ -15,7 +15,7 @@ export class D2LGradeResult extends LitElement {
 			_includeReportsButton: { type: Boolean },
 			_gradebuttontooltip: { type: String },
 			_reportsbuttontooltip: { type: String },
-			_doesUserHavePermissionToEvaluation: { type: Boolean },
+			_doesUserHavePermissionToEvaluate: { type: Boolean },
 			_gradeType: { type: String },
 			_letterGradeOptions: { type: Array },
 			_selectedLetterGrade: { type: String },
@@ -35,7 +35,7 @@ export class D2LGradeResult extends LitElement {
 		this._includeReportsButton = true;
 		this._gradebuttontooltip = 'Assignment 1 Grade Item Attached';
 		this._reportsbuttontooltip = 'Class and user statistics';
-		this._doesUserHavePermissionToEvaluation = true;
+		this._doesUserHavePermissionToEvaluate = true;
 		this._isGradeAutoCompleted = true;
 		this._isManualOverrideActive = false;
 		this._letterGradeOptions = ['A', 'B', 'C'];
@@ -54,7 +54,7 @@ export class D2LGradeResult extends LitElement {
 					?includeReportsButton=${this._includeReportsButton}
 					gradebuttontooltip=${this._gradebuttontooltip}
 					reportsbuttontooltip=${this._reportsbuttontooltip}
-					?doesUserHavePermissionToEvaluation=${this._doesUserHavePermissionToEvaluation}
+					?readOnly=${!this._doesUserHavePermissionToEvaluate}
 					@d2l-grade-result-grade-change=${this._handleGradeChange}
 					@d2l-grade-result-grade-button-click=${this._handleGradeButtonClick}
 					@d2l-grade-result-reports-button-click=${this._handleReportsButtonClick}
@@ -73,7 +73,7 @@ export class D2LGradeResult extends LitElement {
 					reportsbuttontooltip=${this._reportsbuttontooltip}
 					?includeGradeButton=${this._includeGradeButton}
 					?includeReportsButton=${this._includeReportsButton}
-					?doesUserHavePermissionToEvaluation=${this._doesUserHavePermissionToEvaluation}
+					?readOnly=${!this._doesUserHavePermissionToEvaluate}
 					?isGradeAutoCompleted=${this._isGradeAutoCompleted}
 					?isManualOverrideActive=${this._isManualOverrideActive}
 					@d2l-grade-result-grade-button-click=${this._handleGradeButtonClick}

@@ -10,7 +10,7 @@ export class D2LGradeResultManualOverrideButton extends LitElement {
 	}
 
 	render() {
-		if (this.isManualOverrideActive === true) {
+		if (this.isManualOverrideActive) {
 			return html`
 				<d2l-button-subtle
 					text="Clear Manual Override"

@@ -22,7 +22,7 @@ export class D2LGradeResultPresentational extends LitElement {
 			includeReportsButton: { type: Boolean },
 			gradeButtonTooltip: { type: String },
 			reportsButtonTooltip: { type: String },
-			doesUserHavePermissionToEvaluation: { type: Boolean },
+			readOnly: { type: Boolean },
 			isGradeAutoCompleted: { type: Boolean },
 			isManualOverrideActive: { type: Boolean }
 		};
@@ -40,7 +40,7 @@ export class D2LGradeResultPresentational extends LitElement {
 
 	constructor() {
 		super();
-		this.doesUserHavePermissionToEvaluation = false;
+		this.readOnly = false;
 		this.includeGradeButton = false;
 		this.includeReportsButton = false;
 		this.selectedLetterGrade = '';
@@ -62,33 +62,33 @@ export class D2LGradeResultPresentational extends LitElement {
 		}));
 	}
 
-	getNumericScoreComponent() {
+	_getNumericScoreComponent() {
 		return html`
 			<d2l-grade-result-numeric-score
 				.scoreNumerator=${this.scoreNumerator}
 				.scoreDenominator=${this.scoreDenominator}
-				?doesUserHavePermissionToEvaluation=${this.doesUserHavePermissionToEvaluation}
+				?readOnly=${this.readOnly}
 			></d2l-grade-result-numeric-score>
 		`;
 	}
 
-	getLetterScoreComponent() {
+	_getLetterScoreComponent() {
 		return html`
 			<d2l-grade-result-letter-score
 				.availableOptions=${this.letterGradeOptions}
 				.selectedOption=${this.selectedLetterGrade}
-				?doesUserHavePermissionToEvaluation=${this.doesUserHavePermissionToEvaluation}
+				?readOnly=${this.readOnly}
 			></d2l-grade-result-letter-score>
 		`;
 	}
 
-	getScoreComponent() {
+	_getScoreComponent() {
 		if (this.gradeType === GradeType.Number) {
-			return this.getNumericScoreComponent();
+			return this._getNumericScoreComponent();
 		} else if (this.gradeType === GradeType.Letter) {
-			return this.getLetterScoreComponent();
+			return this._getLetterScoreComponent();
 		} else {
-			throw 'INVALID GRADE TYPE PROVIDED';
+			throw new Error('INVALID GRADE TYPE PROVIDED');
 		}
 	}
 
@@ -100,7 +100,7 @@ export class D2LGradeResultPresentational extends LitElement {
 
 			<div class="d2l-grade-result-presentational-container">
 
-				${this.getScoreComponent()}
+				${this._getScoreComponent()}
 
 				${this.includeGradeButton ?  html`
 					<d2l-grade-result-icon-button

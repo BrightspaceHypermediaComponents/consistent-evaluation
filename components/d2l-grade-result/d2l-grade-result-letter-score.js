@@ -8,7 +8,7 @@ export class D2LGradeResultLetterScore extends LitElement {
 		return {
 			availableOptions: { type: Array },
 			selectedOption: { type: String },
-			doesUserHavePermissionToEvaluation: { type: Boolean }
+			readOnly: { type: Boolean }
 		};
 	}
 
@@ -54,7 +54,7 @@ export class D2LGradeResultLetterScore extends LitElement {
 	}
 
 	render() {
-		if (this.doesUserHavePermissionToEvaluation === true) {
+		if (!this.readOnly) {
 			return html`
 				<div class="d2l-grade-result-letter-score-container">
 					<select
