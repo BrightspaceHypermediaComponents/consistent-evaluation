@@ -1,6 +1,4 @@
-import './d2l-grade-result-presentational.js';
 import { html, LitElement } from 'lit-element';
-// eslint-disable-next-line no-duplicate-imports
 import { GradeType } from './d2l-grade-result-presentational.js';
 
 export class D2LGradeResult extends LitElement {
