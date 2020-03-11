@@ -11,6 +11,8 @@ export class D2LGradeResult extends LitElement {
 			_labeltext: { type: String },
 			_scorenumerator: { type: String },
 			_scoredenominator: { type: String },
+			_includeGradeButton: { type: Boolean },
+			_includeReportsButton: { type: Boolean },
 			_gradebuttontooltip: { type: String },
 			_reportsbuttontooltip: { type: String },
 			_doesUserHavePermissionToEvaluation: { type: Boolean },
@@ -29,6 +31,8 @@ export class D2LGradeResult extends LitElement {
 		this._labeltext = 'Overall Grade';
 		this._scorenumerator = 5;
 		this._scoredenominator = 20;
+		this._includeGradeButton = true;
+		this._includeReportsButton = true;
 		this._gradebuttontooltip = 'Assignment 1 Grade Item Attached';
 		this._reportsbuttontooltip = 'Class and user statistics';
 		this._doesUserHavePermissionToEvaluation = true;
@@ -42,13 +46,15 @@ export class D2LGradeResult extends LitElement {
 		if (this._gradeType === GradeType.Number) {
 			return html`
 				<d2l-grade-result-presentational
-					gradeType=${this._gradeType}
+					.gradeType=${this._gradeType}
 					labeltext=${this._labeltext}
 					scorenumerator=${this._scorenumerator}
 					scoredenominator=${this._scoredenominator}
+					?includeGradeButton=${this._includeGradeButton}
+					?includeReportsButton=${this._includeReportsButton}
 					gradebuttontooltip=${this._gradebuttontooltip}
 					reportsbuttontooltip=${this._reportsbuttontooltip}
-					doesUserHavePermissionToEvaluation=${this._doesUserHavePermissionToEvaluation}
+					?doesUserHavePermissionToEvaluation=${this._doesUserHavePermissionToEvaluation}
 					@d2l-grade-result-grade-change=${this._handleGradeChange}
 					@d2l-grade-result-grade-button-click=${this._handleGradeButtonClick}
 					@d2l-grade-result-reports-button-click=${this._handleReportsButtonClick}
@@ -56,19 +62,20 @@ export class D2LGradeResult extends LitElement {
 					@d2l-grade-result-manual-override-button-manual-override-clear-click=${this._handleManualOverrideClearClick}
 				></d2l-grade-result-presentational>
 			`;
-
 		} else if (this._gradeType === GradeType.Letter) {
 			return html`
 				<d2l-grade-result-presentational
-					gradeType=${this._gradeType}
+					.gradeType=${this._gradeType}
 					labeltext=${this._labeltext}
 					.letterGradeOptions=${this._letterGradeOptions}
 					selectedLetterGrade=${this._selectedLetterGrade}
 					gradebuttontooltip=${this._gradebuttontooltip}
 					reportsbuttontooltip=${this._reportsbuttontooltip}
-					doesUserHavePermissionToEvaluation=${this._doesUserHavePermissionToEvaluation}
-					.isGradeAutoCompleted=${this._isGradeAutoCompleted}
-					.isManualOverrideActive=${this._isManualOverrideActive}
+					?includeGradeButton=${this._includeGradeButton}
+					?includeReportsButton=${this._includeReportsButton}
+					?doesUserHavePermissionToEvaluation=${this._doesUserHavePermissionToEvaluation}
+					?isGradeAutoCompleted=${this._isGradeAutoCompleted}
+					?isManualOverrideActive=${this._isManualOverrideActive}
 					@d2l-grade-result-grade-button-click=${this._handleGradeButtonClick}
 					@d2l-grade-result-reports-button-click=${this._handleReportsButtonClick}
 					@d2l-grade-result-letter-score-selected=${this._handleLetterGradeSelected}

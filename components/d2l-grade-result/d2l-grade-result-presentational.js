@@ -43,8 +43,7 @@ export class D2LGradeResultPresentational extends LitElement {
 		this.doesUserHavePermissionToEvaluation = false;
 		this.includeGradeButton = false;
 		this.includeReportsButton = false;
-		this.letterGradeOptions = [];
-		this.selectedLetterGrade = undefined;
+		this.selectedLetterGrade = '';
 		this.isGradeAutoCompleted = false;
 		this.isManualOverrideActive = false;
 	}
@@ -66,9 +65,9 @@ export class D2LGradeResultPresentational extends LitElement {
 	getNumericScoreComponent() {
 		return html`
 			<d2l-grade-result-numeric-score
-				scoreNumerator=${this.scoreNumerator}
-				scoreDenominator=${this.scoreDenominator}
-				.doesUserHavePermissionToEvaluation=${this.doesUserHavePermissionToEvaluation}
+				.scoreNumerator=${this.scoreNumerator}
+				.scoreDenominator=${this.scoreDenominator}
+				?doesUserHavePermissionToEvaluation=${this.doesUserHavePermissionToEvaluation}
 			></d2l-grade-result-numeric-score>
 		`;
 	}
@@ -76,9 +75,9 @@ export class D2LGradeResultPresentational extends LitElement {
 	getLetterScoreComponent() {
 		return html`
 			<d2l-grade-result-letter-score
-				.options=${this.letterGradeOptions}
-				selectedOption=${this.selectedLetterGrade}
-				.doesUserHavePermissionToEvaluation=${this.doesUserHavePermissionToEvaluation}
+				.availableOptions=${this.letterGradeOptions}
+				.selectedOption=${this.selectedLetterGrade}
+				?doesUserHavePermissionToEvaluation=${this.doesUserHavePermissionToEvaluation}
 			></d2l-grade-result-letter-score>
 		`;
 	}
@@ -105,18 +104,16 @@ export class D2LGradeResultPresentational extends LitElement {
 
 				${this.includeGradeButton ?  html`
 					<d2l-grade-result-icon-button
-						.tooltipText="${this.gradeButtonTooltip}"
+						.tooltipText=${this.gradeButtonTooltip}
 						icon="tier1:grade"
-						_id="1"
 						@d2l-grade-result-icon-button-click=${this._onGradeButtonClick}
 					></d2l-grade-result-icon-button>
 				` : html``}
 				
 				${this.includeReportsButton ? html`
 					<d2l-grade-result-icon-button
-						.tooltipText="${this.reportsButtonTooltip}"
+						.tooltipText=${this.reportsButtonTooltip}
 						icon="tier1:reports"
-						_id="2"
 						@d2l-grade-result-icon-button-click=${this._onReportsButtonClick}
 					></d2l-grade-result-icon-button>
 				` : html``}
@@ -125,7 +122,7 @@ export class D2LGradeResultPresentational extends LitElement {
 
 			${this.isGradeAutoCompleted ? html`
 				<d2l-grade-result-manual-override-button
-					.isManualOverrideActive=${this.isManualOverrideActive}
+					?isManualOverrideActive=${this.isManualOverrideActive}
 				></d2l-grade-result-manual-override-button>
 			` : html``}
 		`;

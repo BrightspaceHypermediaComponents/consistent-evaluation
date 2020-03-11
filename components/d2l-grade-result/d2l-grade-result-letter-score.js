@@ -6,7 +6,7 @@ export class D2LGradeResultLetterScore extends LitElement {
 
 	static get properties() {
 		return {
-			options: { type: Array },
+			availableOptions: { type: Array },
 			selectedOption: { type: String },
 			doesUserHavePermissionToEvaluation: { type: Boolean }
 		};
@@ -29,12 +29,12 @@ export class D2LGradeResultLetterScore extends LitElement {
 
 	constructor() {
 		super();
-		this.options = [];
-		this.selectedOption = undefined;
+		this.availableOptions = [];
+		this.selectedOption = '';
 	}
 
 	_renderOptions() {
-		return this.options.map((option) => {
+		return this.availableOptions.map((option) => {
 			if (this.selectedOption === option) {
 				return html`<option selected>${option}</option>`;
 			} else {

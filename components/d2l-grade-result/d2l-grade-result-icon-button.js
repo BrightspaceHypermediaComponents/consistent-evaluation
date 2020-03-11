@@ -1,6 +1,7 @@
 import '@brightspace-ui/core/components/button/button-icon.js';
 import 'd2l-tooltip/d2l-tooltip.js';
 import { html, LitElement } from 'lit-element';
+import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 
 export class D2LGradeResultIconButton extends LitElement {
 	static get properties() {
@@ -13,7 +14,7 @@ export class D2LGradeResultIconButton extends LitElement {
 
 	constructor() {
 		super();
-		this._id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+		this._id = getUniqueId();
 	}
 
 	_onClick() {
