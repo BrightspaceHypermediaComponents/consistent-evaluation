@@ -16,7 +16,7 @@ jobs:
         echo "Not a pull request and/or no secure environment variables, running headless tests...";
         npm run test:headless || travis_terminate 1;
       fi
-  - stage: visual-difference-tests
+  - stage: Visual-difference-tests
     script:
     - |
       if [ $TRAVIS_SECURE_ENV_VARS == true ]; then
