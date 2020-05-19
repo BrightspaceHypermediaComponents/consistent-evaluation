@@ -4,7 +4,7 @@ const VisualDiff = require('@brightspace-ui/visual-diff');
 describe('d2l-consistent-evaluation', () => {
 
 	const visualDiff = new VisualDiff('consistent-evaluation-right-panel', __dirname);
-
+	mocha.setup({ timeout: 10000 });
 	let browser, page;
 
 	before(async() => {
