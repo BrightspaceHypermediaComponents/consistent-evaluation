@@ -37,7 +37,7 @@ describe('d2l-consistent-evaluation-footer event tests', () => {
 	it('should emit a publish event', function() {
 		return new Promise((resolve, reject) => {
 			fixture(defaultComponent).then(el => {
-				const event = 'on-publish';
+				const event = 'd2l-consistent-evaluation-on-publish';
 				el.addEventListener(event, resolve);
 				getPublishButton(el).click();
 				setTimeout(() => reject(`timeout waiting for ${event} event`), eventTimeoutMS);
@@ -48,7 +48,7 @@ describe('d2l-consistent-evaluation-footer event tests', () => {
 	it('should emit a save draft event', function() {
 		return new Promise((resolve, reject) => {
 			fixture(defaultComponent).then(el => {
-				const event = 'on-save-draft';
+				const event = 'd2l-consistent-evaluation-on-save-draft';
 				el.addEventListener(event, resolve);
 				getSaveDraftButton(el).click();
 				setTimeout(() => reject(`timeout waiting for ${event} event`), eventTimeoutMS);
@@ -59,7 +59,7 @@ describe('d2l-consistent-evaluation-footer event tests', () => {
 	it('should emit a retract event', function() {
 		return new Promise((resolve, reject) => {
 			fixture(publishedComponent).then(el => {
-				const event = 'on-retract';
+				const event = 'd2l-consistent-evaluation-on-retract';
 				el.addEventListener(event, resolve);
 				getRetractButton(el).click();
 				setTimeout(() => reject(`timeout waiting for ${event} event`), eventTimeoutMS);
@@ -70,7 +70,7 @@ describe('d2l-consistent-evaluation-footer event tests', () => {
 	it('should emit a update event', function() {
 		return new Promise((resolve, reject) => {
 			fixture(publishedComponent).then(el => {
-				const event = 'on-update';
+				const event = 'd2l-consistent-evaluation-on-update';
 				el.addEventListener(event, resolve);
 				getUpdateButton(el).click();
 				setTimeout(() => reject(`timeout waiting for ${event} event`), eventTimeoutMS);
@@ -81,7 +81,7 @@ describe('d2l-consistent-evaluation-footer event tests', () => {
 	it('should emit a next student event', function() {
 		return new Promise((resolve, reject) => {
 			fixture(nextStudentComponent).then(el => {
-				const event = 'on-next-student';
+				const event = 'd2l-consistent-evaluation-on-next-student';
 				el.addEventListener(event, resolve);
 				getNextStudentButton(el).click();
 				setTimeout(() => reject(`timeout waiting for ${event} event`), eventTimeoutMS);

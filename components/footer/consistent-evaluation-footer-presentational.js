@@ -41,11 +41,11 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeMixin(LitE
 		}));
 	}
 
-	_emitPublishEvent()     { this._dispatchButtonClickEvent('on-publish'); }
-	_emitRetractEvent()     { this._dispatchButtonClickEvent('on-retract'); }
-	_emitUpdateEvent()      { this._dispatchButtonClickEvent('on-update'); }
-	_emitSaveDraftEvent()   { this._dispatchButtonClickEvent('on-save-draft'); }
-	_emitNextStudentEvent() { this._dispatchButtonClickEvent('on-next-student'); }
+	_emitPublishEvent()     { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-publish'); }
+	_emitRetractEvent()     { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-retract'); }
+	_emitUpdateEvent()      { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-update'); }
+	_emitSaveDraftEvent()   { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-save-draft'); }
+	_emitNextStudentEvent() { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-next-student'); }
 
 	_getPublishOrRetractButton() {
 		const text = this.published ? this.localize('retract') : this.localize('publish');

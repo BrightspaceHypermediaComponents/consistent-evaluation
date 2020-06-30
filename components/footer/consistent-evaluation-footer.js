@@ -93,12 +93,12 @@ export class ConsistentEvaluationFooter extends LitElement {
 		return html`
 			<d2l-consistent-evaluation-footer-presentational
 				?published=${this._isEntityPublished()}
-				?showNextStudent=${this.nextStudentHref !== undefined}
-				@on-publish=${this._onPublishClick}				
-				@on-save-draft=${this._onSaveDraftClick}
-				@on-retract=${this._onRetractClick}
-				@on-update=${this._onUpdateClick}
-				@on-next-student=${this._onNextStudentClick}
+				?show-next-student=${this.nextStudentHref !== undefined}
+				@d2l-consistent-evaluation-on-publish=${this._onPublishClick}
+				@d2l-consistent-evaluation-on-save-draft=${this._onSaveDraftClick}
+				@d2l-consistent-evaluation-on-retract=${this._onRetractClick}
+				@d2l-consistent-evaluation-on-update=${this._onUpdateClick}
+				@d2l-consistent-evaluation-on-next-student=${this._onNextStudentClick}
 			></d2l-consistent-evaluation-footer-presentational>
 		`;
 	}
