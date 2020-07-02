@@ -93,7 +93,7 @@ export class ConsistentEvaluationFooter extends LitElement {
 		return html`
 			<d2l-consistent-evaluation-footer-presentational
 				?published=${this._isEntityPublished()}
-				?show-next-student=${this.nextStudentHref !== undefined}
+				?showNextStudent=${this.nextStudentHref !== undefined}
 				@d2l-consistent-evaluation-on-publish=${this._onPublishClick}
 				@d2l-consistent-evaluation-on-save-draft=${this._onSaveDraftClick}
 				@d2l-consistent-evaluation-on-retract=${this._onRetractClick}
