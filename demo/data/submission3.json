@@ -1,0 +1,84 @@
+{
+  "class": [
+    "assignment-submission"
+  ],
+  "entities": [
+    {
+      "class": [
+        "attachment-list"
+      ],
+      "rel": [
+        "https://assignments.api.brightspace.com/rels/attachment-list"
+      ],
+      "entities": [
+        {
+          "class": [
+            "attachment"
+          ],
+          "rel": [
+            "https://assignments.api.brightspace.com/rels/attachment"
+          ],
+          "properties": {
+            "name": "test.png",
+            "size": 69655,
+            "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/common/viewFile.d2lfile/Database/ODQ/test.png?ou=6609",
+            "annotationsViewer": "//s.brightspace.com/apps/annotations-viewer/1.13.1/index.html?dropboxId=1&entityId=10183&fileId=84&submissionId=7&ou=6609&host=http://wvd-cc-dev-016.desire2learn.d2l:44444"
+          },
+          "links": [
+            {
+              "rel": [
+                "alternate"
+              ],
+              "type": "image/png",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.12/6609/dropbox/folders/1/submissions/7/files/84"
+            },
+            {
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.24/6609/dropbox/folders/1/submissions/7/files/84/pdf"
+            },
+            {
+              "class": [
+                "annotated"
+              ],
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.31/6609/dropbox/folders/1/entities/10183/submissions/7/files/84/annotatedpdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "class": [
+        "date",
+        "submission-date"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/date"
+      ],
+      "properties": {
+        "date": "2020-06-18T22:01:29.390Z"
+      }
+    },
+    {
+      "class": [
+        "richtext",
+        "submission-comment",
+        "annotated"
+      ],
+      "rel": [
+        "item",
+        "https://assignments.api.brightspace.com/rels/submission-comment"
+      ],
+      "properties": {
+        "text": "oh no! I'm a late submission :(",
+        "html": "<p>oh no! I&#39;m a late submission :(</p>"
+      }
+    }
+  ]
+}

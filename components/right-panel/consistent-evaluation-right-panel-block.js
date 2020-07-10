@@ -3,8 +3,13 @@ import { css, html, LitElement } from 'lit-element';
 class ConsistentEvaluationRightPanelBlock extends LitElement {
 	static get properties() {
 		return {
-			title: { type: String },
-			noTitle: { type: Boolean }
+			title: {
+				type: String
+			},
+			noTitle: {
+				attribute: 'no-title',
+				type: Boolean
+			}
 		};
 	}
 

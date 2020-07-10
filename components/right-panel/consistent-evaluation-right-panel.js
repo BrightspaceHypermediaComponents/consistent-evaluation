@@ -2,7 +2,6 @@ import './consistent-evaluation-feedback.js';
 import './consistent-evaluation-outcomes.js';
 import './consistent-evaluation-rubric.js';
 import './consistent-evaluation-grade-result.js';
-import '@brightspace-ui-labs/grade-result/d2l-grade-result.js';
 import { css, html, LitElement } from 'lit-element';
 import { loadLocalizationResources } from '../locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin.js';
@@ -11,19 +10,52 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 
 	static get properties() {
 		return {
-			rubricHref: { type: String },
-			rubricAssessmentHref: { type: String },
-			outcomesHref: { type: String },
-			gradeHref: { type: String },
-			feedbackHref: { type: String },
-			token: { type: String },
-			rubricReadOnly: { type: Boolean },
-			richTextEditorDisabled: { type: Boolean },
-			hideRubric: { type: Boolean },
-			hideGrade: { type: Boolean },
-			hideFeedback: { type: Boolean },
-			hideOutcomes: { type: Boolean },
-			_richTextEditorConfig: { type: Object }
+			feedbackText: {
+				attribute: 'feedback-text',
+				type: String
+			},
+			grade: {
+				type: Object
+			},
+			hideRubric: {
+				attribute: 'hide-rubric',
+				type: Boolean
+			},
+			hideGrade: {
+				attribute: 'hide-grade',
+				type: Boolean
+			},
+			hideFeedback: {
+				attribute: 'hide-feedback',
+				type: Boolean
+			},
+			hideOutcomes: {
+				attribute: 'hide-outcomes',
+				type: Boolean
+			},
+			outcomesHref: {
+				attribute: 'outcomes-href',
+				type: String
+			},
+			richTextEditorDisabled: {
+				attribute: 'rich-text-editor-disabled',
+				type: Boolean
+			},
+			rubricAssessmentHref: {
+				attribute: 'rubric-assessment-href',
+				type: String
+			},
+			rubricHref: {
+				attribute: 'rubric-href',
+				type: String
+			},
+			rubricReadOnly: {
+				attribute: 'rubric-read-only',
+				type: Boolean
+			},
+			token: {
+				type: String
+			}
 		};
 	}
 
@@ -38,6 +70,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 	constructor() {
 		super();
 
+		this._token = undefined;
 		this._richTextEditorConfig = {};
 
 		this.hideRubric = false;
@@ -46,15 +79,37 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 		this.hideOutcomes = false;
 	}
 
+	async _transientSaveFeedback(e) {
+		this._emitTransientSaveEvent('on-d2l-consistent-eval-transient-save-feedback', e.detail);
+	}
+
+	async _transientSaveGrade(e) {
+		const type = e.detail.grade.scoreType;
+		if (type === 'LetterGrade') {
+			this._emitTransientSaveEvent('on-d2l-consistent-eval-transient-save-grade', e.detail.grade.letterGrade);
+		}
+		else if (type === 'Numeric') {
+			this._emitTransientSaveEvent('on-d2l-consistent-eval-transient-save-grade', e.detail.grade.score);
+		}
+	}
+
+	_emitTransientSaveEvent(eventName, newValue) {
+		this.dispatchEvent(new CustomEvent(eventName, {
+			composed: true,
+			bubbles: true,
+			detail: newValue
+		}));
+	}
+
 	_renderRubric() {
 		if (!this.hideRubric) {
 			return html`
 				<d2l-consistent-evaluation-rubric
 					header=${this.localize('rubrics')}
 					href=${this.rubricHref}
-					assessmentHref=${this.rubricAssessmentHref}
+					assessment-href=${this.rubricAssessmentHref}
 					.token=${this.token}
-					?readonly=${this.rubricReadOnly}
+					?read-only=${this.rubricReadOnly}
 				></d2l-consistent-evaluation-rubric>
 			`;
 		}
@@ -66,8 +121,8 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 		if (!this.hideGrade) {
 			return html`
 				<d2l-consistent-evaluation-grade-result
-					href=${this.gradeHref}
-					.token=${this.token}
+					.grade=${this.grade}
+					@on-d2l-consistent-eval-grade-changed=${this._transientSaveGrade}
 				></d2l-consistent-evaluation-grade-result>
 			`;
 		}
@@ -78,10 +133,12 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 	_renderFeedback() {
 		if (!this.hideFeedback) {
 			return html`
-				<d2l-consistent-evaluation-feedback
-					href=${this.feedbackHref}
-					.token=${this.token}
-				></d2l-consistent-evaluation-feedback>
+				<d2l-consistent-evaluation-feedback-presentational
+					can-edit-feedback
+					.feedback-text=${this.feedbackText}
+					.rich-text-editor-config=${this._richTextEditorConfig}
+					@d2l-consistent-eval-on-feedback-edit=${this._transientSaveFeedback}
+				></d2l-consistent-evaluation-feedback-presentational>
 			`;
 		}
 

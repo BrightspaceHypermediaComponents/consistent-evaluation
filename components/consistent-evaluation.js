@@ -46,19 +46,16 @@ export class ConsistentEvaluation extends MobxLitElement {
 	render() {
 		return html`
 			<d2l-consistent-evaluation-page
-				.rubricHref=${this._childHrefs && this._childHrefs.rubricHref}
-				.rubricAssessmentHref=${this._childHrefs && this._childHrefs.rubricAssessmentHref}
-				.outcomesHref=${this._childHrefs && this._childHrefs.outcomesHref}
-				.gradeHref=${this._childHrefs && this._childHrefs.gradeHref}
-				.evaluationHref=${this._childHrefs && this._childHrefs.evaluationHref}
-				.nextStudentHref=${this._childHrefs && this._childHrefs.nextHref}
-				.feedbackHref=${this._childHrefs && this._childHrefs.feedbackHref}
-				.submissionList=${this._submissionInfo && this._submissionInfo.submissionList}
-				.evaluationState=${this._submissionInfo && this._submissionInfo.evaluationState}
+				.rubric-href=${this._childHrefs && this._childHrefs.rubricHref}
+				.rubric-assessment-href=${this._childHrefs && this._childHrefs.rubricAssessmentHref}
+				.outcomes-href=${this._childHrefs && this._childHrefs.outcomesHref}
+				.evaluation-href=${this._childHrefs && this._childHrefs.evaluationHref}
+				.next-student-href=${this._childHrefs && this._childHrefs.nextHref}
+				.submission-info=${this._submissionInfo}
 				.token=${this.token}
-				?rubricReadOnly=${this._rubricReadOnly}
-				?richTextEditorDisabled=${this._richTextEditorDisabled}
-				@next-student-click=${this.onNextStudentClick}
+				?rubric-read-only=${this._rubricReadOnly}
+				?rich-text-editor-disabled=${this._richTextEditorDisabled}
+				@d2l-consistent-eval-next-student-click=${this.onNextStudentClick}
 			></d2l-consistent-evaluation-page>
 		`;
 	}

@@ -1,7 +1,7 @@
 {
   "name": "d2l-consistent-evaluation",
   "description": "A consistent evaluation page for all tools",
-  "version": "0.0.26",
+  "version": "0.0.29",
   "repository": "https://github.com/BrightspaceHypermediaComponents/consistent-evaluation.git",
   "private": true,
   "scripts": {
@@ -36,7 +36,8 @@
     "lit-analyzer": "^1",
     "mocha": "^7.0.1",
     "puppeteer": "^1",
-    "sinon": "^9.0.2"
+    "sinon": "^9.0.2",
+    "siren-parser": "^8.2.0"
   },
   "dependencies": {
     "@adobe/lit-mobx": "0.0.x",

@@ -9,6 +9,15 @@
 			import '@brightspace-ui/core/components/typography/styles.js';
 			import '@brightspace-ui/core/components/typography/typography.js';
 			import '../../components/right-panel/consistent-evaluation-right-panel.js';
+			import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
+			import SirenParse from 'siren-parser';
+			fetch('data/grade/evaluationEntity.json').then(response => response.json()).then(entity => {
+				const parsedEntity = SirenParse(entity);
+				const grade = new Grade(GradeType.Number, 47, 100, null, null, parsedEntity);
+				const panels = document.getElementsByTagName('consistent-evaluation-right-panel');
+				for (let i = 0; i < panels.length; i++) {
+					panels[i].grade = grade;
+				}});
 		</script>
 		<style>
 			html {
@@ -24,91 +33,92 @@
 	<body class="d2l-typography">
 		<div id="default">
 			<consistent-evaluation-right-panel
-				rubricHref="data/rubric.json"
-				rubricAssessmentHref="data/assessment.json"
-				outcomesHref="data/outcomes/suggested-level.json"
-				gradeHref="data/grade/grade.json"
+				rubric-href="data/rubric.json"
+				rubric-assessment-href="data/assessment.json"
+				outcomes-href="data/outcomes/suggested-level.json"
+				feedback-text=""
 				token="token"
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="rubric-read-only">
 			<consistent-evaluation-right-panel
-				rubricHref="data/rubric.json"
-				rubricAssessmentHref="data/assessment.json"
-				outcomesHref="data/outcomes/suggested-level.json"
-				gradeHref="data/grade/grade.json"
+				rubric-href="data/rubric.json"
+				rubric-assessment-href="data/assessment.json"
+				outcomes-href="data/outcomes/suggested-level.json"
+				feedback-text=""
 				token="token"
-				rubricReadOnly
+				rubric-read-only
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="rich-text-editor-disabled">
 			<consistent-evaluation-right-panel
-				rubricHref="data/rubric.json"
-				rubricAssessmentHref="data/assessment.json"
-				outcomesHref="data/outcomes/suggested-level.json"
-				gradeHref="data/grade/grade.json"
+				rubric-href="data/rubric.json"
+				rubric-assessment-href="data/assessment.json"
+				outcomes-href="data/outcomes/suggested-level.json"
+				feedback-text=""
 				token="token"
-				richTextEditorDisabled
+				rich-text-editor-disabled
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="hiding-rubric">
 			<consistent-evaluation-right-panel
-				rubricHref="data/rubric.json"
-				rubricAssessmentHref="data/assessment.json"
-				outcomesHref="data/outcomes/suggested-level.json"
-				gradeHref="data/grade/grade.json"
+				rubric-href="data/rubric.json"
+				rubric-assessment-href="data/assessment.json"
+				outcomes-href="data/outcomes/suggested-level.json"
+				feedback-text=""
+				grade=""
 				token="token"
-				hideRubric
+				hide-rubric
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="hiding-grade">
 			<consistent-evaluation-right-panel
-				rubricHref="data/rubric.json"
-				rubricAssessmentHref="data/assessment.json"
-				outcomesHref="data/outcomes/suggested-level.json"
-				gradeHref="data/grade/grade.json"
+				rubric-href="data/rubric.json"
+				rubric-assessment-href="data/assessment.json"
+				outcomes-href="data/outcomes/suggested-level.json"
+				feedback-text=""
 				token="token"
-				hideGrade
+				hide-grade
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="hiding-feedback">
 			<consistent-evaluation-right-panel
-				rubricHref="data/rubric.json"
-				rubricAssessmentHref="data/assessment.json"
-				outcomesHref="data/outcomes/suggested-level.json"
-				gradeHref="data/grade/grade.json"
+				rubric-href="data/rubric.json"
+				rubric-assessment-href="data/assessment.json"
+				outcomes-href="data/outcomes/suggested-level.json"
+				feedback-text=""
 				token="token"
-				hideFeedback
+				hide-feedback
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="hiding-outcomes">
 			<consistent-evaluation-right-panel
-				rubricHref="data/rubric.json"
-				rubricAssessmentHref="data/assessment.json"
-				outcomesHref="data/outcomes/suggested-level.json"
-				gradeHref="data/grade/grade.json"
+				rubric-href="data/rubric.json"
+				rubric-assessment-href="data/assessment.json"
+				outcomes-href="data/outcomes/suggested-level.json"
+				feedback-text=""
 				token="token"
-				hideOutcomes
+				hide-outcomes
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="hiding-all">
 			<consistent-evaluation-right-panel
-				rubricHref="data/rubric.json"
-				rubricAssessmentHref="data/assessment.json"
-				outcomesHref="data/outcomes/suggested-level.json"
-				gradeHref="data/grade/grade.json"
+				rubric-href="data/rubric.json"
+				rubric-assessment-href="data/assessment.json"
+				outcomes-href="data/outcomes/suggested-level.json"
+				feedback-text=""
 				token="token"
-				hideRubric
-				hideGrade
-				hideFeedback
-				hideOutcomes
+				hide-rubric
+				hide-grade
+				hide-feedback
+				hide-outcomes
 			></consistent-evaluation-right-panel>
 		</div>
 

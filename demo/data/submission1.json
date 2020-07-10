@@ -1,0 +1,165 @@
+{
+  "class": [
+    "assignment-submission"
+  ],
+  "entities": [
+    {
+      "class": [
+        "attachment-list"
+      ],
+      "rel": [
+        "https://assignments.api.brightspace.com/rels/attachment-list"
+      ],
+      "entities": [
+        {
+          "class": [
+            "attachment"
+          ],
+          "rel": [
+            "https://assignments.api.brightspace.com/rels/attachment"
+          ],
+          "properties": {
+            "name": "errors.png",
+            "size": 544589,
+            "flagged": true,
+            "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/common/viewFile.d2lfile/Database/ODA/errors.png?ou=6609",
+            "annotationsViewer": "//s.brightspace.com/apps/annotations-viewer/1.13.1/index.html?dropboxId=1&entityId=10183&fileId=80&submissionId=5&ou=6609&host=http://wvd-cc-dev-016.desire2learn.d2l:44444"
+          },
+          "links": [
+            {
+              "rel": [
+                "alternate"
+              ],
+              "type": "image/png",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.12/6609/dropbox/folders/1/submissions/5/files/80"
+            },
+            {
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.24/6609/dropbox/folders/1/submissions/5/files/80/pdf"
+            },
+            {
+              "class": [
+                "annotated"
+              ],
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.31/6609/dropbox/folders/1/entities/10183/submissions/5/files/80/annotatedpdf"
+            }
+          ]
+        },
+        {
+          "class": [
+            "attachment"
+          ],
+          "rel": [
+            "https://assignments.api.brightspace.com/rels/attachment"
+          ],
+          "properties": {
+            "name": "Test doc.docx",
+            "size": 469641,
+            "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/common/viewFile.d2lfile/Database/ODE/Test%20doc.docx?ou=6609",
+            "annotationsViewer": "//s.brightspace.com/apps/annotations-viewer/1.13.1/index.html?dropboxId=1&entityId=10183&fileId=81&submissionId=5&ou=6609&host=http://wvd-cc-dev-016.desire2learn.d2l:44444"
+          },
+          "links": [
+            {
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.12/6609/dropbox/folders/1/submissions/5/files/81"
+            },
+            {
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.24/6609/dropbox/folders/1/submissions/5/files/81/pdf"
+            },
+            {
+              "class": [
+                "annotated"
+              ],
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.31/6609/dropbox/folders/1/entities/10183/submissions/5/files/81/annotatedpdf"
+            }
+          ]
+        },
+        {
+          "class": [
+            "attachment"
+          ],
+          "rel": [
+            "https://assignments.api.brightspace.com/rels/attachment"
+          ],
+          "properties": {
+            "name": "test.png",
+            "size": 69655,
+            "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/common/viewFile.d2lfile/Database/ODI/test.png?ou=6609",
+            "annotationsViewer": "//s.brightspace.com/apps/annotations-viewer/1.13.1/index.html?dropboxId=1&entityId=10183&fileId=82&submissionId=5&ou=6609&host=http://wvd-cc-dev-016.desire2learn.d2l:44444"
+          },
+          "links": [
+            {
+              "rel": [
+                "alternate"
+              ],
+              "type": "image/png",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.12/6609/dropbox/folders/1/submissions/5/files/82"
+            },
+            {
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.24/6609/dropbox/folders/1/submissions/5/files/82/pdf"
+            },
+            {
+              "class": [
+                "annotated"
+              ],
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.31/6609/dropbox/folders/1/entities/10183/submissions/5/files/82/annotatedpdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "class": [
+        "date",
+        "submission-date"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/date"
+      ],
+      "properties": {
+        "date": "2020-06-18T21:40:21.950Z"
+      }
+    },
+    {
+      "class": [
+        "richtext",
+        "submission-comment",
+        "annotated"
+      ],
+      "rel": [
+        "item",
+        "https://assignments.api.brightspace.com/rels/submission-comment"
+      ],
+      "properties": {
+        "text": "\r\nLorem ipsum\r\nLorem ipsum\r\nLorem ipsum\r\n\r\nLorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
+        "html": "<ul>\r\n<li>Lorem ipsum</li>\r\n<li>Lorem ipsum</li>\r\n<li>Lorem ipsum</li>\r\n</ul>\r\n<p>Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>"
+      }
+    }
+  ]
+}

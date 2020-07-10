@@ -1,5 +1,6 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { assessmentRel, evaluationRel, feedbackRel, gradesRel, nextRel, previousRel, rubricRel } from '../components/controllers/constants.js';
+import { assessmentRel, evaluationRel, nextRel, previousRel, rubricRel } from '../components/controllers/constants.js';
+import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
 import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
@@ -51,8 +52,6 @@ describe('ConsistentEvaluationHrefController', () => {
 
 	describe('getHrefs works properly and will set the correct hrefs', () => {
 		const relations = [
-			{ key: 'gradeHref', rel: gradesRel },
-			{ key: 'feedbackHref', rel: feedbackRel },
 			{ key: 'evaluationHref', rel: evaluationRel },
 			{ key: 'nextHref', rel: nextRel },
 			{ key: 'previousHref', rel: previousRel },
@@ -94,14 +93,14 @@ describe('ConsistentEvaluationHrefController', () => {
 					getLinkByRel: (r) => (r === assessmentRel ? { href: expectedAssessmentHref } : undefined)
 				}
 			});
-			sinon.stub(controller, '_getAssessmentEntity').returns(undefined);
+			sinon.stub(controller, '_getEntityFromHref').returns(undefined);
 
 			const hrefs = await controller.getHrefs(true);
 
 			assert.equal(hrefs.rubricAssessmentHref, expectedAssessmentHref);
 
 			controller._getRootEntity.restore();
-			controller._getAssessmentEntity.restore();
+			controller._getEntityFromHref.restore();
 		});
 
 		it('sets the rubric href and the rubric assessment href  properly', async() => {
@@ -115,7 +114,7 @@ describe('ConsistentEvaluationHrefController', () => {
 					getLinkByRel: (r) => (r === assessmentRel ? { href: expectedAssessmentHref } : undefined)
 				}
 			});
-			sinon.stub(controller, '_getAssessmentEntity').returns({
+			sinon.stub(controller, '_getEntityFromHref').returns({
 				entity: {
 					hasLinkByRel: (r) => r === rubricRel,
 					getLinkByRel: (r) => (r === rubricRel ? { href: expectedRubricHref } : undefined)
@@ -128,8 +127,38 @@ describe('ConsistentEvaluationHrefController', () => {
 			assert.equal(hrefs.rubricHref, expectedRubricHref);
 
 			controller._getRootEntity.restore();
-			controller._getAssessmentEntity.restore();
+			controller._getEntityFromHref.restore();
 		});
 
+	});
+
+	describe('getSubmissionInfo works', () => {
+		it('sets the submission info', async() => {
+			const assignmentHref = 'expected_assignment_href';
+			const expectedSubmissions = ['link1', 'link2'];
+			const expectedEvaluationState = 'Draft';
+			const expectedDueDate = '2020-06-18T21:59:00.000Z';
+			const expectedSubmissionType = 'File Submission';
+
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: {
+					hasLinkByRel: (r) => r === Rels.assignment,
+					getLinkByRel: (r) => (r === Rels.assignment ? { href: assignmentHref } : undefined),
+					getSubEntityByClass: (r) => (r === Classes.dates.dueDate ? { properties: { date: expectedDueDate } } : { links: expectedSubmissions }),
+					getSubEntityByRel: (r) => (r === Rels.evaluation ? { properties: {state: expectedEvaluationState}} : undefined)
+				}
+			});
+			sinon.stub(controller, '_getEntityFromHref').returns({
+				entity: {
+					properties: {submissionType: {title: expectedSubmissionType}}
+				}
+			});
+			const submissionInfo = await controller.getSubmissionInfo();
+			assert.equal(submissionInfo.submissionList, expectedSubmissions);
+			assert.equal(submissionInfo.evaluationState, expectedEvaluationState);
+			assert.equal(submissionInfo.submissionType, expectedSubmissionType);
+			assert.equal(submissionInfo.dueDate, expectedDueDate);
+		});
 	});
 });

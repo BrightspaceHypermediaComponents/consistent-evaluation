@@ -55,12 +55,8 @@ class ConsistentEvaluationFeedback extends LitElement {
 	async _initializeController() {
 		this._controller = new ConsistentEvaluationFeedbackController(this._href, this._token);
 
-		this._feedbackEntity = await this._controller.requestFeedback();
-		this._feedbackText = this._feedbackEntity.entities[0].entities[0].properties.text;
-	}
-
-	_saveFeedback(feedback, entity) {
-		this._controller.updateFeedbackText(feedback, entity);
+		this._feedbackEntity = await this._controller.requestFeedbackEntity();
+		this._feedbackText = this._feedbackEntity.properties.text || this._feedbackText;
 	}
 
 	_saveOnFeedbackChange(e) {
@@ -69,17 +65,25 @@ class ConsistentEvaluationFeedback extends LitElement {
 		this._debounceJobs.feedback = Debouncer.debounce(
 			this._debounceJobs.feedback,
 			timeOut.after(500),
-			() => this._saveFeedback(feedback, this._feedbackEntity)
+			() => this._emitFeedbackEditEvent(feedback)
 		);
+	}
+
+	_emitFeedbackEditEvent(feedback) {
+		this.dispatchEvent(new CustomEvent('on-feedback-edit', {
+			composed: true,
+			bubbles: true,
+			detail: feedback
+		}));
 	}
 
 	render() {
 		return html`
 			<d2l-consistent-evaluation-feedback-presentational
-				canEditFeedback
-				feedbackText="${this._feedbackText}"
+				can-edit-feedback
+				feedback-text="${this._feedbackText}"
 				href="${this._href}"
-				.richtextEditorConfig="${this._richTextEditorConfig}"
+				.rich-text-editor-config="${this._richTextEditorConfig}"
 				@d2l-activity-text-editor-change="${this._saveOnFeedbackChange}"
 				.token="${this._token}"
 			></d2l-consistent-evaluation-feedback-presentational>

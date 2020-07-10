@@ -23,7 +23,7 @@ const publishedComponent = html`
 `;
 
 const nextStudentComponent = html`
-	<d2l-consistent-evaluation-footer-presentational shownextstudent></d2l-consistent-evaluation-footer-presentational>
+	<d2l-consistent-evaluation-footer-presentational show-next-student></d2l-consistent-evaluation-footer-presentational>
 `;
 
 const eventTimeoutMS = 1000;

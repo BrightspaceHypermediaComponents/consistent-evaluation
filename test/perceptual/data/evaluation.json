@@ -1,0 +1,2331 @@
+{
+  "rel": [
+    "https://assignments.api.brightspace.com/rels/evaluation"
+  ],
+  "properties": {
+    "state": "Unevaluated"
+  },
+  "class": [
+    "evaluation"
+  ],
+  "_actionsByName": {
+    "publish": {
+      "name": "publish",
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation?action=publish",
+      "method": "PUT",
+      "type": "application/x-www-form-urlencoded",
+      "_fieldsByName": {},
+      "_fieldsByClass": {},
+      "_fieldsByType": {}
+    },
+    "save-draft": {
+      "name": "save-draft",
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation?action=save-draft",
+      "method": "PUT",
+      "type": "application/x-www-form-urlencoded",
+      "_fieldsByName": {},
+      "_fieldsByClass": {},
+      "_fieldsByType": {}
+    }
+  },
+  "_actionsByClass": {},
+  "_actionsByMethod": {
+    "PUT": [
+      {
+        "name": "publish",
+        "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation?action=publish",
+        "method": "PUT",
+        "type": "application/x-www-form-urlencoded",
+        "_fieldsByName": {},
+        "_fieldsByClass": {},
+        "_fieldsByType": {}
+      },
+      {
+        "name": "save-draft",
+        "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation?action=save-draft",
+        "method": "PUT",
+        "type": "application/x-www-form-urlencoded",
+        "_fieldsByName": {},
+        "_fieldsByClass": {},
+        "_fieldsByType": {}
+      }
+    ]
+  },
+  "_actionsByType": {
+    "application/x-www-form-urlencoded": [
+      {
+        "name": "publish",
+        "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation?action=publish",
+        "method": "PUT",
+        "type": "application/x-www-form-urlencoded",
+        "_fieldsByName": {},
+        "_fieldsByClass": {},
+        "_fieldsByType": {}
+      },
+      {
+        "name": "save-draft",
+        "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation?action=save-draft",
+        "method": "PUT",
+        "type": "application/x-www-form-urlencoded",
+        "_fieldsByName": {},
+        "_fieldsByClass": {},
+        "_fieldsByType": {}
+      }
+    ]
+  },
+  "actions": [
+    {
+      "name": "publish",
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation?action=publish",
+      "method": "PUT",
+      "type": "application/x-www-form-urlencoded",
+      "_fieldsByName": {},
+      "_fieldsByClass": {},
+      "_fieldsByType": {}
+    },
+    {
+      "name": "save-draft",
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation?action=save-draft",
+      "method": "PUT",
+      "type": "application/x-www-form-urlencoded",
+      "_fieldsByName": {},
+      "_fieldsByClass": {},
+      "_fieldsByType": {}
+    }
+  ],
+  "_linksByRel": {
+    "https://activities.api.brightspace.com/rels/attachments": [
+      {
+        "rel": [
+          "https://activities.api.brightspace.com/rels/attachments"
+        ],
+        "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/user_10183/evaluation/attachments"
+      }
+    ],
+    "https://activities.api.brightspace.com/rels/evaluation": [
+      {
+        "rel": [
+          "https://activities.api.brightspace.com/rels/evaluation",
+          "self"
+        ],
+        "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation"
+      }
+    ],
+    "self": [
+      {
+        "rel": [
+          "https://activities.api.brightspace.com/rels/evaluation",
+          "self"
+        ],
+        "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation"
+      }
+    ],
+    "https://activities.api.brightspace.com/rels/user-activity-usage": [
+      {
+        "rel": [
+          "https://activities.api.brightspace.com/rels/user-activity-usage"
+        ],
+        "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183"
+      }
+    ]
+  },
+  "_linksByClass": {},
+  "_linksByType": {},
+  "links": [
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/attachments"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/user_10183/evaluation/attachments"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/evaluation",
+        "self"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/user-activity-usage"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183"
+    }
+  ],
+  "_entitiesByRel": {
+    "grade": [
+      {
+        "rel": [
+          "grade"
+        ],
+        "properties": {
+          "outOf": 10,
+          "scoreType": "Numeric",
+          "score": "",
+          "letterGrade": null,
+          "letterGradeOptions": null
+        },
+        "class": [
+          "evaluation-entity"
+        ],
+        "_actionsByName": {
+          "SaveGrade": {
+            "name": "SaveGrade",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-grade"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "grade"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-grade"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "grade"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "grade"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-grade"
+              },
+              {
+                "type": "text",
+                "title": "grade",
+                "name": "value"
+              }
+            ]
+          }
+        },
+        "_actionsByClass": {
+          "update-grade": [
+            {
+              "name": "SaveGrade",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-grade"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "grade"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-grade"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "grade"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "grade"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-grade"
+                },
+                {
+                  "type": "text",
+                  "title": "grade",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "_actionsByMethod": {
+          "PATCH": [
+            {
+              "name": "SaveGrade",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-grade"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "grade"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-grade"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "grade"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "grade"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-grade"
+                },
+                {
+                  "type": "text",
+                  "title": "grade",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "_actionsByType": {
+          "application/x-www-form-urlencoded": [
+            {
+              "name": "SaveGrade",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-grade"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "grade"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-grade"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "grade"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "grade"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-grade"
+                },
+                {
+                  "type": "text",
+                  "title": "grade",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "actions": [
+          {
+            "name": "SaveGrade",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-grade"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "grade"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-grade"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "grade"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "grade"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-grade"
+              },
+              {
+                "type": "text",
+                "title": "grade",
+                "name": "value"
+              }
+            ]
+          }
+        ],
+        "_linksByRel": {},
+        "_linksByClass": {},
+        "_linksByType": {},
+        "_entitiesByRel": {},
+        "_entitiesByClass": {},
+        "_entitiesByType": {}
+      }
+    ],
+    "feedback": [
+      {
+        "rel": [
+          "feedback"
+        ],
+        "properties": {
+          "text": null,
+          "html": null
+        },
+        "class": [
+          "evaluation-entity"
+        ],
+        "_actionsByName": {
+          "SaveFeedback": {
+            "name": "SaveFeedback",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-feedback"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "feedback"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-feedback"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "feedback"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "feedback"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-feedback"
+              },
+              {
+                "type": "text",
+                "title": "feedback",
+                "name": "value"
+              }
+            ]
+          }
+        },
+        "_actionsByClass": {
+          "update-feedback": [
+            {
+              "name": "SaveFeedback",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-feedback"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "feedback"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-feedback"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "feedback"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "feedback"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-feedback"
+                },
+                {
+                  "type": "text",
+                  "title": "feedback",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "_actionsByMethod": {
+          "PATCH": [
+            {
+              "name": "SaveFeedback",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-feedback"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "feedback"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-feedback"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "feedback"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "feedback"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-feedback"
+                },
+                {
+                  "type": "text",
+                  "title": "feedback",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "_actionsByType": {
+          "application/x-www-form-urlencoded": [
+            {
+              "name": "SaveFeedback",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-feedback"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "feedback"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-feedback"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "feedback"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "feedback"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-feedback"
+                },
+                {
+                  "type": "text",
+                  "title": "feedback",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "actions": [
+          {
+            "name": "SaveFeedback",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-feedback"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "feedback"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-feedback"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "feedback"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "feedback"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-feedback"
+              },
+              {
+                "type": "text",
+                "title": "feedback",
+                "name": "value"
+              }
+            ]
+          }
+        ],
+        "_linksByRel": {},
+        "_linksByClass": {},
+        "_linksByType": {},
+        "_entitiesByRel": {},
+        "_entitiesByClass": {},
+        "_entitiesByType": {}
+      }
+    ]
+  },
+  "_entitiesByClass": {
+    "evaluation-entity": [
+      {
+        "rel": [
+          "grade"
+        ],
+        "properties": {
+          "outOf": 10,
+          "scoreType": "Numeric",
+          "score": "",
+          "letterGrade": null,
+          "letterGradeOptions": null
+        },
+        "class": [
+          "evaluation-entity"
+        ],
+        "_actionsByName": {
+          "SaveGrade": {
+            "name": "SaveGrade",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-grade"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "grade"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-grade"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "grade"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "grade"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-grade"
+              },
+              {
+                "type": "text",
+                "title": "grade",
+                "name": "value"
+              }
+            ]
+          }
+        },
+        "_actionsByClass": {
+          "update-grade": [
+            {
+              "name": "SaveGrade",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-grade"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "grade"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-grade"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "grade"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "grade"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-grade"
+                },
+                {
+                  "type": "text",
+                  "title": "grade",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "_actionsByMethod": {
+          "PATCH": [
+            {
+              "name": "SaveGrade",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-grade"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "grade"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-grade"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "grade"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "grade"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-grade"
+                },
+                {
+                  "type": "text",
+                  "title": "grade",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "_actionsByType": {
+          "application/x-www-form-urlencoded": [
+            {
+              "name": "SaveGrade",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-grade"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "grade"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-grade"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "grade"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "grade"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-grade"
+                },
+                {
+                  "type": "text",
+                  "title": "grade",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "actions": [
+          {
+            "name": "SaveGrade",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-grade"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "grade"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-grade"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "grade"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "grade"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-grade"
+              },
+              {
+                "type": "text",
+                "title": "grade",
+                "name": "value"
+              }
+            ]
+          }
+        ],
+        "_linksByRel": {},
+        "_linksByClass": {},
+        "_linksByType": {},
+        "_entitiesByRel": {},
+        "_entitiesByClass": {},
+        "_entitiesByType": {}
+      },
+      {
+        "rel": [
+          "feedback"
+        ],
+        "properties": {
+          "text": null,
+          "html": null
+        },
+        "class": [
+          "evaluation-entity"
+        ],
+        "_actionsByName": {
+          "SaveFeedback": {
+            "name": "SaveFeedback",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-feedback"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "feedback"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-feedback"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "feedback"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "feedback"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-feedback"
+              },
+              {
+                "type": "text",
+                "title": "feedback",
+                "name": "value"
+              }
+            ]
+          }
+        },
+        "_actionsByClass": {
+          "update-feedback": [
+            {
+              "name": "SaveFeedback",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-feedback"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "feedback"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-feedback"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "feedback"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "feedback"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-feedback"
+                },
+                {
+                  "type": "text",
+                  "title": "feedback",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "_actionsByMethod": {
+          "PATCH": [
+            {
+              "name": "SaveFeedback",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-feedback"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "feedback"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-feedback"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "feedback"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "feedback"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-feedback"
+                },
+                {
+                  "type": "text",
+                  "title": "feedback",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "_actionsByType": {
+          "application/x-www-form-urlencoded": [
+            {
+              "name": "SaveFeedback",
+              "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+              "class": [
+                "update-feedback"
+              ],
+              "method": "PATCH",
+              "type": "application/x-www-form-urlencoded",
+              "_fieldsByName": {
+                "provider": {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                "type": {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                },
+                "value": {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              },
+              "_fieldsByClass": {},
+              "_fieldsByType": {
+                "hidden": [
+                  {
+                    "name": "provider",
+                    "type": "hidden",
+                    "value": "feedback"
+                  },
+                  {
+                    "name": "type",
+                    "type": "hidden",
+                    "value": "add-feedback"
+                  }
+                ],
+                "text": [
+                  {
+                    "name": "value",
+                    "type": "text",
+                    "title": "feedback"
+                  }
+                ]
+              },
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "provider",
+                  "value": "feedback"
+                },
+                {
+                  "type": "hidden",
+                  "name": "type",
+                  "value": "add-feedback"
+                },
+                {
+                  "type": "text",
+                  "title": "feedback",
+                  "name": "value"
+                }
+              ]
+            }
+          ]
+        },
+        "actions": [
+          {
+            "name": "SaveFeedback",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-feedback"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "feedback"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-feedback"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "feedback"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "feedback"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-feedback"
+              },
+              {
+                "type": "text",
+                "title": "feedback",
+                "name": "value"
+              }
+            ]
+          }
+        ],
+        "_linksByRel": {},
+        "_linksByClass": {},
+        "_linksByType": {},
+        "_entitiesByRel": {},
+        "_entitiesByClass": {},
+        "_entitiesByType": {}
+      }
+    ]
+  },
+  "_entitiesByType": {},
+  "entities": [
+    {
+      "rel": [
+        "grade"
+      ],
+      "properties": {
+        "outOf": 10,
+        "scoreType": "Numeric",
+        "score": "",
+        "letterGrade": null,
+        "letterGradeOptions": null
+      },
+      "class": [
+        "evaluation-entity"
+      ],
+      "_actionsByName": {
+        "SaveGrade": {
+          "name": "SaveGrade",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+          "class": [
+            "update-grade"
+          ],
+          "method": "PATCH",
+          "type": "application/x-www-form-urlencoded",
+          "_fieldsByName": {
+            "provider": {
+              "name": "provider",
+              "type": "hidden",
+              "value": "grade"
+            },
+            "type": {
+              "name": "type",
+              "type": "hidden",
+              "value": "add-grade"
+            },
+            "value": {
+              "name": "value",
+              "type": "text",
+              "title": "grade"
+            }
+          },
+          "_fieldsByClass": {},
+          "_fieldsByType": {
+            "hidden": [
+              {
+                "name": "provider",
+                "type": "hidden",
+                "value": "grade"
+              },
+              {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-grade"
+              }
+            ],
+            "text": [
+              {
+                "name": "value",
+                "type": "text",
+                "title": "grade"
+              }
+            ]
+          },
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "provider",
+              "value": "grade"
+            },
+            {
+              "type": "hidden",
+              "name": "type",
+              "value": "add-grade"
+            },
+            {
+              "type": "text",
+              "title": "grade",
+              "name": "value"
+            }
+          ]
+        }
+      },
+      "_actionsByClass": {
+        "update-grade": [
+          {
+            "name": "SaveGrade",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-grade"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "grade"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-grade"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "grade"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "grade"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-grade"
+              },
+              {
+                "type": "text",
+                "title": "grade",
+                "name": "value"
+              }
+            ]
+          }
+        ]
+      },
+      "_actionsByMethod": {
+        "PATCH": [
+          {
+            "name": "SaveGrade",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-grade"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "grade"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-grade"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "grade"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "grade"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-grade"
+              },
+              {
+                "type": "text",
+                "title": "grade",
+                "name": "value"
+              }
+            ]
+          }
+        ]
+      },
+      "_actionsByType": {
+        "application/x-www-form-urlencoded": [
+          {
+            "name": "SaveGrade",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-grade"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "grade"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-grade"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "grade"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "grade"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-grade"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "grade"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "grade"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-grade"
+              },
+              {
+                "type": "text",
+                "title": "grade",
+                "name": "value"
+              }
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "SaveGrade",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+          "class": [
+            "update-grade"
+          ],
+          "method": "PATCH",
+          "type": "application/x-www-form-urlencoded",
+          "_fieldsByName": {
+            "provider": {
+              "name": "provider",
+              "type": "hidden",
+              "value": "grade"
+            },
+            "type": {
+              "name": "type",
+              "type": "hidden",
+              "value": "add-grade"
+            },
+            "value": {
+              "name": "value",
+              "type": "text",
+              "title": "grade"
+            }
+          },
+          "_fieldsByClass": {},
+          "_fieldsByType": {
+            "hidden": [
+              {
+                "name": "provider",
+                "type": "hidden",
+                "value": "grade"
+              },
+              {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-grade"
+              }
+            ],
+            "text": [
+              {
+                "name": "value",
+                "type": "text",
+                "title": "grade"
+              }
+            ]
+          },
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "provider",
+              "value": "grade"
+            },
+            {
+              "type": "hidden",
+              "name": "type",
+              "value": "add-grade"
+            },
+            {
+              "type": "text",
+              "title": "grade",
+              "name": "value"
+            }
+          ]
+        }
+      ],
+      "_linksByRel": {},
+      "_linksByClass": {},
+      "_linksByType": {},
+      "_entitiesByRel": {},
+      "_entitiesByClass": {},
+      "_entitiesByType": {}
+    },
+    {
+      "rel": [
+        "feedback"
+      ],
+      "properties": {
+        "text": null,
+        "html": null
+      },
+      "class": [
+        "evaluation-entity"
+      ],
+      "_actionsByName": {
+        "SaveFeedback": {
+          "name": "SaveFeedback",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+          "class": [
+            "update-feedback"
+          ],
+          "method": "PATCH",
+          "type": "application/x-www-form-urlencoded",
+          "_fieldsByName": {
+            "provider": {
+              "name": "provider",
+              "type": "hidden",
+              "value": "feedback"
+            },
+            "type": {
+              "name": "type",
+              "type": "hidden",
+              "value": "add-feedback"
+            },
+            "value": {
+              "name": "value",
+              "type": "text",
+              "title": "feedback"
+            }
+          },
+          "_fieldsByClass": {},
+          "_fieldsByType": {
+            "hidden": [
+              {
+                "name": "provider",
+                "type": "hidden",
+                "value": "feedback"
+              },
+              {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-feedback"
+              }
+            ],
+            "text": [
+              {
+                "name": "value",
+                "type": "text",
+                "title": "feedback"
+              }
+            ]
+          },
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "provider",
+              "value": "feedback"
+            },
+            {
+              "type": "hidden",
+              "name": "type",
+              "value": "add-feedback"
+            },
+            {
+              "type": "text",
+              "title": "feedback",
+              "name": "value"
+            }
+          ]
+        }
+      },
+      "_actionsByClass": {
+        "update-feedback": [
+          {
+            "name": "SaveFeedback",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-feedback"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "feedback"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-feedback"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "feedback"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "feedback"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-feedback"
+              },
+              {
+                "type": "text",
+                "title": "feedback",
+                "name": "value"
+              }
+            ]
+          }
+        ]
+      },
+      "_actionsByMethod": {
+        "PATCH": [
+          {
+            "name": "SaveFeedback",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-feedback"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "feedback"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-feedback"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "feedback"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "feedback"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-feedback"
+              },
+              {
+                "type": "text",
+                "title": "feedback",
+                "name": "value"
+              }
+            ]
+          }
+        ]
+      },
+      "_actionsByType": {
+        "application/x-www-form-urlencoded": [
+          {
+            "name": "SaveFeedback",
+            "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+            "class": [
+              "update-feedback"
+            ],
+            "method": "PATCH",
+            "type": "application/x-www-form-urlencoded",
+            "_fieldsByName": {
+              "provider": {
+                "name": "provider",
+                "type": "hidden",
+                "value": "feedback"
+              },
+              "type": {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-feedback"
+              },
+              "value": {
+                "name": "value",
+                "type": "text",
+                "title": "feedback"
+              }
+            },
+            "_fieldsByClass": {},
+            "_fieldsByType": {
+              "hidden": [
+                {
+                  "name": "provider",
+                  "type": "hidden",
+                  "value": "feedback"
+                },
+                {
+                  "name": "type",
+                  "type": "hidden",
+                  "value": "add-feedback"
+                }
+              ],
+              "text": [
+                {
+                  "name": "value",
+                  "type": "text",
+                  "title": "feedback"
+                }
+              ]
+            },
+            "fields": [
+              {
+                "type": "hidden",
+                "name": "provider",
+                "value": "feedback"
+              },
+              {
+                "type": "hidden",
+                "name": "type",
+                "value": "add-feedback"
+              },
+              {
+                "type": "text",
+                "title": "feedback",
+                "name": "value"
+              }
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "SaveFeedback",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+          "class": [
+            "update-feedback"
+          ],
+          "method": "PATCH",
+          "type": "application/x-www-form-urlencoded",
+          "_fieldsByName": {
+            "provider": {
+              "name": "provider",
+              "type": "hidden",
+              "value": "feedback"
+            },
+            "type": {
+              "name": "type",
+              "type": "hidden",
+              "value": "add-feedback"
+            },
+            "value": {
+              "name": "value",
+              "type": "text",
+              "title": "feedback"
+            }
+          },
+          "_fieldsByClass": {},
+          "_fieldsByType": {
+            "hidden": [
+              {
+                "name": "provider",
+                "type": "hidden",
+                "value": "feedback"
+              },
+              {
+                "name": "type",
+                "type": "hidden",
+                "value": "add-feedback"
+              }
+            ],
+            "text": [
+              {
+                "name": "value",
+                "type": "text",
+                "title": "feedback"
+              }
+            ]
+          },
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "provider",
+              "value": "feedback"
+            },
+            {
+              "type": "hidden",
+              "name": "type",
+              "value": "add-feedback"
+            },
+            {
+              "type": "text",
+              "title": "feedback",
+              "name": "value"
+            }
+          ]
+        }
+      ],
+      "_linksByRel": {},
+      "_linksByClass": {},
+      "_linksByType": {},
+      "_entitiesByRel": {},
+      "_entitiesByClass": {},
+      "_entitiesByType": {}
+    }
+  ]
+}

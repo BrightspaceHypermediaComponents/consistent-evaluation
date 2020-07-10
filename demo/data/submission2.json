@@ -1,0 +1,79 @@
+{
+  "class": [
+    "assignment-submission"
+  ],
+  "entities": [
+    {
+      "class": [
+        "attachment-list"
+      ],
+      "rel": [
+        "https://assignments.api.brightspace.com/rels/attachment-list"
+      ],
+      "entities": [
+        {
+          "class": [
+            "attachment"
+          ],
+          "rel": [
+            "https://assignments.api.brightspace.com/rels/attachment"
+          ],
+          "properties": {
+            "name": "Test doc.pdf",
+            "size": 124499,
+            "flagged": true,
+            "read": true,
+            "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/common/viewFile.d2lfile/Database/ODM/Test%20doc.pdf?ou=6609",
+            "annotationsViewer": "//s.brightspace.com/apps/annotations-viewer/1.13.1/index.html?dropboxId=1&entityId=10183&fileId=83&submissionId=6&ou=6609&host=http://wvd-cc-dev-016.desire2learn.d2l:44444"
+          },
+          "links": [
+            {
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.12/6609/dropbox/folders/1/submissions/6/files/83"
+            },
+            {
+              "class": [
+                "annotated"
+              ],
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.31/6609/dropbox/folders/1/entities/10183/submissions/6/files/83/annotatedpdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "class": [
+        "date",
+        "submission-date"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/date"
+      ],
+      "properties": {
+        "date": "2020-06-18T21:41:06.593Z"
+      }
+    },
+    {
+      "class": [
+        "richtext",
+        "submission-comment",
+        "annotated"
+      ],
+      "rel": [
+        "item",
+        "https://assignments.api.brightspace.com/rels/submission-comment"
+      ],
+      "properties": {
+        "text": "",
+        "html": ""
+      }
+    }
+  ]
+}

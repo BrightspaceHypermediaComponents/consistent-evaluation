@@ -1,0 +1,127 @@
+{
+  "class": [
+    "evaluation"
+  ],
+  "properties": {
+    "state": "Unevaluated"
+  },
+  "entities": [
+    {
+      "class": [
+        "evaluation-entity"
+      ],
+      "rel": [
+        "grade"
+      ],
+      "properties": {
+        "outOf": 10.000000000,
+        "scoreType": "Numeric",
+        "score": "",
+        "letterGrade": null,
+        "letterGradeOptions": null
+      },
+      "actions": [
+        {
+          "class": [
+            "update-grade"
+          ],
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+          "name": "SaveGrade",
+          "method": "PATCH",
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "provider",
+              "value": "grade"
+            },
+            {
+              "type": "hidden",
+              "name": "type",
+              "value": "add-grade"
+            },
+            {
+              "type": "text",
+              "title": "grade",
+              "name": "value"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "class": [
+        "evaluation-entity"
+      ],
+      "rel": [
+        "feedback"
+      ],
+      "properties": {
+        "text": null,
+        "html": null
+      },
+      "actions": [
+        {
+          "class": [
+            "update-feedback"
+          ],
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation",
+          "name": "SaveFeedback",
+          "method": "PATCH",
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "provider",
+              "value": "feedback"
+            },
+            {
+              "type": "hidden",
+              "name": "type",
+              "value": "add-feedback"
+            },
+            {
+              "type": "text",
+              "title": "feedback",
+              "name": "value"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/attachments"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/user_10183/evaluation/attachments"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/evaluation",
+        "self"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/user-activity-usage"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183"
+    }
+  ],
+  "actions": [
+    {
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation?action=publish",
+      "name": "publish",
+      "method": "PUT"
+    },
+    {
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_1/usages/6609/users/10183/evaluation?action=save-draft",
+      "name": "save-draft",
+      "method": "PUT"
+    }
+  ],
+  "rel": [
+    "https://assignments.api.brightspace.com/rels/evaluation"
+  ]
+}

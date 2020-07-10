@@ -8,6 +8,15 @@
 			import '@brightspace-ui/core/components/typography/styles.js';
 			import '@brightspace-ui/core/components/typography/typography.js';
 			import '../components/consistent-evaluation.js';
+			import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
+			import SirenParse from 'siren-parser';
+			fetch('data/grade/evaluationEntity.json').then(response => response.json()).then(entity => {
+				const parsedEntity = SirenParse(entity);
+				const grade = new Grade(GradeType.Number, 47, 100, null, null, parsedEntity);
+				const panels = document.getElementsByTagName('consistent-evaluation-right-panel');
+				for (let i = 0; i < panels.length; i++) {
+					panels[i].grade = grade;
+				}});
 		</script>
 		<title>d2l-consistent-evaluation</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,10 +29,10 @@
 			<h2>Default right panel</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubricHref="data/rubric.json"
-					rubricAssessmentHref="data/assessment.json"
-					outcomesHref="data/outcomes/suggested-level.json"
-					gradeHref="data/grade/grade.json"
+					rubric-href="data/rubric.json"
+					rubric-assessment-href="data/assessment.json"
+					outcomes-href="data/outcomes/suggested-level.json"
+					feedback-text=""
 					token="token"
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
@@ -31,87 +40,87 @@
 			<h2>Rubric Read only</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubricHref="data/rubric.json"
-					rubricAssessmentHref="data/assessment.json"
-					outcomesHref="data/outcomes/suggested-level.json"
-					gradeHref="data/grade/grade.json"
+					rubric-href="data/rubric.json"
+					rubric-assessment-href="data/assessment.json"
+					outcomes-href="data/outcomes/suggested-level.json"
+					feedback-text=""
 					token="token"
-					rubricReadOnly
+					rubric-read-only
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
 
 			<h2>Rich Text Editor Disabled</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubricHref="data/rubric.json"
-					rubricAssessmentHref="data/assessment.json"
-					outcomesHref="data/outcomes/suggested-level.json"
-					gradeHref="data/grade/grade.json"
+					rubric-href="data/rubric.json"
+					rubric-assessment-href="data/assessment.json"
+					outcomes-href="data/outcomes/suggested-level.json"
+					feedback-text=""
 					token="token"
-					richTextEditorDisabled
+					rich-text-editor-disabled
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
 
 			<h2>Hiding the Rubric</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubricHref="data/rubric.json"
-					rubricAssessmentHref="data/assessment.json"
-					outcomesHref="data/outcomes/suggested-level.json"
-					gradeHref="data/grade/grade.json"
+					rubric-href="data/rubric.json"
+					rubric-assessment-href="data/assessment.json"
+					outcomes-href="data/outcomes/suggested-level.json"
+					feedback-text=""
 					token="token"
-					hideRubric
+					hide-rubric
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
 
 			<h2>Hiding the Grade</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubricHref="data/rubric.json"
-					rubricAssessmentHref="data/assessment.json"
-					outcomesHref="data/outcomes/suggested-level.json"
-					gradeHref="data/grade/grade.json"
+					rubric-href="data/rubric.json"
+					rubric-assessment-href="data/assessment.json"
+					outcomes-href="data/outcomes/suggested-level.json"
+					feedback-text=""
 					token="token"
-					hideGrade
+					hide-grade
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
 
 			<h2>Hiding the Feedback</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubricHref="data/rubric.json"
-					rubricAssessmentHref="data/assessment.json"
-					outcomesHref="data/outcomes/suggested-level.json"
-					gradeHref="data/grade/grade.json"
+					rubric-href="data/rubric.json"
+					rubric-assessment-href="data/assessment.json"
+					outcomes-href="data/outcomes/suggested-level.json"
+					feedback-text=""
 					token="token"
-					hideFeedback
+					hide-feedback
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
 
 			<h2>Hiding the Outcomes</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubricHref="data/rubric.json"
-					rubricAssessmentHref="data/assessment.json"
-					outcomesHref="data/outcomes/suggested-level.json"
-					gradeHref="data/grade/grade.json"
+					rubric-href="data/rubric.json"
+					rubric-assessment-href="data/assessment.json"
+					outcomes-href="data/outcomes/suggested-level.json"
+					feedback-text=""
 					token="token"
-					hideOutcomes
+					hide-outcomes
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
 
 			<h2>Hiding Everything</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubricHref="data/rubric.json"
-					rubricAssessmentHref="data/assessment.json"
-					outcomesHref="data/outcomes/suggested-level.json"
-					gradeHref="data/grade/grade.json"
+					rubric-href="data/rubric.json"
+					rubric-assessment-href="data/assessment.json"
+					outcomes-href="data/outcomes/suggested-level.json"
+					feedback-text=""
 					token="token"
-					hideRubric
-					hideGrade
-					hideFeedback
-					hideOutcomes
+					hide-rubric
+					hide-grade
+					hide-feedback
+					hide-outcomes
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
 

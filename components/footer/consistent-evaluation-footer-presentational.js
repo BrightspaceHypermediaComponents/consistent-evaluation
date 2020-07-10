@@ -7,8 +7,13 @@ import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin.js';
 export class ConsistentEvaluationFooterPresentational extends LocalizeMixin(LitElement) {
 	static get properties() {
 		return {
-			published: { type: Boolean },
-			showNextStudent: { type: Boolean }
+			published: {
+				type: Boolean
+			},
+			showNextStudent: {
+				attribute: 'show-next-student',
+				type: Boolean
+			}
 		};
 	}
 	static get styles() {

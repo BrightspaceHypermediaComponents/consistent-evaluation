@@ -12,12 +12,14 @@ class ConsistentEvaluationRubric extends LitElement {
 				type: String
 			},
 			assessmentHref: {
+				attribute: 'assessment-href',
 				type: String
 			},
 			token: {
 				type: String
 			},
 			readonly: {
+				attribute: 'read-only',
 				type: Boolean
 			}
 		};

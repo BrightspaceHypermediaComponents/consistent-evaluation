@@ -4,6 +4,9 @@ export const val = {
 	addLink: 'Attach Weblink',
 	addOneDriveLink: 'Attach from OneDrive',
 	addQuicklink: 'Attach Link to Existing Activity',
+	comments: 'Comments',
+	flagged: 'Flagged',
+	late: 'Late',
 	retract: 'Retract',
 	recordAudio: 'Record Audio',
 	recordVideo: 'Record Video',
@@ -13,8 +16,10 @@ export const val = {
 	overallFeedback: 'Overall Feedback',
 	publish: 'Publish',
 	saveDraft: 'Save Draft',
+	submission: 'Submission',
+	textSubmission: 'Text Submission',
 	update: 'Update',
-	kB: ' kB',
+	kB: ' KB',
 	MB: ' MB',
 	GB: ' GB'
 };

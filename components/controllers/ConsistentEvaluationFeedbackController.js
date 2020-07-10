@@ -1,6 +1,4 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { saveFeedbackActionName, saveFeedbackFieldName } from './constants.js';
-import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 
 export const FeedbackControllerErrors = {
 	INVALID_BASE_HREF: 'baseHref was not defined when initializing FeedbackController',
@@ -35,36 +33,16 @@ export class ConsistentEvaluationFeedbackController {
 		this.baseHref = baseHref;
 		this.token = token;
 	}
-	async requestFeedback() {
+
+	async requestFeedbackEntity() {
 		const response = await window.D2L.Siren.EntityStore.fetch(this.baseHref, this.token);
+
 		if (!response) {
 			throw new Error(FeedbackControllerErrors.REQUEST_FAILED);
 		}
 		if (!response.entity) {
 			throw new Error(FeedbackControllerErrors.ENTITY_NOT_FOUND_REQUEST_FEEDBACK);
 		}
-		return response.entity;
-	}
-	async updateFeedbackText(feedbackText, entity) {
-		if (typeof feedbackText !== 'string') {
-			throw new Error(FeedbackControllerErrors.INVALID_FEEDBACK_TEXT);
-		}
-		if (!entity) {
-			throw new Error(FeedbackControllerErrors.FEEDBACK_MUST_HAVE_ENTITY);
-		}
-		if (!entity.hasActionByName(saveFeedbackActionName)) {
-			throw new Error(FeedbackControllerErrors.NO_SAVE_FEEDBACK_ACTION);
-		}
-
-		const saveFeedbackAction = entity.getActionByName(saveFeedbackActionName);
-
-		if (!saveFeedbackAction.hasFieldByName(saveFeedbackFieldName)) {
-			throw new Error(FeedbackControllerErrors.FIELD_IN_ACTION_NOT_FOUND(saveFeedbackAction.name, saveFeedbackFieldName));
-		}
-
-		const field = saveFeedbackAction.getFieldByName(saveFeedbackFieldName);
-		field.value = feedbackText;
-
-		return await performSirenAction(this.token, saveFeedbackAction, [field], true);
+		return response.entity.getSubEntityByRel('feedback');
 	}
 }

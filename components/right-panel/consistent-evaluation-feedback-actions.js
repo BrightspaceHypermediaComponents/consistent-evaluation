@@ -10,13 +10,34 @@ class FeedbackActions extends LocalizeMixin(LitElement) {
 
 	static get properties() {
 		return {
-			canAddFile: { type: Boolean },
-			canAddLink: { type: Boolean },
-			canAddGoogleDriveLink: { type: Boolean },
-			canAddOneDriveLink: { type: Boolean },
-			canRecordAudio: { type: Boolean },
-			canRecordVideo: { type: Boolean },
-			showAll: { type: Boolean }
+			canAddFile: {
+				attribute: 'can-add-file',
+				type: Boolean
+			},
+			canAddLink: {
+				attribute: 'can-add-link',
+				type: Boolean
+			},
+			canAddGoogleDriveLink: {
+				attribute: 'can-add-google-drive-link',
+				type: Boolean
+			},
+			canAddOneDriveLink: {
+				attribute: 'can-add-one-drive-link',
+				type: Boolean
+			},
+			canRecordAudio: {
+				attribute: 'can-record-audio',
+				type: Boolean
+			},
+			canRecordVideo: {
+				attribute: 'can-record-video',
+				type: Boolean
+			},
+			showAll: {
+				attribute: 'show-all',
+				type: Boolean
+			}
 		};
 	}
 
