@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@adobe/lit-mobx": "0.0.x",
-    "@brightspace-ui-labs/grade-result": "^1.0.5",
+    "@brightspace-ui-labs/grade-result": "^1.0.16",
     "@brightspace-ui/core": "^1.36.0",
     "@webcomponents/webcomponentsjs": "^2",
     "d2l-activities": "github:BrightspaceHypermediaComponents/activities#semver:^3",
