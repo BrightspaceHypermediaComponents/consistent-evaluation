@@ -7,7 +7,7 @@
 			import '@brightspace-ui/core/components/demo/demo-page.js';
 			import '@brightspace-ui/core/components/typography/styles.js';
 			import '@brightspace-ui/core/components/typography/typography.js';
-			import '../components/right-panel/consistent-evaluation-feedback.js';
+			import '../components/right-panel/consistent-evaluation-feedback-presentational.js';
 		</script>
 		<title>d2l-consistent-html-editor</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,13 +15,13 @@
 		<meta charset="UTF-8">
 	</head>
 	<body class="d2l-typography">
-		<d2l-demo-page page-title="consistent-evaluation-feedback">
+		<d2l-demo-page page-title="consistent-evaluation-feedback-presentational">
 
 			<d2l-demo-snippet>
-				<d2l-consistent-evaluation-feedback
-					href=""
-					token=""
-				></d2l-consistent-evaluation-feedback>
+				<d2l-consistent-evaluation-feedback-presentational
+					can-edit-feedback
+					feedback-text="This is where you can add feedback!"
+				></d2l-consistent-evaluation-feedback-presentational>
 			</d2l-demo-snippet>
 
 		</d2l-demo-page>

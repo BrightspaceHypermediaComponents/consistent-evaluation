@@ -49,13 +49,13 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 
 		this._debounceJobs.feedback = Debouncer.debounce(
 			this._debounceJobs.feedback,
-			timeOut.after(500),
+			timeOut.after(800),
 			() => this._emitFeedbackEditEvent(feedback)
 		);
 	}
 
 	_emitFeedbackEditEvent(feedback) {
-		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-on-feedback-edit', {
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-edit', {
 			composed: true,
 			bubbles: true,
 			detail: feedback
@@ -68,6 +68,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 				<d2l-activity-text-editor
 					.value="${this.feedbackText}"
 					.richtextEditorConfig="${this.richTextEditorConfig}"
+					@d2l-activity-text-editor-change="${this._saveOnFeedbackChange}"
 					ariaLabel="${this.localize('overallFeedback')}"
 					?disabled="${!this.canEditFeedback}">
 				</d2l-activity-text-editor>

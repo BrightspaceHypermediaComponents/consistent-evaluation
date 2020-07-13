@@ -81,20 +81,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 		this.hideOutcomes = false;
 	}
 
-	async _transientSaveFeedback(e) {
-		this._emitTransientSaveEvent('on-d2l-consistent-eval-transient-save-feedback', e.detail);
-	}
-
-	async _transientSaveGrade(e) {
-		const type = e.detail.grade.scoreType;
-		if (type === 'LetterGrade') {
-			this._emitTransientSaveEvent('on-d2l-consistent-eval-transient-save-grade', e.detail.grade.letterGrade);
-		}
-		else if (type === 'Numeric') {
-			this._emitTransientSaveEvent('on-d2l-consistent-eval-transient-save-grade', e.detail.grade.score);
-		}
-	}
-
 	_emitTransientSaveEvent(eventName, newValue) {
 		this.dispatchEvent(new CustomEvent(eventName, {
 			composed: true,
@@ -124,7 +110,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 			return html`
 				<d2l-consistent-evaluation-grade-result
 					.grade=${this.grade}
-					@on-d2l-consistent-eval-grade-changed=${this._transientSaveGrade}
 				></d2l-consistent-evaluation-grade-result>
 			`;
 		}
@@ -139,7 +124,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 					can-edit-feedback
 					feedback-text=${this.feedbackText}
 					.rich-text-editor-config=${this._richTextEditorConfig}
-					@d2l-consistent-eval-on-feedback-edit=${this._transientSaveFeedback}
 				></d2l-consistent-evaluation-feedback-presentational>
 			`;
 		}

@@ -188,7 +188,14 @@ export default class ConsistentEvaluationPage extends LitElement {
 	}
 
 	async _transientSaveGrade(e) {
-		const newGradeVal = e.detail;
+		let newGradeVal;
+		const type = e.detail.grade.scoreType;
+		if (type === GradeType.Letter) {
+			newGradeVal = e.detail.grade.letterGrade;
+		}
+		else if (type === GradeType.Number) {
+			newGradeVal = e.detail.grade.score;
+		}
 		this.evaluationEntity = await this._controller.transientSaveGrade(this.evaluationEntity, newGradeVal);
 	}
 
@@ -240,8 +247,8 @@ export default class ConsistentEvaluationPage extends LitElement {
 						?hide-grade=${this._noGradeComponent()}
 						?hide-outcomes=${this.outcomesHref === undefined}
 						?hide-feedback=${this._noFeedbackComponent()}
-						@on-d2l-consistent-eval-transient-save-feedback=${this._transientSaveFeedback}
-						@on-d2l-consistent-eval-transient-save-grade=${this._transientSaveGrade}
+						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
+						@on-d2l-consistent-eval-grade-changed=${this._transientSaveGrade}
 					></consistent-evaluation-right-panel>
 				</div>
 				<div slot="footer">
