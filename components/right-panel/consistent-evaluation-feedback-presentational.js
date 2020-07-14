@@ -22,7 +22,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 				type: String
 			},
 			richTextEditorConfig: {
-				attribute: 'rich-text-editor-config',
+				attribute: false,
 				type: Object
 			},
 			token: {

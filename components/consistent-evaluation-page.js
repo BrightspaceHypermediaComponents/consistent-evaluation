@@ -1,4 +1,3 @@
-import './footer/consistent-evaluation-footer.js';
 import './right-panel/consistent-evaluation-right-panel.js';
 import './left-panel/consistent-evaluation-submissions-page.js';
 import '@brightspace-ui/core/components/inputs/input-text.js';

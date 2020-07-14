@@ -37,7 +37,7 @@ export class ConsistentEvaluationSubmissionItem extends LocalizeMixin(LitElement
 				type: Boolean
 			},
 			submissionEntity : {
-				attribute: 'submission-entity',
+				attribute: false,
 				type: Object
 			},
 			submissionType: {

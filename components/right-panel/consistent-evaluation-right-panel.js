@@ -81,14 +81,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 		this.hideOutcomes = false;
 	}
 
-	_emitTransientSaveEvent(eventName, newValue) {
-		this.dispatchEvent(new CustomEvent(eventName, {
-			composed: true,
-			bubbles: true,
-			detail: newValue
-		}));
-	}
-
 	_renderRubric() {
 		if (!this.hideRubric) {
 			return html`
@@ -123,7 +115,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 				<d2l-consistent-evaluation-feedback-presentational
 					can-edit-feedback
 					feedback-text=${this.feedbackText}
-					.rich-text-editor-config=${this._richTextEditorConfig}
+					.richTextEditorConfig=${this._richTextEditorConfig}
 				></d2l-consistent-evaluation-feedback-presentational>
 			`;
 		}
