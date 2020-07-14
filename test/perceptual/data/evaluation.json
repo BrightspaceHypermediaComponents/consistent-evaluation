@@ -159,9 +159,9 @@
           "grade"
         ],
         "properties": {
-          "outOf": 10,
+          "outOf": 100,
           "scoreType": "Numeric",
-          "score": "",
+          "score": 47,
           "letterGrade": null,
           "letterGradeOptions": null
         },
@@ -523,8 +523,8 @@
           "feedback"
         ],
         "properties": {
-          "text": null,
-          "html": null
+          "text": "some feedback",
+          "html": "<p>some feedback</p>"
         },
         "class": [
           "evaluation-entity"
@@ -886,9 +886,9 @@
           "grade"
         ],
         "properties": {
-          "outOf": 10,
+          "outOf": 100,
           "scoreType": "Numeric",
-          "score": "",
+          "score": 47,
           "letterGrade": null,
           "letterGradeOptions": null
         },
@@ -1248,8 +1248,8 @@
           "feedback"
         ],
         "properties": {
-          "text": null,
-          "html": null
+          "text": "some feedback",
+          "html": "<p>some feedback</p>"
         },
         "class": [
           "evaluation-entity"
@@ -1611,9 +1611,9 @@
         "grade"
       ],
       "properties": {
-        "outOf": 10,
+        "outOf": 100,
         "scoreType": "Numeric",
-        "score": "",
+        "score": 47,
         "letterGrade": null,
         "letterGradeOptions": null
       },
@@ -1973,8 +1973,8 @@
         "feedback"
       ],
       "properties": {
-        "text": null,
-        "html": null
+        "text": "some feedback",
+        "html": "<p>some feedback</p>"
       },
       "class": [
         "evaluation-entity"

@@ -48,7 +48,7 @@ describe('d2l-consistent-evaluation', () => {
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it.skip('hiding-outcomes', async function() {
+	it('hiding-outcomes', async function() {
 		const rect = await visualDiff.getRect(page, '#hiding-outcomes');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
