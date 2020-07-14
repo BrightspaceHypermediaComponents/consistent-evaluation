@@ -138,7 +138,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 				<d2l-consistent-evaluation-feedback-presentational
 					can-edit-feedback
 					feedback-text=${this.feedbackText}
-					.rich-text-editor-config=${this._richTextEditorConfig}
+					.richTextEditorConfig=${this._richTextEditorConfig}
 					@d2l-consistent-eval-on-feedback-edit=${this._transientSaveFeedback}
 				></d2l-consistent-evaluation-feedback-presentational>
 			`;
