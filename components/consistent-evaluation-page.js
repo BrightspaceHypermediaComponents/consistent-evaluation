@@ -183,11 +183,13 @@ export default class ConsistentEvaluationPage extends LitElement {
 	}
 
 	async _transientSaveFeedback(e) {
+		const entity = await this._controller.fetchEvaluationEntity(false);
 		const newFeedbackVal = e.detail;
-		this.evaluationEntity = await this._controller.transientSaveFeedback(this.evaluationEntity, newFeedbackVal);
+		this.evaluationEntity = await this._controller.transientSaveFeedback(entity, newFeedbackVal);
 	}
 
 	async _transientSaveGrade(e) {
+    const entity = await this._controller.fetchEvaluationEntity(false);
 		let newGradeVal;
 		const type = e.detail.grade.scoreType;
 		if (type === GradeType.Letter) {
@@ -196,27 +198,31 @@ export default class ConsistentEvaluationPage extends LitElement {
 		else if (type === GradeType.Number) {
 			newGradeVal = e.detail.grade.score;
 		}
-		this.evaluationEntity = await this._controller.transientSaveGrade(this.evaluationEntity, newGradeVal);
+		this.evaluationEntity = await this._controller.transientSaveGrade(entity, newGradeVal);
 	}
 
 	async _saveEvaluation() {
-		this.evaluationEntity = await this._controller.save(this.evaluationEntity);
+		const entity = await this._controller.fetchEvaluationEntity(false);
+		this.evaluationEntity = await this._controller.save(entity);
 		this.evaluationState = this.evaluationEntity.properties.state;
 	}
 
 	async _updateEvaluation() {
-		this.evaluationEntity = await this._controller.update(this.evaluationEntity);
+		const entity = await this._controller.fetchEvaluationEntity(false);
+		this.evaluationEntity = await this._controller.update(entity);
 		this.evaluationState = this.evaluationEntity.properties.state;
 	}
 
 	async _publishEvaluation() {
-		this.evaluationEntity = await this._controller.publish(this.evaluationEntity);
+		const entity = await this._controller.fetchEvaluationEntity(false);
+		this.evaluationEntity = await this._controller.publish(entity);
 		this.evaluationState = this.evaluationEntity.properties.state;
 		this.submissionInfo.evaluationState = publishedState;
 	}
 
 	async _retractEvaluation() {
-		this.evaluationEntity = await this._controller.retract(this.evaluationEntity);
+		const entity = await this._controller.fetchEvaluationEntity(false);
+		this.evaluationEntity = await this._controller.retract(entity);
 		this.evaluationState = this.evaluationEntity.properties.state;
 		this.submissionInfo.evaluationState = draftState;
 	}
@@ -235,6 +241,7 @@ export default class ConsistentEvaluationPage extends LitElement {
 				</div>
 				<div slot="secondary">
 					<consistent-evaluation-right-panel
+						evaluation-href=${this.evaluationHref}
 						feedback-text=${this._feedbackText}
 						rubric-href=${ifDefined(this.rubricHref)}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}

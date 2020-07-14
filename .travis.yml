@@ -16,13 +16,6 @@ jobs:
         echo "Not a pull request and/or no secure environment variables, running headless tests...";
         npm run test:headless || travis_terminate 1;
       fi
-  - stage: Visual-difference-tests
-    script:
-    - |
-      if [ $TRAVIS_SECURE_ENV_VARS == true ]; then
-        echo "Running visual difference tests...";
-        npm run test:diff || travis_terminate 1;
-      fi
   - stage: update-version
     script: frauci-update-version && export TRAVIS_TAG=$(frauci-get-version)
 

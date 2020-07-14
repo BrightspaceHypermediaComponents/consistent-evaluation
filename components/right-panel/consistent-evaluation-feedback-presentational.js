@@ -1,5 +1,6 @@
 import 'd2l-activities/components/d2l-activity-editor/d2l-activity-text-editor.js';
 import 'd2l-activities/components/d2l-activity-editor/d2l-activity-attachments/d2l-activity-attachments-editor.js';
+import 'd2l-activities/components/d2l-activity-editor/d2l-activity-attachments/d2l-activity-attachments-list.js';
 import './consistent-evaluation-right-panel-block';
 import { html, LitElement } from 'lit-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
@@ -61,9 +62,12 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 			detail: feedback
 		}));
 	}
-
+	async saveAttachment() {
+		this.shadowRoot.querySelector('d2l-activity-attachments-editor').save();
+	}
 	render() {
-		return html`
+		if (this.href && this.token) {
+			return html`
 			<d2l-consistent-evaluation-right-panel-block title="${this.localize('overallFeedback')}">
 				<d2l-activity-text-editor
 					.value="${this.feedbackText}"
@@ -73,14 +77,19 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 					?disabled="${!this.canEditFeedback}">
 				</d2l-activity-text-editor>
 
-				<div ?hidden="${!this.href}">
+				<div>
 					<d2l-activity-attachments-editor
-						href="${this.href}"
-						.token="${this.token}">
+						.href="${this.href}/attachments"
+						.token="${this.token}"
+						@d2l-activity-attachments-picker-files-uploaded="${this.saveAttachment}"
+						@d2l-attachment-removed="${this.saveAttachment}">
 					</d2l-activity-attachments-editor>
 				</div>
 			</d2l-consistent-evaluation-right-panel-block>
 		`;
+		} else {
+			return html``;
+		}
 	}
 }
 

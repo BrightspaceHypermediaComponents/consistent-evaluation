@@ -83,7 +83,7 @@ class FeedbackActions extends LocalizeMixin(LitElement) {
 
 	constructor() {
 		super();
-
+		this.showAll = true;
 		this._tooltipBoundary = {
 			left: 32, // padding-left applied to d2l-consistent-evaluation-feedback-actions + padding-left of d2l-button-icon
 			right: 0
