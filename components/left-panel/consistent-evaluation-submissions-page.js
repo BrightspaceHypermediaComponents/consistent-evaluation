@@ -18,6 +18,7 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 				type: String
 			},
 			submissionList: {
+				attribute: false,
 				type: Array
 			},
 			submissionType: {
