@@ -260,7 +260,7 @@ export class ConsistentEvaluationSubmissionItem extends LocalizeMixin(LitElement
 				<d2l-list-item>
 				<d2l-list-item-content>
 					${this._renderCommentTitle()}
-					<div slot="secondary">
+					<div slot="supporting-info">
 						<d2l-more-less height=${peekHeight}>${unsafeHTML(this._comment)}</d2l-more-less>
 					</div>
 				</d2l-list-item-content>
