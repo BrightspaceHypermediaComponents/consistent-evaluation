@@ -30,7 +30,7 @@ export default class ConsistentEvaluationPage extends LitElement {
 				type: Boolean
 			},
 			richtextEditorConfig: {
-				attribute: 'rich-text-editor-config',
+				attribute: false,
 				type: Object
 			},
 			rubricAssessmentHref: {
