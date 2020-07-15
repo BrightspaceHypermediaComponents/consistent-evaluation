@@ -189,7 +189,7 @@ export default class ConsistentEvaluationPage extends LitElement {
 	}
 
 	async _transientSaveGrade(e) {
-    const entity = await this._controller.fetchEvaluationEntity(false);
+		const entity = await this._controller.fetchEvaluationEntity(false);
 		let newGradeVal;
 		const type = e.detail.grade.scoreType;
 		if (type === GradeType.Letter) {
