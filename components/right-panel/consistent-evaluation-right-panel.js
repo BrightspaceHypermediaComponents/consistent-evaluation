@@ -117,7 +117,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 
 	_renderFeedback() {
 		if (!this.hideFeedback) {
-			console.log()
 			return html`
 				<d2l-consistent-evaluation-feedback-presentational
 					.href=${this.evaluationHref}
