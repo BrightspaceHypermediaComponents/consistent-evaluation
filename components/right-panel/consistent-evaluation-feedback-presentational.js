@@ -43,6 +43,10 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 		this.feedbackText = '';
 
 		this._debounceJobs = {};
+		this.addEventListener('d2l-request-provider',
+			e => {
+				if (e.detail.key === 'd2l-provider-html-editor-enabled') e.detail.provider = true;
+			});
 	}
 
 	_saveOnFeedbackChange(e) {
@@ -82,6 +86,8 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 						.href="${this.href}/attachments"
 						.token="${this.token}"
 						@d2l-activity-attachments-picker-files-uploaded="${this.saveAttachment}"
+						@d2l-activity-attachments-picker-video-uploaded="${this.saveAttachment}"
+						@d2l-activity-attachments-picker-audio-uploaded="${this.saveAttachment}"
 						@d2l-attachment-removed="${this.saveAttachment}">
 					</d2l-activity-attachments-editor>
 				</div>

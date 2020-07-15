@@ -43,6 +43,10 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 				attribute: 'rich-text-editor-disabled',
 				type: Boolean
 			},
+			richtextEditorConfig: {
+				attribute: false,
+				type: Object
+			},
 			rubricAssessmentHref: {
 				attribute: 'rubric-assessment-href',
 				type: String
@@ -77,8 +81,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 		super();
 
 		this._token = undefined;
-		this._richTextEditorConfig = {};
-
 		this.hideRubric = false;
 		this.hideGrade = false;
 		this.hideFeedback = false;
@@ -115,13 +117,14 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 
 	_renderFeedback() {
 		if (!this.hideFeedback) {
+			console.log()
 			return html`
 				<d2l-consistent-evaluation-feedback-presentational
 					.href=${this.evaluationHref}
 					.token=${this.token}
 					can-edit-feedback
 					feedback-text=${this.feedbackText}
-					.richTextEditorConfig=${this._richTextEditorConfig}
+					.richTextEditorConfig=${this.richTextEditorConfig}
 				></d2l-consistent-evaluation-feedback-presentational>
 			`;
 		}

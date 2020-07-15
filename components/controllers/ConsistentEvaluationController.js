@@ -2,6 +2,7 @@ import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { publishActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, updateActionName } from './constants.js';
 import { Grade } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
+import { Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationControllerErrors = {
 	INVALID_EVALUATION_HREF: 'evaluationHref was not defined when initializing ConsistentEvaluationController',
@@ -149,5 +150,12 @@ export class ConsistentEvaluationController {
 		}
 
 		return await this._performAction(evaluationEntity, retractActionName);
+	}
+	getRichTextEditorConfig(entity) {
+		if (!entity) {
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
+		}
+		const config = entity.getSubEntityByRel('feedback').getSubEntityByRel(Rels.richTextEditorConfig).properties;
+		return config;
 	}
 }

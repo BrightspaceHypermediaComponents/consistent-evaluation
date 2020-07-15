@@ -29,6 +29,10 @@ export default class ConsistentEvaluationPage extends LitElement {
 				attribute: 'rich-text-editor-disabled',
 				type: Boolean
 			},
+			richtextEditorConfig: {
+				attribute: 'rich-text-editor-config',
+				type: Object
+			},
 			rubricAssessmentHref: {
 				attribute: 'rubric-assessment-href',
 				type: String
@@ -158,6 +162,7 @@ export default class ConsistentEvaluationPage extends LitElement {
 		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
 		this.evaluationEntity = await this._controller.fetchEvaluationEntity();
 		this.evaluationState = this.evaluationEntity.properties.state;
+		this.richtextEditorConfig = this._controller.getRichTextEditorConfig(this.evaluationEntity);
 	}
 
 	_noFeedbackComponent() {
@@ -246,6 +251,7 @@ export default class ConsistentEvaluationPage extends LitElement {
 						rubric-href=${ifDefined(this.rubricHref)}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}
+						.richTextEditorConfig=${this.richtextEditorConfig}
 						.grade=${this._grade}
 						.token=${this.token}
 						?rubric-read-only=${this.rubricReadOnly}
