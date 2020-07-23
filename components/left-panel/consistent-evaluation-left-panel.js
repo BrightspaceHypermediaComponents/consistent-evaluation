@@ -16,6 +16,8 @@ function getSubmissionTypeName(type) {
 			return 'observedInPerson';
 		case onPaperSubmission:
 			return 'onPaperSubmission';
+		default:
+			console.error(`Consistent-Eval: Unknown submission type "${type}"`);
 	}
 }
 
@@ -45,7 +47,7 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 				align-items: center;
 				display: flex;
 				flex-direction: column;
-				height: calc(100% - 2.7rem);
+				height: 100%;
 				justify-content: center;
 				margin: 0 1rem;
 				text-align: center;
@@ -58,7 +60,6 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 				box-sizing: border-box;
 				margin: 1rem;
 				padding: 1rem;
-				width: 100%;
 			}
 
 			.d2l-consistent-evaluation-no-submissions {
