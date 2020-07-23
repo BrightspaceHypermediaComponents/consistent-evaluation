@@ -2,9 +2,24 @@ import './consistent-evaluation-evidence.js';
 import './consistent-evaluation-submissions-page.js';
 import { css, html, LitElement } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { submissionTypesWithNoEvidence } from '../controllers/constants';
+import { loadLocalizationResources } from '../locale.js';
+import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin';
+import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWithNoEvidence, textSubmission } from '../controllers/constants';
 
-export class ConsistentEvaluationLeftPanel extends LitElement {
+function getSubmissionTypeName(type) {
+	switch (type) {
+		case fileSubmission:
+			return 'fileSubmission';
+		case textSubmission:
+			return 'textSubmission';
+		case observedInPerson:
+			return 'observedInPerson';
+		case onPaperSubmission:
+			return 'onPaperSubmission';
+	}
+}
+
+export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 
 	static get properties() {
 		return {
@@ -67,6 +82,10 @@ export class ConsistentEvaluationLeftPanel extends LitElement {
 		this._evidenceUrl = undefined;
 	}
 
+	static async getLocalizeResources(langs) {
+		return await loadLocalizationResources(langs);
+	}
+
 	connectedCallback() {
 		this.addEventListener('d2l-consistent-evaluation-submission-item-render-evidence', this._renderEvidence);
 		this.addEventListener('d2l-consistent-evaluation-evidence-back-to-user-submissions', this._renderSubmissionList);
@@ -88,18 +107,16 @@ export class ConsistentEvaluationLeftPanel extends LitElement {
 	}
 
 	render() {
-		const noEvidence = 'There is no evidence uploaded for this submission type';
-		const noSubmissions = 'No submissions made for this assignment';
 		if(this.submissionInfo.submissionList == undefined) {
 			return html`${submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType) ?
 				html`
 				<div class="d2l-consistent-evaluation-no-evidence">
-					<h1>${this.submissionInfo.submissionType}</h1>
-					<p>${noEvidence}</p>
+					<h1>${this.localize(getSubmissionTypeName(this.submissionInfo.submissionType))}</h1>
+					<p>${this.localize('noEvidence')}</p>
 				</div>` :
 				html`
 				<div class="d2l-consistent-evaluation-no-submissions-container">
-					<div class="d2l-consistent-evaluation-no-submissions">${noSubmissions}</div>
+					<div class="d2l-consistent-evaluation-no-submissions">${this.localize('noSubmissions')}</div>
 				</div>`
 			}`;
 		}
