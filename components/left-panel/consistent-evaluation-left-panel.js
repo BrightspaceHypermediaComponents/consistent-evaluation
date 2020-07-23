@@ -107,18 +107,19 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 	}
 
 	render() {
-		if (this.submissionInfo.submissionList === undefined) {
-			return html`${submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType) ?
-				html`
+		if (submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
+			return html`
 				<div class="d2l-consistent-evaluation-no-evidence">
 					<h1>${this.localize(getSubmissionTypeName(this.submissionInfo.submissionType))}</h1>
 					<p>${this.localize('noEvidence')}</p>
-				</div>` :
-				html`
+				</div>`;
+		}
+
+		if (this.submissionInfo.submissionList === undefined) {
+			return html`
 				<div class="d2l-consistent-evaluation-no-submissions-container">
 					<div class="d2l-consistent-evaluation-no-submissions">${this.localize('noSubmissions')}</div>
-				</div>`
-			}`;
+				</div>`;
 		}
 
 		if (this._evidenceUrl) {
