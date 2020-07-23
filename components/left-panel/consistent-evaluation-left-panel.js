@@ -1,10 +1,10 @@
 import './consistent-evaluation-evidence.js';
 import './consistent-evaluation-submissions-page.js';
 import { css, html, LitElement } from 'lit-element';
+import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWithNoEvidence, textSubmission } from '../controllers/constants';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { loadLocalizationResources } from '../locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin';
-import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWithNoEvidence, textSubmission } from '../controllers/constants';
 
 function getSubmissionTypeName(type) {
 	switch (type) {
@@ -76,14 +76,14 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 		`;
 	}
 
+	static async getLocalizeResources(langs) {
+		return await loadLocalizationResources(langs);
+	}
+
 	constructor() {
 		super();
 
 		this._evidenceUrl = undefined;
-	}
-
-	static async getLocalizeResources(langs) {
-		return await loadLocalizationResources(langs);
 	}
 
 	connectedCallback() {
@@ -107,7 +107,7 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 	}
 
 	render() {
-		if(this.submissionInfo.submissionList == undefined) {
+		if (this.submissionInfo.submissionList === undefined) {
 			return html`${submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType) ?
 				html`
 				<div class="d2l-consistent-evaluation-no-evidence">
