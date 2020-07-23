@@ -36,10 +36,6 @@ export class ConsistentEvaluationLeftPanel extends LitElement {
 				text-align: center;
 			}
 
-			.consistent-evaluation-no-evidence-image {
-				width: 100%;
-			}
-
 			.d2l-consistent-evaluation-no-submissions-container {
 				background: white;
 				border-radius: 0.3rem;
@@ -98,7 +94,6 @@ export class ConsistentEvaluationLeftPanel extends LitElement {
 			return html`${submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType) ?
 				html`
 				<div class="d2l-consistent-evaluation-no-evidence">
-					<img class="consistent-evaluation-no-evidence-image" src="https://www.clker.com/cliparts/T/B/q/X/i/r/moose.svg"></img>
 					<h1>${this.submissionInfo.submissionType}</h1>
 					<p>${noEvidence}</p>
 				</div>` :
