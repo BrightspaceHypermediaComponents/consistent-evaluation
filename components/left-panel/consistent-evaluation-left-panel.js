@@ -1,5 +1,6 @@
 import './consistent-evaluation-evidence.js';
 import './consistent-evaluation-submissions-page.js';
+import { bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWithNoEvidence, textSubmission } from '../controllers/constants';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
@@ -38,7 +39,7 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 	}
 
 	static get styles() {
-		return css`
+		return [bodyStandardStyles, heading2Styles, css`
 			d2l-consistent-evaluation-evidence {
 				overflow: hidden;
 			}
@@ -74,7 +75,7 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 			d2l-consistent-evaluation-submissions-page {
 				width: 100%;
 			}
-		`;
+		`];
 	}
 
 	static async getLocalizeResources(langs) {
@@ -110,17 +111,17 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 	render() {
 		if (submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
 			return html`
-				<div class="d2l-consistent-evaluation-no-evidence">
-					<h1>${this.localize(getSubmissionTypeName(this.submissionInfo.submissionType))}</h1>
-					<p>${this.localize('noEvidence')}</p>
-				</div>`;
+			<div class="d2l-consistent-evaluation-no-evidence">
+				<h2 class="d2l-heading-2">${this.localize(getSubmissionTypeName(this.submissionInfo.submissionType))}</h2>
+				<p class="d2l-body-standard">${this.localize('noEvidence')}</p>
+			</div>`;
 		}
 
 		if (this.submissionInfo.submissionList === undefined) {
 			return html`
-				<div class="d2l-consistent-evaluation-no-submissions-container">
-					<div class="d2l-consistent-evaluation-no-submissions">${this.localize('noSubmissions')}</div>
-				</div>`;
+			<div class="d2l-consistent-evaluation-no-submissions-container">
+				<div class="d2l-consistent-evaluation-no-submissions d2l-body-standard">${this.localize('noSubmissions')}</div>
+			</div>`;
 		}
 
 		if (this._evidenceUrl) {
