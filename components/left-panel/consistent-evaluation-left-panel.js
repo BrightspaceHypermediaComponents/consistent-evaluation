@@ -6,7 +6,6 @@ import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWit
 import { loadLocalizationResources } from '../locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin';
 
-
 function getSubmissionTypeName(type) {
 	switch (type) {
 		case fileSubmission:
