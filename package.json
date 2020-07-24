@@ -1,7 +1,7 @@
 {
   "name": "d2l-consistent-evaluation",
   "description": "A consistent evaluation page for all tools",
-  "version": "0.0.37",
+  "version": "0.0.40",
   "repository": "https://github.com/BrightspaceHypermediaComponents/consistent-evaluation.git",
   "private": true,
   "scripts": {
@@ -50,6 +50,7 @@
     "d2l-rubric": "github:Brightspace/d2l-rubric#semver:^3",
     "d2l-tooltip": "github:BrightspaceUI/tooltip#semver:^3",
     "lit-element": "^2",
-    "mobx": "^5.15.4"
+    "mobx": "^5.15.4",
+    "moment": "^2.27.0"
   }
 }

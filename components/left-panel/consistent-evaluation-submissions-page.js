@@ -1,22 +1,14 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import '@brightspace-ui/core/components/list/list.js';
-import '@brightspace-ui/core/components/list/list-item.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import './consistent-evaluation-submission-item.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Classes } from 'd2l-hypermedia-constants';
+import moment from 'moment/src/moment';
 
 export class ConsistentEvaluationSubmissionsPage extends LitElement {
 	static get properties() {
 		return {
-			dueDate: {
-				attribute: 'due-date',
-				type: String
-			},
-			evaluationState: {
-				attribute: 'evaluation-state',
-				type: String
-			},
 			submissionList: {
 				attribute: false,
 				type: Array
@@ -52,6 +44,7 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 		this._submissionList = [];
 		this._token = undefined;
 		this._submissionEntities = [];
+		moment.relativeTimeRounding(Math.floor);
 	}
 
 	get submissionList() {
@@ -103,14 +96,17 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 				const submissionEntity = this._submissionEntities[i].entity;
 				if (submissionEntity.getSubEntityByClass(Classes.assignments.submissionDate)) {
 					const submissionDate = submissionEntity.getSubEntityByClass(Classes.assignments.submissionDate).properties.date;
+					const evaluationState = submissionEntity.properties.evaluationStatus;
+					const latenessTimespan = submissionEntity.properties.lateTimeSpan;
 					itemTemplate.push(html`
 						<d2l-consistent-evaluation-submission-item
 							date-str=${submissionDate}
 							display-number=${this._submissionEntities.length - i}
-							evaluation-state=${this.evaluationState}
+							evaluation-state=${evaluationState}
+							lateness=${moment.duration(latenessTimespan, 'seconds').humanize()}
 							submission-type=${this.submissionType}
 							.submissionEntity=${submissionEntity}
-							?late=${new Date(this.dueDate) < new Date(submissionDate)}
+							?late=${latenessTimespan !== undefined}
 						></d2l-consistent-evaluation-submission-item>`);
 				} else {
 					console.warn('Consistent Evaluation submission date property not found');

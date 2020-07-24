@@ -16,8 +16,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 				type: Boolean
 			},
 			feedbackText: {
-				attribute: 'feedback-text',
-				type: String
+				attribute: false
 			},
 			href: {
 				type: String
@@ -40,8 +39,6 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 		super();
 
 		this.canEditFeedback = false;
-		this.feedbackText = '';
-
 		this._debounceJobs = {};
 		this.addEventListener('d2l-request-provider',
 			e => {
@@ -71,6 +68,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 	}
 	render() {
 		if (this.href && this.token) {
+
 			return html`
 			<d2l-consistent-evaluation-right-panel-block title="${this.localize('overallFeedback')}">
 				<d2l-activity-text-editor

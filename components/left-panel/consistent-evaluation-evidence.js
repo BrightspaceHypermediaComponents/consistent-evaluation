@@ -18,6 +18,8 @@ export class ConsistentEvaluationEvidence extends LocalizeMixin(LitElement) {
 				--top-bar-height: 2.7rem;
 			}
 			.d2l-consistent-evaluation-evidence-top-bar {
+				display: flex;
+				align-items: center;
 				height: var(--top-bar-height);
 			}
 			iframe {

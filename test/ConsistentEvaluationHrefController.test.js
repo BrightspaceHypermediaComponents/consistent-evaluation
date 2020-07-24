@@ -137,7 +137,6 @@ describe('ConsistentEvaluationHrefController', () => {
 			const assignmentHref = 'expected_assignment_href';
 			const expectedSubmissions = ['link1', 'link2'];
 			const expectedEvaluationState = 'Draft';
-			const expectedDueDate = '2020-06-18T21:59:00.000Z';
 			const expectedSubmissionType = 'File Submission';
 
 			const controller = new ConsistentEvaluationHrefController('href', 'token');
@@ -145,7 +144,7 @@ describe('ConsistentEvaluationHrefController', () => {
 				entity: {
 					hasLinkByRel: (r) => r === Rels.assignment,
 					getLinkByRel: (r) => (r === Rels.assignment ? { href: assignmentHref } : undefined),
-					getSubEntityByClass: (r) => (r === Classes.dates.dueDate ? { properties: { date: expectedDueDate } } : { links: expectedSubmissions }),
+					getSubEntityByClass: (r) => (r === Classes.assignments.submissionList ? { links: expectedSubmissions } : undefined),
 					getSubEntityByRel: (r) => (r === Rels.evaluation ? { properties: {state: expectedEvaluationState}} : undefined)
 				}
 			});
@@ -158,7 +157,6 @@ describe('ConsistentEvaluationHrefController', () => {
 			assert.equal(submissionInfo.submissionList, expectedSubmissions);
 			assert.equal(submissionInfo.evaluationState, expectedEvaluationState);
 			assert.equal(submissionInfo.submissionType, expectedSubmissionType);
-			assert.equal(submissionInfo.dueDate, expectedDueDate);
 		});
 	});
 });

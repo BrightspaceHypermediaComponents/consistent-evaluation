@@ -12,8 +12,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 	static get properties() {
 		return {
 			feedbackText: {
-				attribute: 'feedback-text',
-				type: String
+				attribute: false
 			},
 			grade: {
 				attribute: false,
@@ -122,7 +121,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 					.href=${this.evaluationHref}
 					.token=${this.token}
 					can-edit-feedback
-					feedback-text=${this.feedbackText}
+					.feedbackText=${this.feedbackText}
 					.richTextEditorConfig=${this.richTextEditorConfig}
 				></d2l-consistent-evaluation-feedback-presentational>
 			`;

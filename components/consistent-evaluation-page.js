@@ -134,7 +134,7 @@ export default class ConsistentEvaluationPage extends LitElement {
 		if (this._feedbackEntity && this._feedbackEntity.properties) {
 			return this._feedbackEntity.properties.text || '';
 		}
-		return '';
+		return undefined;
 	}
 
 	get _grade() {
@@ -245,7 +245,7 @@ export default class ConsistentEvaluationPage extends LitElement {
 				<div slot="secondary">
 					<consistent-evaluation-right-panel
 						evaluation-href=${this.evaluationHref}
-						feedback-text=${this._feedbackText}
+						.feedbackText=${this._feedbackText}
 						rubric-href=${ifDefined(this.rubricHref)}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}

@@ -1,4 +1,3 @@
-import '@brightspace-ui/core/components/button/button-icon.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-more.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-menu.js';
@@ -13,12 +12,22 @@ import '@brightspace-ui/core/components/status-indicator/status-indicator.js';
 import { bodySmallStyles, heading3Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { fileSubmission, textSubmission } from '../controllers/constants';
-import { formatDateTime } from '@brightspace-ui/intl/lib/dateTime.js';
+import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
 import { loadLocalizationResources } from '../locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin';
+import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 
-export class ConsistentEvaluationSubmissionItem extends LocalizeMixin(LitElement) {
+export const fileTypes = {
+	'MP3':'file-audio', 'WAV':'file-audio', 'WMA':'file-audio',
+	'DOC':'file-document', 'DOCX':'file-document', 'PDF':'file-document', 'TXT':'file-document', 'WPD':'file-document', 'XML':'file-document',
+	'BMP':'file-image', 'GIF':'file-image', 'PNG':'file-image', 'JPEG':'file-image', 'JPG':'file-image', 'TIF':'file-image', 'TIFF':'file-image',
+	'PPT':'file-presentation', 'PPTX':'file-presentation', 'PPS':'file-presentation',
+	'MPG':'file-video', 'MPEG':'file-video', 'MP4':'file-video', 'M4V':'file-video', 'M4A':'file-video', 'MOV':'file-video',
+	'RM':'file-video', 'RA':'file-video', 'RAM':'file-video', 'SWF':'file-video', 'WMV':'file-video', 'AVI':'file-video', 'ASF':'file-video'
+};
+
+export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(LitElement)) {
 	static get properties() {
 		return {
 			dateStr : {
@@ -35,6 +44,9 @@ export class ConsistentEvaluationSubmissionItem extends LocalizeMixin(LitElement
 			},
 			late: {
 				type: Boolean
+			},
+			lateness: {
+				type: String
 			},
 			submissionEntity : {
 				attribute: false,
@@ -58,19 +70,58 @@ export class ConsistentEvaluationSubmissionItem extends LocalizeMixin(LitElement
 			flex-direction: column;
 			position: relative;
 		}
+		d2l-list-item, d2l-list-item:hover {
+			--d2l-list-item-content-text-color: var(--d2l-color-ferrite);
+		}
 		.d2l-heading-3 {
 			margin: 0;
+			padding-right: 0.5rem;
 		}
-		.consistent-eval-submission-attachment-item {
-			display: inline-block;
-			vertical-align: middle;
+		:host([dir="rtl"]) .d2l-heading-3 {
 			padding-left: 0.5rem;
+			padding-right: 0;
 		}
-		.consistent-eval-submission-attachment-item-container:hover {
-			background-color: var(--d2l-color-regolith);
+		.d2l-label-text {
+			padding-top: 0.5rem;
 		}
-		.consistent-eval-submission-attachment-item-container {
-			justify-content: space-between;
+		.d2l-submission-attachment-icon-container {
+			display: inline-block;
+			position: relative;
+			top: 0;
+			left: 0;
+			border-radius: 0;
+		}
+		.d2l-submission-attachment-icon-container-inner {
+			margin: 0.5rem;
+			position: relative;
+			top: 0;
+			left: 0;
+		}
+		.d2l-attachment-read-status {
+			color: var(--d2l-color-carnelian);
+			position: absolute;
+			top: 0;
+			right: -4px;
+		}
+		:host([dir="rtl"]) .d2l-attachment-read-status {
+			left: -4px;
+			right: unset;
+		}
+		.d2l-separator-icon {
+			width: 10px;
+			height: 10px;
+			padding: 0.2rem;
+		}
+		d2l-more-less p, ul {
+			margin: 0.5rem 0rem;
+		}
+		d2l-status-indicator {
+			text-transform: none;
+			margin-right: 0.5rem;
+		}
+		:host([dir="rtl"]) d2l-status-indicator {
+			margin-left: 0.5rem;
+			margin-right: 0;
 		}
 	`];
 	}
@@ -115,21 +166,29 @@ export class ConsistentEvaluationSubmissionItem extends LocalizeMixin(LitElement
 	//Helper methods
 
 	_getIcon(filename) {
-		const ext = this._getFileType(filename);
-		if (ext === 'PNG' || ext === 'JPG' || ext === 'TIF' || ext === 'TIFF') {
-			return 'file-image';
+		const ext = this._getFileExtension(filename);
+		if (ext in fileTypes) {
+			return fileTypes[ext];
 		}
-		else {
-			return 'file-document';
-		}
+		return 'file-document';
 	}
 
 	_getFileTitle(filename) {
-		return filename.split('.')[0];
+		const index = filename.lastIndexOf('.');
+		if (index < 0) {
+			return '';
+		} else {
+			return filename.substring(0, index);
+		}
 	}
 
-	_getFileType(filename) {
-		return filename.split('.')[1].toUpperCase();
+	_getFileExtension(filename) {
+		const index = filename.lastIndexOf('.');
+		if (index < 0) {
+			return '';
+		} else {
+			return filename.substring(index + 1).toUpperCase();
+		}
 	}
 
 	_getReadableFileSizeString(fileSizeBytes) {
@@ -153,11 +212,14 @@ export class ConsistentEvaluationSubmissionItem extends LocalizeMixin(LitElement
 		this.dispatchEvent(event);
 	}
 
-	_formatDate() {
-		const formattedDate = (this._date) ? formatDateTime(
+	_formatDateTime() {
+		const formattedDate = (this._date) ? formatDate(
 			this._date,
 			{format: 'full'}) : '';
-		return formattedDate;
+		const formattedTime = (this._date) ? formatTime(
+			this._date,
+			{format: 'short'}) : '';
+		return `${formattedDate} ${formattedTime}`;
 	}
 
 	//Helper rendering methods
@@ -167,10 +229,14 @@ export class ConsistentEvaluationSubmissionItem extends LocalizeMixin(LitElement
 		<d2l-list-item>
 		<d2l-list-item-content>
 			<h3 class="d2l-heading-3">${this.localize('submission')} ${this.displayNumber}</h3>
-			<div class="d2l-body-small">
+			<div slot="supporting-info">
+			<span>
 				${this._renderLateStatus()}
 				${this._renderEvaluationState()}
-				${this._formatDate()}
+			</span>
+			<span class="d2l-body-small">
+				${this._formatDateTime()}
+			</span>
 			</div>
 		</d2l-list-item-content>
 		</d2l-list-item>`;
@@ -185,36 +251,48 @@ export class ConsistentEvaluationSubmissionItem extends LocalizeMixin(LitElement
 		return html`
 		<d2l-list-item>
 		<d2l-list-item-content>
-			<h3 class="d2l-heading-3">${this.localize('textSubmission')} ${this.displayNumber}${this._renderReadStatus(read)}</h3>
-			<div class="d2l-body-small">
+			<div class="d2l-submission-attachment-icon-container">
+				<h3 class="d2l-heading-3">${this.localize('textSubmission')} ${this.displayNumber}</h3>
+				${this._renderReadStatus(read)}
+			</div>
+			<div slot="supporting-info">
 				${this._renderLateStatus()}
 				${this._renderEvaluationState()}
 				${this._renderFlaggedStatus(flagged)}
-				${this._formatDate()}
+				<span class="d2l-body-small">${this._formatDateTime()}</span>
 			</div>
 		</d2l-list-item-content>
-		${this._addMenuOptions(href)}
+		${this._addMenuOptions(read, flagged, href, file.properties.name)}
 		</d2l-list-item>`;
 	}
 
 	_renderReadStatus(read) {
 		if (!read) {
-			return html`<d2l-icon icon="tier1:dot" style="color: #E87511; vertical-align: top; position: relative; top: 0px;
-			right: 0px;"></d2l-icon>`;
+			return html`
+			<d2l-icon
+				icon="tier1:dot"
+				class="d2l-attachment-read-status"
+				role="img"
+				aria-label="Unread">
+			</d2l-icon>`;
 		}
 	}
 
 	_renderLateStatus() {
 		if (this.late) {
-			return html`<d2l-status-indicator state="alert" text="${this.localize('late')}" bold></d2l-status-indicator>`;
+			return html`
+			<d2l-status-indicator bold
+				state="alert"
+				text="${this.localize('late')} &gt; ${this.lateness}">
+				</d2l-status-indicator>`;
 		} else {
 			return html ``;
 		}
 	}
 
 	_renderEvaluationState() {
-		if (this.evaluationState) {
-			return html`<d2l-status-indicator state="default" text="${this.evaluationState}"></d2l-status-indicator>`;
+		if (this.evaluationState === 'Unevaluated') {
+			return html`<d2l-status-indicator state="default" text="${this.localize('unevaluated')}"></d2l-status-indicator>`;
 		} else {
 			return html``;
 		}
@@ -227,65 +305,77 @@ export class ConsistentEvaluationSubmissionItem extends LocalizeMixin(LitElement
 	}
 
 	_renderAttachments() {
+		// href placeholder on list-item
 		return html`${this._attachments.map((file) => html`
 			<d2l-list-item 
-				class="consistent-eval-submission-attachment-item-container"
+				href="javascript:void(0);"
 				@click="${
 	// eslint-disable-next-line lit/no-template-arrow
 	() => this._dispatchRenderEvidenceEvent(file.properties.fileViewer)}">
-				<d2l-list-item-content>
-					<d2l-icon class="consistent-eval-submission-attachment-item" icon="tier2:${this._getIcon(file.properties.name)}">
-					</d2l-icon>
-					${this._renderReadStatus(file.properties.read)}
-					<div class="consistent-eval-submission-attachment-item">
-						<span>${this._getFileTitle(file.properties.name)}</span>
-						<div slot="supporting-info">
-							${this._renderFlaggedStatus(file.properties.flagged)}
-							${this._getFileType(file.properties.name)}
-							<d2l-icon icon="tier1:dot"></d2l-icon>${this._getReadableFileSizeString(file.properties.size)}
-						</div>
-					</div>
-				</d2l-list-item-content>
-				${this._addMenuOptions(file.properties.href)}
+
+			<div slot="illustration" class="d2l-submission-attachment-icon-container">
+				<d2l-icon class="d2l-submission-attachment-icon-container-inner"
+					icon="tier2:${this._getIcon(file.properties.name)}"
+					aria-label="${this._getIcon(file.properties.name)}"></d2l-icon>
+				${this._renderReadStatus(file.properties.read)}
+			</div>
+			<d2l-list-item-content>
+				<span>${this._getFileTitle(file.properties.name)}</span>
+				<div slot="supporting-info">
+					${this._renderFlaggedStatus(file.properties.flagged)}
+					${this._getFileExtension(file.properties.name)}
+					<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>
+					${this._getReadableFileSizeString(file.properties.size)}
+				</div>
+			</d2l-list-item-content>
+			${this._addMenuOptions(file.properties.read, file.properties.flagged, file.properties.href, file.properties.name)}
 			</d2l-list-item>
 			`)}`;
 	}
 
-	_addMenuOptions(downloadHref) {
+	_addMenuOptions(read, flagged, downloadHref, name) {
 		// Placeholder for menu presentational
+		const oppositeReadState = read ? this.localize('markUnread') : this.localize('markRead');
+		const oppositeFlagState = flagged ? this.localize('unflag') : this.localize('flag');
+		const fileType = this._getFileExtension(name);
 		return html`<div slot="actions" style="z-index: inherit;">
 			<d2l-dropdown-more text="More Options">
-			<d2l-dropdown-menu id="dropdown">
-				<d2l-menu label="Options">
-					<d2l-menu-item-link text="Download" href="${downloadHref}"></d2l-menu-item-link>
-					<d2l-menu-item-link text="Mark as Read" href="https://en.wikipedia.org/wiki/Universe"></d2l-menu-item-link>
-					<d2l-menu-item-link text="Flag" href="https://en.wikipedia.org/wiki/Universe"></d2l-menu-item-link>
-					<d2l-menu-item-link text="Edit a Copy" href="https://en.wikipedia.org/wiki/Universe"></d2l-menu-item-link>
+			<d2l-dropdown-menu id="dropdown" boundary="{&quot;right&quot;:10}">
+				<d2l-menu>
+					<d2l-menu-item-link text="${this.localize('download')}" href="${downloadHref}"></d2l-menu-item-link>
+					<d2l-menu-item-link text="${oppositeReadState}" href="#"></d2l-menu-item-link>
+					<d2l-menu-item-link text="${oppositeFlagState}" href="#"></d2l-menu-item-link>
+					${this._renderEditACopy(fileType)}
 				</d2l-menu>
 			</d2l-dropdown-menu>
 			</d2l-dropdown-more>
 			</div>`;
 	}
 
+	_renderEditACopy(fileType) {
+		if (fileType === 'TXT' || fileType === 'HTML') {
+			return html `<d2l-menu-item-link text="${this.localize('editCopy')}" href="#"></d2l-menu-item-link>`;
+		}
+		return html``;
+	}
+
 	_renderComment() {
 		const peekHeight = this.submissionType === fileSubmission ? '5em' : '8em';
 		if (this._comment) {
 			return html`
-				<d2l-list-item>
-				<d2l-list-item-content>
 					${this._renderCommentTitle()}
-					<div slot="supporting-info">
-						<d2l-more-less height=${peekHeight}>${unsafeHTML(this._comment)}</d2l-more-less>
-					</div>
-				</d2l-list-item-content>
-				</d2l-list-item>`;
+					<d2l-more-less height=${peekHeight}>${unsafeHTML(this._comment)}</d2l-more-less>
+				`;
 		}
 		return html``;
 	}
 
 	_renderCommentTitle() {
 		if (this.submissionType === fileSubmission) {
-			return html`<div class="d2l-label-text">${this.localize('comments')}</div>`;
+			return html`
+			<div class="d2l-label-text">
+				${this.localize('comments')}
+			</div>`;
 		} else {
 			return html``;
 		}
@@ -294,10 +384,11 @@ export class ConsistentEvaluationSubmissionItem extends LocalizeMixin(LitElement
 	_renderFileSubmission() {
 		return html`
 		${this._renderFileSubmissionTitle()}
-		<d2l-list separators="between">
-			${this._renderAttachments()}
+		<d2l-list grid separators="all">
+		${this._renderAttachments()}
 		</d2l-list>
 		${this._renderComment()}
+
 		`;
 	}
 
