@@ -34,14 +34,6 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 		};
 	}
 
-	static get styles() {
-		return css`
-			d2l-activity-text-editor([hidden]) {
-				display: none;
-			 }
-		`;
-	}
-
 	static async getLocalizeResources(langs) {
 		return await loadLocalizationResources(langs);
 	}
@@ -115,7 +107,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 						@d2l-activity-attachments-picker-video-uploaded="${this.saveAttachment}"
 						@d2l-activity-attachments-picker-audio-uploaded="${this.saveAttachment}"
 						@d2l-attachment-removed="${this.deleteAttachment}"
-						?hidden="${!this.canEditFeedback}">
+						?disabled="${!this.canEditFeedback}">
 					</d2l-activity-attachments-editor>
 				</div>
 			</d2l-consistent-evaluation-right-panel-block>
