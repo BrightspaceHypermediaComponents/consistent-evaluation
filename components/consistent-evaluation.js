@@ -1,6 +1,6 @@
 import './consistent-evaluation-page.js';
+import { css, html } from 'lit-element';
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
-import { html } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { MobxLitElement } from '@adobe/lit-mobx';
 import RootStore from './stores/root.js';
@@ -16,6 +16,14 @@ export class ConsistentEvaluation extends MobxLitElement {
 			_childHrefs: { type: Object },
 			_submissionInfo: { type: Object }
 		};
+	}
+
+	static get styles() {
+		return css`
+			d2l-consistent-evaluation-page {
+				width: 100%;
+			}
+		`;
 	}
 
 	constructor() {

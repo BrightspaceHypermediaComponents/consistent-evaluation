@@ -1,4 +1,8 @@
 {
+  "properties": {
+    "evaluationStatus": "Unevaluated",
+    "lateTimeSpan": "123456"
+  },
   "class": [
     "assignment-submission"
   ],
@@ -62,7 +66,7 @@
         "https://api.brightspace.com/rels/date"
       ],
       "properties": {
-        "date": "2020-06-18T22:01:29.390Z"
+        "date": "2020-06-19T22:01:29.390Z"
       }
     },
     {

@@ -1,4 +1,8 @@
 {
+  "properties": {
+    "evaluationStatus": "Unevaluated",
+    "lateTimeSpan": "777"
+  },
   "class": [
     "assignment-submission"
   ],

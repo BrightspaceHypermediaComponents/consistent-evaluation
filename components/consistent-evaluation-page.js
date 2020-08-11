@@ -1,6 +1,6 @@
+import './left-panel/consistent-evaluation-left-panel.js';
 import './footer/consistent-evaluation-footer-presentational.js';
 import './right-panel/consistent-evaluation-right-panel.js';
-import './left-panel/consistent-evaluation-submissions-page.js';
 import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/templates/primary-secondary/primary-secondary.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
@@ -63,6 +63,9 @@ export default class ConsistentEvaluationPage extends LitElement {
 			},
 			_gradeEntity: {
 				attribute: false
+			},
+			_scrollbarStatus: {
+				attribute: false
 			}
 		};
 	}
@@ -75,8 +78,8 @@ export default class ConsistentEvaluationPage extends LitElement {
 			:host([hidden]) {
 				display: none;
 			}
-			d2l-consistent-evaluation-submissions-page {
-				width: 100%;
+			.d2l-consistent-evaluation-page-primary-slot {
+				height: 100%;
 			}
 		`;
 	}
@@ -88,6 +91,8 @@ export default class ConsistentEvaluationPage extends LitElement {
 
 		this._controller = undefined;
 		this._evaluationEntity = undefined;
+
+		this._scrollbarStatus = 'default';
 	}
 
 	get evaluationEntity() {
@@ -187,6 +192,14 @@ export default class ConsistentEvaluationPage extends LitElement {
 		}));
 	}
 
+	_hideScrollbars() {
+		this._scrollbarStatus = 'hidden';
+	}
+
+	_showScrollbars() {
+		this._scrollbarStatus = 'default';
+	}
+
 	async _transientSaveFeedback(e) {
 		const entity = await this._controller.fetchEvaluationEntity(false);
 		const newFeedbackVal = e.detail;
@@ -234,15 +247,15 @@ export default class ConsistentEvaluationPage extends LitElement {
 
 	render() {
 		return html`
-			<d2l-template-primary-secondary>
+			<d2l-template-primary-secondary primary-overflow="${this._scrollbarStatus}">
 				<div slot="header"><h1>Hello, consistent-evaluation!</h1></div>
-				<div slot="primary">
-					<d2l-consistent-evaluation-submissions-page
-					due-date=${ifDefined(this.submissionInfo && this.submissionInfo.dueDate)}
-					evaluation-state=${this.submissionInfo && this.submissionInfo.evaluationState}
-					submission-type=${this.submissionInfo && this.submissionInfo.submissionType}
-					.submissionList=${this.submissionInfo && this.submissionInfo.submissionList}
-					.token=${this.token}></d2l-consistent-evaluation-submissions-page>
+				<div slot="primary" class="d2l-consistent-evaluation-page-primary-slot">
+					<d2l-consistent-evaluation-left-panel
+						.submissionInfo=${this.submissionInfo}
+						.token=${this.token}
+						@d2l-consistent-evaluation-left-panel-render-evidence=${this._hideScrollbars}
+						@d2l-consistent-evaluation-left-panel-render-submission-list=${this._showScrollbars}
+					></d2l-consistent-evaluation-left-panel>
 				</div>
 				<div slot="secondary">
 					<consistent-evaluation-right-panel
