@@ -52,16 +52,16 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeMixin(LitE
 	_emitSaveDraftEvent()   { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-save-draft'); }
 	_emitNextStudentEvent() { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-next-student'); }
 
-	_getPublishOrRetractButton() {
-		const text = this.published ? this.localize('retract') : this.localize('publish');
-		const eventEmitter = this.published ? this._emitRetractEvent : this._emitPublishEvent;
+	_getPublishOrUpdateButton() {
+		const text = this.published ? this.localize('update') : this.localize('publish');
+		const eventEmitter = this.published ? this._emitUpdateEvent : this._emitPublishEvent;
 		const id = `consistent-evaluation-footer-${text.toLowerCase()}`;
 		return html`<d2l-button primary id=${id} @click=${eventEmitter} >${text}</d2l-button>`;
 	}
 
-	_getSaveDraftOrUpdateButton() {
-		const text = this.published ? this.localize('update') : this.localize('saveDraft');
-		const eventEmitter = this.published ? this._emitUpdateEvent : this._emitSaveDraftEvent;
+	_getSaveDraftOrRetractButton() {
+		const text = this.published ? this.localize('retract') : this.localize('saveDraft');
+		const eventEmitter = this.published ? this._emitRetractEvent : this._emitSaveDraftEvent;
 		const id = `consistent-evaluation-footer-${text.toLowerCase().split(' ').join('-')}`;
 		return html`<d2l-button id=${id} @click=${eventEmitter}>${text}</d2l-button>`;
 	}
@@ -81,10 +81,10 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeMixin(LitE
 		return html`
 			<div id="footer-container">
 				<div class="button-container">
-					${this._getPublishOrRetractButton()}
+					${this._getPublishOrUpdateButton()}
 				</div>
 				<div class="button-container">
-					${this._getSaveDraftOrUpdateButton()}
+					${this._getSaveDraftOrRetractButton()}
 				</div>
 				<div class="button-container">
 					${this._getNextStudentButton()}
