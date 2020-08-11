@@ -85,7 +85,7 @@ export class ConsistentEvaluationHrefController {
 
 	async getSubmissionInfo() {
 		let root = await this._getRootEntity(false);
-		let submissionList, evaluationState, submissionType, dueDate;
+		let submissionList, evaluationState, submissionType;
 		if (root && root.entity) {
 			root = root.entity;
 			if (root.getSubEntityByClass(Classes.assignments.submissionList)) {
@@ -93,9 +93,6 @@ export class ConsistentEvaluationHrefController {
 			}
 			if (root.getSubEntityByRel(Rels.evaluation)) {
 				evaluationState = root.getSubEntityByRel(Rels.evaluation).properties.state;
-			}
-			if (root.getSubEntityByClass(Classes.dates.dueDate)) {
-				dueDate = root.getSubEntityByClass(Classes.dates.dueDate).properties.date;
 			}
 			const assignmentHref = this._getHref(root, Rels.assignment);
 			if (assignmentHref) {
@@ -108,8 +105,7 @@ export class ConsistentEvaluationHrefController {
 		return {
 			submissionList,
 			evaluationState,
-			submissionType,
-			dueDate
+			submissionType
 		};
 	}
 }

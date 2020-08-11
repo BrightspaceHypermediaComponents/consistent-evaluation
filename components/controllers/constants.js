@@ -18,3 +18,6 @@ export const publishedState = 'Published';
 export const draftState = 'Draft';
 export const fileSubmission = 'File submission';
 export const textSubmission = 'Text submission';
+export const onPaperSubmission = 'On paper submission';
+export const observedInPerson = 'Observed in person';
+export const submissionTypesWithNoEvidence = [onPaperSubmission, observedInPerson];
