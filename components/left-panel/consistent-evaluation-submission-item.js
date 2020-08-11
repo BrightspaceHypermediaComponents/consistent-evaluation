@@ -202,10 +202,25 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 		return Math.max(fileSizeBytes, 0.1).toFixed(1) + unit;
 	}
 
-	_dispatchRenderEvidenceEvent(url) {
-		const event = new CustomEvent('d2l-consistent-evaluation-submission-item-render-evidence', {
+	_dispatchRenderEvidenceFileEvent(url) {
+		const event = new CustomEvent('d2l-consistent-evaluation-submission-item-render-evidence-file', {
 			detail: {
 				url: url
+			},
+			composed: true
+		});
+		this.dispatchEvent(event);
+	}
+
+	_dispatchRenderEvidenceTextEvent() {
+		const event = new CustomEvent('d2l-consistent-evaluation-submission-item-render-evidence-text', {
+			detail: {
+				textSubmissionEvidence: {
+					title: `${this.localize('textSubmission')} ${this.displayNumber}`,
+					date: this._formatDateTime(),
+					downloadUrl: this._attachments[0].properties.href,
+					content: this._comment
+				}
 			},
 			composed: true
 		});
@@ -317,7 +332,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 			<d2l-list-item-content
 			@click="${
 	// eslint-disable-next-line lit/no-template-arrow
-	() => this._dispatchRenderEvidenceEvent(file.properties.fileViewer)}">
+	() => this._dispatchRenderEvidenceFileEvent(file.properties.fileViewer)}">
 				<span>${this._getFileTitle(file.properties.name)}</span>
 				<div slot="supporting-info">
 					${this._renderFlaggedStatus(file.properties.flagged)}
@@ -340,6 +355,10 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 			<d2l-dropdown-more text="More Options">
 			<d2l-dropdown-menu id="dropdown" boundary="{&quot;right&quot;:10}">
 				<d2l-menu>
+					${this.submissionType === textSubmission ? html`
+						<d2l-menu-item-link text="${this.localize('viewFullSubmission')}"
+							href="javascript:void(0);"
+							@click="${this._dispatchRenderEvidenceTextEvent}"></d2l-menu-item-link>` : null }
 					<d2l-menu-item-link text="${this.localize('download')}" href="${downloadHref}"></d2l-menu-item-link>
 					<d2l-menu-item-link text="${oppositeReadState}" href="#"></d2l-menu-item-link>
 					<d2l-menu-item-link text="${oppositeFlagState}" href="#"></d2l-menu-item-link>
