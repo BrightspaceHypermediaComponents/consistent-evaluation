@@ -4,7 +4,7 @@ import 'd2l-activities/components/d2l-activity-editor/d2l-activity-attachments/d
 import './consistent-evaluation-right-panel-block';
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 
-import { css, html, LitElement } from 'lit-element';
+import { html, LitElement } from 'lit-element';
 import { AttachmentCollectionEntity } from 'siren-sdk/src/activities/AttachmentCollectionEntity.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { loadLocalizationResources } from '../locale.js';
