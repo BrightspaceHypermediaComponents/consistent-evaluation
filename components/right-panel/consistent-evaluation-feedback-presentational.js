@@ -4,7 +4,7 @@ import 'd2l-activities/components/d2l-activity-editor/d2l-activity-attachments/d
 import './consistent-evaluation-right-panel-block';
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 
-import { html, LitElement } from 'lit-element';
+import { css, html, LitElement } from 'lit-element';
 import { AttachmentCollectionEntity } from 'siren-sdk/src/activities/AttachmentCollectionEntity.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { loadLocalizationResources } from '../locale.js';
@@ -32,6 +32,14 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 				type: String
 			}
 		};
+	}
+
+	static get styles() {
+		return css`
+			d2l-activity-text-editor([hidden]) {
+				display: none;
+			 }
+		`;
 	}
 
 	static async getLocalizeResources(langs) {
@@ -68,17 +76,17 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 	}
 	async saveAttachment(e) {
 		const files = e.detail.files;
-		for (let i = 0; files.length > i; i++) {
-			const fileSystemType = files[i].m_fileSystemType;
-			const fileId = files[i].m_id;
+		files.forEach(async file => {
+			const fileSystemType = file.m_fileSystemType;
+			const fileId = file.m_id;
 
 			const sirenEntity = await window.D2L.Siren.EntityStore.get(this.href, this.token);
 			const link = sirenEntity.getLinkByRel('https://activities.api.brightspace.com/rels/attachments');
 			const entitytemp = await window.D2L.Siren.EntityStore.fetch(link, this.token);
 
-			const entity = new AttachmentCollectionEntity(entitytemp.entity, this.token, { remove: () => { } });
+			const entity = new AttachmentCollectionEntity(entitytemp.entity, this.token);
 			await entity.addFileAttachment(fileSystemType, fileId);
-		}
+		});
 
 	}
 
@@ -96,7 +104,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 					.richtextEditorConfig="${this.richTextEditorConfig}"
 					@d2l-activity-text-editor-change="${this._saveOnFeedbackChange}"
 					ariaLabel="${this.localize('overallFeedback')}"
-					?disabled="${!this.canEditFeedback}">
+					?hidden="${!this.canEditFeedback}">
 				</d2l-activity-text-editor>
 
 				<div>
@@ -106,7 +114,8 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 						@d2l-activity-attachments-picker-files-uploaded="${this.saveAttachment}"
 						@d2l-activity-attachments-picker-video-uploaded="${this.saveAttachment}"
 						@d2l-activity-attachments-picker-audio-uploaded="${this.saveAttachment}"
-						@d2l-attachment-removed="${this.deleteAttachment}">
+						@d2l-attachment-removed="${this.deleteAttachment}"
+						?hidden="${!this.canEditFeedback}">
 					</d2l-activity-attachments-editor>
 				</div>
 			</d2l-consistent-evaluation-right-panel-block>
