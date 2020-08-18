@@ -9,8 +9,8 @@ import { AttachmentCollectionEntity } from 'siren-sdk/src/activities/AttachmentC
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { loadLocalizationResources } from '../locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin.js';
-import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import { Rels } from 'd2l-hypermedia-constants';
+import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
 class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElement) {
 	static get properties() {
