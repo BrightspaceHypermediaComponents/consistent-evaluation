@@ -10,6 +10,7 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { loadLocalizationResources } from '../locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
+import { Rels } from 'd2l-hypermedia-constants';
 
 class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElement) {
 	static get properties() {
@@ -73,7 +74,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 			const fileId = files[i].m_id;
 
 			const sirenEntity = await window.D2L.Siren.EntityStore.get(this.href, this.token);
-			const link = sirenEntity.getLinkByRel('https://activities.api.brightspace.com/rels/attachments');
+			const link = sirenEntity.getLinkByRel(Rels.Activities.feedbackAttachments);
 			const entitytemp = await window.D2L.Siren.EntityStore.fetch(link, this.token);
 
 			const entity = new AttachmentCollectionEntity(entitytemp.entity, this.token, { remove: () => { } });
