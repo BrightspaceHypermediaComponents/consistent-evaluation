@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>d2l-consistent-evaluation-grade-result visual diff tests</title>
+		<script type="module">
+			import '@brightspace-ui/core/components/typography/styles.js';
+			import '@brightspace-ui/core/components/typography/typography.js';
+			import '../../components/right-panel/consistent-evaluation-grade-result.js';
+			import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
+			import SirenParse from 'siren-parser';
+			fetch('data/grade/evaluationEntity.json').then(response => response.json()).then(entity => {
+				const parsedEntity = SirenParse(entity);
+				const grades = [
+					{grade: new Grade(GradeType.Number, 69, 100, null, null, parsedEntity)},
+					{grade: new Grade(GradeType.Letter, null, null, 'A', ['A', 'B', 'C'], parsedEntity)}
+				];
+				const panels = document.getElementsByTagName('d2l-consistent-evaluation-grade-result');
+				for (let i = 0; i < panels.length; i++) {
+					panels[i].grade = grades[i].grade;
+				}});
+		</script>
+		<style>
+			html {
+				font-size: 20px;
+			}
+			div {
+				padding: 50px;
+				display: flex;
+				justify-content: center;
+			}
+		</style>
+	</head>
+	<body class="d2l-typography">
+		<div id="grade-number">
+			<d2l-consistent-evaluation-grade-result/>
+		</div>
+
+		<div id="grade-letter">
+			<d2l-consistent-evaluation-grade-result/>
+		</div>
+	</body>
+</html>
