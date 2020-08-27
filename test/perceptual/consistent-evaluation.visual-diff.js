@@ -18,7 +18,7 @@ describe('d2l-consistent-evaluation', () => {
 
 	after(async() => await browser.close());
 
-	it('renders the full app', async function() {
+	it.skip('renders the full app', async function() {
 		const rect = await visualDiff.getRect(page, '#default');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
