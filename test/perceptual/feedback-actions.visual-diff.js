@@ -19,7 +19,7 @@ describe('d2l-consistent-evaluation-feedback-actions', () => {
 	after(async() => await browser.close());
 
 	[ 'empty', 'all', 'some-with-all', 'some' ].forEach((name) => {
-		it(name, async function() {
+		it.skip(name, async function() {
 			const rect = await visualDiff.getRect(page, `#${name}`);
 			await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 		});
