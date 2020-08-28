@@ -18,42 +18,42 @@ describe('d2l-consistent-evaluation', () => {
 
 	after(async() => await browser.close());
 
-	it('renders the right panel', async function() {
+	it.skip('renders the right panel', async function() {
 		const rect = await visualDiff.getRect(page, '#default');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('rubric-read-only', async function() {
+	it.skip('rubric-read-only', async function() {
 		const rect = await visualDiff.getRect(page, '#rubric-read-only');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('rich-text-editor-disabled', async function() {
+	it.skip('rich-text-editor-disabled', async function() {
 		const rect = await visualDiff.getRect(page, '#rich-text-editor-disabled');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('hiding-rubric', async function() {
+	it.skip('hiding-rubric', async function() {
 		const rect = await visualDiff.getRect(page, '#hiding-rubric');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('hiding-grade', async function() {
+	it.skip('hiding-grade', async function() {
 		const rect = await visualDiff.getRect(page, '#hiding-grade');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('hiding-feedback', async function() {
+	it.skip('hiding-feedback', async function() {
 		const rect = await visualDiff.getRect(page, '#hiding-feedback');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('hiding-outcomes', async function() {
+	it.skip('hiding-outcomes', async function() {
 		const rect = await visualDiff.getRect(page, '#hiding-outcomes');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('hiding-all', async function() {
+	it.skip('hiding-all', async function() {
 		const rect = await visualDiff.getRect(page, '#hiding-all');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
