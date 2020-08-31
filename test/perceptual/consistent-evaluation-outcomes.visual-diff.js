@@ -18,12 +18,12 @@ describe('d2l-consistent-evaluation', () => {
 
 	after(async() => await browser.close());
 
-	it('renders outcomes', async function() {
+	it.skip('renders outcomes', async function() {
 		const rect = await visualDiff.getRect(page, '#default');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('renders outcomes with description', async function() {
+	it.skip('renders outcomes with description', async function() {
 		const rect = await visualDiff.getRect(page, '#outcome-with-description');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
