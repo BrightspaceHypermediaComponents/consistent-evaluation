@@ -17,7 +17,7 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 				type: String
 			},
 			token: {
-				type: String
+				type: Object
 			}
 		};
 	}
@@ -79,6 +79,7 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 	}
 
 	async _initializeSubmissionEntities() {
+		this._submissionEntities = [];
 		if (this._submissionList !== undefined) {
 			for (const submissionLink of this._submissionList) {
 				if (submissionLink.href) {
@@ -91,6 +92,21 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 
 	async _getSubmissionEntity(submissionHref) {
 		return await window.D2L.Siren.EntityStore.fetch(submissionHref, this._token, false);
+	}
+
+	_getComment(submissionEntity) {
+		if (submissionEntity.getSubEntityByClass(Classes.assignments.submissionComment)) {
+			return submissionEntity.getSubEntityByClass(Classes.assignments.submissionComment).properties.html;
+		}
+		return '';
+	}
+
+	_getAttachments(submissionEntity) {
+		const attachmentsListEntity = submissionEntity.getSubEntityByClass(Classes.assignments.attachmentList);
+		if (attachmentsListEntity) {
+			return attachmentsListEntity.getSubEntitiesByClass(Classes.assignments.attachment);
+		}
+		return [];
 	}
 
 	_renderListItems() {
@@ -109,7 +125,8 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 							evaluation-state=${evaluationState}
 							lateness=${moment.duration(Number(latenessTimespan), 'seconds').humanize()}
 							submission-type=${this.submissionType}
-							.submissionEntity=${submissionEntity}
+							comment=${this._getComment(submissionEntity)}
+							.attachments=${this._getAttachments(submissionEntity)}
 							?late=${latenessTimespan !== undefined}
 						></d2l-consistent-evaluation-submission-item>`);
 				} else {

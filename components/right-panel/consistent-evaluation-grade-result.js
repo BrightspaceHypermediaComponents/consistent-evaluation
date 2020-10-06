@@ -59,7 +59,6 @@ export class ConsistentEvaluationGradeResult extends LocalizeMixin(LitElement) {
 		this._gradeButtonUrl = '';
 		this._reportsButtonUrl = '';
 		// hard coded as disabled as not yet supported by API
-
 		this._manuallyOverriddenGrade = undefined;
 		this._hasUnsavedChanged = false;
 		this._gradeButtonTooltip = undefined;
@@ -90,6 +89,7 @@ export class ConsistentEvaluationGradeResult extends LocalizeMixin(LitElement) {
 		} else if (gradeType === GradeType.Letter && score === null) {
 			score = '';
 		}
+
 		return html`
 			<d2l-consistent-evaluation-right-panel-block title="Overall Grade">
 			<d2l-labs-d2l-grade-result-presentational

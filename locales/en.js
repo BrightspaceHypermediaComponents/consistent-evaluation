@@ -14,6 +14,7 @@ export const val = {
 	flag: 'Flag',
 	fileSubmission: 'File Submission',
 	flagged: 'Flagged',
+	exempt: 'Exempt',
 	late: 'late',
 	rubrics: 'Rubrics',
 	markRead: 'Mark as Read',
@@ -46,5 +47,6 @@ export const val = {
 	published:   'Evaluation published',
 	retracted:   'Evaluation retracted',
 	saved:  'Evaluation saved as draft',
-	updated:  'Evaluation updated'
+	updated:  'Evaluation updated',
+	iteratorText: 'User {num} of {total}',
 };

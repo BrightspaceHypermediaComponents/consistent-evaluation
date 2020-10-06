@@ -1,0 +1,28 @@
+{
+	"class": [
+		"user-assignment-activity",
+		"activity"
+	],
+	"entities": [
+		{
+			"class": [
+				"user-activity-name"
+			],
+			"rel": [
+				"item"
+			],
+			"properties": {
+				"shortText": "Attempt 1"
+			}
+		}
+	],
+	"links": [
+		{
+			"rel": [
+				"https://activities.api.brightspace.com/rels/user-activity-usage",
+				"self"
+			],
+			"href": "data/outcomes-overall-achievement/user-activity-usages/1000.json"
+		}
+	]
+}

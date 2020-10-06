@@ -6,7 +6,7 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 	static get properties() {
 		return {
 			url: { type: String },
-			token: { type: String }
+			token: { type: Object }
 		};
 	}
 
@@ -30,7 +30,7 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 				e.source.postMessage({
 					type: 'token-response',
 					token: this.token
-				}, 'http://s.brightspace.com');
+				}, 'https://s.brightspace.com');
 			}
 		});
 	}

@@ -1,0 +1,28 @@
+{
+	"class": [
+		"user-progress-outcome"
+	],
+	"rel": [
+		"item"
+	],
+	"links": [
+		{
+			"rel": [
+				"self"
+			],
+			"href": "data/outcomes-overall-achievement/user-progress-outcome/upo0.json"
+		},
+		{
+			"rel": [
+				"https://outcomes.api.brightspace.com/rels/outcome"
+			],
+			"href": "data/outcomes-overall-achievement/outcomes/o0.json"
+		},
+		{
+			"rel": [
+				"https://user-progress.api.brightspace.com/rels/outcome-activities"
+			],
+			"href": "data/outcomes-overall-achievement/user-progress-outcomes/10/activities.json"
+		}
+	]
+}

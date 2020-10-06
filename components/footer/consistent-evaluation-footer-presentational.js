@@ -10,6 +10,14 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeMixin(LitE
 			published: {
 				type: Boolean
 			},
+			allowEvaluationWrite: {
+				attribute: 'allow-evaluation-write',
+				type: Boolean
+			},
+			allowEvaluationDelete: {
+				attribute: 'allow-evaluation-delete',
+				type: Boolean
+			},
 			showNextStudent: {
 				attribute: 'show-next-student',
 				type: Boolean
@@ -37,6 +45,8 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeMixin(LitE
 		super();
 		this.published = false;
 		this.showNextStudent = false;
+		this.allowEvaluationWrite = false;
+		this.allowEvaluationDelete = false;
 	}
 
 	_dispatchButtonClickEvent(eventName) {
@@ -56,14 +66,32 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeMixin(LitE
 		const text = this.published ? this.localize('update') : this.localize('publish');
 		const eventEmitter = this.published ? this._emitUpdateEvent : this._emitPublishEvent;
 		const id = `consistent-evaluation-footer-${text.toLowerCase()}`;
-		return html`<d2l-button primary id=${id} @click=${eventEmitter} >${text}</d2l-button>`;
+		return this.allowEvaluationWrite ? html`<d2l-button primary id=${id} @click=${eventEmitter} >${text}</d2l-button>` : html``;
 	}
 
 	_getSaveDraftOrRetractButton() {
-		const text = this.published ? this.localize('retract') : this.localize('saveDraft');
-		const eventEmitter = this.published ? this._emitRetractEvent : this._emitSaveDraftEvent;
+
+		let text;
+		let eventEmitter;
+
+		if (this.published) {
+			if (this.allowEvaluationDelete) {
+				text = this.localize('retract');
+				eventEmitter =  this._emitRetractEvent;
+			} else {
+				return html ``;
+			}
+		} else {
+			if (this.allowEvaluationWrite) {
+				text = this.localize('saveDraft');
+				eventEmitter =  this._emitSaveDraftEvent;
+			} else {
+				return html ``;
+			}
+		}
+
 		const id = `consistent-evaluation-footer-${text.toLowerCase().split(' ').join('-')}`;
-		return html`<d2l-button id=${id} @click=${eventEmitter}>${text}</d2l-button>`;
+		return this.allowEvaluationWrite ? html`<d2l-button id=${id} @click=${eventEmitter}>${text}</d2l-button>` : html``;
 	}
 
 	_getNextStudentButton() {

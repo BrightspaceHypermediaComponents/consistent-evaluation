@@ -13,7 +13,6 @@ import { bodySmallStyles, heading3Styles, labelStyles } from '@brightspace-ui/co
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { fileSubmission, textSubmission } from '../controllers/constants';
 import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
-import { Classes } from 'd2l-hypermedia-constants';
 import { getFileIconTypeFromExtension } from '@brightspace-ui/core/components/icons/getFileIconType';
 import { loadLocalizationResources } from '../locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin';
@@ -42,9 +41,11 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 			lateness: {
 				type: String
 			},
-			submissionEntity : {
-				attribute: false,
-				type: Object
+			attachments: {
+				type: Array
+			},
+			comment: {
+				type: String
 			},
 			submissionType: {
 				attribute: 'submission-type',
@@ -138,24 +139,9 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 	constructor() {
 		super();
 		this.late = false;
-		this._submissionEntity = undefined;
-		this._date = undefined;
-		this._attachments = [];
-		this._comment = '';
+		this.comment = '';
+		this.attachments = [];
 		this._updateFilenameTooltips = this._updateFilenameTooltips.bind(this);
-	}
-
-	get submissionEntity() {
-		return this._submissionEntity;
-	}
-
-	set submissionEntity(newSubmission) {
-		const oldVal = this.submissionList;
-		if (oldVal !== newSubmission) {
-			this._submissionEntity = newSubmission;
-			this._initializeSubmissionProperties();
-			this.requestUpdate();
-		}
 	}
 
 	connectedCallback() {
@@ -178,17 +164,6 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 		const filenames = this.shadowRoot.querySelectorAll('.d2l-truncate');
 		for (const filename of filenames) {
 			this._resizeObserver.observe(filename);
-		}
-	}
-
-	_initializeSubmissionProperties() {
-		this._date = this.dateStr ? new Date(this.dateStr) : undefined;
-		const attachmentsListEntity = this.submissionEntity.getSubEntityByClass(Classes.assignments.attachmentList);
-		if (attachmentsListEntity) {
-			this._attachments = attachmentsListEntity.getSubEntitiesByClass(Classes.assignments.attachment);
-		}
-		if (this.submissionEntity.getSubEntityByClass(Classes.assignments.submissionComment)) {
-			this._comment = this.submissionEntity.getSubEntityByClass(Classes.assignments.submissionComment).properties.html;
 		}
 	}
 
@@ -248,8 +223,8 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 				textSubmissionEvidence: {
 					title: `${this.localize('textSubmission')} ${this.displayNumber}`,
 					date: this._formatDateTime(),
-					downloadUrl: this._attachments[0].properties.href,
-					content: this._comment
+					downloadUrl: this.attachments[0].properties.href,
+					content: this.comment
 				}
 			},
 			composed: true
@@ -258,11 +233,13 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 	}
 
 	_formatDateTime() {
-		const formattedDate = (this._date) ? formatDate(
-			this._date,
+		const date = this.dateStr ? new Date(this.dateStr) : undefined;
+
+		const formattedDate = (date) ? formatDate(
+			date,
 			{format: 'full'}) : '';
-		const formattedTime = (this._date) ? formatTime(
-			this._date,
+		const formattedTime = (date) ? formatTime(
+			date,
 			{format: 'short'}) : '';
 		return `${formattedDate} ${formattedTime}`;
 	}
@@ -289,7 +266,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 
 	_renderTextSubmissionTitle() {
 		// There is only one attachment for text submissions: an html file
-		const file = this._attachments[0];
+		const file = this.attachments[0];
 		const flagged = file.properties.flagged;
 		const read = file.properties.read;
 		const href = file.properties.href;
@@ -350,7 +327,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 	}
 
 	_renderAttachments() {
-		return html`${this._attachments.map((file) => {
+		return html`${this.attachments.map((file) => {
 			const {name, size, extension, flagged, read, href, fileViewer} = file.properties;
 			return html`
 			<d2l-list-item>
@@ -423,10 +400,10 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 
 	_renderComment() {
 		const peekHeight = this.submissionType === fileSubmission ? '5em' : '8em';
-		if (this._comment) {
+		if (this.comment) {
 			return html`
 					${this._renderCommentTitle()}
-					<d2l-more-less height=${peekHeight}>${unsafeHTML(this._comment)}</d2l-more-less>
+					<d2l-more-less height=${peekHeight}>${unsafeHTML(this.comment)}</d2l-more-less>
 				`;
 		}
 		return html``;

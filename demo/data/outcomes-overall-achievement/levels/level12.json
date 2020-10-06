@@ -1,0 +1,28 @@
+{
+    "class": [
+        "level-of-achievement"
+    ],
+    "rel": [
+        "item"
+    ],
+    "properties": {
+        "color": "#ffe599",
+        "levelId": "level12",
+        "name": "Satisfactory",
+        "sortOrder": 300
+    },
+    "links": [
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/outcomes-overall-achievement/levels/level12.json"
+        },
+        {
+            "rel": [
+                "achievement-scale"
+            ],
+            "href": "data/outcomes-overall-achievement/loa/scale0.json"
+        }
+    ]
+}

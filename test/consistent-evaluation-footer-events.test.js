@@ -15,10 +15,25 @@ const getUpdateButton = (el) => getButton(el, 'consistent-evaluation-footer-upda
 const getNextStudentButton = (el) => getButton(el, 'consistent-evaluation-footer-next-student');
 
 const defaultComponent = html`
-	<d2l-consistent-evaluation-footer-presentational></d2l-consistent-evaluation-footer-presentational>
+	<d2l-consistent-evaluation-footer-presentational 
+		allow-evaluation-write 
+		allow-evaluation-delete
+	></d2l-consistent-evaluation-footer-presentational>
 `;
 
 const publishedComponent = html`
+	<d2l-consistent-evaluation-footer-presentational 
+		allow-evaluation-write 
+		allow-evaluation-delete
+		published
+	></d2l-consistent-evaluation-footer-presentational>
+`;
+
+const noPermissionNotPublishedComponent = html`
+	<d2l-consistent-evaluation-footer-presentational></d2l-consistent-evaluation-footer-presentational>
+`;
+
+const noPermissionPublishedComponent = html`
 	<d2l-consistent-evaluation-footer-presentational published></d2l-consistent-evaluation-footer-presentational>
 `;
 
@@ -86,6 +101,24 @@ describe('d2l-consistent-evaluation-footer event tests', () => {
 				getNextStudentButton(el).click();
 				setTimeout(() => reject(`timeout waiting for ${event} event`), eventTimeoutMS);
 			});
+		});
+	});
+
+	it('should not show publish or save button', function() {
+		fixture(noPermissionNotPublishedComponent).then(el => {
+			const publishButtion = getPublishButton(el);
+			expect(publishButtion).to.be.null();
+			const saveButton = getSaveDraftButton(el);
+			expect(saveButton).to.be.null();
+		});
+	});
+
+	it('should not show retract or update button', function() {
+		fixture(noPermissionPublishedComponent).then(el => {
+			const retractButton = getRetractButton(el);
+			expect(retractButton).to.be.null();
+			const updateButton = getUpdateButton(el);
+			expect(updateButton).to.be.null();
 		});
 	});
 });

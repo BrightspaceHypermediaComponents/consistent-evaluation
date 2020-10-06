@@ -1,0 +1,15 @@
+{
+	"class": [
+		"user-assignment-activity",
+		"activity"
+	],
+	"links": [
+		{
+			"rel": [
+				"https://activities.api.brightspace.com/rels/user-activity-usage",
+				"self"
+			],
+			"href": "data/outcomes-overall-achievement/user-activity-usages/1005.json"
+		}
+	]
+}

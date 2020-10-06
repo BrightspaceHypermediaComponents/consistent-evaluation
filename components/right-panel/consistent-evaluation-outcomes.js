@@ -13,7 +13,7 @@ class ConsistentEvaluationOutcomes extends LitElement {
 				type: String
 			},
 			token: {
-				type: String
+				type: Object
 			},
 			description: {
 				type: String

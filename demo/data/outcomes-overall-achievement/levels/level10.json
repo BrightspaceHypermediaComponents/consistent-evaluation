@@ -1,0 +1,28 @@
+{
+    "class": [
+        "level-of-achievement"
+    ],
+    "rel": [
+        "item"
+    ],
+    "properties": {
+        "color": "#ea9999",
+        "levelId": "level10",
+        "name": "Poor",
+        "sortOrder": 100
+    },
+    "links": [
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/outcomes-overall-achievement/levels/level10.json"
+        },
+        {
+            "rel": [
+                "achievement-scale"
+            ],
+            "href": "data/outcomes-overall-achievement/loa/scale1.json"
+        }
+    ]
+}

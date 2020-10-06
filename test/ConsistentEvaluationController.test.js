@@ -17,34 +17,16 @@ describe('ConsistentEvaluationController', () => {
 			}, ConsistentEvaluationControllerErrors.INVALID_EVALUATION_HREF);
 		});
 
-		it('throws an error when empty string given for token', () => {
-			assert.throws(() => {
-				new ConsistentEvaluationController('href', '');
-			}, ConsistentEvaluationControllerErrors.INVALID_TOKEN);
-		});
-
 		it('throws an error for null href', () => {
 			assert.throws(() => {
 				new ConsistentEvaluationController(null, 'token');
 			}, ConsistentEvaluationControllerErrors.INVALID_EVALUATION_HREF);
 		});
 
-		it('throws an error for null token', () => {
-			assert.throws(() => {
-				new ConsistentEvaluationController('href', null);
-			}, ConsistentEvaluationControllerErrors.INVALID_TOKEN);
-		});
-
 		it('throws an error for non string href', () => {
 			assert.throws(() => {
 				new ConsistentEvaluationController(20, 'token');
 			}, ConsistentEvaluationControllerErrors.INVALID_TYPE_EVALUATION_HREF);
-		});
-
-		it('throws an error for non string token', () => {
-			assert.throws(() => {
-				new ConsistentEvaluationController('href', 20);
-			}, ConsistentEvaluationControllerErrors.INVALID_TYPE_TOKEN);
 		});
 	});
 

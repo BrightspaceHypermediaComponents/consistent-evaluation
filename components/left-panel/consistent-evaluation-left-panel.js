@@ -1,6 +1,7 @@
 import './consistent-evaluation-evidence-file.js';
 import './consistent-evaluation-evidence-text.js';
 import './consistent-evaluation-submissions-page.js';
+import './consistent-evaluation-outcomes-overall-achievement.js';
 import { bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWithNoEvidence, textSubmission } from '../controllers/constants';
@@ -30,7 +31,7 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 				attribute: false,
 				type: Object
 			},
-			token: { type: String },
+			token: { type: Object },
 			_fileEvidenceUrl: {
 				attribute: false,
 				type: String
@@ -38,6 +39,10 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 			_textEvidence: {
 				attribute: false,
 				type: Object
+			},
+			userProgressOutcomeHref: {
+				attribute: 'user-progress-outcome-href',
+				type: String
 			}
 		};
 	}
@@ -138,6 +143,15 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 		</div>`;
 	}
 
+	_renderOverallAchievement() {
+		return html`
+			<d2l-consistent-evaluation-outcomes-overall-achievement
+				href=${this.userProgressOutcomeHref}
+				.token=${this.token}
+			></d2l-consistent-evaluation-outcomes-overall-achievement>
+		`;
+	}
+
 	_renderSubmissionList() {
 		return html`
 		<d2l-consistent-evaluation-submissions-page
@@ -161,6 +175,10 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 	}
 
 	render() {
+		if (this.userProgressOutcomeHref) {
+			return this._renderOverallAchievement();
+		}
+
 		if (submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
 			return this._renderNoEvidenceSubmissionType();
 		}

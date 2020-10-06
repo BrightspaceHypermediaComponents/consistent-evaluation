@@ -19,34 +19,16 @@ describe('ConsistentEvaluationHrefController', () => {
 			}, ConsistentEvaluationHrefControllerErrors.INVALID_BASE_HREF);
 		});
 
-		it('throws an error when empty string given for token', () => {
-			assert.throws(() => {
-				new ConsistentEvaluationHrefController('href', '');
-			}, ConsistentEvaluationHrefControllerErrors.INVALID_TOKEN);
-		});
-
 		it('throws an error for null href', () => {
 			assert.throws(() => {
 				new ConsistentEvaluationHrefController(null, 'token');
 			}, ConsistentEvaluationHrefControllerErrors.INVALID_BASE_HREF);
 		});
 
-		it('throws an error for null token', () => {
-			assert.throws(() => {
-				new ConsistentEvaluationHrefController('href', null);
-			}, ConsistentEvaluationHrefControllerErrors.INVALID_TOKEN);
-		});
-
 		it('throws an error for non string href', () => {
 			assert.throws(() => {
 				new ConsistentEvaluationHrefController(20, 'token');
 			}, ConsistentEvaluationHrefControllerErrors.INVALID_TYPE_BASE_HREF);
-		});
-
-		it('throws an error for non string token', () => {
-			assert.throws(() => {
-				new ConsistentEvaluationHrefController('href', 20);
-			}, ConsistentEvaluationHrefControllerErrors.INVALID_TYPE_TOKEN);
 		});
 	});
 
@@ -200,6 +182,62 @@ describe('ConsistentEvaluationHrefController', () => {
 			assert.equal(gradeItemInfo.evaluationUrl, evaluationUrl);
 			assert.equal(gradeItemInfo.statsUrl, statsUrl);
 			assert.equal(gradeItemInfo.gradeItemName, gradeItemName);
+		});
+	});
+
+	describe('getAssignmentOrganizationName gets correct info', () => {
+		it('sets the assignment name', async() => {
+			const assignmentHref = 'expected_assignment_href';
+			const expectedAssignmentName = 'expectedAssignmentName';
+
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: {
+					hasLinkByRel: (r) => r === Rels.assignment,
+					getLinkByRel: (r) => (r === Rels.assignment ? { href: assignmentHref } : undefined)
+				}
+			});
+
+			const getHrefStub = sinon.stub(controller, '_getEntityFromHref');
+
+			getHrefStub.withArgs(assignmentHref, false).returns({
+				entity: {
+					properties: {
+						name: expectedAssignmentName
+					}
+				}
+			});
+
+			const actualAssignmentName = await controller.getAssignmentOrganizationName('assignment');
+			assert.equal(actualAssignmentName, expectedAssignmentName);
+		});
+
+		it('sets the organization name', async() => {
+			const organizationHref = 'expected_organization_href';
+			const expectedOrganizationName = 'expectedOrganizationName';
+
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: {
+					hasLinkByRel: (r) => r === Rels.organization,
+					getLinkByRel: (r) => (r === Rels.organization ? { href: organizationHref } : undefined)
+				}
+			});
+
+			const getHrefStub = sinon.stub(controller, '_getEntityFromHref');
+
+			getHrefStub.withArgs(organizationHref, false).returns({
+				entity: {
+					properties: {
+						name: expectedOrganizationName
+					}
+				}
+			});
+
+			const actualOrganizationName = await controller.getAssignmentOrganizationName('organization');
+			assert.equal(actualOrganizationName, expectedOrganizationName);
 		});
 	});
 });

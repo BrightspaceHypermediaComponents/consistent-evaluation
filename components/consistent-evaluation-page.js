@@ -1,7 +1,9 @@
+import './header/d2l-consistent-evaluation-learner-context-bar.js';
 import './left-panel/consistent-evaluation-left-panel.js';
 import './footer/consistent-evaluation-footer-presentational.js';
 import './right-panel/consistent-evaluation-right-panel.js';
 import './left-panel/consistent-evaluation-submissions-page.js';
+import './header/consistent-evaluation-nav-bar.js';
 import '@brightspace-ui/core/components/alert/alert-toast.js';
 import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/templates/primary-secondary/primary-secondary.js';
@@ -23,6 +25,14 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 			},
 			nextStudentHref: {
 				attribute: 'next-student-href',
+				type: String
+			},
+			returnHref: {
+				attribute: 'return-href',
+				type: String
+			},
+			returnHrefText: {
+				attribute: 'return-href-text',
 				type: String
 			},
 			outcomesHref: {
@@ -49,6 +59,18 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 				attribute: 'rubric-read-only',
 				type: Boolean
 			},
+			userHref: {
+				attribute: 'user-href',
+				type: String
+			},
+			userProgressOutcomeHref: {
+				attribute: 'user-progress-outcome-href',
+				type: String
+			},
+			coaDemonstrationHref: {
+				attribute: 'coa-demonstration-href',
+				type: String
+			},
 			submissionInfo: {
 				attribute: false,
 				type: Object
@@ -57,8 +79,24 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 				attribute: false,
 				type: Object
 			},
-			token: {
+			assignmentName: {
+				attribute: false,
 				type: String
+			},
+			organizationName: {
+				attribute: false,
+				type: String
+			},
+			iteratorTotal: {
+				attribute: false,
+				type: Number
+			},
+			iteratorIndex: {
+				attribute: false,
+				type: Number
+			},
+			token: {
+				type: Object
 			},
 			_displayToast: {
 				type: Boolean
@@ -106,12 +144,13 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 		super();
 		this._evaluationHref = undefined;
 		this._token = undefined;
-
 		this._controller = undefined;
 		this._evaluationEntity = undefined;
 		this._displayToast = false;
 		this._toastMessage = '';
 		this._scrollbarStatus = 'default';
+		this.allowEvaluationWrite = false;
+		this.allowEvaluationDelete = false;
 	}
 
 	get evaluationEntity() {
@@ -186,6 +225,8 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
 		this.evaluationEntity = await this._controller.fetchEvaluationEntity();
 		this.evaluationState = this.evaluationEntity.properties.state;
+		this.allowEvaluationWrite = this._controller.userHasWritePermission(this.evaluationEntity);
+		this.allowEvaluationDelete = this._controller.userHasDeletePermission(this.evaluationEntity);
 		this.richtextEditorConfig = this._controller.getRichTextEditorConfig(this.evaluationEntity);
 	}
 
@@ -205,7 +246,14 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 	}
 
 	_onNextStudentClick() {
-		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-next-student-click', {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-next-student-click', {
+			composed: true,
+			bubbles: true
+		}));
+	}
+
+	_onPreviousStudentClick() {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-previous-student-click', {
 			composed: true,
 			bubbles: true
 		}));
@@ -303,11 +351,28 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 	render() {
 		return html`
 			<d2l-template-primary-secondary primary-overflow="${this._scrollbarStatus}">
-				<div slot="header"><h1>Hello, consistent-evaluation!</h1></div>
+				<div slot="header">
+					<d2l-consistent-evaluation-nav-bar
+						return-href=${ifDefined(this.returnHref)}
+						return-href-text=${ifDefined(this.returnHrefText)}
+						.assignmentName=${this.assignmentName}
+						.organizationName=${this.organizationName}
+						.iteratorIndex=${this.iteratorIndex}
+						.iteratorTotal=${this.iteratorTotal}
+						@d2l-consistent-evaluation-on-previous-student=${this._onPreviousStudentClick}
+						@d2l-consistent-evaluation-on-next-student=${this._onNextStudentClick}
+					></d2l-consistent-evaluation-nav-bar>
+					<d2l-consistent-evaluation-learner-context-bar
+						href=${ifDefined(this.userHref)}
+						.token=${this.token}
+						.submissionInfo=${this.submissionInfo}
+					></d2l-consistent-evaluation-learner-context-bar>
+				</div>
 				<div slot="primary" class="d2l-consistent-evaluation-page-primary-slot">
 					<d2l-consistent-evaluation-left-panel
 						.submissionInfo=${this.submissionInfo}
 						.token=${this.token}
+						user-progress-outcome-href=${ifDefined(this.userProgressOutcomeHref)}
 						@d2l-consistent-evaluation-left-panel-render-evidence=${this._hideScrollbars}
 						@d2l-consistent-evaluation-left-panel-render-submission-list=${this._showScrollbars}
 					></d2l-consistent-evaluation-left-panel>
@@ -319,6 +384,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 						rubric-href=${ifDefined(this.rubricHref)}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}
+						coa-eval-override-href=${ifDefined(this.coaDemonstrationHref)}
 						.richTextEditorConfig=${this.richtextEditorConfig}
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}
@@ -329,6 +395,8 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 						?hide-grade=${this._noGradeComponent()}
 						?hide-outcomes=${this.outcomesHref === undefined}
 						?hide-feedback=${this._noFeedbackComponent()}
+						?hide-coa-eval-override=${this.coaDemonstrationHref === undefined}
+						?allow-evaluation-write=${this.allowEvaluationWrite}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
 						@on-d2l-consistent-eval-grade-changed=${this._transientSaveGrade}
 					></consistent-evaluation-right-panel>
@@ -338,6 +406,8 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 					<d2l-consistent-evaluation-footer-presentational
 						next-student-href=${ifDefined(this.nextStudentHref)}
 						?published=${this._isEvaluationPublished()}
+						?allow-evaluation-write=${this.allowEvaluationWrite}						
+						?allow-evaluation-delete=${this.allowEvaluationDelete}
 						@d2l-consistent-evaluation-on-publish=${this._publishEvaluation}
 						@d2l-consistent-evaluation-on-save-draft=${this._saveEvaluation}
 						@d2l-consistent-evaluation-on-retract=${this._retractEvaluation}

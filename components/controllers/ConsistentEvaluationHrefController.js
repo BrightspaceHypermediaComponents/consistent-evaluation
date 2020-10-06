@@ -1,12 +1,10 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { assessmentRel, evaluationRel, nextRel, previousRel, rubricRel } from './constants.js';
+import { actorRel, alignmentsRel, assessmentRel, checkpointItemType, evaluationRel, nextRel, previousRel, rubricRel, userProgressOutcomeActivitiesRel, userProgressOutcomeRel, userRel} from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
 	INVALID_BASE_HREF: 'baseHref was not defined when initializing ConsistentEvaluationHrefController',
-	INVALID_TYPE_BASE_HREF: 'baseHref must be a string when initializing ConsistentEvaluationHrefController',
-	INVALID_TOKEN: 'token was not defined when initializing ConsistentEvaluationHrefController',
-	INVALID_TYPE_TOKEN: 'token must be a string when initializing ConsistentEvaluationHrefController'
+	INVALID_TYPE_BASE_HREF: 'baseHref must be a string when initializing ConsistentEvaluationHrefController'
 };
 
 export class ConsistentEvaluationHrefController {
@@ -17,14 +15,6 @@ export class ConsistentEvaluationHrefController {
 
 		if (typeof baseHref !== 'string') {
 			throw new Error(ConsistentEvaluationHrefControllerErrors.INVALID_TYPE_BASE_HREF);
-		}
-
-		if (!token) {
-			throw new Error(ConsistentEvaluationHrefControllerErrors.INVALID_TOKEN);
-		}
-
-		if (typeof token !== 'string') {
-			throw new Error(ConsistentEvaluationHrefControllerErrors.INVALID_TYPE_TOKEN);
 		}
 
 		this.baseHref = baseHref;
@@ -55,6 +45,10 @@ export class ConsistentEvaluationHrefController {
 		let rubricAssessmentHref = undefined;
 		let rubricHref = undefined;
 		let alignmentsHref = undefined;
+		let userHref = undefined;
+		let actorHref = undefined;
+		let userProgressOutcomeHref = undefined;
+		let coaDemonstrationHref = undefined;
 
 		if (root && root.entity) {
 			root = root.entity;
@@ -63,7 +57,10 @@ export class ConsistentEvaluationHrefController {
 			nextHref = this._getHref(root, nextRel);
 			previousHref = this._getHref(root, previousRel);
 			rubricAssessmentHref = this._getHref(root, assessmentRel);
-			alignmentsHref = this._getHref(root, Rels.Alignments.alignments);
+			actorHref = this._getHref(root, actorRel);
+			userHref = this._getHref(root, userRel);
+			alignmentsHref = this._getHref(root, alignmentsRel);
+			userProgressOutcomeHref = this._getHref(root, userProgressOutcomeRel);
 
 			if (rubricAssessmentHref) {
 				const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, bypassCache);
@@ -71,9 +68,42 @@ export class ConsistentEvaluationHrefController {
 					rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
 				}
 			}
-		}
 
-		// we still need the outcomes href
+			if (alignmentsHref) {
+				const alignmentsEntity = await this._getEntityFromHref(alignmentsHref, bypassCache);
+				if (alignmentsEntity && alignmentsEntity.entity) {
+					if (alignmentsEntity.entity.entities && alignmentsEntity.entity.entities.length > 0) {
+						alignmentsHref = actorHref;
+					} else {
+						alignmentsHref = undefined;
+					}
+				}
+			}
+
+			if (userProgressOutcomeHref) {
+				const userProgressOutcomeEntity = await this._getEntityFromHref(userProgressOutcomeHref, bypassCache);
+				if (userProgressOutcomeEntity && userProgressOutcomeEntity.entity) {
+					const userProgressOutcomeActivitiesHref = this._getHref(userProgressOutcomeEntity.entity, userProgressOutcomeActivitiesRel);
+
+					if (userProgressOutcomeActivitiesHref) {
+						const userProgressOutcomeActivitiesEntity = await this._getEntityFromHref(userProgressOutcomeActivitiesHref, bypassCache);
+
+						if (userProgressOutcomeActivitiesEntity && userProgressOutcomeActivitiesEntity.entity) {
+							const checkpointActivityEntity = userProgressOutcomeActivitiesEntity.entity.getSubEntitiesByClass(Classes.userProgress.outcomes.activity).find((activityEntity) => {
+								return activityEntity.properties && activityEntity.properties.type === checkpointItemType;
+							});
+
+							if (checkpointActivityEntity) {
+								const demonstrationEntity = checkpointActivityEntity.getSubEntityByClass(Classes.outcomes.demonstration);
+								if (demonstrationEntity) {
+									coaDemonstrationHref = this._getHref(demonstrationEntity, 'self');
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
 		return {
 			root,
@@ -82,13 +112,17 @@ export class ConsistentEvaluationHrefController {
 			alignmentsHref,
 			previousHref,
 			rubricAssessmentHref,
-			rubricHref
+			rubricHref,
+			userHref,
+			userProgressOutcomeHref,
+			coaDemonstrationHref
 		};
 	}
 
 	async getSubmissionInfo() {
 		let root = await this._getRootEntity(false);
 		let submissionList, evaluationState, submissionType;
+		let isExempt = false;
 		if (root && root.entity) {
 			root = root.entity;
 			if (root.getSubEntityByClass(Classes.assignments.submissionList)) {
@@ -104,11 +138,19 @@ export class ConsistentEvaluationHrefController {
 					submissionType = assignmentEntity.entity.properties.submissionType.title;
 				}
 			}
+			const evaluationHref = this._getHref(root, evaluationRel);
+			if (evaluationHref) {
+				const evaluationEntity = await this._getEntityFromHref(evaluationHref, false);
+				if (evaluationEntity && evaluationEntity.entity) {
+					isExempt = evaluationEntity.entity.properties.isExempt;
+				}
+			}
 		}
 		return {
 			submissionList,
 			evaluationState,
-			submissionType
+			submissionType,
+			isExempt
 		};
 	}
 
@@ -138,5 +180,47 @@ export class ConsistentEvaluationHrefController {
 			statsUrl,
 			gradeItemName
 		};
+	}
+
+	async getAssignmentOrganizationName(domainName) {
+		let domainRel;
+
+		switch (domainName) {
+			case 'assignment':
+				domainRel = Rels.assignment;
+				break;
+			case 'organization':
+				domainRel = Rels.organization;
+				break;
+			default:
+				return undefined;
+		}
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			if (root.entity.hasLinkByRel(domainRel)) {
+				const domainLink = root.entity.getLinkByRel(domainRel).href;
+				const domainResponse = await this._getEntityFromHref(domainLink, false);
+
+				if (domainResponse && domainResponse.entity) {
+					return domainResponse.entity.properties.name;
+				}
+			}
+		}
+		return undefined;
+	}
+
+	async getIteratorInfo(iteratorProperty) {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			switch (iteratorProperty) {
+				case 'total':
+					return root.entity.properties.iteratorTotal;
+				case 'index':
+					return root.entity.properties.iteratorIndex;
+				default:
+					break;
+			}
+		}
+		return undefined;
 	}
 }

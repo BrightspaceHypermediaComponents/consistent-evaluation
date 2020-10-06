@@ -35,7 +35,6 @@ class ConsistentEvaluationRubric extends LitElement {
 					?read-only=${this.readonly}
 					force-Compact
 					overall-score-flag
-					outcomes-title-text="test"
 				>
 				</d2l-rubric>
 			</d2l-consistent-evaluation-right-panel-block>
