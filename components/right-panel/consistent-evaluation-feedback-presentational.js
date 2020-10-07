@@ -62,7 +62,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 
 	_saveOnFeedbackChange(e) {
 		const feedback = e.detail.content;
-
+		this._emitFeedbackTextEditorChangeEvent();
 		this._debounceJobs.feedback = Debouncer.debounce(
 			this._debounceJobs.feedback,
 			timeOut.after(800),
@@ -77,6 +77,14 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 			detail: feedback
 		}));
 	}
+
+	_emitFeedbackTextEditorChangeEvent() {
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-text-editor-change', {
+			composed: true,
+			bubbles: true
+		}));
+	}
+
 	async saveAttachment(e) {
 		const files = e.detail.files;
 		for (let i = 0; files.length > i; i++) {

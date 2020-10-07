@@ -37,6 +37,10 @@ class ConsistentEvaluationNavBar extends LocalizeMixin(LitElement) {
 				attribute: 'return-href-text',
 				type: String
 			},
+			hasUnsavedChanges: {
+				attribute: 'has-unsaved-changes',
+				type: Boolean
+			}
 		};
 	}
 
@@ -98,6 +102,13 @@ class ConsistentEvaluationNavBar extends LocalizeMixin(LitElement) {
 	_emitPreviousStudentEvent() { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-previous-student');}
 	_emitNextStudentEvent() { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-next-student'); }
 
+	_onNavigateBack(e) {
+		if (this.hasUnsavedChanges) {
+			e.preventDefault();
+			this._dispatchButtonClickEvent('d2l-consistent-evaluation-navigate-back-with-unsaved-changes');
+		}
+	}
+
 	_renderBackButton() {
 		if (this.returnHref === undefined) {
 			return html``;
@@ -109,12 +120,14 @@ class ConsistentEvaluationNavBar extends LocalizeMixin(LitElement) {
 				<d2l-navigation-link-back 
 					class="d2l-full-back"
 					href=${this.returnHref}
-					text=${ifDefined(this.returnHrefText)} >
+					text="${ifDefined(this.returnHrefText)}"
+					@click=${this._onNavigateBack} >
 				</d2l-navigation-link-back>
 
 				<d2l-navigation-link-back 
 					class="d2l-short-back"
-					href=${this.returnHref}>
+					href=${this.returnHref}
+					@click=${this._onNavigateBack}>
 				</d2l-navigation-link-back>
 			`;
 		}
