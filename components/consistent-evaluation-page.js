@@ -253,7 +253,8 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 
 	async _initializeController() {
 		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
-		this.evaluationEntity = await this._controller.fetchEvaluationEntity();
+		const bypassCache = true;
+		this.evaluationEntity = await this._controller.fetchEvaluationEntity(bypassCache);
 		this.evaluationState = this.evaluationEntity.properties.state;
 		this.allowEvaluationWrite = this._controller.userHasWritePermission(this.evaluationEntity);
 		this.allowEvaluationDelete = this._controller.userHasDeletePermission(this.evaluationEntity);
