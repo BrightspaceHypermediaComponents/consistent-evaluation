@@ -21,6 +21,9 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 			:host {
 				display: block;
 			}
+			d2l-labs-attachment {
+				margin-bottom: 20px;
+			}
 		`;
 	}
 
