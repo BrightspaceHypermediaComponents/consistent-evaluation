@@ -89,6 +89,15 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 		this.href = currentHref;
 	}
 
+	async removeAttachment(e) {
+		const a = await window.D2L.Siren.EntityStore.fetch(e.detail, this.token);
+		const attachmentEntity = new AttachmentEntity(a.entity, this.token);
+		await attachmentEntity.deleteAttachment();
+
+		const evaluationEntity = await window.D2L.Siren.EntityStore.get(this.destinationHref, this.token);
+		this.href = evaluationEntity.getLinkByRel(Rels.Activities.feedbackAttachments).href;
+	}
+
 	render() {
 		const a = this.attachments.map(a => {
 			const attachment = {
@@ -110,7 +119,9 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 		});
 
 		return html`
-			<d2l-labs-attachment-list editing="true">
+			<d2l-labs-attachment-list
+				editing="true"
+				@d2l-attachment-removed="${this.removeAttachment}">
 				${a}
 			</d2l-labs-attachment-list>
 			<d2l-activity-attachments-picker
