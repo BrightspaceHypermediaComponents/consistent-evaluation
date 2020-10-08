@@ -23,7 +23,8 @@ export class ConsistentEvaluationEvidenceTopBar extends LocalizeMixin(LitElement
 
 	_dispatchBackToUserSubmissionsEvent() {
 		const event = new CustomEvent('d2l-consistent-evaluation-evidence-back-to-user-submissions', {
-			composed: true
+			composed: true,
+			bubbles: true
 		});
 		this.dispatchEvent(event);
 	}

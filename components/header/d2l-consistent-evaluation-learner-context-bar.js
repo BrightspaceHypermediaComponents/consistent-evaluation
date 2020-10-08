@@ -1,4 +1,5 @@
 import './d2l-consistent-evaluation-lcb-user-context.js';
+import './d2l-consistent-evaluation-lcb-file-context.js';
 import { css, html, LitElement } from 'lit-element';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 
@@ -15,6 +16,10 @@ export class ConsistentEvaluationLearnerContextBar extends RtlMixin(LitElement) 
 			submissionInfo: {
 				attribute: false,
 				type: Object
+			},
+			selectedItemName: {
+				attribute: 'selected-item-name',
+				type: String
 			}
 		};
 	}
@@ -22,7 +27,7 @@ export class ConsistentEvaluationLearnerContextBar extends RtlMixin(LitElement) 
 	static get styles() {
 		return css`
 			:host {
-				display: block;
+				display: flex;
 				height: 100%;
 				margin: 0.75rem 0 0.75rem 1.5rem;
 			}
@@ -69,6 +74,11 @@ export class ConsistentEvaluationLearnerContextBar extends RtlMixin(LitElement) 
 				.token="${this.token}"
 				?is-exempt="${this._getIsExempt()}"
 			></d2l-consistent-evaluation-lcb-user-context>
+			<d2l-consistent-evaluation-lcb-file-context
+				selected-item-name=${this.selectedItemName}
+				.submissionInfo="${this.submissionInfo}">
+			</d2l-consistent-evaluation-lcb-file-context>
+
 		`;
 	}
 }

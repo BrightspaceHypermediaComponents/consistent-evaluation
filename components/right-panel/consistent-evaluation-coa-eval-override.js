@@ -14,12 +14,20 @@ class ConsistentEvaluationCoaEvalOverride extends LitElement {
 		};
 	}
 
+	_emitCoaEvalOverrideChange() {
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-coa-eval-override-changed', {
+			composed: true,
+			bubbles: true
+		}));
+	}
+
 	render() {
 		return html`
 			<d2l-consistent-evaluation-right-panel-block no-title>
 				<d2l-outcomes-coa-eval-override
 					href=${this.href}
-					.token=${this.token}>
+					.token=${this.token}
+					@d2l-outcomes-coa-eval-override-change=${this._emitCoaEvalOverrideChange}>
 				</d2l-outcomes-coa-eval-override>
 			</d2l-consistent-evaluation-right-panel-block>
 		`;
