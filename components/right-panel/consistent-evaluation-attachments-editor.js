@@ -12,7 +12,11 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 			href: { type: String },
 			destinationHref: { type: String },
 			token: { type: String },
-			attachments: { type: Array }
+			attachments: { type: Array },
+			canEditFeedback: {
+				attribute: 'can-edit-feedback',
+				type: Boolean
+			},
 		};
 	}
 
@@ -137,6 +141,7 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 				@d2l-activity-attachments-picker-files-uploaded="${this.saveAttachment}"
 				@d2l-activity-attachments-picker-video-uploaded="${this.saveAttachment}"
 				@d2l-activity-attachments-picker-audio-uploaded="${this.saveAttachment}">
+				?disabled="${!this.canEditFeedback}">
 			</d2l-activity-attachments-picker>`;
 	}
 }

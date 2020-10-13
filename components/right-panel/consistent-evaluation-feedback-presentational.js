@@ -109,6 +109,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 							href="${this.href}/attachments"
 							.token="${this.token}"
 							destinationHref="${this.href}">
+							.canEditFeedback="${this.canEditFeedback}"
 						</d2l-consistent-evaluation-attachments-editor>
 					</div>
 				</d2l-consistent-evaluation-right-panel-block>
