@@ -61,15 +61,16 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 	}
 
 	async _init(href, token) {
-		this.attachments = [];
+		const tempAttachments = [];
 		const entity = await window.D2L.Siren.EntityStore.fetch(href, token);
 		if (entity && entity.entity && entity.entity.entities) {
 			const entities = entity.entity.entities;
 			for (let i = 0; i < entities.length; i++) {
 				const a = await window.D2L.Siren.EntityStore.fetch(entities[i].href, token);
-				this.attachments.push(new AttachmentEntity(a.entity, token));
+				tempAttachments.push(new AttachmentEntity(a.entity, token));
 			}
 		}
+		this.attachments = tempAttachments;
 	}
 
 	async saveAttachment(e) {
@@ -83,6 +84,9 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 			const attachmentsEntity = await window.D2L.Siren.EntityStore.fetch(currentHref, this.token);
 
 			const attachmentCollectionEntity = new AttachmentCollectionEntity(attachmentsEntity.entity, this.token);
+			if (!attachmentCollectionEntity.canAddAttachments()) {
+				return;
+			}
 			await attachmentCollectionEntity.addFileAttachment(fileSystemType, fileId);
 
 			const evaluationEntity = await window.D2L.Siren.EntityStore.get(this.destinationHref, this.token);
