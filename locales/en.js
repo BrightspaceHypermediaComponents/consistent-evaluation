@@ -26,6 +26,7 @@ export const val = {
 	observedInPerson: 'Observed In Person',
 	onPaperSubmission: 'On Paper Submission',
 	outcomes: 'Outcomes',
+	overallAchievement: 'Overall Achievement',
 	overallAverage: 'Overall Average',
 	overallFeedback: 'Overall Feedback',
 	publish: 'Publish',

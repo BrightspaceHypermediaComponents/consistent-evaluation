@@ -20,13 +20,17 @@
 			<h2>d2l-coa-override-page</h2>
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation
+					id='consistent-eval'
 					href='data/outcomes-overall-achievement/user-activity-usage.json'
-					token='token'
 					return-href-text='Back to Mastery View'
 					return-href='/demo/'
 				></d2l-consistent-evaluation>
 			</d2l-demo-snippet>
 		</d2l-demo-page>
 
+		<script>
+			const element = document.getElementById('consistent-eval');
+			element.token = async() => { return 'token'; };
+		</script>
 	</body>
 </html>

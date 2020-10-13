@@ -13,12 +13,12 @@ import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin.js';
 class ConsistentEvaluationNavBar extends LocalizeMixin(LitElement) {
 	static get properties() {
 		return {
-			assignmentName: {
-				attribute: 'assignment-name',
+			titleName: {
+				attribute: 'title-name',
 				type: String
 			},
-			organizationName: {
-				attribute: 'organization-name',
+			subtitleName: {
+				attribute: 'subtitle-name',
 				type: String
 			},
 			iteratorTotal: {
@@ -133,22 +133,9 @@ class ConsistentEvaluationNavBar extends LocalizeMixin(LitElement) {
 		}
 	}
 
-	render() {
-		return html`
-			<d2l-navigation-immersive
-				width-type="fullscreen">
-
-				<div slot="left">
-					${this._renderBackButton()}
-				</div>
-
-				<div slot="middle">
-					<div id="assignmentName" class="d2l-heading-3 d2l-truncate">${this.assignmentName}</div>
-					<div id="className" class="d2l-label-text d2l-truncate">${this.organizationName}</div>
-					<d2l-tooltip for="assignmentName"> ${this.assignmentName}</d2l-tooltip>
-					<d2l-tooltip for="className">${this.organizationName}</d2l-tooltip>
-				</div>
-
+	_renderIteratorButtons() {
+		if (this.iteratorIndex !== undefined || this.iteratorTotal !== undefined) {
+			return html`
 				<d2l-navigation-iterator 
 					slot="right"
 					@previous-click=${this._emitPreviousStudentEvent} 
@@ -162,6 +149,27 @@ class ConsistentEvaluationNavBar extends LocalizeMixin(LitElement) {
 					</div>
 
 				</d2l-navigation-iterator>
+			`;
+		}
+	}
+
+	render() {
+		return html`
+			<d2l-navigation-immersive
+				width-type="fullscreen">
+
+				<div slot="left">
+					${this._renderBackButton()}
+				</div>
+
+				<div slot="middle">
+					<div id="titleName" class="d2l-heading-3 d2l-truncate">${this.titleName}</div>
+					<div id="subtitleName" class="d2l-label-text d2l-truncate">${this.subtitleName}</div>
+					<d2l-tooltip for="titleName"> ${this.titleName}</d2l-tooltip>
+					<d2l-tooltip for="subtitleName">${this.subtitleName}</d2l-tooltip>
+				</div>
+
+				${this._renderIteratorButtons()}
 				
 			</d2l-navigation-immersive>
 		`;

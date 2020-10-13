@@ -198,9 +198,13 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 
 		let score = this.grade.score;
 		let letterGrade = this.grade.letterGrade;
-		if (this.grade.scoreType === GradeType.Letter && this.grade.entity.properties.letterGradeSchemeRanges) {
+		let outOf = 100;
+		if (e.detail.outOf) {
+			outOf = e.detail.outOf;
+		}
 
-			const percentage = (e.detail.score / e.detail.outOf) * 100;
+		if (this.grade.scoreType === GradeType.Letter && this.grade.entity.properties.letterGradeSchemeRanges) {
+			const percentage = (e.detail.score / outOf) * 100;
 			const map = this.grade.entity.properties.letterGradeSchemeRanges;
 			for (const [key, value] of Object.entries(map)) {
 				if (percentage >= value) {
@@ -209,11 +213,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeMixin(LitElement) {
 				}
 			}
 		} else {
-			let outOf = 100;
-			if (e.detail.outOf) {
-				outOf = e.detail.outOf;
-			}
-
 			score = (e.detail.score / outOf) * this.grade.outOf;
 		}
 

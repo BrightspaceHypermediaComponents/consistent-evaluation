@@ -11,6 +11,10 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 
 	static get properties() {
 		return {
+			selectedItemName: {
+				attribute: 'selected-item-name',
+				type: String
+			},
 			submissionInfo: {
 				attribute: false,
 				type: Object
@@ -19,9 +23,9 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 				attribute: false,
 				type: Array
 			},
-			selectedItemName: {
-				attribute: 'selected-item-name',
-				type: String
+			_showFiles: {
+				attribute: false,
+				type: Boolean
 			}
 		};
 	}
@@ -39,6 +43,17 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 					margin-left: 0;
 					margin-right: 0.7rem;
 				}
+				.d2l-truncate {
+					overflow: hidden;
+					overflow-wrap: break-word;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+				@media (max-width: 930px) {
+					:host {
+						display: none;
+					}
+				}
 			`
 		];
 	}
@@ -47,19 +62,29 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 		return await loadLocalizationResources(langs);
 	}
 
+	constructor() {
+		super();
+
+		this._showFiles = false;
+	}
+
 	async updated(changedProperties) {
 		super.updated(changedProperties);
 
 		if (changedProperties.has('submissionInfo')) {
 			this._files = await this.getSubmissions();
 		}
+
+		this._showFiles = (this._files && this._files.length > 0);
 	}
 
 	async getSubmissions() {
-		if (this.submissionInfo) {
+		if (this.submissionInfo && this. submissionInfo.submissionList) {
+			const totalSubmissions = this.submissionInfo.submissionList.length;
+
 			const submissionEntities = this.submissionInfo.submissionList.map(async(sub, index) => {
 				const file = await window.D2L.Siren.EntityStore.fetch(sub.href, this.token, false);
-				file.submissionNumber = index + 1;
+				file.submissionNumber = totalSubmissions - index;
 				return file;
 			});
 			return Promise.all(submissionEntities);
@@ -127,19 +152,31 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 		this.dispatchEvent(event);
 	}
 
+	_truncateFileName(fileName) {
+		const maxFileLength = 50;
+		if (fileName.length <= maxFileLength) {
+			return fileName;
+		}
+
+		const ext = fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length);
+		return  `${fileName.substring(0, maxFileLength)}…${ext}`;
+	}
+
 	render() {
+		if (!this._showFiles) return html ``;
+
 		return html`
-			<select class="d2l-input-select" @change=${this._onSelectChange}>
+			<select class="d2l-input-select d2l-truncate" aria-label=${this.localize('userSubmissions')} @change=${this._onSelectChange}>
 				<option label=${this.localize('userSubmissions')} value=${submissions} ?selected=${this.selectedItemName === submissions}></option>
 				${this._files && this._files.map(submission => html`
 					<optgroup label=${this.localize('submissionNumber', 'number', submission.submissionNumber)}>
 						${this.getSubmissionFiles(submission).map(sf => html`
-							<option value=${JSON.stringify(sf)} label=${sf.name} ?selected=${sf.name === this.selectedItemName} class="select-option"></option>
+							<option value=${JSON.stringify(sf)} label=${this._truncateFileName(sf.name)} ?selected=${sf.name === this.selectedItemName} class="select-option"></option>
 						`)}
 					</optgroup>
 				`)};
 			</select>
- 		`;
+		`;
 	}
 }
 

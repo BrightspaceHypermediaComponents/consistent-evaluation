@@ -3,10 +3,6 @@
 		"user-assignment-activity",
 		"activity"
     ],
-    "properties": {
-        "iteratorTotal": "1",
-        "iteratorIndex": "1"
-	},
 	"links": [
 		{
 			"rel": [
@@ -26,6 +22,12 @@
                 "https://activities.api.brightspace.com/rels/evaluation"
             ],
             "href": "data/outcomes-overall-achievement/evaluation.json"
+        },
+        {
+            "rel": [
+                "https://api.brightspace.com/rels/user"
+            ],
+            "href": "data/user.json"
         }
 	]
 }
