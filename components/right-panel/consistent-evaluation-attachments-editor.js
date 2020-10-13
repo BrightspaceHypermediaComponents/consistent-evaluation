@@ -135,14 +135,16 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 				@d2l-attachment-removed="${this.removeAttachment}">
 				${a}
 			</d2l-labs-attachment-list>
-			<d2l-activity-attachments-picker
-				href="${this.href}"
-				.token="${this.token}"
-				@d2l-activity-attachments-picker-files-uploaded="${this.saveAttachment}"
-				@d2l-activity-attachments-picker-video-uploaded="${this.saveAttachment}"
-				@d2l-activity-attachments-picker-audio-uploaded="${this.saveAttachment}">
-				?disabled="${!this.canEditFeedback}">
-			</d2l-activity-attachments-picker>`;
+			<div ?hidden="${!this.canEditFeedback}">
+				<d2l-activity-attachments-picker
+					href="${this.href}"
+					.token="${this.token}"
+					@d2l-activity-attachments-picker-files-uploaded="${this.saveAttachment}"
+					@d2l-activity-attachments-picker-video-uploaded="${this.saveAttachment}"
+					@d2l-activity-attachments-picker-audio-uploaded="${this.saveAttachment}">
+				</d2l-activity-attachments-picker>
+			</div>
+`;
 	}
 }
 customElements.define('d2l-consistent-evaluation-attachments-editor', ConsistentEvaluationAttachmentsEditor);
