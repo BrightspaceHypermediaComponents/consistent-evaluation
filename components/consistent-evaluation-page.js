@@ -503,7 +503,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 				</div>
 				<div slot="secondary">
 					<consistent-evaluation-right-panel
-						evaluation-href=${this.evaluationHref}
+						evaluation-href=${ifDefined(this.evaluationHref)}
 						.feedbackText=${this._feedbackText}
 						rubric-href=${ifDefined(this.rubricHref)}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}

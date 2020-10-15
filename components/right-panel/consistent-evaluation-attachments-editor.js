@@ -12,7 +12,7 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 			href: { type: String },
 			destinationHref: { type: String },
 			token: { type: String },
-			attachments: { type: Array },
+			_attachments: { type: Array },
 			canEditFeedback: {
 				attribute: 'can-edit-feedback',
 				type: Boolean
@@ -33,9 +33,7 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 
 	constructor() {
 		super();
-		if (!this.attachments) {
-			this.attachments = [];
-		}
+		this._attachments = [];
 	}
 
 	get href() {
@@ -68,15 +66,19 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 
 	async _init(href, token) {
 		const tempAttachments = [];
+		let promises = [];
 		const entity = await window.D2L.Siren.EntityStore.fetch(href, token);
 		if (entity && entity.entity && entity.entity.entities) {
 			const entities = entity.entity.entities;
-			for (let i = 0; i < entities.length; i++) {
-				const a = await window.D2L.Siren.EntityStore.fetch(entities[i].href, token);
-				tempAttachments.push(new AttachmentEntity(a.entity, token));
-			}
+			promises = entities.map(attachmentEntity => {
+				return window.D2L.Siren.EntityStore.fetch(attachmentEntity.href, token);
+			});
 		}
-		this.attachments = tempAttachments;
+		const vals = await Promise.all(promises);
+		vals.map(a => {
+			tempAttachments.push(new AttachmentEntity(a.entity, token));
+		});
+		this._attachments = tempAttachments;
 	}
 
 	async saveAttachment(e) {
@@ -112,7 +114,8 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 	}
 
 	render() {
-		const attachmentsLocal = this.attachments.map(attachment => {
+		console.log('render', this._attachments.length);
+		const attachmentsLocal = this._attachments.map(attachment => {
 			const newAttachment = {
 				id: attachment.self(),
 				name: attachment.name(),
