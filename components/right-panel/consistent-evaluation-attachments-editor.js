@@ -33,7 +33,9 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 
 	constructor() {
 		super();
-		this.attachments = [];
+		if (!this.attachments) {
+			this.attachments = [];
+		}
 	}
 
 	get href() {
@@ -110,30 +112,27 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 	}
 
 	render() {
-		const a = this.attachments.map(a => {
-			const attachment = {
-				id: a.self(),
-				name: a.name(),
-				url: a.href()
+		const attachmentsLocal = this.attachments.map(attachment => {
+			const newAttachment = {
+				id: attachment.self(),
+				name: attachment.name(),
+				url: attachment.href()
 			};
-			const deleted = false;
-			const creating = false;
+
 			return html`<li slot="attachment" class="panel">
 				<d2l-labs-attachment
-					attachmentId="${a.self()}"
-					.attachment="${attachment}"
-					?deleted="${deleted}"
-					?creating="${creating}"
-					?editing="${a.canDeleteAttachment()}">
+					attachmentId="${newAttachment.id}"
+					.attachment="${newAttachment}"
+					?editing="${attachment.canDeleteAttachment()}"></d2l-labs-attachment>
 				</d2l-labs-attachment>
 				</li>`;
 		});
 
 		return html`
 			<d2l-labs-attachment-list
-				editing="true"
+				editing="${this.canEditFeedback}"
 				@d2l-attachment-removed="${this.removeAttachment}">
-				${a}
+				${attachmentsLocal}
 			</d2l-labs-attachment-list>
 			<div ?hidden="${!this.canEditFeedback}">
 				<d2l-activity-attachments-picker
