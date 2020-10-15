@@ -93,14 +93,12 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 
 	getSubmissionFiles(submission) {
 		const attachments = submission.entity.getSubEntityByRel(attachmentListRel);
-		let displayNum = 0;
 		return attachments.entities.map(sf => {
-			displayNum += displayNum;
 			if (submission.entity.getSubEntityByClass(Classes.assignments.submissionComment)) {
 				sf.properties.comment = submission.entity.getSubEntityByClass(Classes.assignments.submissionComment).properties.html;
 			}
 			sf.properties.date = submission.entity.getSubEntityByClass(Classes.assignments.submissionDate).properties.date;
-			sf.properties.displayNumber = displayNum;
+			sf.properties.displayNumber = submission.submissionNumber;
 			return sf.properties;
 		});
 	}
