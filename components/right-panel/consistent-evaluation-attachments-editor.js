@@ -75,7 +75,7 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 			});
 		}
 		const vals = await Promise.all(promises);
-		vals.map(a => {
+		vals.forEach(a => {
 			tempAttachments.push(new AttachmentEntity(a.entity, token));
 		});
 		this._attachments = tempAttachments;
@@ -114,7 +114,6 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 	}
 
 	render() {
-		console.log('render', this._attachments.length);
 		const attachmentsLocal = this._attachments.map(attachment => {
 			const newAttachment = {
 				id: attachment.self(),
