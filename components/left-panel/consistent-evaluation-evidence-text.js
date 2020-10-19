@@ -49,7 +49,6 @@ export class ConsistentEvaluationEvidenceText extends LocalizeMixin(LitElement) 
 					<d2l-dropdown-menu id="dropdown" boundary="{&quot;right&quot;:10}">
 						<d2l-menu>
 							<d2l-menu-item-link text="${this.localize('download')}" href="${this.downloadUrl}"></d2l-menu-item-link>
-							<d2l-menu-item-link text="${this.localize('editCopy')}" href="#"></d2l-menu-item-link>
 						</d2l-menu>
 					</d2l-dropdown-menu>
 				</d2l-dropdown-more>

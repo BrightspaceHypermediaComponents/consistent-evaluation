@@ -104,9 +104,7 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 
 	getSubmissionFiles(submission) {
 		const attachments = submission.entity.getSubEntityByRel(attachmentListRel);
-		let displayNum = 0;
 		return attachments.entities.map(sf => {
-			displayNum += displayNum;
 			if (submission.entity.getSubEntityByClass(Classes.assignments.submissionComment)) {
 				sf.properties.comment = submission.entity.getSubEntityByClass(Classes.assignments.submissionComment).properties.html;
 			}
@@ -116,7 +114,7 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 			}
 
 			sf.properties.date = submission.entity.getSubEntityByClass(Classes.assignments.submissionDate).properties.date;
-			sf.properties.displayNumber = displayNum;
+			sf.properties.displayNumber = submission.submissionNumber;
 			return sf.properties;
 		});
 	}
@@ -236,7 +234,6 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 
 	render() {
 		if (!this._showFiles) return html ``;
-
 		return html`
 			<select class="d2l-input-select d2l-truncate" aria-label=${this.localize('userSubmissions')} @change=${this._onSelectChange}>
 				<option label=${this.localize('userSubmissions')} value=${submissions} ?selected=${this.selectedItemName === submissions}></option>

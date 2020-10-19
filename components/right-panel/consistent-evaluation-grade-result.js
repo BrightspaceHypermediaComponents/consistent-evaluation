@@ -2,8 +2,10 @@ import '@brightspace-ui-labs/grade-result/d2l-grade-result.js';
 import './consistent-evaluation-right-panel-block';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { html, LitElement } from 'lit-element';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { loadLocalizationResources } from '../locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin.js';
+import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
 export class ConsistentEvaluationGradeResult extends LocalizeMixin(LitElement) {
 
@@ -58,6 +60,9 @@ export class ConsistentEvaluationGradeResult extends LocalizeMixin(LitElement) {
 		this.hideTitle = false;
 		this._gradeButtonUrl = '';
 		this._reportsButtonUrl = '';
+		this._debounceJobs = {};
+		this.flush = this.flush.bind(this);
+
 		// hard coded as disabled as not yet supported by API
 		this._manuallyOverriddenGrade = undefined;
 		this._hasUnsavedChanged = false;
@@ -66,8 +71,32 @@ export class ConsistentEvaluationGradeResult extends LocalizeMixin(LitElement) {
 		this._isGradeAutoCompleted = false;
 	}
 
+	connectedCallback() {
+		super.connectedCallback();
+		window.addEventListener('d2l-flush', this.flush);
+	}
+
+	disconnectedCallback() {
+		window.removeEventListener('d2l-flush', this.flush);
+		super.disconnectedCallback();
+	}
+
+	flush() {
+		if (this._debounceJobs.grade && this._debounceJobs.grade.isActive()) {
+			this._debounceJobs.grade.flush();
+		}
+	}
+
 	onGradeChanged(e) {
 		const score = e.detail.value;
+		this._debounceJobs.grade = Debouncer.debounce(
+			this._debounceJobs.grade,
+			timeOut.after(800),
+			() => this._emitGradeChangeEvent(score)
+		);
+	}
+
+	_emitGradeChangeEvent(score) {
 		this.grade.setScore(score);
 		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-grade-changed', {
 			composed: true,
@@ -94,7 +123,7 @@ export class ConsistentEvaluationGradeResult extends LocalizeMixin(LitElement) {
 			<d2l-consistent-evaluation-right-panel-block title="Overall Grade">
 			<d2l-labs-d2l-grade-result-presentational
 				labelText=${this.labelText || this.localize('overallGrade')}
-				.gradeType=${gradeType} 
+				.gradeType=${gradeType}
 				scoreNumerator=${score}
 				scoreDenominator=${scoreOutOf}
 				.letterGradeOptions=${scoreOutOf}

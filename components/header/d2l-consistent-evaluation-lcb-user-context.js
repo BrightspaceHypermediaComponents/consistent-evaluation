@@ -16,6 +16,10 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				attribute: 'is-exempt',
 				type: Boolean
 			},
+			isGroupActivity: {
+				attribute: 'is-group-activity',
+				type: Boolean
+			},
 			_displayName: {
 				attribute: false,
 				type: String
@@ -64,17 +68,17 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 
 	set _entity(entity) {
 		if (this._entityHasChanged(entity)) {
-			this._onUserEntityChanged(entity);
+			this._onActorEntityChanged(entity);
 			super._entity = entity;
 		}
 	}
 
-	_onUserEntityChanged(userEntity, error) {
-		if (error || userEntity === null) {
+	_onActorEntityChanged(actorEntity, error) {
+		if (error || actorEntity === null) {
 			return;
 		}
 
-		this._displayName = userEntity.getDisplayName();
+		this._displayName = actorEntity.getDisplayName();
 	}
 
 	_getExemptText() {
@@ -85,13 +89,22 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		}
 	}
 
-	render() {
-		return html`
+	_renderProfileImage() {
+		if (this.isGroupActivity) {
+			return html``;
+		} else {
+			return html `
 			<d2l-profile-image
 				href="${this.href}"
 				.token="${this.token}"
 				small
-			></d2l-profile-image>
+			></d2l-profile-image>`;
+		}
+	}
+
+	render() {
+		return html`
+			${this._renderProfileImage()}
 			<span class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</span>
 			${this._getExemptText()}
 		`;
