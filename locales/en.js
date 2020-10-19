@@ -14,6 +14,7 @@ export const val = {
 	flag: 'Flag',
 	fileSubmission: 'File Submission',
 	flagged: 'Flagged',
+	groupIteratorText: 'Group {num} of {total}',
 	exempt: 'Exempt',
 	late: 'late',
 	leaveBtn: 'Leave',
@@ -54,5 +55,5 @@ export const val = {
 	retracted:   'Evaluation retracted',
 	saved:  'Evaluation saved as draft',
 	updated:  'Evaluation updated',
-	iteratorText: 'User {num} of {total}',
+	userIteratorText: 'User {num} of {total}'
 };

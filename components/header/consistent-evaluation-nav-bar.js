@@ -40,6 +40,10 @@ class ConsistentEvaluationNavBar extends LocalizeMixin(LitElement) {
 			hasUnsavedChanges: {
 				attribute: 'has-unsaved-changes',
 				type: Boolean
+			},
+			isGroupActivity: {
+				attribute: 'is-group-activity',
+				type: Boolean
 			}
 		};
 	}
@@ -135,6 +139,9 @@ class ConsistentEvaluationNavBar extends LocalizeMixin(LitElement) {
 
 	_renderIteratorButtons() {
 		if (this.iteratorIndex !== undefined || this.iteratorTotal !== undefined) {
+
+			const iteratorText = this.isGroupActivity ? 'groupIteratorText' : 'userIteratorText';
+
 			return html`
 				<d2l-navigation-iterator 
 					slot="right"
@@ -145,7 +152,7 @@ class ConsistentEvaluationNavBar extends LocalizeMixin(LitElement) {
 					hide-text>
 
 					<div class="d2l-iterator-space"> 
-						<span class="d2l-iterator-text d2l-label-text">${this.localize('iteratorText', { num: this.iteratorIndex, total: this.iteratorTotal }) }</span>
+						<span class="d2l-iterator-text d2l-label-text">${this.localize(iteratorText, { num: this.iteratorIndex, total: this.iteratorTotal }) }</span>
 					</div>
 
 				</d2l-navigation-iterator>

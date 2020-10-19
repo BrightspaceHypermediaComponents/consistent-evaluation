@@ -12,6 +12,7 @@ import '@brightspace-ui/core/components/button/button.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { draftState, publishedState } from './controllers/constants.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
+import { Awaiter } from './awaiter.js';
 import { ConsistentEvaluationController } from './controllers/ConsistentEvaluationController.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { loadLocalizationResources } from './locale.js';
@@ -70,6 +71,10 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 			},
 			userHref: {
 				attribute: 'user-href',
+				type: String
+			},
+			groupHref: {
+				attribute: 'group-href',
 				type: String
 			},
 			confirmUnsavedChanges: {
@@ -195,6 +200,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 		this._displayToast = false;
 		this._toastMessage = '';
 		this._scrollbarStatus = 'default';
+		this._mutex = new Awaiter();
 		this._setSubmissionsView = this._setSubmissionsView.bind(this);
 		this._hasUnsavedChanges = false;
 		this._dialogOpened = false;
@@ -308,18 +314,29 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 		return this.evaluationEntity.properties.state === publishedState;
 	}
 
-	_onNextStudentClick() {
-		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-next-student-click', {
-			composed: true,
-			bubbles: true
-		}));
+	async _onNextStudentClick() {
+		await this._mutex.dispatch(
+			() => this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-next-student-click', {
+				composed: true,
+				bubbles: true
+			}))
+		);
 	}
 
-	_onPreviousStudentClick() {
-		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-previous-student-click', {
-			composed: true,
-			bubbles: true
-		}));
+	async _onPreviousStudentClick() {
+		await this._mutex.dispatch(
+			() => this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-previous-student-click', {
+				composed: true,
+				bubbles: true
+			}))
+		);
+	}
+
+	_resetEvidence() {
+		this.submissionInfo = undefined;
+		this._fileEvidenceUrl = undefined;
+		this._textEvidence = undefined;
+		this.userProgressOutcomeHref = undefined;
 	}
 
 	_hideScrollbars() {
@@ -331,73 +348,118 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 	}
 
 	async _transientSaveFeedback(e) {
-		const entity = await this._controller.fetchEvaluationEntity(false);
-		const newFeedbackVal = e.detail;
-		this.evaluationEntity = await this._controller.transientSaveFeedback(entity, newFeedbackVal);
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				const newFeedbackVal = e.detail;
+
+				this.evaluationEntity = await this._controller.transientSaveFeedback(entity, newFeedbackVal);
+			}
+		);
 	}
 
 	async _transientSaveGrade(e) {
-		const entity = await this._controller.fetchEvaluationEntity(false);
-		let newGradeVal;
-		const type = e.detail.grade.scoreType;
-		if (type === GradeType.Letter) {
-			newGradeVal = e.detail.grade.letterGrade;
-		}
-		else if (type === GradeType.Number) {
-			newGradeVal = e.detail.grade.score;
-		}
-		this.evaluationEntity = await this._controller.transientSaveGrade(entity, newGradeVal);
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				let newGradeVal;
+				const type = e.detail.grade.scoreType;
+				if (type === GradeType.Letter) {
+					newGradeVal = e.detail.grade.letterGrade;
+				}
+				else if (type === GradeType.Number) {
+					newGradeVal = e.detail.grade.score;
+				}
+				this.evaluationEntity = await this._controller.transientSaveGrade(entity, newGradeVal);
+			}
+		);
 	}
 
 	async _saveEvaluation() {
-		const entity = await this._controller.fetchEvaluationEntity(false);
-		this.evaluationEntity = await this._controller.save(entity);
-		if (!(this.evaluationEntity instanceof Error)) {
-			this._showToast(this.localize('saved'));
-			this._updateHasUnsavedChanges(false);
-		} else {
-			this._showToast(this.localize('saveError'));
-		}
-		this.evaluationState = this.evaluationEntity.properties.state;
+		window.dispatchEvent(new CustomEvent('d2l-flush', {
+			composed: true,
+			bubbles: true
+		}));
+
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				this.evaluationEntity = await this._controller.save(entity);
+				if (!(this.evaluationEntity instanceof Error)) {
+					this._showToast(this.localize('saved'));
+					this._updateHasUnsavedChanges(false);
+				} else {
+					this._showToast(this.localize('saveError'));
+				}
+				this.evaluationState = this.evaluationEntity.properties.state;
+			}
+		);
 	}
 
 	async _updateEvaluation() {
-		const entity = await this._controller.fetchEvaluationEntity(false);
-		this.evaluationEntity = await this._controller.update(entity);
-		if (!(this.evaluationEntity instanceof Error)) {
-			this._showToast(this.localize('updated'));
-			this._updateHasUnsavedChanges(false);
-		} else {
-			this._showToast(this.localize('updatedError'));
-		}
-		this.evaluationState = this.evaluationEntity.properties.state;
+		window.dispatchEvent(new CustomEvent('d2l-flush', {
+			composed: true,
+			bubbles: true
+		}));
+
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				this.evaluationEntity = await this._controller.update(entity);
+				if (!(this.evaluationEntity instanceof Error)) {
+					this._showToast(this.localize('updated'));
+					this._updateHasUnsavedChanges(false);
+				} else {
+					this._showToast(this.localize('updatedError'));
+				}
+				this.evaluationState = this.evaluationEntity.properties.state;
+			}
+		);
 	}
 
 	async _publishEvaluation() {
-		const entity = await this._controller.fetchEvaluationEntity(false);
-		this.evaluationEntity = await this._controller.publish(entity);
-		this.evaluationState = this.evaluationEntity.properties.state;
-		if (!(this.evaluationEntity instanceof Error)) {
-			this._showToast(this.localize('published'));
-			this._updateHasUnsavedChanges(false);
-		} else {
-			this._showToast(this.localize('publishError'));
-		}
-		this.submissionInfo.evaluationState = publishedState;
-		this.allowEvaluationDelete = this._controller.userHasDeletePermission(this.evaluationEntity);
+		window.dispatchEvent(new CustomEvent('d2l-flush', {
+			composed: true,
+			bubbles: true
+		}));
+
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				this.evaluationEntity = await this._controller.publish(entity);
+				this.evaluationState = this.evaluationEntity.properties.state;
+				if (!(this.evaluationEntity instanceof Error)) {
+					this._showToast(this.localize('published'));
+					this._updateHasUnsavedChanges(false);
+				} else {
+					this._showToast(this.localize('publishError'));
+				}
+				this.submissionInfo.evaluationState = publishedState;
+				this.allowEvaluationDelete = this._controller.userHasDeletePermission(this.evaluationEntity);
+			}
+		);
 	}
 
 	async _retractEvaluation() {
-		const entity = await this._controller.fetchEvaluationEntity(false);
-		this.evaluationEntity = await this._controller.retract(entity);
-		if (!(this.evaluationEntity instanceof Error)) {
-			this._showToast(this.localize('retracted'));
-		} else {
-			this._showToast(this.localize('retractError'));
-		}
-		this.evaluationState = this.evaluationEntity.properties.state;
-		this.submissionInfo.evaluationState = draftState;
-		this.allowEvaluationWrite = this._controller.userHasWritePermission(this.evaluationEntity);
+		window.dispatchEvent(new CustomEvent('d2l-flush', {
+			composed: true,
+			bubbles: true
+		}));
+
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				this.evaluationEntity = await this._controller.retract(entity);
+				if (!(this.evaluationEntity instanceof Error)) {
+					this._showToast(this.localize('retracted'));
+				} else {
+					this._showToast(this.localize('retractError'));
+				}
+				this.evaluationState = this.evaluationEntity.properties.state;
+				this.submissionInfo.evaluationState = draftState;
+				this.allowEvaluationWrite = this._controller.userHasWritePermission(this.evaluationEntity);
+			}
+		);
 	}
 
 	_showToast(message) {
@@ -443,8 +505,8 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 	}
 
 	_renderToast() {
-		return html`<d2l-alert-toast 
-			?open=${this._displayToast} 
+		return html`<d2l-alert-toast
+			?open=${this._displayToast}
 			button-text=""
 			@d2l-alert-toast-close=${this._onToastClose}>${this._toastMessage}</d2l-alert-toast>`;
 	}
@@ -453,7 +515,8 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 		if (!this.hideLearnerContextBar) {
 			return html`
 				<d2l-consistent-evaluation-learner-context-bar
-					href=${ifDefined(this.userHref)}
+					user-href=${ifDefined(this.userHref)}
+					group-href=${ifDefined(this.groupHref)}
 					selected-item-name=${this._selectedFile}
 					special-access-href=${ifDefined(this.specialAccessHref)}
 					.token=${this.token}
@@ -497,7 +560,8 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 						.subtitleName=${this._navBarSubtitleText}
 						.iteratorIndex=${this.iteratorIndex}
 						.iteratorTotal=${this.iteratorTotal}
-						?has-unsaved-changes=${this._hasUnsavedChanges}
+						?has-unsaved-changes=${this._hasUnsavedChanges}						
+						?is-group-activity="${this.groupHref}"
 						@d2l-consistent-evaluation-on-previous-student=${this._onPreviousStudentClick}
 						@d2l-consistent-evaluation-on-next-student=${this._onNextStudentClick}
 						@d2l-consistent-evaluation-navigate-back-with-unsaved-changes=${this._showDialog}
@@ -515,7 +579,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 				</div>
 				<div slot="secondary">
 					<consistent-evaluation-right-panel
-						evaluation-href=${this.evaluationHref}
+						evaluation-href=${ifDefined(this.evaluationHref)}
 						.feedbackText=${this._feedbackText}
 						rubric-href=${ifDefined(this.rubricHref)}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
@@ -544,7 +608,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 					<d2l-consistent-evaluation-footer-presentational
 						next-student-href=${ifDefined(this.nextStudentHref)}
 						?published=${this._isEvaluationPublished()}
-						?allow-evaluation-write=${this.allowEvaluationWrite}						
+						?allow-evaluation-write=${this.allowEvaluationWrite}
 						?allow-evaluation-delete=${this.allowEvaluationDelete}
 						@d2l-consistent-evaluation-on-publish=${this._publishEvaluation}
 						@d2l-consistent-evaluation-on-save-draft=${this._saveEvaluation}
@@ -554,7 +618,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 					></d2l-consistent-evaluation-footer-presentational>
 				</div>
 			</d2l-template-primary-secondary>
-			<d2l-dialog-confirm	
+			<d2l-dialog-confirm
 				title-text=${this.localize('unsavedChangesTitle')}
 				text=${this.localize('unsavedChangesBody')}
 				?opened=${this._dialogOpened}

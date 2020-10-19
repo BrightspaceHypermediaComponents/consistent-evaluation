@@ -1,15 +1,12 @@
 import 'd2l-activities/components/d2l-activity-editor/d2l-activity-text-editor.js';
-import 'd2l-activities/components/d2l-activity-editor/d2l-activity-attachments/d2l-activity-attachments-editor.js';
-import 'd2l-activities/components/d2l-activity-editor/d2l-activity-attachments/d2l-activity-attachments-list.js';
 import './consistent-evaluation-right-panel-block';
+import './consistent-evaluation-attachments-editor.js';
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 
 import { css, html, LitElement } from 'lit-element';
-import { AttachmentCollectionEntity } from 'siren-sdk/src/activities/AttachmentCollectionEntity.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { loadLocalizationResources } from '../locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin.js';
-import { Rels } from 'd2l-hypermedia-constants';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
 class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElement) {
@@ -55,10 +52,31 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 
 		this.canEditFeedback = false;
 		this._debounceJobs = {};
-		this.addEventListener('d2l-request-provider',
-			e => {
-				if (e.detail.key === 'd2l-provider-html-editor-enabled') e.detail.provider = true;
-			});
+		this.flush = this.flush.bind(this);
+	}
+
+	htmlEditorEnabled(e) {
+		if (e.detail.key === 'd2l-provider-html-editor-enabled') {
+			e.detail.provider = true;
+		}
+	}
+
+	connectedCallback() {
+		super.connectedCallback();
+		this.addEventListener('d2l-request-provider', this.htmlEditorEnabled);
+		window.addEventListener('d2l-flush', this.flush);
+	}
+
+	disconnectedCallback() {
+		this.removeEventListener('d2l-request-provider', this.htmlEditorEnabled);
+		window.removeEventListener('d2l-flush', this.flush);
+		super.disconnectedCallback();
+	}
+
+	flush() {
+		if (this._debounceJobs.feedback && this._debounceJobs.feedback.isActive()) {
+			this._debounceJobs.feedback.flush();
+		}
 	}
 
 	_saveOnFeedbackChange(e) {
@@ -86,26 +104,6 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 		}));
 	}
 
-	async saveAttachment(e) {
-		const files = e.detail.files;
-		for (let i = 0; files.length > i; i++) {
-			const fileSystemType = files[i].m_fileSystemType;
-			const fileId = files[i].m_id;
-
-			const sirenEntity = await window.D2L.Siren.EntityStore.get(this.href, this.token);
-			const link = sirenEntity.getLinkByRel(Rels.Activities.feedbackAttachments);
-			const entitytemp = await window.D2L.Siren.EntityStore.fetch(link, this.token);
-
-			const entity = new AttachmentCollectionEntity(entitytemp.entity, this.token, { remove: () => { } });
-			await entity.addFileAttachment(fileSystemType, fileId);
-		}
-
-	}
-
-	async deleteAttachment() {
-		await this.shadowRoot.querySelector('d2l-activity-attachments-editor').save();
-	}
-
 	updated(changedProperties) {
 		super.updated(changedProperties);
 
@@ -128,15 +126,12 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeMixin(LitElemen
 						ariaLabel="${this.localize('overallFeedback')}">
 					</d2l-activity-text-editor>
 					<div>
-						<d2l-activity-attachments-editor
-							.href="${this.href}/attachments"
+						<d2l-consistent-evaluation-attachments-editor
+							href="${this.href}/attachments"
 							.token="${this.token}"
-							@d2l-activity-attachments-picker-files-uploaded="${this.saveAttachment}"
-							@d2l-activity-attachments-picker-video-uploaded="${this.saveAttachment}"
-							@d2l-activity-attachments-picker-audio-uploaded="${this.saveAttachment}"
-							@d2l-attachment-removed="${this.deleteAttachment}"
-							?disabled="${!this.canEditFeedback}">
-						</d2l-activity-attachments-editor>
+							destinationHref="${this.href}"
+							.canEditFeedback="${this.canEditFeedback}">
+						</d2l-consistent-evaluation-attachments-editor>
 					</div>
 				</d2l-consistent-evaluation-right-panel-block>
 			</div>

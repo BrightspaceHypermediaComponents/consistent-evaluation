@@ -284,7 +284,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 				<span class="d2l-body-small">${this._formatDateTime()}</span>
 			</div>
 		</d2l-list-item-content>
-		${this._addMenuOptions(read, flagged, href, file.properties.name)}
+		${this._addMenuOptions(read, flagged, href)}
 		</d2l-list-item>`;
 	}
 
@@ -349,7 +349,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 						${this._getReadableFileSizeString(size)}
 					</div>
 				</d2l-list-item-content>
-				${this._addMenuOptions(read, flagged, href, extension)}
+				${this._addMenuOptions(read, flagged, href)}
 			</d2l-list-item>`;
 		})}`;
 	}
@@ -369,7 +369,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 		});
 	}
 
-	_addMenuOptions(read, flagged, downloadHref, extension) {
+	_addMenuOptions(read, flagged, downloadHref) {
 		// Placeholder for menu presentational
 		const oppositeReadState = read ? this.localize('markUnread') : this.localize('markRead');
 		const oppositeFlagState = flagged ? this.localize('unflag') : this.localize('flag');
@@ -384,18 +384,10 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 					<d2l-menu-item-link text="${this.localize('download')}" href="${downloadHref}"></d2l-menu-item-link>
 					<d2l-menu-item-link text="${oppositeReadState}" href="#"></d2l-menu-item-link>
 					<d2l-menu-item-link text="${oppositeFlagState}" href="#"></d2l-menu-item-link>
-					${this._renderEditACopy(extension)}
 				</d2l-menu>
 			</d2l-dropdown-menu>
 			</d2l-dropdown-more>
 			</div>`;
-	}
-
-	_renderEditACopy(extension) {
-		if (extension === 'txt' || extension === 'html') {
-			return html `<d2l-menu-item-link text="${this.localize('editCopy')}" href="#"></d2l-menu-item-link>`;
-		}
-		return html``;
 	}
 
 	_renderComment() {

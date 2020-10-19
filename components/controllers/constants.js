@@ -8,6 +8,7 @@ export const saveGradeActionName = 'SaveGrade';
 export const saveFeedbackFieldName = 'value';
 export const saveGradeFieldName = 'value';
 export const gradesRel = 'https://activities.api.brightspace.com/rels/grade';
+export const groupRel = 'https://api.brightspace.com/rels/group';
 export const feedbackRel = 'https://activities.api.brightspace.com/rels/feedback';
 export const evaluationRel = 'https://activities.api.brightspace.com/rels/evaluation';
 export const assessmentRel = 'https://api.brightspace.com/rels/assessment';
