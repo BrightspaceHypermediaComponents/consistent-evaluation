@@ -34,3 +34,4 @@ export const submissions = 'Submissions';
 export const submissionTypesWithNoEvidence = [onPaperSubmission, observedInPerson];
 export const toggleIsReadActionName = 'ToggleRead';
 export const toggleFlagActionName = 'ToggleFlagged';
+export const uselessChange = 'publish';
