@@ -18,6 +18,7 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { loadLocalizationResources } from './locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin.js';
 import { submissions } from './controllers/constants';
+import { SubmissionsAndFilesHelpers } from './helpers/submissionsAndFilesHelpers.js';
 
 const DIALOG_ACTION_LEAVE = 'leave';
 
@@ -278,6 +279,14 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 		return this.organizationName;
 	}
 
+	async updated(changedProperties) {
+		super.updated(changedProperties);
+
+		if (changedProperties.has('submissionInfo') && this.token) {
+			await this.setSubmissionViewFromUrl();
+		}
+	}
+
 	async _initializeController() {
 		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
 		const bypassCache = true;
@@ -286,6 +295,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 		this.allowEvaluationWrite = this._controller.userHasWritePermission(this.evaluationEntity);
 		this.allowEvaluationDelete = this._controller.userHasDeletePermission(this.evaluationEntity);
 		this.richtextEditorConfig = this._controller.getRichTextEditorConfig(this.evaluationEntity);
+
 	}
 
 	_noFeedbackComponent() {
@@ -531,6 +541,45 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 		this._selectedFile = e.detail.textSubmissionEvidence.name;
 		this._fileEvidenceUrl = undefined;
 		this._hideScrollbars();
+	}
+
+	async setSubmissionViewFromUrl() {
+		const fileHelpers = new SubmissionsAndFilesHelpers(this.token);
+
+		const params = new URLSearchParams(window.location.search);
+		const fileIdQueryName = 'fileId';
+		const fileId = params.get(fileIdQueryName);
+		const submissions = await fileHelpers.getSubmissions(this.submissionInfo);
+		if (fileId && submissions) {
+			submissions.forEach(file => {
+				const fileProps = fileHelpers.getSubmissionFiles(file);
+				for (const sf of fileProps) {
+					if (sf.id === fileId) {
+						if (sf.comment === undefined) {
+							this._setFileEvidence({
+								detail: {
+									url: sf.fileViewer,
+									name: sf.name
+								}
+							});
+						} else {
+							this._setTextEvidence({
+								detail: {
+									textSubmissionEvidence: {
+										title: `${this.localize('textSubmission')} ${sf.displayNumber}`,
+										name: sf.name,
+										date: sf.date,
+										downloadUrl: sf.href,
+										content: sf.comment
+									}
+								}});
+						}
+						const urlWithoutFileQuery = window.location.href.replace(`&${fileIdQueryName}=${fileId}`, '');
+						history.replaceState({}, document.title, urlWithoutFileQuery);
+					}
+				}
+			});
+		}
 	}
 
 	render() {
