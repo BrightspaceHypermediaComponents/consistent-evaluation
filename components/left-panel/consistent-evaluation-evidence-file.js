@@ -25,24 +25,50 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 	constructor() {
 		super();
 
-		window.addEventListener('message', e => {
-			if (e.data.type === 'token-request') {
-				if (typeof this.token === 'string') {
-					this._postMessage(e, this.token);
-				} else {
-					this.token().then(token => {
-						this._postMessage(e, token);
-					});
-				}
-			}
-		});
+		this._handleMessage = this._handleMessage.bind(this);
 	}
 
-	_postMessage(e, token) {
+	connectedCallback() {
+		super.connectedCallback();
+		window.addEventListener('message', this._handleMessage);
+	}
+
+	disconnectedCallback() {
+		window.removeEventListener('message', this._handleMessage);
+		super.disconnectedCallback();
+	}
+
+	_handleMessage(e) {
+		if (e.data.type === 'token-request') {
+			return this._handleTokenRequest(e);
+		} else if (e.data.type === 'annotations-update') {
+			return this._handleAnnotationsUpdate(e);
+		}
+	}
+
+	_handleTokenRequest(e) {
+		if (typeof this.token === 'string') {
+			this._postTokenResponse(e, this.token);
+		} else {
+			this.token().then(token => {
+				this._postTokenResponse(e, token);
+			});
+		}
+	}
+
+	_postTokenResponse(e, token) {
 		e.source.postMessage({
 			type: 'token-response',
 			token: token
 		}, 'https://s.brightspace.com');
+	}
+
+	_handleAnnotationsUpdate(e) {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-annotations-update', {
+			composed: true,
+			bubbles: true,
+			detail: e.data.value
+		}));
 	}
 
 	render() {
