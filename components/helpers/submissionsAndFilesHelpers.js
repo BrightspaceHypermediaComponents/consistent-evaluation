@@ -14,6 +14,10 @@ export class SubmissionsAndFilesHelpers  {
 			if (submission.entity.getSubEntityByClass(Classes.assignments.submissionComment)) {
 				sf.properties.comment = submission.entity.getSubEntityByClass(Classes.assignments.submissionComment).properties.html;
 			}
+
+			if (submission.entity.getSubEntityByClass(Classes.assignments.submissionDate)) {
+				sf.properties.latenessTimespan = submission.entity.properties.lateTimeSpan;
+			}
 			sf.properties.date = submission.entity.getSubEntityByClass(Classes.assignments.submissionDate).properties.date;
 			sf.properties.displayNumber = submission.submissionNumber;
 			return sf.properties;
