@@ -184,7 +184,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 		moment.relativeTimeThreshold('m', 60);
 		moment.relativeTimeThreshold('h', 24);
 		moment.relativeTimeThreshold('d', Number.MAX_SAFE_INTEGER);
-		moment.relativeTimeRounding(Math.floor);		
+		moment.relativeTimeRounding(Math.floor);
 
 		this._evaluationHref = undefined;
 		this._token = undefined;
