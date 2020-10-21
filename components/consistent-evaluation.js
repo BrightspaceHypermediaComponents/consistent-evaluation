@@ -62,6 +62,7 @@ export class ConsistentEvaluation extends MobxLitElement {
 		if (changedProperties.has('href')) {
 			const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 			this._childHrefs = await controller.getHrefs();
+			this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._resetEvidence();
 			this._submissionInfo = await controller.getSubmissionInfo();
 			this._gradeItemInfo = await controller.getGradeItemInfo();
 			this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
@@ -69,7 +70,6 @@ export class ConsistentEvaluation extends MobxLitElement {
 			this._userName = await controller.getUserName();
 			this._iteratorTotal = await controller.getIteratorInfo('total');
 			this._iteratorIndex = await controller.getIteratorInfo('index');
-			this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._resetEvidence();
 			this._setFileIdFromUrl();
 		}
 	}
