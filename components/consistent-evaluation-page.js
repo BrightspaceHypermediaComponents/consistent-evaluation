@@ -90,6 +90,10 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 				attribute: 'hide-learner-context-bar',
 				type: Boolean
 			},
+			currentFileId: {
+				attribute: 'current-file-id',
+				type: String
+			},
 			submissionInfo: {
 				attribute: false,
 				type: Object
@@ -546,15 +550,12 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 	async setSubmissionViewFromUrl() {
 		const fileHelpers = new SubmissionsAndFilesHelpers(this.token);
 
-		const params = new URLSearchParams(window.location.search);
-		const fileIdQueryName = 'fileId';
-		const fileId = params.get(fileIdQueryName);
 		const submissions = await fileHelpers.getSubmissions(this.submissionInfo);
-		if (fileId && submissions) {
+		if (this.currentFileId && submissions) {
 			submissions.forEach(file => {
 				const fileProps = fileHelpers.getSubmissionFiles(file);
 				for (const sf of fileProps) {
-					if (sf.id === fileId) {
+					if (sf.id === this.currentFileId) {
 						if (sf.comment === undefined) {
 							this._setFileEvidence({
 								detail: {
@@ -574,8 +575,6 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 									}
 								}});
 						}
-						const urlWithoutFileQuery = window.location.href.replace(`&${fileIdQueryName}=${fileId}`, '');
-						history.replaceState({}, document.title, urlWithoutFileQuery);
 					}
 				}
 			});

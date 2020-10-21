@@ -28,7 +28,8 @@ export class ConsistentEvaluation extends MobxLitElement {
 			_organizationName: { type: String },
 			_userName: { type: String },
 			_iteratorTotal: { type: Number },
-			_iteratorIndex: { type: Number }
+			_iteratorIndex: { type: Number },
+			_currentFileId: { type: String}
 		};
 	}
 
@@ -69,6 +70,17 @@ export class ConsistentEvaluation extends MobxLitElement {
 			this._iteratorTotal = await controller.getIteratorInfo('total');
 			this._iteratorIndex = await controller.getIteratorInfo('index');
 			this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._resetEvidence();
+			this._setFileIdFromUrl();
+		}
+	}
+
+	_setFileIdFromUrl() {
+		const params = new URLSearchParams(window.location.search);
+		const fileIdQueryName = 'fileId';
+		this._currentFileId = params.get(fileIdQueryName);
+		if (this._currentFileId) {
+			const urlWithoutFileQuery = window.location.href.replace(`&${fileIdQueryName}=${this._currentFileId}`, '');
+			history.replaceState({}, document.title, urlWithoutFileQuery);
 		}
 	}
 
@@ -102,6 +114,7 @@ export class ConsistentEvaluation extends MobxLitElement {
 				coa-demonstration-href=${ifDefined(this._childHrefs && this._childHrefs.coaDemonstrationHref)}
 				return-href=${ifDefined(this.returnHref)}
 				return-href-text=${ifDefined(this.returnHrefText)}
+				current-file-id=${ifDefined(this._currentFileId)}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
 				.assignmentName=${this._assignmentName}
