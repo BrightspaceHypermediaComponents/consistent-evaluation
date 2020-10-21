@@ -147,12 +147,14 @@ export class ConsistentEvaluationLeftPanel extends LocalizeMixin(LitElement) {
 			return this._renderOverallAchievement();
 		}
 
-		if (submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
-			return this._renderNoEvidenceSubmissionType();
-		}
+		if (this.submissionInfo) {
+			if (submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
+				return this._renderNoEvidenceSubmissionType();
+			}
 
-		if (this.submissionInfo.submissionList === undefined) {
-			return this._renderNoSubmissions();
+			if (this.submissionInfo.submissionList === undefined) {
+				return this._renderNoSubmissions();
+			}
 		}
 
 		if (this.fileEvidenceUrl) {

@@ -6,6 +6,7 @@ import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/list/list-item.js';
 import '@brightspace-ui/core/components/list/list-item-content.js';
 import '@brightspace-ui/core/components/menu/menu.js';
+import '@brightspace-ui/core/components/menu/menu-item.js';
 import '@brightspace-ui/core/components/menu/menu-item-link.js';
 import '@brightspace-ui/core/components/more-less/more-less.js';
 import '@brightspace-ui/core/components/status-indicator/status-indicator.js';
@@ -13,6 +14,7 @@ import { bodySmallStyles, heading3Styles, labelStyles } from '@brightspace-ui/co
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { fileSubmission, textSubmission } from '../controllers/constants';
 import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
+import { toggleFlagActionName, toggleIsReadActionName } from '../controllers/constants.js';
 import { getFileIconTypeFromExtension } from '@brightspace-ui/core/components/icons/getFileIconType';
 import { loadLocalizationResources } from '../locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin';
@@ -232,6 +234,20 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 		this.dispatchEvent(event);
 	}
 
+	_dispatchToggleEvent(e) {
+		const action = e.target.getAttribute('data-action');
+		const fileId = e.target.getAttribute('data-key');
+		const event = new CustomEvent('d2l-consistent-evaluation-evidence-toggle-action', {
+			detail: {
+				fileId: fileId,
+				action: action
+			},
+			composed: true,
+			bubbles: true
+		});
+		this.dispatchEvent(event);
+	}
+
 	_formatDateTime() {
 		const date = this.dateStr ? new Date(this.dateStr) : undefined;
 
@@ -328,7 +344,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 
 	_renderAttachments() {
 		return html`${this.attachments.map((file) => {
-			const {name, size, extension, flagged, read, href, fileViewer} = file.properties;
+			const {id, name, size, extension, flagged, read, href, fileViewer} = file.properties;
 			return html`
 			<d2l-list-item>
 				<div slot="illustration" class="d2l-submission-attachment-icon-container">
@@ -349,7 +365,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 						${this._getReadableFileSizeString(size)}
 					</div>
 				</d2l-list-item-content>
-				${this._addMenuOptions(read, flagged, href)}
+				${this._addMenuOptions(read, flagged, href, id)}
 			</d2l-list-item>`;
 		})}`;
 	}
@@ -369,25 +385,24 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 		});
 	}
 
-	_addMenuOptions(read, flagged, downloadHref) {
-		// Placeholder for menu presentational
+	_addMenuOptions(read, flagged, downloadHref, id) {
 		const oppositeReadState = read ? this.localize('markUnread') : this.localize('markRead');
 		const oppositeFlagState = flagged ? this.localize('unflag') : this.localize('flag');
 		return html`<div slot="actions" style="z-index: inherit;">
-			<d2l-dropdown-more text="More Options">
+			<d2l-dropdown-more text="${this.localize('moreOptions')}">
 			<d2l-dropdown-menu id="dropdown" boundary="{&quot;right&quot;:10}">
-				<d2l-menu label="More Options">
-				${this.submissionType === textSubmission ? html`
+				<d2l-menu label="${this.localize('moreOptions')}">
+					${this.submissionType === textSubmission ? html`
 						<d2l-menu-item-link text="${this.localize('viewFullSubmission')}"
 							href="javascript:void(0);"
-							@click="${this._dispatchRenderEvidenceTextEvent}"></d2l-menu-item-link>` : null }
+							@click="${this._dispatchRenderEvidenceTextEvent}"></d2l-menu-item-link>` : null}
 					<d2l-menu-item-link text="${this.localize('download')}" href="${downloadHref}"></d2l-menu-item-link>
-					<d2l-menu-item-link text="${oppositeReadState}" href="#"></d2l-menu-item-link>
-					<d2l-menu-item-link text="${oppositeFlagState}" href="#"></d2l-menu-item-link>
+					<d2l-menu-item text="${oppositeReadState}" data-action="${toggleIsReadActionName}" data-key="${id}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
+					<d2l-menu-item text="${oppositeFlagState}" data-action="${toggleFlagActionName}" data-key="${id}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
 				</d2l-menu>
 			</d2l-dropdown-menu>
 			</d2l-dropdown-more>
-			</div>`;
+		</div>`;
 	}
 
 	_renderComment() {

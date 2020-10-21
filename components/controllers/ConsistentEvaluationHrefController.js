@@ -1,5 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { actorRel, alignmentsRel, assessmentRel, checkpointItemType, evaluationRel, groupRel, nextRel, previousRel, rubricRel, userProgressOutcomeActivitiesRel, userProgressOutcomeRel, userRel} from './constants.js';
+import { actorRel, alignmentsRel, assessmentRel, checkpointItemType, editSpecialAccessApplicationRel, evaluationRel, groupRel, nextRel, previousRel, rubricRel, userProgressOutcomeActivitiesRel, userProgressOutcomeRel, userRel} from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -50,6 +50,7 @@ export class ConsistentEvaluationHrefController {
 		let actorHref = undefined;
 		let userProgressOutcomeHref = undefined;
 		let coaDemonstrationHref = undefined;
+		let specialAccessHref = undefined;
 
 		if (root && root.entity) {
 			root = root.entity;
@@ -107,6 +108,10 @@ export class ConsistentEvaluationHrefController {
 			}
 		}
 
+		if (root.hasSubEntityByRel(editSpecialAccessApplicationRel)) {
+			specialAccessHref = root.getSubEntityByRel(editSpecialAccessApplicationRel).properties.path;
+		}
+
 		return {
 			root,
 			evaluationHref,
@@ -118,7 +123,8 @@ export class ConsistentEvaluationHrefController {
 			userHref,
 			groupHref,
 			userProgressOutcomeHref,
-			coaDemonstrationHref
+			coaDemonstrationHref,
+			specialAccessHref
 		};
 	}
 

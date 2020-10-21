@@ -1,9 +1,11 @@
+/* global moment:false */
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import './consistent-evaluation-submission-item.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Classes } from 'd2l-hypermedia-constants';
+import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 
 export class ConsistentEvaluationSubmissionsPage extends LitElement {
 	static get properties() {
@@ -43,12 +45,6 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 		this._submissionList = [];
 		this._token = undefined;
 		this._submissionEntities = [];
-		/* global moment:false */
-		moment.relativeTimeThreshold('s', 60);
-		moment.relativeTimeThreshold('m', 60);
-		moment.relativeTimeThreshold('h', 24);
-		moment.relativeTimeThreshold('d', Number.MAX_SAFE_INTEGER);
-		moment.relativeTimeRounding(Math.floor);
 	}
 
 	get submissionList() {
@@ -91,7 +87,8 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 	}
 
 	async _getSubmissionEntity(submissionHref) {
-		return await window.D2L.Siren.EntityStore.fetch(submissionHref, this._token, false);
+		const byPassCache = true;
+		return await window.D2L.Siren.EntityStore.fetch(submissionHref, this._token, byPassCache);
 	}
 
 	_getComment(submissionEntity) {
@@ -107,6 +104,46 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 			return attachmentsListEntity.getSubEntitiesByClass(Classes.assignments.attachment);
 		}
 		return [];
+	}
+
+	_getAttachmentEntity(fileId) {
+		for (let i = 0;i < this._submissionEntities.length; i++) {
+			const attachments = this._getAttachments(this._submissionEntities[i].entity);
+			for (let y = 0;y < attachments.length; y++) {
+				if (attachments[y].properties.id === fileId) {
+					return attachments[y];
+				}
+			}
+		}
+		return null;
+	}
+
+	async _updateSubmissionEntity(submissionEntity, submissionSelfLinkHref) {
+		for (let i = 0;i < this._submissionEntities.length; i++) {
+			const oldSubmissionEntity = await this._submissionEntities[i].entity.getLinkByRel('self');
+
+			if (oldSubmissionEntity.href === submissionSelfLinkHref) {
+				this._submissionEntities[i].entity = submissionEntity;
+				return;
+			}
+		}
+	}
+
+	async _toggleAction(e) {
+		const fileId = e.detail.fileId;
+		const actionName = e.detail.action;
+
+		const attachmentEntity = this._getAttachmentEntity(fileId);
+		if (!attachmentEntity) {
+			throw new Error('Invalid entity provided for attachment');
+		}
+
+		const action = attachmentEntity.getActionByName(actionName);
+		const newSubmissionEntity = await performSirenAction(this.token, action, undefined, true);
+
+		const submissionSelfLink = newSubmissionEntity.getLinkByRel('self');
+		await this._updateSubmissionEntity(newSubmissionEntity, submissionSelfLink.href) ;
+		await this.requestUpdate();
 	}
 
 	_renderListItems() {
@@ -128,6 +165,7 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 							comment=${this._getComment(submissionEntity)}
 							.attachments=${this._getAttachments(submissionEntity)}
 							?late=${latenessTimespan !== undefined}
+							@d2l-consistent-evaluation-evidence-toggle-action=${this._toggleAction}
 						></d2l-consistent-evaluation-submission-item>`);
 				} else {
 					console.warn('Consistent Evaluation submission date property not found');

@@ -16,6 +16,10 @@ export class ConsistentEvaluationLearnerContextBar extends RtlMixin(LitElement) 
 				attribute: 'group-href',
 				type: String
 			},
+			specialAccessHref: {
+				attribute: 'special-access-href',
+				type: String
+			},
 			token: {
 				type: Object
 			},
@@ -88,8 +92,9 @@ export class ConsistentEvaluationLearnerContextBar extends RtlMixin(LitElement) 
 			></d2l-consistent-evaluation-lcb-user-context>
 			<d2l-consistent-evaluation-lcb-file-context
 				selected-item-name=${this.selectedItemName}
-				.submissionInfo="${this.submissionInfo}"
-			></d2l-consistent-evaluation-lcb-file-context>
+				special-access-href=${this.specialAccessHref}
+				.submissionInfo="${this.submissionInfo}">
+			</d2l-consistent-evaluation-lcb-file-context>
 		`;
 	}
 }

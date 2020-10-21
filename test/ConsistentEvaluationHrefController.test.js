@@ -1,5 +1,5 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { assessmentRel, evaluationRel, nextRel, previousRel, rubricRel } from '../components/controllers/constants.js';
+import { assessmentRel, editSpecialAccessApplicationRel, evaluationRel, nextRel, previousRel, rubricRel } from '../components/controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
 import { assert } from '@open-wc/testing';
@@ -45,11 +45,14 @@ describe('ConsistentEvaluationHrefController', () => {
 
 				const controller = new ConsistentEvaluationHrefController('href', 'token');
 				const href = 'the_href_to_find';
+				const expectedSpecialAcessPath = 'the_special_access_path';
 
 				sinon.stub(controller, '_getRootEntity').returns({
 					entity: {
 						hasLinkByRel: (r) => r === rel,
-						getLinkByRel: (r) => (r === rel ? { href } : undefined)
+						getLinkByRel: (r) => (r === rel ? { href } : undefined),
+						hasSubEntityByRel: (r) => r === editSpecialAccessApplicationRel,
+						getSubEntityByRel: (r) => (r === editSpecialAccessApplicationRel ? { properties: {path: expectedSpecialAcessPath}} : undefined)
 					}
 				});
 
@@ -66,13 +69,16 @@ describe('ConsistentEvaluationHrefController', () => {
 
 		it('sets only the rubric assessment href properly', async() => {
 			const expectedAssessmentHref = 'the_assessment_href_to_find';
+			const expectedSpecialAcessPath = 'the_special_access_path';
 
 			const controller = new ConsistentEvaluationHrefController('href', 'token');
 
 			sinon.stub(controller, '_getRootEntity').returns({
 				entity: {
 					hasLinkByRel: (r) => r === assessmentRel,
-					getLinkByRel: (r) => (r === assessmentRel ? { href: expectedAssessmentHref } : undefined)
+					getLinkByRel: (r) => (r === assessmentRel ? { href: expectedAssessmentHref } : undefined),
+					hasSubEntityByRel: (r) => r === editSpecialAccessApplicationRel,
+					getSubEntityByRel: (r) => (r === editSpecialAccessApplicationRel ? { properties: {path: expectedSpecialAcessPath}} : undefined)
 				}
 			});
 			sinon.stub(controller, '_getEntityFromHref').returns(undefined);
@@ -88,12 +94,15 @@ describe('ConsistentEvaluationHrefController', () => {
 		it('sets the rubric href and the rubric assessment href  properly', async() => {
 			const expectedAssessmentHref = 'the_assessment_href_to_find';
 			const expectedRubricHref = 'the_rubric_href_to_find';
+			const expectedSpecialAcessPath = 'the_special_access_path';
 
 			const controller = new ConsistentEvaluationHrefController('href', 'token');
 			sinon.stub(controller, '_getRootEntity').returns({
 				entity: {
 					hasLinkByRel: (r) => r === assessmentRel,
-					getLinkByRel: (r) => (r === assessmentRel ? { href: expectedAssessmentHref } : undefined)
+					getLinkByRel: (r) => (r === assessmentRel ? { href: expectedAssessmentHref } : undefined),
+					hasSubEntityByRel: (r) => r === editSpecialAccessApplicationRel,
+					getSubEntityByRel: (r) => (r === editSpecialAccessApplicationRel ? { properties: {path: expectedSpecialAcessPath}} : undefined)
 				}
 			});
 			sinon.stub(controller, '_getEntityFromHref').returns({

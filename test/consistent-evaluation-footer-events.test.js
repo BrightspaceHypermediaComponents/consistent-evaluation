@@ -93,10 +93,10 @@ describe('d2l-consistent-evaluation-footer event tests', () => {
 		});
 	});
 
-	it('should emit a next student event', function() {
+	it('should emit a d2l-consistent-evaluation-navigate event', function() {
 		return new Promise((resolve, reject) => {
 			fixture(nextStudentComponent).then(el => {
-				const event = 'd2l-consistent-evaluation-on-next-student';
+				const event = 'd2l-consistent-evaluation-navigate';
 				el.addEventListener(event, resolve);
 				getNextStudentButton(el).click();
 				setTimeout(() => reject(`timeout waiting for ${event} event`), eventTimeoutMS);

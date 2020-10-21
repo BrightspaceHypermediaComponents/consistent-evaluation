@@ -1,4 +1,6 @@
+/* global moment:false */
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
+import '@brightspace-ui/core/components/button/button-subtle.js';
 import { css, html, LitElement } from 'lit-element';
 import { loadLocalizationResources } from '../locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin.js';
@@ -22,6 +24,14 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 			_files: {
 				attribute: false,
 				type: Array
+			},
+			specialAccessHref: {
+				attribute: 'special-access-href',
+				type: String
+			},
+			_submissionLateness: {
+				attribute: false,
+				type: Number
 			},
 			_showFiles: {
 				attribute: false,
@@ -76,6 +86,7 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 
 		if (changedProperties.has('submissionInfo')) {
 			this._files = await this._fileHelpers.getSubmissions(this.submissionInfo);
+			this._submissionLateness = undefined;
 		}
 
 		this._showFiles = (this._files && this._files.length > 0);
@@ -97,6 +108,8 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 		} else {
 			this._dispatchRenderEvidenceTextEvent(submission);
 		}
+
+		this._submissionLateness = submission.latenessTimespan;
 	}
 
 	_dispatchRenderEvidenceFileEvent(sf) {
@@ -128,6 +141,60 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 		this.dispatchEvent(event);
 	}
 
+	_renderLateButton() {
+		if (this.selectedItemName === submissions || !this._submissionLateness)
+		{
+			return html``;
+		} else {
+			return html`
+				<d2l-button-subtle
+					text="${moment.duration(Number(this._submissionLateness), 'seconds').humanize()} ${this.localize('late')}"
+					icon="tier1:access-special"
+					@click="${this._openSpecialAccessDialog}"
+				></d2l-button-subtle>`;
+		}
+	}
+
+	_openSpecialAccessDialog() {
+		const specialAccess = this.specialAccessHref;
+
+		if (!specialAccess) {
+			console.error('Consistent-Eval: Expected special access item dialog URL, but none found');
+			return;
+		}
+
+		const location = new D2L.LP.Web.Http.UrlLocation(specialAccess);
+
+		const buttons = [
+			{
+				Key: 'save',
+				Text: this.localize('saveBtn'),
+				ResponseType: 1, // D2L.Dialog.ResponseType.Positive
+				IsPrimary: true,
+				IsEnabled: true
+			},
+			{
+				Text: this.localize('cancelBtn'),
+				ResponseType: 2, // D2L.Dialog.ResponseType.Negative
+				IsPrimary: false,
+				IsEnabled: true
+			}
+		];
+
+		D2L.LP.Web.UI.Legacy.MasterPages.Dialog.Open(
+			/*               opener: */ this.shadowRoot.querySelector('d2l-button-subtle'),
+			/*             location: */ location,
+			/*          srcCallback: */ 'SrcCallback',
+			/*       resizeCallback: */ '',
+			/*      responseDataKey: */ 'result',
+			/*                width: */ 1920,
+			/*               height: */ 1080,
+			/*            closeText: */ this.localize('closeBtn'),
+			/*              buttons: */ buttons,
+			/* forceTriggerOnCancel: */ false
+		);
+	}
+
 	_truncateFileName(fileName) {
 		const maxFileLength = 50;
 		if (fileName.length <= maxFileLength) {
@@ -151,7 +218,8 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 					</optgroup>
 				`)};
 			</select>
-		`;
+			${this._renderLateButton()}
+ 		`;
 	}
 }
 
