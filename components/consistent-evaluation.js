@@ -29,7 +29,10 @@ export class ConsistentEvaluation extends MobxLitElement {
 			_userName: { type: String },
 			_iteratorTotal: { type: Number },
 			_iteratorIndex: { type: Number },
-			_currentFileId: { type: String}
+			fileId: {
+				attribute: 'file-id',
+				type: String
+			}
 		};
 	}
 
@@ -75,11 +78,9 @@ export class ConsistentEvaluation extends MobxLitElement {
 	}
 
 	_setFileIdFromUrl() {
-		const params = new URLSearchParams(window.location.search);
 		const fileIdQueryName = 'fileId';
-		this._currentFileId = params.get(fileIdQueryName);
-		if (this._currentFileId) {
-			const urlWithoutFileQuery = window.location.href.replace(`&${fileIdQueryName}=${this._currentFileId}`, '');
+		if (this.fileId) {
+			const urlWithoutFileQuery = window.location.href.replace(`&${fileIdQueryName}=${this.fileId}`, '');
 			history.replaceState({}, document.title, urlWithoutFileQuery);
 		}
 	}
@@ -111,7 +112,7 @@ export class ConsistentEvaluation extends MobxLitElement {
 				special-access-href=${ifDefined(this._childHrefs && this._childHrefs.specialAccessHref)}
 				return-href=${ifDefined(this.returnHref)}
 				return-href-text=${ifDefined(this.returnHrefText)}
-				current-file-id=${ifDefined(this._currentFileId !== null && this._currentFileId)}
+				current-file-id=${ifDefined(this.fileId !== null && this.fileId)}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
 				.assignmentName=${this._assignmentName}
