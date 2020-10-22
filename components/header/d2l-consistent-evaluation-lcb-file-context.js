@@ -36,9 +36,6 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 			_showFiles: {
 				attribute: false,
 				type: Boolean
-			},
-			_fileHelpers: {
-				attribute: false
 			}
 		};
 	}
@@ -77,7 +74,7 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 
 	constructor() {
 		super();
-		this._fileHelpers = new SubmissionsAndFilesHelpers(this.token);
+		this._fileHelpers = new SubmissionsAndFilesHelpers();
 		this._showFiles = false;
 	}
 
@@ -85,7 +82,7 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 		super.updated(changedProperties);
 
 		if (changedProperties.has('submissionInfo')) {
-			this._files = await this._fileHelpers.getSubmissions(this.submissionInfo);
+			this._files = await this._fileHelpers.getSubmissions(this.submissionInfo, this.token);
 			this._submissionLateness = undefined;
 		}
 
@@ -212,7 +209,7 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 				<option label=${this.localize('userSubmissions')} value=${submissions} ?selected=${this.selectedItemName === submissions}></option>
 				${this._files && this._files.map(submission => html`
 					<optgroup label=${this.localize('submissionNumber', 'number', submission.submissionNumber)}>
-						${this._fileHelpers.getSubmissionFiles(submission).map(sf => html`
+						${this._fileHelpers.getSubmissionFiles(submission, this.token).map(sf => html`
 							<option value=${JSON.stringify(sf)} label=${this._truncateFileName(sf.name)} ?selected=${sf.name === this.selectedItemName} class="select-option"></option>
 						`)}
 					</optgroup>

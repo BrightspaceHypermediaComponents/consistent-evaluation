@@ -4,10 +4,6 @@ import { Classes } from 'd2l-hypermedia-constants';
 
 export class SubmissionsAndFilesHelpers  {
 
-	constructor(token) {
-		this.token = token;
-	}
-
 	getSubmissionFiles(submission) {
 		const attachments = submission.entity.getSubEntityByRel(attachmentListRel);
 		return attachments.entities.map(sf => {
@@ -24,12 +20,12 @@ export class SubmissionsAndFilesHelpers  {
 		});
 	}
 
-	async getSubmissions(submissionInfo) {
+	async getSubmissions(submissionInfo, token) {
 		if (submissionInfo && submissionInfo.submissionList) {
 			const totalSubmissions = submissionInfo.submissionList.length;
 
 			const submissionEntities = submissionInfo.submissionList.map(async(sub, index) => {
-				const file = await window.D2L.Siren.EntityStore.fetch(sub.href, this.token, false);
+				const file = await window.D2L.Siren.EntityStore.fetch(sub.href, token, false);
 				file.submissionNumber = totalSubmissions - index;
 				return file;
 			});

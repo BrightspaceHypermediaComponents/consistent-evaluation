@@ -73,15 +73,6 @@ export class ConsistentEvaluation extends MobxLitElement {
 			this._iteratorTotal = await controller.getIteratorInfo('total');
 			this._iteratorIndex = await controller.getIteratorInfo('index');
 			this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._resetEvidence();
-			this._setFileIdFromUrl();
-		}
-	}
-
-	_setFileIdFromUrl() {
-		const fileIdQueryName = 'fileId';
-		if (this.fileId) {
-			const urlWithoutFileQuery = window.location.href.replace(`&${fileIdQueryName}=${this.fileId}`, '');
-			history.replaceState({}, document.title, urlWithoutFileQuery);
 		}
 	}
 

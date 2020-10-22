@@ -563,9 +563,9 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 	}
 
 	async setSubmissionViewFromUrl() {
-		const fileHelpers = new SubmissionsAndFilesHelpers(this.token);
+		const fileHelpers = new SubmissionsAndFilesHelpers();
 
-		const submissions = await fileHelpers.getSubmissions(this.submissionInfo);
+		const submissions = await fileHelpers.getSubmissions(this.submissionInfo, this.token);
 		if (this.currentFileId && submissions) {
 			submissions.forEach(file => {
 				const fileProps = fileHelpers.getSubmissionFiles(file);
