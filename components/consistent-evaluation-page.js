@@ -11,6 +11,7 @@ import '@brightspace-ui/core/components/dialog/dialog-confirm.js';
 import '@brightspace-ui/core/components/button/button.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { draftState, publishedState } from './controllers/constants.js';
+import {getSubmissionFiles, getSubmissions} from './helpers/submissionsAndFilesHelpers.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { Awaiter } from './awaiter.js';
 import { ConsistentEvaluationController } from './controllers/ConsistentEvaluationController.js';
@@ -18,7 +19,6 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { loadLocalizationResources } from './locale.js';
 import { LocalizeMixin } from '@brightspace-ui/core/mixins/localize-mixin.js';
 import { submissions } from './controllers/constants';
-import { SubmissionsAndFilesHelpers } from './helpers/submissionsAndFilesHelpers.js';
 
 const DIALOG_ACTION_LEAVE = 'leave';
 
@@ -563,12 +563,11 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 	}
 
 	async setSubmissionViewFromUrl() {
-		const fileHelpers = new SubmissionsAndFilesHelpers();
 
-		const submissions = await fileHelpers.getSubmissions(this.submissionInfo, this.token);
+		const submissions = await getSubmissions(this.submissionInfo, this.token);
 		if (this.currentFileId && submissions) {
 			submissions.forEach(file => {
-				const fileProps = fileHelpers.getSubmissionFiles(file);
+				const fileProps = getSubmissionFiles(file);
 				for (const sf of fileProps) {
 					if (sf.id === this.currentFileId) {
 						if (sf.comment === undefined) {
