@@ -153,13 +153,12 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 	}
 
 	_renderLateButton() {
-		if (this._selectedFileName === submissions || !this._selectedFileLateness)
-		{
+		if (this._selectedFileName === submissions || !this._selectedFileLateness) {
 			return html``;
 		} else {
 			return html`
 				<d2l-button-subtle
-					text="${moment.duration(Number(this.selectedFile.lateness), 'seconds').humanize()} ${this.localize('late')}"
+					text="${moment.duration(Number(this._selectedFileLateness), 'seconds').humanize()} ${this.localize('late')}"
 					icon="tier1:access-special"
 					@click="${this._openSpecialAccessDialog}"
 				></d2l-button-subtle>`;

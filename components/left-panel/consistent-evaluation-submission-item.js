@@ -145,7 +145,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 		this.comment = '';
 		this.attachments = [];
 		this._updateFilenameTooltips = this._updateFilenameTooltips.bind(this);
-		this._dispatchRenderEvidence = this._dispatchRenderEvidence.bind(this);
+		this._dispatchRenderEvidenceFileEvent = this._dispatchRenderEvidenceFileEvent.bind(this);
 	}
 
 	connectedCallback() {
@@ -207,7 +207,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 			detail: {
 				url: url,
 				submissionFile :{
-					id: null,
+					id: id,
 					name : name,
 					lateness: this.lateness
 				}
@@ -363,7 +363,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 				<d2l-list-item-content
 				@click="${
 	// eslint-disable-next-line lit/no-template-arrow
-	() => this._dispatchRenderEvidence(id, fileViewer, name)}">
+	() => this._dispatchRenderEvidenceFileEvent(id, fileViewer, name)}">
 					<div class="truncate" aria-label="heading">${this._getFileTitle(name)}</div>
 					<div slot="supporting-info">
 						${this._renderFlaggedStatus(flagged)}
