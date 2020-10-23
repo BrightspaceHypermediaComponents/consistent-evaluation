@@ -578,12 +578,12 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 				const fileProps = getSubmissionFiles(file);
 				for (const sf of fileProps) {
 					if (sf.id === this.currentFileId) {
+						const submissionFile = {
+							name: sf.name,
+							lateness: sf.latenessTimespan,
+							id: sf.id
+						};
 						if (sf.comment === undefined) {
-							const submissionFile = {
-								name: sf.name,
-								lateness: sf.latenessTimespan,
-								id: sf.id
-							}
 							this._setFileEvidence({
 								detail: {
 									url: sf.fileViewer,
@@ -592,8 +592,8 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 							});
 						} else {
 							this._setTextEvidence({
-								detail: {									
-									submissionFile:submissionFile,
+								detail: {
+									submissionFile: submissionFile,
 									textSubmissionEvidence: {
 										title: `${this.localize('textSubmission')} ${sf.displayNumber}`,
 										date: sf.date,

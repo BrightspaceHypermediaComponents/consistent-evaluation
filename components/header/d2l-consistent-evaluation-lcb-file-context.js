@@ -89,7 +89,7 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 		}
 
 		this._showFiles = (this._files && this._files.length > 0);
-		if(this.selectedFile) {
+		if (this.selectedFile) {
 			this._selectedFileName = this.selectedFile.name;
 			this._selectedFileLateness = this.selectedFile.lateness;
 		}
@@ -140,7 +140,7 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 					id: sf.id
 				},
 				textSubmissionEvidence: {
-					title: `${this.localize('textSubmission')} ${sf.displayNumber}`,					
+					title: `${this.localize('textSubmission')} ${sf.displayNumber}`,
 					date: sf.date,
 					downloadUrl: sf.href,
 					content: sf.comment
@@ -220,7 +220,7 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 		if (!this._showFiles) return html ``;
 		return html`
 			<select class="d2l-input-select d2l-truncate" aria-label=${this.localize('userSubmissions')} @change=${this._onSelectChange}>
-				<option label=${this.localize('userSubmissions')} value=${submissions} ?selected=${this._selectedFileName=== submissions}></option>
+				<option label=${this.localize('userSubmissions')} value=${submissions} ?selected=${this._selectedFileName === submissions}></option>
 				${this._files && this._files.map(submission => html`
 					<optgroup label=${this.localize('submissionNumber', 'number', submission.submissionNumber)}>
 						${getSubmissionFiles(submission, this.token).map(sf => html`
