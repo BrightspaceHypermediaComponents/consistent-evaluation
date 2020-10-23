@@ -160,7 +160,7 @@ export class ConsistentEvaluationSubmissionsPage extends LitElement {
 							date-str=${submissionDate}
 							display-number=${this._submissionEntities.length - i}
 							evaluation-state=${evaluationState}
-							lateness=${moment.duration(Number(latenessTimespan), 'seconds').humanize()}
+							lateness=${latenessTimespan}
 							submission-type=${this.submissionType}
 							comment=${this._getComment(submissionEntity)}
 							.attachments=${this._getAttachments(submissionEntity)}

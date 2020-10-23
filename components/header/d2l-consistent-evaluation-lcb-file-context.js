@@ -13,9 +13,9 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 
 	static get properties() {
 		return {
-			selectedItemName: {
-				attribute: 'selected-item-name',
-				type: String
+			selectedFile: {
+				attribute: false,
+				type: Object
 			},
 			submissionInfo: {
 				attribute: false,
@@ -29,11 +29,15 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 				attribute: 'special-access-href',
 				type: String
 			},
-			_submissionLateness: {
-				attribute: false,
-				type: Number
-			},
 			_showFiles: {
+				attribute: false,
+				type: Boolean
+			},
+			_selectedFileName : {
+				attribute: false,
+				type: String
+			},
+			_selectedFileLateness : {
 				attribute: false,
 				type: Boolean
 			}
@@ -82,10 +86,13 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 
 		if (changedProperties.has('submissionInfo')) {
 			this._files = await getSubmissions(this.submissionInfo, this.token);
-			this._submissionLateness = undefined;
 		}
 
 		this._showFiles = (this._files && this._files.length > 0);
+		if(this.selectedFile) {
+			this._selectedFileName = this.selectedFile.name;
+			this._selectedFileLateness = this.selectedFile.lateness;
+		}
 	}
 
 	_onSelectChange(e) {
@@ -112,7 +119,11 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 		const event = new CustomEvent('d2l-consistent-evaluation-submission-item-render-evidence-file', {
 			detail: {
 				url: sf.fileViewer,
-				name: sf.name
+				submissionFile: {
+					name: sf.name,
+					lateness: sf.latenessTimespan,
+					id: sf.id
+				}
 			},
 			composed: true,
 			bubbles: true
@@ -123,9 +134,13 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 	_dispatchRenderEvidenceTextEvent(sf) {
 		const event = new CustomEvent('d2l-consistent-evaluation-submission-item-render-evidence-text', {
 			detail: {
-				textSubmissionEvidence: {
-					title: `${this.localize('textSubmission')} ${sf.displayNumber}`,
+				submissionFile:{
 					name: sf.name,
+					lateness: sf.latenessTimespan,
+					id: sf.id
+				},
+				textSubmissionEvidence: {
+					title: `${this.localize('textSubmission')} ${sf.displayNumber}`,					
 					date: sf.date,
 					downloadUrl: sf.href,
 					content: sf.comment
@@ -138,13 +153,13 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 	}
 
 	_renderLateButton() {
-		if (this.selectedItemName === submissions || !this._submissionLateness)
+		if (this._selectedFileName === submissions || !this._selectedFileLateness)
 		{
 			return html``;
 		} else {
 			return html`
 				<d2l-button-subtle
-					text="${moment.duration(Number(this._submissionLateness), 'seconds').humanize()} ${this.localize('late')}"
+					text="${moment.duration(Number(this.selectedFile.lateness), 'seconds').humanize()} ${this.localize('late')}"
 					icon="tier1:access-special"
 					@click="${this._openSpecialAccessDialog}"
 				></d2l-button-subtle>`;
@@ -205,11 +220,11 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeMixin(L
 		if (!this._showFiles) return html ``;
 		return html`
 			<select class="d2l-input-select d2l-truncate" aria-label=${this.localize('userSubmissions')} @change=${this._onSelectChange}>
-				<option label=${this.localize('userSubmissions')} value=${submissions} ?selected=${this.selectedItemName === submissions}></option>
+				<option label=${this.localize('userSubmissions')} value=${submissions} ?selected=${this._selectedFileName=== submissions}></option>
 				${this._files && this._files.map(submission => html`
 					<optgroup label=${this.localize('submissionNumber', 'number', submission.submissionNumber)}>
 						${getSubmissionFiles(submission, this.token).map(sf => html`
-							<option value=${JSON.stringify(sf)} label=${this._truncateFileName(sf.name)} ?selected=${sf.name === this.selectedItemName} class="select-option"></option>
+							<option value=${JSON.stringify(sf)} label=${this._truncateFileName(sf.name)} ?selected=${sf.name === this._selectedFileName} class="select-option"></option>
 						`)}
 					</optgroup>
 				`)};

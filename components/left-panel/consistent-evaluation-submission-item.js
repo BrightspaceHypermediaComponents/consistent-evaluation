@@ -209,7 +209,11 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 		const event = new CustomEvent('d2l-consistent-evaluation-submission-item-render-evidence-file', {
 			detail: {
 				url: url,
-				name: name
+				file :{
+					id: null,
+					name : name,
+					lateness: this.lateness
+				}
 			},
 			composed: true,
 			bubbles: true
@@ -222,10 +226,14 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 			detail: {
 				textSubmissionEvidence: {
 					title: `${this.localize('textSubmission')} ${this.displayNumber}`,
-					name: name,
 					date: this._formatDateTime(),
 					downloadUrl: this.attachments[0].properties.href,
-					content: this.comment
+					content: this.comment,
+					file :{
+						id: null,
+						name : name,
+						lateness: this.lateness
+					}
 				}
 			},
 			composed: true,
@@ -321,7 +329,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeMixin(L
 			return html`
 			<d2l-status-indicator bold
 				state="alert"
-				text="${this.lateness} ${this.localize('late')}">
+				text="${moment.duration(Number(this.lateness), 'seconds').humanize()} ${this.localize('late')}">
 				</d2l-status-indicator>`;
 		} else {
 			return html ``;

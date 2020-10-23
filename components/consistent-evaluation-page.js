@@ -156,7 +156,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 			},
 			_selectedFile: {
 				attribute: false,
-				type: String
+				type: Object
 			},
 			_dialogOpened: {
 				attribute: false
@@ -204,6 +204,11 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 		this.allowEvaluationWrite = false;
 		this.allowEvaluationDelete = false;
 		this.unsavedChangesHandler = this._confirmUnsavedChangesBeforeUnload.bind(this);
+		this._defaultSelectedFile =  {
+			id : null,
+			name : submissions,
+			lateness : undefined
+		};
 	}
 
 	get evaluationEntity() {
@@ -338,7 +343,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 	}
 
 	_resetEvidence() {
-		this._selectedFile = submissions;
+		this._selectedFile = this._defaultSelectedFile;
 		this.submissionInfo = undefined;
 		this._fileEvidenceUrl = undefined;
 		this._textEvidence = undefined;
@@ -537,7 +542,7 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 				<d2l-consistent-evaluation-learner-context-bar
 					user-href=${ifDefined(this.userHref)}
 					group-href=${ifDefined(this.groupHref)}
-					selected-item-name=${this._selectedFile}
+					.selectedFile=${this._selectedFile}
 					special-access-href=${ifDefined(this.specialAccessHref)}
 					.token=${this.token}
 					.submissionInfo=${this.submissionInfo}
@@ -549,18 +554,18 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 	_setSubmissionsView() {
 		this._fileEvidenceUrl = undefined;
 		this._textEvidence = undefined;
-		this._selectedFile = submissions;
+		this._selectedFile = this._defaultSelectedFile;
 		this._showScrollbars();
 	}
 	_setFileEvidence(e) {
 		this._fileEvidenceUrl = e.detail.url;
-		this._selectedFile = e.detail.name;
+		this._selectedFile = e.detail.submissionFile;
 		this._textEvidence = undefined;
 		this._hideScrollbars();
 	}
 	_setTextEvidence(e) {
 		this._textEvidence = e.detail.textSubmissionEvidence;
-		this._selectedFile = e.detail.textSubmissionEvidence.name;
+		this._selectedFile = e.detail.submissionFile;
 		this._fileEvidenceUrl = undefined;
 		this._hideScrollbars();
 	}
@@ -574,18 +579,23 @@ export default class ConsistentEvaluationPage extends LocalizeMixin(LitElement) 
 				for (const sf of fileProps) {
 					if (sf.id === this.currentFileId) {
 						if (sf.comment === undefined) {
+							const submissionFile = {
+								name: sf.name,
+								lateness: sf.latenessTimespan,
+								id: sf.id
+							}
 							this._setFileEvidence({
 								detail: {
 									url: sf.fileViewer,
-									name: sf.name
+									submissionFile: submissionFile
 								}
 							});
 						} else {
 							this._setTextEvidence({
-								detail: {
+								detail: {									
+									submissionFile:submissionFile,
 									textSubmissionEvidence: {
 										title: `${this.localize('textSubmission')} ${sf.displayNumber}`,
-										name: sf.name,
 										date: sf.date,
 										downloadUrl: sf.href,
 										content: sf.comment
