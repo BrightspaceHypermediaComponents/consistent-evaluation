@@ -36,7 +36,7 @@ class ConsistentEvaluationRightPanelBlock extends LitElement {
 			}
 			@media (max-width: 768px) {
 				.d2l-label-text {
-					margin-bottom: 0.0rem;
+					margin-bottom: 0;
 				}
 				.d2l-block {
 					display: none;
@@ -45,12 +45,12 @@ class ConsistentEvaluationRightPanelBlock extends LitElement {
 					padding-right: 0.75rem;
 				}
 				.d2l-list-item {
-					display: block;
-					padding: 20px;
-					padding-top: 0px;
-					padding-bottom: 0px;
 					border-top: 1px solid var(--d2l-color-mica);
 					border-width: 1px;
+					display: block;
+					padding: 20px;
+					padding-bottom: 0;
+					padding-top: 0;
 				}
 			}
 		`];

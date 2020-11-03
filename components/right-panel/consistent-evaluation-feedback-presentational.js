@@ -2,7 +2,7 @@ import 'd2l-activities/components/d2l-activity-editor/d2l-activity-text-editor.j
 import './consistent-evaluation-right-panel-block';
 import './consistent-evaluation-attachments-editor.js';
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { css, html, LitElement } from 'lit-element';
+import { html, LitElement } from 'lit-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
@@ -35,11 +35,6 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				type: String
 			}
 		};
-	}
-
-	static get styles() {
-		return css`
-		`;
 	}
 
 	constructor() {
