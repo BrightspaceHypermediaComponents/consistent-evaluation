@@ -24,6 +24,10 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			href: {
 				type: String
 			},
+			inDialog: {
+				attribute: 'in-dialog',
+				type: Boolean
+			},
 			richTextEditorConfig: {
 				attribute: false,
 				type: Object
@@ -39,9 +43,6 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 	static get styles() {
 		return css`
-			.d2l-evaluation-feedback-container {
-				margin-top: 0.3rem;
-			}
 		`;
 	}
 
@@ -52,6 +53,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		this._debounceJobs = {};
 		this.flush = this.flush.bind(this);
 		this.attachmentsHref = null;
+		this.inDialog = false;
 	}
 
 	htmlEditorEnabled(e) {
@@ -126,8 +128,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				: null;
 
 			return html`
-				<div class="d2l-evaluation-feedback-container">
-					<d2l-consistent-evaluation-right-panel-block title="${this.localize('overallFeedback')}">
+					<d2l-consistent-evaluation-right-panel-block title="${this.localize('overallFeedback')}" ?in-dialog=${this.inDialog}>
 						<d2l-activity-text-editor
 							.key="${this._key}"
 							.value="${this.feedbackText}"
@@ -137,7 +138,6 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 						</d2l-activity-text-editor>
 						${attachments}
 					</d2l-consistent-evaluation-right-panel-block>
-				</div>
 			`;
 		} else {
 			return html``;

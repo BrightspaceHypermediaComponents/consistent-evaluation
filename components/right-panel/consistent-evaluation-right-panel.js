@@ -3,6 +3,7 @@ import './consistent-evaluation-outcomes.js';
 import './consistent-evaluation-rubric.js';
 import './consistent-evaluation-grade-result.js';
 import './consistent-evaluation-coa-eval-override.js';
+import '@brightspace-ui/core/components/dialog/dialog-fullscreen.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { html, LitElement } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
@@ -85,6 +86,10 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			},
 			token: {
 				type: Object
+			},
+			_feedbackDialogOpen: {
+				attribute: false,
+				type: Boolean
 			}
 		};
 	}
@@ -101,6 +106,11 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		this.allowEvaluationWrite = false;
 		this.rubricOpen = false;
 		this.attachmentsHref = null;
+		this._feedbackDialogOpen = false;
+	}
+
+	_setFeedbackDialogOpen() {
+		this._feedbackDialogOpen = true;
 	}
 
 	_renderRubric() {
@@ -148,6 +158,20 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 
 	_renderFeedback() {
 		if (!this.hideFeedback) {
+			if (this._feedbackDialogOpen) {
+				return html`
+					<d2l-dialog-fullscreen ?opened=${this._feedbackDialogOpen} title-text="Josh">
+						<d2l-consistent-evaluation-feedback-presentational
+							.href=${this.evaluationHref}
+							.token=${this.token}
+							?can-edit-feedback=${this.allowEvaluationWrite}
+							.feedbackText=${this.feedbackText}
+							.richTextEditorConfig=${this.richTextEditorConfig}
+							attachments-href=${ifDefined(this.attachmentsHref)}
+							?in-dialog=${this._feedbackDialogOpen}
+						></d2l-consistent-evaluation-feedback-presentational>
+					</d2l-dialog-fullscreen>`;
+			}
 			return html`
 				<d2l-consistent-evaluation-feedback-presentational
 					.href=${this.evaluationHref}
@@ -156,12 +180,12 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					.feedbackText=${this.feedbackText}
 					.richTextEditorConfig=${this.richTextEditorConfig}
 					attachments-href=${ifDefined(this.attachmentsHref)}
+					?in-dialog=${this._feedbackDialogOpen}
+					@d2l-consistent-evaluation-right-panel-list-item-clicked=${this._setFeedbackDialogOpen}
 				></d2l-consistent-evaluation-feedback-presentational>
 			`;
 		}
-
 		return html``;
-
 	}
 
 	_renderOutcome() {
