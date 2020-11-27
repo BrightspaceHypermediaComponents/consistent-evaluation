@@ -1,6 +1,6 @@
 import './consistent-evaluation-page.js';
 import { css, html, LitElement } from 'lit-element';
-import { ConsistentEvalTelemetryMixin } from './mixins/consistent-eval-telemetry-mixin.js'
+import { ConsistentEvalTelemetryMixin } from './mixins/consistent-eval-telemetry-mixin.js';
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 
