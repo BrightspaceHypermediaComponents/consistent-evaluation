@@ -1,9 +1,10 @@
 import './consistent-evaluation-page.js';
 import { css, html, LitElement } from 'lit-element';
+import { ConsistentEvalTelemetryMixin } from './mixins/consistent-eval-telemetry-mixin.js'
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 
-export class ConsistentEvaluation extends LitElement {
+export class ConsistentEvaluation extends ConsistentEvalTelemetryMixin(LitElement) {
 
 	static get properties() {
 		return {
@@ -140,9 +141,11 @@ export class ConsistentEvaluation extends LitElement {
 			}
 		}
 		this._loading = false;
+		this.logLoadEvent(this.href, 'consistentEvalPage');
 	}
 
 	_setLoading() {
+		this.markEventStart('consistentEvalPage');
 		for (const component in this._loadingComponents) {
 			this._loadingComponents[component] = true;
 		}
