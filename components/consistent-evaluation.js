@@ -36,6 +36,10 @@ export class ConsistentEvaluation extends LitElement {
 			},
 			currentFileId: {
 				type: String
+			},
+			dataTelemetryEndpoint: {
+				attribute: 'data-telemetry-endpoint',
+				type: String
 			}
 		};
 	}
@@ -162,6 +166,7 @@ export class ConsistentEvaluation extends LitElement {
 				return-href=${ifDefined(this.returnHref)}
 				return-href-text=${ifDefined(this.returnHrefText)}
 				current-file-id=${ifDefined(this.currentFileId)}
+				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
 				.assignmentName=${this._assignmentName}

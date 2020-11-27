@@ -53,6 +53,7 @@
     "d2l-outcomes-level-of-achievements": "github:Brightspace/outcomes-level-of-achievement-ui#semver:^3",
     "d2l-outcomes-overall-achievement": "github:Brightspace/d2l-outcomes-overall-achievement#semver:^1",
     "d2l-rubric": "github:Brightspace/d2l-rubric#semver:^3",
+    "d2l-telemetry-browser-client": "Brightspace/d2l-telemetry-browser-client#semver:^1",
     "d2l-users": "github:BrightspaceHypermediaComponents/users#semver:^2",
     "lit-element": "^2",
     "resize-observer-polyfill": "^1.5.1",
