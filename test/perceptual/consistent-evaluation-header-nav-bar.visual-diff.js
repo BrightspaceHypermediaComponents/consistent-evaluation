@@ -8,7 +8,10 @@ describe('d2l-consistent-evaluation', () => {
 	let browser, page;
 
 	before(async() => {
-		browser = await puppeteer.launch();
+		browser = await puppeteer.launch({
+			headless: true,
+			args: ['--no-sandbox', '--disable-setuid-sandbox', '--lang=en-GB']
+		});
 		page = await browser.newPage();
 		await page.setViewport({width: 900, height: 900, deviceScaleFactor: 2});
 		await page.goto(`${visualDiff.getBaseUrl()}/test/perceptual/consistent-evaluation-header-nav-bar.visual-diff.html`, { waitUntil: ['networkidle0', 'load'] });
@@ -18,7 +21,7 @@ describe('d2l-consistent-evaluation', () => {
 
 	after(async() => await browser.close());
 
-	it.skip('renders nav-bar', async function() {
+	it('renders nav-bar', async function() {
 		const rect = await visualDiff.getRect(page, '#default');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});

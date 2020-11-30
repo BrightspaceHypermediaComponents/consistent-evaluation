@@ -168,7 +168,7 @@ class ConsistentEvaluationNavBar extends LocalizeConsistentEvaluation(LitElement
 
 	render() {
 		return html`
-			<div  class="d2l-consistent-evaluation-immersive-navigation">
+			<div class="d2l-consistent-evaluation-immersive-navigation">
 				<d2l-navigation-immersive width-type="fullscreen">
 					<div slot="left">
 						${this._renderBackButton()}
