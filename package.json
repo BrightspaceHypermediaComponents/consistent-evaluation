@@ -23,6 +23,7 @@
   "devDependencies": {
     "@brightspace-ui/stylelint-config": "0.0.1",
     "@brightspace-ui/visual-diff": "^1.1.1",
+    "@webcomponents/webcomponentsjs": "^2",
     "@open-wc/testing": "^2",
     "@open-wc/testing-karma": "^3",
     "babel-eslint": "^10",
@@ -33,7 +34,6 @@
     "eslint-plugin-html": "^6",
     "eslint-plugin-lit": "^1",
     "eslint-plugin-sort-class-members": "^1",
-    "frau-ci": "^1",
     "karma-sauce-launcher": "^2",
     "lit-analyzer": "^1",
     "mocha": "^7.0.1",
@@ -45,7 +45,6 @@
   "dependencies": {
     "@brightspace-ui-labs/grade-result": "^1.0.5",
     "@brightspace-ui/core": "^1",
-    "@webcomponents/webcomponentsjs": "^2",
     "d2l-activities": "github:BrightspaceHypermediaComponents/activities#semver:^3",
     "d2l-activity-alignments": "github:Brightspace/d2l-activity-alignments#semver:^2",
     "d2l-html-editor": "github:Brightspace/d2l-html-editor#semver:^2",

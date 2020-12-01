@@ -1,7 +1,5 @@
 # d2l-consistent-evaluation
 
-[![Build status](https://travis-ci.com/BrightspaceHypermediaComponents/consistent-evaluation.svg?branch=master)](https://travis-ci.com/BrightspaceHypermediaComponents/consistent-evaluation)
-
 A consistent evaluation page for all tools
 
 ## Usage
@@ -45,8 +43,10 @@ To run both linting and unit tests:
 npm test
 ```
 
-## Versioning, Releasing & Deploying
+## Versioning & Releasing
 
-All version changes should obey [semantic versioning](https://semver.org/) rules.
+When a pull request is merged, the minor version (0.x) in the `package.json` will be incremented, and a tag and GitHub release will be created.
 
-Include either `[increment major]`, `[increment minor]` or `[increment patch]` in your merge commit message to automatically increment the `package.json` version and create a tag.
+Include `[increment major]`, `[increment minor]`, `[increment patch]` or `[skip version]` in your merge commit message to change the default versioning behavior.
+
+**Learn More**: [incremental-release GitHub Action](https://github.com/BrightspaceUI/actions/tree/master/incremental-release)
