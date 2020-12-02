@@ -37,10 +37,6 @@ export class ConsistentEvaluation extends ConsistentEvalTelemetryMixin(LitElemen
 			},
 			currentFileId: {
 				type: String
-			},
-			dataTelemetryEndpoint: {
-				attribute: 'data-telemetry-endpoint',
-				type: String
 			}
 		};
 	}
@@ -70,6 +66,8 @@ export class ConsistentEvaluation extends ConsistentEvalTelemetryMixin(LitElemen
 			main : true,
 			submissions: true
 		};
+		this._perfRenderEventName = 'consistentEvalPageRender';
+		this.markEventStart(this._perfRenderEventName);
 	}
 
 	async updated(changedProperties) {
@@ -141,11 +139,10 @@ export class ConsistentEvaluation extends ConsistentEvalTelemetryMixin(LitElemen
 			}
 		}
 		this._loading = false;
-		this.logLoadEvent(this.href, 'consistentEvalPage');
+		this.markEventEndAndLog(this.href, this._perfRenderEventName);
 	}
 
 	_setLoading() {
-		this.markEventStart('consistentEvalPage');
 		for (const component in this._loadingComponents) {
 			this._loadingComponents[component] = true;
 		}

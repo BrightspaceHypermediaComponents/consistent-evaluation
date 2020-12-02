@@ -1,6 +1,13 @@
 import Events from 'd2l-telemetry-browser-client';
 
 export const ConsistentEvalTelemetryMixin = superclass => class extends superclass {
+	static get properties() {
+		return {
+			dataTelemetryEndpoint: {
+				attribute: 'data-telemetry-endpoint',
+				type: String
+			}};
+	}
 	//Mark that a page has been loaded
 	logLoadEvent(href, type) {
 		if (!href || !type) return;
@@ -11,12 +18,10 @@ export const ConsistentEvalTelemetryMixin = superclass => class extends supercla
 	}
 
 	//Submit an event measure
-	logEvent(href, type) {
+	markEventEndAndLog(href, type) {
 		if (!href || !type) return;
 
 		const measureName = `d2l-consistent-eval-event-${type}`;
-
-		performance.clearMeasures(measureName);
 
 		const eventStartMarkName = this._getEventStartMarkName(type);
 		performance.measure(measureName, eventStartMarkName);
@@ -47,7 +52,7 @@ export const ConsistentEvalTelemetryMixin = superclass => class extends supercla
 			.setDate(new Date())
 			.setSourceId('consistent-eval')
 			.setBody(eventBody);
-		const client = await D2L.Telemetry.CreateClient();
+		const client = await D2L.Telemetry.CreateClient({endpoint: this.dataTelemetryEndpoint});
 		client.logUserEvent(event);
 	}
 

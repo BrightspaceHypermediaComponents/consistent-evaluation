@@ -5,12 +5,13 @@ import '@brightspace-ui/core/components/colors/colors.js';
 import './consistent-evaluation-submission-item.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Classes } from 'd2l-hypermedia-constants';
+import { ConsistentEvalTelemetryMixin } from '../mixins/consistent-eval-telemetry-mixin.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { toggleIsReadActionName } from '../controllers/constants.js';
 
-export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(LitElement)) {
+export class ConsistentEvaluationSubmissionsPage extends ConsistentEvalTelemetryMixin(SkeletonMixin(RtlMixin(LitElement))) {
 	static get properties() {
 		return {
 			submissionList: {
@@ -123,6 +124,8 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._submissionList = [];
 		this._token = undefined;
 		this._submissionEntities = [];
+		this._perfRenderEventName = 'submissionsPageRender';
+		this.markEventStart(this._perfRenderEventName);
 	}
 
 	get submissionList() {
@@ -199,6 +202,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 
 	_finishedLoading() {
+		this.markEventEndAndLog(this.href, this._perfRenderEventName);
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
 			composed: true,
 			bubbles: true,
