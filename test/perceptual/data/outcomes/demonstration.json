@@ -1,0 +1,348 @@
+{
+  "class": [
+    "demonstration",
+    "assessed"
+  ],
+  "properties": {
+    "dateAssessed": "2020-08-17T18:05:31.397Z"
+  },
+  "entities": [
+    {
+      "class": [
+        "demonstratable-level"
+      ],
+      "rel": [
+        "item"
+      ],
+      "properties": {
+        "levelId": "da71520a-e2da-4116-a3b4-47bcfa611dd9"
+      },
+      "actions": [
+        {
+          "type": "application/json",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.achievements.api.proddev.d2l/demonstrations/d8c47f17-27f3-4264-b8d6-168028c2042a/select",
+          "name": "select",
+          "method": "POST",
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "levelId",
+              "value": "da71520a-e2da-4116-a3b4-47bcfa611dd9"
+            },
+            {
+              "type": "hidden",
+              "name": "select",
+              "value": true
+            },
+            {
+              "type": "hidden",
+              "name": "save",
+              "value": true
+            },
+            {
+              "type": "hidden",
+              "name": "transientLevelId",
+              "value": "00000000-0000-0000-0000-000000000000"
+            }
+          ]
+        },
+        {
+          "type": "application/json",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.achievements.api.proddev.d2l/demonstrations/d8c47f17-27f3-4264-b8d6-168028c2042a/select",
+          "name": "select-deferred",
+          "method": "POST",
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "levelId",
+              "value": "da71520a-e2da-4116-a3b4-47bcfa611dd9"
+            },
+            {
+              "type": "hidden",
+              "name": "select",
+              "value": true
+            },
+            {
+              "type": "hidden",
+              "name": "save",
+              "value": false
+            },
+            {
+              "type": "hidden",
+              "name": "transientLevelId",
+              "value": "303eaf23-9b19-4115-b27e-0fd7ea518dc5"
+            }
+          ]
+        },
+        {
+          "type": "application/json",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.achievements.api.proddev.d2l/demonstrations/d8c47f17-27f3-4264-b8d6-168028c2042a/suggest",
+          "name": "suggest",
+          "method": "POST",
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "levelId",
+              "value": "da71520a-e2da-4116-a3b4-47bcfa611dd9"
+            },
+            {
+              "type": "hidden",
+              "name": "suggest",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "rel": [
+            "https://achievements.api.brightspace.com/rels/level"
+          ],
+          "href": "data/outcomes/level-1.json"
+        }
+      ]
+    },
+    {
+      "class": [
+        "demonstratable-level"
+      ],
+      "rel": [
+        "item"
+      ],
+      "properties": {
+        "levelId": "f52ab7b5-623e-47cc-9860-efd5cb6be57b"
+      },
+      "actions": [
+        {
+          "type": "application/json",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.achievements.api.proddev.d2l/demonstrations/d8c47f17-27f3-4264-b8d6-168028c2042a/select",
+          "name": "select",
+          "method": "POST",
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "levelId",
+              "value": "f52ab7b5-623e-47cc-9860-efd5cb6be57b"
+            },
+            {
+              "type": "hidden",
+              "name": "select",
+              "value": true
+            },
+            {
+              "type": "hidden",
+              "name": "save",
+              "value": true
+            },
+            {
+              "type": "hidden",
+              "name": "transientLevelId",
+              "value": "00000000-0000-0000-0000-000000000000"
+            }
+          ]
+        },
+        {
+          "type": "application/json",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.achievements.api.proddev.d2l/demonstrations/d8c47f17-27f3-4264-b8d6-168028c2042a/select",
+          "name": "select-deferred",
+          "method": "POST",
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "levelId",
+              "value": "f52ab7b5-623e-47cc-9860-efd5cb6be57b"
+            },
+            {
+              "type": "hidden",
+              "name": "select",
+              "value": true
+            },
+            {
+              "type": "hidden",
+              "name": "save",
+              "value": false
+            },
+            {
+              "type": "hidden",
+              "name": "transientLevelId",
+              "value": "303eaf23-9b19-4115-b27e-0fd7ea518dc5"
+            }
+          ]
+        },
+        {
+          "type": "application/json",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.achievements.api.proddev.d2l/demonstrations/d8c47f17-27f3-4264-b8d6-168028c2042a/suggest",
+          "name": "suggest",
+          "method": "POST",
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "levelId",
+              "value": "f52ab7b5-623e-47cc-9860-efd5cb6be57b"
+            },
+            {
+              "type": "hidden",
+              "name": "suggest",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "rel": [
+            "https://achievements.api.brightspace.com/rels/level"
+          ],
+          "href": "data/outcomes/level-2.json"
+        }
+      ]
+    },
+    {
+      "class": [
+        "demonstratable-level",
+        "selected",
+        "suggested"
+      ],
+      "rel": [
+        "item"
+      ],
+      "properties": {
+        "levelId": "303eaf23-9b19-4115-b27e-0fd7ea518dc5"
+      },
+      "actions": [
+        {
+          "type": "application/json",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.achievements.api.proddev.d2l/demonstrations/d8c47f17-27f3-4264-b8d6-168028c2042a/select",
+          "name": "deselect",
+          "method": "POST",
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "levelId",
+              "value": "303eaf23-9b19-4115-b27e-0fd7ea518dc5"
+            },
+            {
+              "type": "hidden",
+              "name": "select",
+              "value": false
+            },
+            {
+              "type": "hidden",
+              "name": "save",
+              "value": true
+            },
+            {
+              "type": "hidden",
+              "name": "transientLevelId",
+              "value": "00000000-0000-0000-0000-000000000000"
+            }
+          ]
+        },
+        {
+          "type": "application/json",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.achievements.api.proddev.d2l/demonstrations/d8c47f17-27f3-4264-b8d6-168028c2042a/select",
+          "name": "deselect-deferred",
+          "method": "POST",
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "levelId",
+              "value": "303eaf23-9b19-4115-b27e-0fd7ea518dc5"
+            },
+            {
+              "type": "hidden",
+              "name": "select",
+              "value": false
+            },
+            {
+              "type": "hidden",
+              "name": "save",
+              "value": false
+            },
+            {
+              "type": "hidden",
+              "name": "transientLevelId",
+              "value": "303eaf23-9b19-4115-b27e-0fd7ea518dc5"
+            }
+          ]
+        },
+        {
+          "type": "application/json",
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.achievements.api.proddev.d2l/demonstrations/d8c47f17-27f3-4264-b8d6-168028c2042a/suggest",
+          "name": "unsuggest",
+          "method": "POST",
+          "fields": [
+            {
+              "type": "hidden",
+              "name": "levelId",
+              "value": "303eaf23-9b19-4115-b27e-0fd7ea518dc5"
+            },
+            {
+              "type": "hidden",
+              "name": "suggest",
+              "value": false
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "rel": [
+            "https://achievements.api.brightspace.com/rels/level"
+          ],
+          "href": "data/outcomes/level-3.json"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": [
+        "self"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.achievements.api.proddev.d2l/demonstrations/d8c47f17-27f3-4264-b8d6-168028c2042a"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/user-activity-usage"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_3/usages/6613/users/175"
+    },
+    {
+      "rel": [
+        "https://user-progress.api.brightspace.com/rels/feedback"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.user-progress.api.proddev.d2l/org-unit/6613/user/175/outcomes/dbfcbaf6-e203-427a-9c34-e77fca8ef96b/activities/VG1wWmQwNXNPSGxOUkVGM1dIcE5MalkyTVRNLjE3NQ/feedback"
+    }
+  ],
+  "actions": [
+    {
+      "type": "application/json",
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.achievements.api.proddev.d2l/demonstrations/d8c47f17-27f3-4264-b8d6-168028c2042a/select",
+      "name": "publish",
+      "method": "POST",
+      "fields": [
+        {
+          "type": "hidden",
+          "name": "levelId",
+          "value": "303eaf23-9b19-4115-b27e-0fd7ea518dc5"
+        },
+        {
+          "type": "hidden",
+          "name": "select",
+          "value": true
+        },
+        {
+          "type": "hidden",
+          "name": "save",
+          "value": true
+        },
+        {
+          "type": "hidden",
+          "name": "transientLevelId",
+          "value": "00000000-0000-0000-0000-000000000000"
+        }
+      ]
+    }
+  ]
+}

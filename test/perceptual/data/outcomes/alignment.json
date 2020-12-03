@@ -1,0 +1,34 @@
+{
+  "class": [
+    "alignment"
+  ],
+  "properties": {
+    "relationshipType": "referenced"
+  },
+  "links": [
+    {
+      "rel": [
+        "collection"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.alignments.api.proddev.d2l/user-activity-usage/6606_2000_3/6613/175"
+    },
+    {
+      "rel": [
+        "https://outcomes.api.brightspace.com/rels/intent"
+      ],
+      "href": "data/outcomes/intent.json"
+    },
+    {
+      "rel": [
+        "self"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.alignments.api.proddev.d2l/user-activity-usage/6606_2000_3/6613/175/b5ca6a98-c17b-45f0-8537-ac9f89669f4f/dbfcbaf6-e203-427a-9c34-e77fca8ef96b"
+    },
+    {
+      "rel": [
+        "https://achievements.api.brightspace.com/rels/demonstration"
+      ],
+      "href": "data/outcomes/demonstration.json"
+    }
+  ]
+}

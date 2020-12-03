@@ -14,7 +14,17 @@ class ConsistentEvaluationOutcomes extends LocalizeConsistentEvaluation(LitEleme
 				type: String
 			},
 			token: {
-				type: Object
+				type: Object,
+				converter: {
+					formatAttribute(value) {
+						const retVal = String(value);
+						return retVal;
+					},
+					toAttribute(value) {
+						const retVal = Object(value);
+						return retVal;
+					}
+				}
 			},
 			description: {
 				type: String
