@@ -6,6 +6,10 @@ addons:
 
 jobs:
   include:
+  - stage: Empty First Stage
+    script:
+    - |
+      echo "Empty first stage so visual-diff is 2nd."
   - stage: Visual-difference-tests
     script:
     - |

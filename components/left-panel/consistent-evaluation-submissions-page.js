@@ -22,7 +22,17 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				type: String
 			},
 			token: {
-				type: Object
+				type: Object,
+				converter: {
+					fromAttribute(value) {
+						const retVal = String(value);
+						return retVal;
+					},
+					toAttribute(value) {
+						const retVal = Object(value);
+						return retVal;
+					}
+				}
 			}
 		};
 	}
@@ -320,7 +330,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			</div>
 			<div class="d2l-consistent-evaluation-submission-list-view" aria-hidden="${this.skeleton}">
 				<d2l-list separators="between">
-						${this._renderListItems()}
+					${this._renderListItems()}
 				</d2l-list>
 			</div>
 		`;

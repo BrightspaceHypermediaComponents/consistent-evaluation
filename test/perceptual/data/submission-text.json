@@ -1,0 +1,88 @@
+{
+  "properties": {
+    "evaluationStatus": "Evaluated",
+    "submissionNumber": 1
+  },
+  "class": [
+    "assignment-submission"
+  ],
+  "entities": [
+    {
+      "class": [
+        "attachment-list"
+      ],
+      "rel": [
+        "https://assignments.api.brightspace.com/rels/attachment-list"
+      ],
+      "entities": [
+        {
+          "class": [
+            "attachment"
+          ],
+          "rel": [
+            "https://assignments.api.brightspace.com/rels/attachment"
+          ],
+          "properties": {
+            "name": "Text trial-Jun 16, 2020 1154 AM.html",
+            "size": 1050,
+            "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/common/viewFile.d2lfile/Database/Nzk/Text%20trial-Jun%2016,%202020%201154%20AM.html?ou=6609",
+            "annotationsViewer": "//s.brightspace.com/apps/annotations-viewer/1.13.1/index.html?dropboxId=3&entityId=10188&fileId=79&submissionId=4&ou=6609&host=http://wvd-cc-dev-016.desire2learn.d2l:44444"
+          },
+          "links": [
+            {
+              "rel": [
+                "alternate"
+              ],
+              "type": "text/html",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.12/6609/dropbox/folders/3/submissions/4/files/79"
+            },
+            {
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.24/6609/dropbox/folders/3/submissions/4/files/79/pdf"
+            },
+            {
+              "class": [
+                "annotated"
+              ],
+              "rel": [
+                "alternate"
+              ],
+              "type": "application/pdf",
+              "href": "http://wvd-cc-dev-016.desire2learn.d2l:44444/d2l/api/le/1.31/6609/dropbox/folders/3/entities/10188/submissions/4/files/79/annotatedpdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "class": [
+        "date",
+        "submission-date"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/date"
+      ],
+      "properties": {
+        "date": "2020-06-16T15:54:03.200Z"
+      }
+    },
+    {
+      "class": [
+        "richtext",
+        "submission-comment",
+        "annotated"
+      ],
+      "rel": [
+        "item",
+        "https://assignments.api.brightspace.com/rels/submission-comment"
+      ],
+      "properties": {
+        "text": "lorem ipsum\r\n\r\nlorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum\r\nlorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum \r\n\r\nlorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum  lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum ",
+        "html": "<h2>lorem ipsum</h2>\r\n<ul>\r\n<li><em><strong><span style=\"text-decoration: underline;\">lorem</span> </strong>ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</em></li>\r\n<li>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum&#160;</li>\r\n</ul>\r\n<p><span style=\"font-size: 10pt;\">lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem </span>ipsum lorem ipsum lorem ipsum&#160; lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum&#160; lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum&#160; lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum&#160; lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum&#160;</p>"
+      }
+    }
+  ]
+}
