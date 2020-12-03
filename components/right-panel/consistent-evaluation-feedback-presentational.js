@@ -45,7 +45,17 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				type: Object
 			},
 			token: {
-				type: Object
+				type: Object,
+				converter: {
+					fromAttribute(value) {
+						const retVal = String(value);
+						return retVal;
+					},
+					toAttribute(value) {
+						const retVal = Object(value);
+						return retVal;
+					}
+				}
 			},
 			_key: {
 				type: String

@@ -8,6 +8,22 @@
 			import '@brightspace-ui/core/components/typography/styles.js';
 			import '@brightspace-ui/core/components/typography/typography.js';
 			import '../components/right-panel/consistent-evaluation-feedback-presentational.js';
+
+			const feedback = document.getElementById('feedback');
+			feedback.feedbackText = 'With attachments';
+			feedback.richTextEditorConfig = 'data/feedback/richText.json';
+			feedback.attachments = [
+	{
+		'class': ['file'],
+		'rel': ['item'],
+		'href': {'class': ['file'], 'properties': { 'name': 'accordion_expanded_design.txt' } }
+	}
+];
+
+			const noAttachments = document.getElementById('noAttachments');
+			noAttachments.feedbackText = 'No attachments';
+			noAttachments.richTextEditorConfig = 'data/feedback/richText.json';
+			noAttachments.attachments = [];
 		</script>
 		<title>d2l-consistent-html-editor</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,21 +36,29 @@
 			<h2>Standard</h2>
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-feedback-presentational
+					id="feedback"
 					can-edit-feedback
-					feedback-text="This is where you can add feedback!"
-					href="data/grade/evaluationEntity.json"
-					token='"abc123"'
-					attachments-href="data/grade/attachments.json"
+					can-add-file
+					can-record-video
+					can-record-audio
+					href="href"
+					token="token"
+					attachments-href="href"
 				></d2l-consistent-evaluation-feedback-presentational>
 			</d2l-demo-snippet>
 
 			<h2>No Attachments</h2>
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-feedback-presentational
+					id="noAttachments"
 					can-edit-feedback
-					feedback-text="This is where you can add feedback!"
-					href="data/grade/evaluationEntity.json"
-					token='"abc123"'
+					can-edit-feedback
+					can-add-file
+					can-record-video
+					can-record-audio
+					href="href"
+					token="token"
+					attachments-href="href"
 				></d2l-consistent-evaluation-feedback-presentational>
 			</d2l-demo-snippet>
 
