@@ -1,10 +1,10 @@
 import './consistent-evaluation-page.js';
 import { css, html, LitElement } from 'lit-element';
-import { ConsistentEvalTelemetryMixin } from './mixins/consistent-eval-telemetry-mixin.js';
+import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 
-export class ConsistentEvaluation extends ConsistentEvalTelemetryMixin(LitElement) {
+export class ConsistentEvaluation extends LitElement {
 
 	static get properties() {
 		return {
@@ -20,6 +20,10 @@ export class ConsistentEvaluation extends ConsistentEvalTelemetryMixin(LitElemen
 			},
 			returnHrefText: {
 				attribute: 'return-href-text',
+				type: String
+			},
+			_dataTelemetryEndpoint: {
+				attribute: 'data-telemetry-endpoint',
 				type: String
 			},
 			_rubricReadOnly: { type: Boolean },
@@ -66,8 +70,8 @@ export class ConsistentEvaluation extends ConsistentEvalTelemetryMixin(LitElemen
 			main : true,
 			submissions: true
 		};
-		this._perfRenderEventName = 'consistentEvalPageRender';
-		this.markEventStart(this._perfRenderEventName);
+		this._telemetry = new ConsistentEvalTelemetry(this._dataTelemetryEndpoint);
+		this._perfRenderEventName = 'consistentEvalMain';
 	}
 
 	async updated(changedProperties) {
@@ -139,7 +143,7 @@ export class ConsistentEvaluation extends ConsistentEvalTelemetryMixin(LitElemen
 			}
 		}
 		this._loading = false;
-		this.markEventEndAndLog(this.href, this._perfRenderEventName);
+		this._telemetry.logLoadEvent(this._perfRenderEventName);
 	}
 
 	_setLoading() {
