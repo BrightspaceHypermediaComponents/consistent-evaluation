@@ -8,8 +8,20 @@
 			import '@brightspace-ui/core/components/typography/styles.js';
 			import '@brightspace-ui/core/components/typography/typography.js';
 			import '../components/header/d2l-consistent-evaluation-learner-context-bar.js';
-			const lcbIsExempt = document.getElementById('lcb-is-exempt');
-			lcbIsExempt.submissionInfo = {'isExempt': 'true'};
+
+			const submissionList = [
+				{'href': 'data/submission3.json'},
+				{'href': 'data/submission2.json'},
+				{'href': 'data/submission1.json'}];
+
+			const panels = document.getElementsByTagName('d2l-consistent-evaluation-learner-context-bar');
+			for (let i = 0; i < panels.length; i++) {
+				if (panels[i].id === 'lcb-is-exempt') {
+					panels[i].submissionInfo = {'isExempt': 'true', 'submissionList': submissionList};
+					continue;
+				}
+				panels[i].submissionInfo = {'submissionList': submissionList};
+			}
 		</script>
 		<title>d2l-consistent-evaluation-learner-context-bar</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,14 +33,14 @@
 
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-learner-context-bar
-					href="data/user.json"
+					user-href="data/user.json"
 					token="token"
 				></d2l-consistent-evaluation-learner-context-bar>
 			</d2l-demo-snippet>
 
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-learner-context-bar id="lcb-is-exempt"
-					href="data/user.json"
+					user-href="data/user.json"
 					token="token"
 				></d2l-consistent-evaluation-learner-context-bar>
 			</d2l-demo-snippet>

@@ -66,13 +66,13 @@ export class ConsistentEvaluationController {
 		const attachments = [];
 		if (attachmentsEntity.entities) {
 			attachmentsEntity.entities.forEach(a => {
-				const self = a.hasLinkByRel('self') && a.getLinkByRel('self').href;
+				const id = a.properties && a.properties.id;
 				const name = a.properties && a.properties.name;
 				const href = a.hasLinkByRel('alternate') && a.getLinkByRel('alternate').href;
 				const canDeleteAttachment = a.hasActionByName('delete');
 
 				const attachment = {
-					id: self,
+					id: id,
 					name: name,
 					url: href,
 					canDeleteAttachment: canDeleteAttachment
@@ -165,7 +165,7 @@ export class ConsistentEvaluationController {
 		return updatedEvaluationEntity;
 	}
 
-	async transientRemoveFeedbackAttachment(evaluationEntity, fileSelfLink) {
+	async transientRemoveFeedbackAttachment(evaluationEntity, fileIdentifier) {
 		if (!evaluationEntity) {
 			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
 		}
@@ -177,8 +177,8 @@ export class ConsistentEvaluationController {
 
 		if (targetEntity.entities) {
 			for (let i = 0; targetEntity.entities.length > i; i++) {
-				const self = targetEntity.entities[i].hasLinkByRel('self') && targetEntity.entities[i].getLinkByRel('self').href;
-				if (self === fileSelfLink) {
+				const id = targetEntity.entities[i].properties && targetEntity.entities[i].properties.id;
+				if (id === fileIdentifier) {
 					return await this._performAction(targetEntity.entities[i], removeFeedbackAttachmentActionName);
 				}
 			}

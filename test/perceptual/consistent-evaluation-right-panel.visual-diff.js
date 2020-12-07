@@ -19,7 +19,7 @@ describe.only('d2l-consistent-evaluation-right-panel', () => {
 	];
 
 	let categories = [
-		{ name: 'desktop', width: 800 },
+		{ name: 'desktop', width: 900 },
 		{ name: 'mobile', width: 700 }
 	];
 
@@ -28,17 +28,17 @@ describe.only('d2l-consistent-evaluation-right-panel', () => {
 			headless: true,
 			args: ['--no-sandbox', '--disable-setuid-sandbox', '--lang=en-GB']
 		});
-		page = await browser.newPage();
-		await page.setViewport({width, height: 1200, deviceScaleFactor: 2});
+		page = await visualDiff.createPage(browser, { viewport: { width, height: 900 } });
 		await page.goto(`${visualDiff.getBaseUrl()}/test/perceptual/consistent-evaluation-right-panel.visual-diff.html`, { waitUntil: ['networkidle0', 'load'] });
 		await page.bringToFront();
-		await visualDiff.disableAnimations(page);
 	}
+
+	after(async() => await browser.close());
 
 	categories.forEach((cat) => {
 		describe(cat.name, () => {
 
-			before(async() => setupForSize(cat.width));
+			before(async() => await setupForSize(cat.width));
 			after(async() => await browser.close());
 
 			tests.forEach((testName) => {

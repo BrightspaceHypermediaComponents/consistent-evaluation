@@ -11,10 +11,6 @@ import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvaluation(LitElement) {
 	static get properties() {
 		return {
-			attachmentsHref: {
-				attribute: 'attachments-href',
-				type: String
-			},
 			canEditFeedback: {
 				attribute: 'can-edit-feedback',
 				type: Boolean
@@ -45,7 +41,17 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				type: Object
 			},
 			token: {
-				type: Object
+				type: Object,
+				converter: {
+					fromAttribute(value) {
+						const retVal = String(value);
+						return retVal;
+					},
+					toAttribute(value) {
+						const retVal = Object(value);
+						return retVal;
+					}
+				}
 			},
 			_key: {
 				type: String
@@ -65,7 +71,6 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		this.canRecordAudio = false;
 		this._debounceJobs = {};
 		this.flush = this.flush.bind(this);
-		this.attachmentsHref = null;
 	}
 
 	htmlEditorEnabled(e) {
@@ -139,7 +144,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 	render() {
 		if (this.href && this.token && this.richTextEditorConfig) {
-			const attachmentsComponent = this.attachmentsHref !== null
+			const attachmentsComponent = this.canEditFeedback || this.attachments.length !== 0
 				? html`
 					<div>
 						<d2l-consistent-evaluation-attachments-editor

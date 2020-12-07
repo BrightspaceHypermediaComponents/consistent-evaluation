@@ -20,9 +20,17 @@ export class ConsistentEvaluationHrefController {
 		this.baseHref = baseHref;
 		this.token = token;
 	}
+
 	_getHref(root, rel) {
 		if (root.hasLinkByRel(rel)) {
 			return root.getLinkByRel(rel).href;
+		}
+		return undefined;
+	}
+
+	_getHrefs(root, rel) {
+		if (root.hasLinkByRel(rel)) {
+			return root.getLinksByRel(rel).map(x => x.href);
 		}
 		return undefined;
 	}
@@ -42,8 +50,7 @@ export class ConsistentEvaluationHrefController {
 		let evaluationHref = undefined;
 		let nextHref = undefined;
 		let previousHref = undefined;
-		let rubricAssessmentHref = undefined;
-		let rubricHref = undefined;
+		let rubricHrefs = undefined;
 		let alignmentsHref = undefined;
 		let userHref = undefined;
 		let groupHref = undefined;
@@ -58,19 +65,24 @@ export class ConsistentEvaluationHrefController {
 			evaluationHref = this._getHref(root, evaluationRel);
 			nextHref = this._getHref(root, nextRel);
 			previousHref = this._getHref(root, previousRel);
-			rubricAssessmentHref = this._getHref(root, assessmentRel);
+			rubricHrefs = this._getHrefs(root, assessmentRel);
 			actorHref = this._getHref(root, actorRel);
 			userHref = this._getHref(root, userRel);
 			alignmentsHref = this._getHref(root, alignmentsRel);
 			groupHref = this._getHref(root, groupRel);
-
 			userProgressOutcomeHref = this._getHref(root, userProgressOutcomeRel);
 
-			if (rubricAssessmentHref) {
-				const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, bypassCache);
-				if (assessmentEntity && assessmentEntity.entity) {
-					rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
-				}
+			if (rubricHrefs) {
+				rubricHrefs = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
+					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, bypassCache);
+					if (assessmentEntity && assessmentEntity.entity) {
+						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
+						return {
+							rubricHref,
+							rubricAssessmentHref
+						};
+					}
+				}));
 			}
 
 			if (alignmentsHref) {
@@ -109,8 +121,7 @@ export class ConsistentEvaluationHrefController {
 			nextHref,
 			alignmentsHref,
 			previousHref,
-			rubricAssessmentHref,
-			rubricHref,
+			rubricHrefs,
 			userHref,
 			groupHref,
 			userProgressOutcomeHref,
