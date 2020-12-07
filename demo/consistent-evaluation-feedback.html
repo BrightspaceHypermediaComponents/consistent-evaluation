@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-us">
 	<head>
 		<link rel="stylesheet" href="/node_modules/@brightspace-ui/core/components/demo/styles.css" type="text/css">
 		<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
@@ -12,13 +12,7 @@
 			const feedback = document.getElementById('feedback');
 			feedback.feedbackText = 'With attachments';
 			feedback.richTextEditorConfig = 'data/feedback/richText.json';
-			feedback.attachments = [
-	{
-		'class': ['file'],
-		'rel': ['item'],
-		'href': {'class': ['file'], 'properties': { 'name': 'accordion_expanded_design.txt' } }
-	}
-];
+			feedback.attachments = [ { id: "0", name: "Testing Document.docx", url: "www.somefaketestingurl.fake", canDeleteAttachment: true} ];
 
 			const noAttachments = document.getElementById('noAttachments');
 			noAttachments.feedbackText = 'No attachments';
@@ -51,7 +45,6 @@
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-feedback-presentational
 					id="noAttachments"
-					can-edit-feedback
 					can-edit-feedback
 					can-add-file
 					can-record-video
