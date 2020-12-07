@@ -1,6 +1,6 @@
-import 'd2l-rubric/d2l-rubric.js';
 import './consistent-evaluation-right-panel-block';
-import { html, LitElement } from 'lit-element';
+import 'd2l-rubric/d2l-rubric.js';
+import { css, html, LitElement } from 'lit-element';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement) {
@@ -9,12 +9,9 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 			header: {
 				type: String
 			},
-			href: {
-				type: String
-			},
-			assessmentHref: {
-				attribute: 'assessment-href',
-				type: String
+			rubricHrefs: {
+				attribute: false,
+				type: Array
 			},
 			token: {
 				type: String
@@ -26,19 +23,41 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		};
 	}
 
-	render() {
-		return html`
-			<d2l-consistent-evaluation-right-panel-block
-				supportingInfo="${this.localize('rubricSummary', {num: 1})}"
-				title="${this.header}">
+	static get styles() {
+		return  css`
+			.d2l-consistent-evaluation-rubric:nth-child(n + 2) {
+				margin-top: 0.7rem;
+			}
+		`;
+	}
+
+	_getRubrics() {
+		const rubrics =	this.rubricHrefs.map(rubric => {
+			if (!rubric) {
+				return html``;
+			}
+			return html`
+				<div class="d2l-consistent-evaluation-rubric">
 					<d2l-rubric
-						href=${this.href}
-						assessment-href=${this.assessmentHref}
+						href=${rubric.rubricHref}
+						assessment-href=${rubric.rubricAssessmentHref}
 						.token=${this.token}
 						?read-only=${this.readonly}
-						force-Compact
+						force-compact
 						overall-score-flag
+						selected
 					></d2l-rubric>
+				</div>
+			`;
+		});
+
+		return html`${rubrics}`;
+	}
+
+	render() {
+		return html`
+			<d2l-consistent-evaluation-right-panel-block title="${this.header}">
+				${this._getRubrics()}
 			</d2l-consistent-evaluation-right-panel-block>
 		`;
 	}

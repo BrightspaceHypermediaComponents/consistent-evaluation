@@ -22,6 +22,16 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 				type: String
 			},
 			token: {
+				converter: {
+					fromAttribute(value) {
+						const retVal = String(value);
+						return retVal;
+					},
+					toAttribute(value) {
+						const retVal = Object(value);
+						return retVal;
+					}
+				},
 				type: Object
 			},
 			submissionInfo: {

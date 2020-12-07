@@ -51,13 +51,9 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'special-access-href',
 				type: String
 			},
-			rubricAssessmentHref: {
-				attribute: 'rubric-assessment-href',
-				type: String
-			},
-			rubricHref: {
-				attribute: 'rubric-href',
-				type: String
+			rubricHrefs: {
+				attribute: false,
+				type: Array
 			},
 			rubricReadOnly: {
 				attribute: 'rubric-read-only',
@@ -340,8 +336,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
 
-				const fileSelfLink = e.detail.file;
-				this.evaluationEntity = await this._controller.transientRemoveFeedbackAttachment(entity, fileSelfLink);
+				const fileIdentifier = e.detail.file;
+				this.evaluationEntity = await this._controller.transientRemoveFeedbackAttachment(entity, fileIdentifier);
 			}
 		);
 
@@ -750,18 +746,17 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					<consistent-evaluation-right-panel
 						evaluation-href=${ifDefined(this.evaluationHref)}
 						.feedbackText=${this._feedbackText}
+						.rubricHrefs=${this.rubricHrefs}
 						.feedbackAttachments=${attachments}
-						rubric-href=${ifDefined(this.rubricHref)}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}
 						coa-eval-override-href=${ifDefined(this.coaDemonstrationHref)}
-						attachments-href=${ifDefined(this._getAttachmentsLink())}
 						.richTextEditorConfig=${this._getRichTextEditorConfig()}
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}
 						.token=${this.token}
 						?rubric-read-only=${this.rubricReadOnly}
-						?hide-rubric=${this.rubricHref === undefined}
+						?hide-rubric=${this.rubricHrefs === undefined}
 						?hide-grade=${this._noGradeComponent()}
 						?hide-outcomes=${this.outcomesHref === undefined}
 						?hide-feedback=${this._noFeedbackComponent()}
