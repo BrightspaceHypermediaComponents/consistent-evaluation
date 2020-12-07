@@ -1,0 +1,43 @@
+{
+	"class": [
+		"user"
+	],
+	"entities": [
+		{
+		"class": [
+			"display",
+			"name"
+		],
+		"rel": [
+			"https://api.brightspace.com/rels/display-name"
+		],
+		"properties": {
+			"name": "Leonidas Crawford"
+		}
+		},
+		{
+		"class": [
+			"first",
+			"name"
+		],
+		"rel": [
+			"https://api.brightspace.com/rels/first-name"
+		],
+		"properties": {
+			"name": "Leonidas"
+		}
+		},
+		{
+		"class": [
+			"last",
+			"name"
+		],
+		"rel": [
+			"https://api.brightspace.com/rels/last-name"
+		],
+		"properties": {
+			"name": "Crawford"
+		}
+		}
+	]
+}

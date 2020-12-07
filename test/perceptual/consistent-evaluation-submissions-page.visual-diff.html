@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>d2l-consistent-evaluation-submissions-page visual diff tests</title>
+		<script type="text/javascript" src="https://s.brightspace.com/lib/moment.js/2.15.2/moment.min.js"></script>
+		<script type="module">
+			import '@brightspace-ui/core/components/typography/styles.js';
+			import '@brightspace-ui/core/components/typography/typography.js';
+			import '../../components/left-panel/consistent-evaluation-submissions-page.js';
+			const fileSubmissionsPage = document.getElementById('fileSubmissions');
+			fileSubmissionsPage.submissionList = [
+				{'href': 'data/submission3.json'},
+				{'href': 'data/submission2.json'},
+				{'href': 'data/submission1.json'}];
+			const textSubmissionsPage = document.getElementById('textSubmissions');
+			textSubmissionsPage.submissionList = [
+				{'href': 'data/submission-text2.json'},
+				{'href': 'data/submission-text.json'}
+			];
+		</script>
+		<style>
+			html {
+				font-size: 20px;
+			}
+			div {
+				padding: 50px;
+				justify-content: center;
+			}
+		</style>
+	</head>
+	<body class="d2l-typography">
+
+		<div id="skeleton">
+			<d2l-consistent-evaluation-submissions-page
+				token="token"
+				submission-type="0"
+				skeleton="skeleton"
+			></d2l-consistent-evaluation-submissions-page>
+		</div>
+
+		<div id="file">
+			<d2l-consistent-evaluation-submissions-page
+				id="fileSubmissions"
+				token="token"
+				submission-type="0"
+			></d2l-consistent-evaluation-submissions-page>
+		</div>
+
+		<div id="text">
+			<d2l-consistent-evaluation-submissions-page
+				id="textSubmissions"
+				token="token"
+				submission-type="1"
+			></d2l-consistent-evaluation-submissions-page>
+		</div>
+
+	</body>
+</html>

@@ -12,11 +12,9 @@ describe('d2l-consistent-evaluation-footer', () => {
 			headless: true,
 			args: ['--no-sandbox', '--disable-setuid-sandbox', '--lang=en-GB']
 		});
-		page = await browser.newPage();
-		await page.setViewport({width: 900, height: 900, deviceScaleFactor: 2});
+		page = await visualDiff.createPage(browser, { viewport: { width: 900, height: 900 } });
 		await page.goto(`${visualDiff.getBaseUrl()}/test/perceptual/consistent-evaluation-footer.visual-diff.html`, { waitUntil: ['networkidle0', 'load'] });
 		await page.bringToFront();
-		await visualDiff.disableAnimations(page);
 	});
 
 	after(async() => await browser.close());

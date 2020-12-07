@@ -11,15 +11,26 @@ import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvaluation(LitElement) {
 	static get properties() {
 		return {
-			attachmentsHref: {
-				attribute: 'attachments-href',
-				type: String
-			},
 			canEditFeedback: {
 				attribute: 'can-edit-feedback',
 				type: Boolean
 			},
+			canAddFile: {
+				attribute: 'can-add-file',
+				type: Boolean
+			},
+			canRecordVideo: {
+				attribute: 'can-record-video',
+				type: Boolean
+			},
+			canRecordAudio: {
+				attribute: 'can-record-audio',
+				type: Boolean
+			},
 			feedbackText: {
+				attribute: false
+			},
+			attachments: {
 				attribute: false
 			},
 			href: {
@@ -45,9 +56,11 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		super();
 
 		this.canEditFeedback = false;
+		this.canAddFile = false;
+		this.canRecordVideo = false;
+		this.canRecordAudio = false;
 		this._debounceJobs = {};
 		this.flush = this.flush.bind(this);
-		this.attachmentsHref = null;
 	}
 
 	htmlEditorEnabled(e) {
@@ -121,14 +134,15 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 	render() {
 		if (this.href && this.token && this.richTextEditorConfig) {
-			const attachments = this.attachmentsHref !== null
+			const attachmentsComponent = this.canEditFeedback || this.attachments.length !== 0
 				? html`
 					<div>
 						<d2l-consistent-evaluation-attachments-editor
-							href=${this.attachmentsHref}
-							.token="${this.token}"
-							destinationHref="${this.href}"
-							.canEditFeedback="${this.canEditFeedback}">
+							.attachments=${this.attachments}
+							.canEditFeedback="${this.canEditFeedback}"
+							.canAddFile="${this.canAddFile}"
+							.canRecordVideo="${this.canRecordVideo}"
+							.canRecordAudio="${this.canRecordAudio}">
 						</d2l-consistent-evaluation-attachments-editor>
 					</div>`
 				: null;
@@ -144,7 +158,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 							@d2l-activity-text-editor-change="${this._saveOnFeedbackChange}"
 							ariaLabel="${this.localize('overallFeedback')}">
 						</d2l-activity-text-editor>
-						${attachments}
+						${attachmentsComponent}
 				</d2l-consistent-evaluation-right-panel-block>
 			`;
 		} else {

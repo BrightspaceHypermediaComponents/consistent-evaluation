@@ -67,55 +67,42 @@ describe('ConsistentEvaluationHrefController', () => {
 			});
 		});
 
-		it('sets only the rubric assessment href properly', async() => {
-			const expectedAssessmentHref = 'the_assessment_href_to_find';
-			const expectedSpecialAcessPath = 'the_special_access_path';
-
-			const controller = new ConsistentEvaluationHrefController('href', 'token');
-
-			sinon.stub(controller, '_getRootEntity').returns({
-				entity: {
-					hasLinkByRel: (r) => r === assessmentRel,
-					getLinkByRel: (r) => (r === assessmentRel ? { href: expectedAssessmentHref } : undefined),
-					hasSubEntityByRel: (r) => r === editSpecialAccessApplicationRel,
-					getSubEntityByRel: (r) => (r === editSpecialAccessApplicationRel ? { properties: {path: expectedSpecialAcessPath}} : undefined)
-				}
-			});
-			sinon.stub(controller, '_getEntityFromHref').returns(undefined);
-
-			const hrefs = await controller.getHrefs(true);
-
-			assert.equal(hrefs.rubricAssessmentHref, expectedAssessmentHref);
-
-			controller._getRootEntity.restore();
-			controller._getEntityFromHref.restore();
-		});
-
-		it('sets the rubric href and the rubric assessment href  properly', async() => {
-			const expectedAssessmentHref = 'the_assessment_href_to_find';
-			const expectedRubricHref = 'the_rubric_href_to_find';
-			const expectedSpecialAcessPath = 'the_special_access_path';
+		it('sets all the rubric hrefs and the rubric assessment hrefs properly', async() => {
+			const expectedAssessmentHrefOne = 'the_assessment_href_to_find_one';
+			const expectedAssessmentHrefTwo = 'the_assessment_href_to_find_two';
+			const expectedRubricHrefOne = 'the_rubric_href_to_find_one';
+			const expectedRubricHrefTwo = 'the_rubric_href_to_find_two';
 
 			const controller = new ConsistentEvaluationHrefController('href', 'token');
 			sinon.stub(controller, '_getRootEntity').returns({
 				entity: {
 					hasLinkByRel: (r) => r === assessmentRel,
-					getLinkByRel: (r) => (r === assessmentRel ? { href: expectedAssessmentHref } : undefined),
-					hasSubEntityByRel: (r) => r === editSpecialAccessApplicationRel,
-					getSubEntityByRel: (r) => (r === editSpecialAccessApplicationRel ? { properties: {path: expectedSpecialAcessPath}} : undefined)
+					getLinksByRel: (r) => (r === assessmentRel ? [ {href: expectedAssessmentHrefOne}, {href: expectedAssessmentHrefTwo} ] : undefined),
+					hasSubEntityByRel: () => false,
 				}
 			});
-			sinon.stub(controller, '_getEntityFromHref').returns({
-				entity: {
-					hasLinkByRel: (r) => r === rubricRel,
-					getLinkByRel: (r) => (r === rubricRel ? { href: expectedRubricHref } : undefined)
-				}
-			});
+			sinon.stub(controller, '_getEntityFromHref')
+				.withArgs(expectedAssessmentHrefOne, true)
+				.returns({
+					entity: {
+						hasLinkByRel: (r) => r === rubricRel,
+						getLinkByRel: (r) => (r === rubricRel ? {href : expectedRubricHrefOne} : undefined)
+					}
+				})
+				.withArgs(expectedAssessmentHrefTwo, true)
+				.returns({
+					entity: {
+						hasLinkByRel: (r) => r === rubricRel,
+						getLinkByRel: (r) => (r === rubricRel ? {href : expectedRubricHrefTwo} : undefined)
+					}
+				});
 
 			const hrefs = await controller.getHrefs(true);
 
-			assert.equal(hrefs.rubricAssessmentHref, expectedAssessmentHref);
-			assert.equal(hrefs.rubricHref, expectedRubricHref);
+			assert.equal(hrefs.rubricHrefs[0].rubricAssessmentHref, expectedAssessmentHrefOne);
+			assert.equal(hrefs.rubricHrefs[0].rubricHref, expectedRubricHrefOne);
+			assert.equal(hrefs.rubricHrefs[1].rubricAssessmentHref, expectedAssessmentHrefTwo);
+			assert.equal(hrefs.rubricHrefs[1].rubricHref, expectedRubricHrefTwo);
 
 			controller._getRootEntity.restore();
 			controller._getEntityFromHref.restore();

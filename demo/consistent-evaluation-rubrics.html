@@ -8,6 +8,17 @@
 			import '@brightspace-ui/core/components/typography/styles.js';
 			import '@brightspace-ui/core/components/typography/typography.js';
 			import '../components/right-panel/consistent-evaluation-rubric.js';
+
+			const tests = document.getElementsByTagName('d2l-consistent-evaluation-rubric');
+			for (let i = 0; i < tests.length; i++) {
+				if (tests[i].id === 'multiple-rubrics') {
+					tests[i].rubricHrefs = [
+						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'},
+						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
+					continue;
+				}
+				tests[i].rubricHrefs = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
+			}
 		</script>
 		<title>d2l-consistent-rubric</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,8 +40,6 @@
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-rubric
 					header="Rubrics"
-					href="data/rubric.json"
-					assessment-href="data/assessment.json"
 					token="abcde"
 				></d2l-consistent-evaluation-rubric>
 			</d2l-demo-snippet>
@@ -39,8 +48,6 @@
 				<div class="half-width">
 					<d2l-consistent-evaluation-rubric
 						header="Rubrics"
-						href="data/rubric.json"
-						assessment-href="data/assessment.json"
 						token="abcde"
 					></d2l-consistent-evaluation-rubric>
 				</div>
@@ -50,11 +57,17 @@
 				<div class="quarter-width">
 					<d2l-consistent-evaluation-rubric
 						header="Rubrics"
-						href="data/rubric.json"
-						assessment-href="data/assessment.json"
 						token="abcde"
 					></d2l-consistent-evaluation-rubric>
 				</div>
+			</d2l-demo-snippet>
+
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-rubric
+					id="multiple-rubrics"
+					header="Rubrics"
+					token="abcde"
+				></d2l-consistent-evaluation-rubric>
 			</d2l-demo-snippet>
 
 		</d2l-demo-page>

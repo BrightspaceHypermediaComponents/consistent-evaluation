@@ -157,8 +157,6 @@ export class ConsistentEvaluation extends LitElement {
 		return html`
 			<d2l-consistent-evaluation-page
 				?skeleton=${this._loading}
-				rubric-href=${ifDefined(this._childHrefs && this._childHrefs.rubricHref)}
-				rubric-assessment-href=${ifDefined(this._childHrefs && this._childHrefs.rubricAssessmentHref)}
 				outcomes-href=${ifDefined(this._childHrefs && this._childHrefs.alignmentsHref)}
 				evaluation-href=${ifDefined(this._childHrefs && this._childHrefs.evaluationHref)}
 				next-student-href=${ifDefined(this._childHrefs && this._childHrefs.nextHref)}
@@ -171,6 +169,7 @@ export class ConsistentEvaluation extends LitElement {
 				return-href-text=${ifDefined(this.returnHrefText)}
 				current-file-id=${ifDefined(this.currentFileId)}
 				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
+				.rubricHrefs=${this._childHrefs && this._childHrefs.rubricHrefs}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
 				.assignmentName=${this._assignmentName}

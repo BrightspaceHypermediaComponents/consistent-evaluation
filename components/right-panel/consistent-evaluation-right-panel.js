@@ -5,7 +5,6 @@ import './consistent-evaluation-grade-result.js';
 import './consistent-evaluation-coa-eval-override.js';
 import { css, html, LitElement } from 'lit-element';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
-import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation(LitElement) {
@@ -16,11 +15,22 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: 'allow-evaluation-write',
 				type: Boolean
 			},
-			attachmentsHref: {
-				attribute: 'attachments-href',
-				type: String
+			canAddFeedbackFile: {
+				attribute: 'allow-add-file',
+				type: Boolean
+			},
+			canRecordFeedbackVideo: {
+				attribute: 'allow-record-video',
+				type: Boolean
+			},
+			canRecordFeedbackAudio: {
+				attribute: 'allow-record-audio',
+				type: Boolean
 			},
 			feedbackText: {
+				attribute: false
+			},
+			feedbackAttachments: {
 				attribute: false
 			},
 			grade: {
@@ -59,13 +69,9 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: false,
 				type: Object
 			},
-			rubricAssessmentHref: {
-				attribute: 'rubric-assessment-href',
-				type: String
-			},
-			rubricHref: {
-				attribute: 'rubric-href',
-				type: String
+			rubricHrefs: {
+				attribute: false,
+				type: Array
 			},
 			evaluationHref: {
 				attribute: 'evaluation-href',
@@ -109,6 +115,9 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		this.hideOutcomes = false;
 		this.hideCoaOverride = false;
 		this.allowEvaluationWrite = false;
+		this.canAddFeedbackFile = false;
+		this.canRecordFeedbackVideo = false;
+		this.canRecordFeedbackAudio = false;
 		this.rubricOpen = false;
 	}
 
@@ -117,8 +126,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 			return html`
 				<d2l-consistent-evaluation-rubric
 					header=${this.localize('rubrics')}
-					href=${this.rubricHref}
-					assessment-href=${ifDefined(this.rubricAssessmentHref)}
+					.rubricHrefs=${this.rubricHrefs}
 					.token=${this.token}
 					?read-only=${this.rubricReadOnly}
 					@d2l-rubric-total-score-changed=${this._syncRubricGrade}
@@ -162,15 +170,17 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					.href=${this.evaluationHref}
 					.token=${this.token}
 					?can-edit-feedback=${this.allowEvaluationWrite}
+					?can-add-file=${this.canAddFeedbackFile}
+					?can-record-video=${this.canRecordFeedbackVideo}
+					?can-record-audio=${this.canRecordFeedbackAudio}
 					.feedbackText=${this.feedbackText}
+					.attachments=${this.feedbackAttachments}
 					.richTextEditorConfig=${this.richTextEditorConfig}
-					attachments-href=${ifDefined(this.attachmentsHref)}
 				></d2l-consistent-evaluation-feedback-presentational>
 			`;
 		}
 
 		return html``;
-
 	}
 
 	_renderOutcome() {

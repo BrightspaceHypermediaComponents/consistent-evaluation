@@ -51,13 +51,9 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'special-access-href',
 				type: String
 			},
-			rubricAssessmentHref: {
-				attribute: 'rubric-assessment-href',
-				type: String
-			},
-			rubricHref: {
-				attribute: 'rubric-href',
-				type: String
+			rubricHrefs: {
+				attribute: false,
+				type: Array
 			},
 			rubricReadOnly: {
 				attribute: 'rubric-read-only',
@@ -127,6 +123,9 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			_feedbackText: {
 				attribute: false
 			},
+			_attachmentsInfo: {
+				attribute: false
+			},
 			_grade: {
 				attribute: false
 			},
@@ -173,6 +172,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._token = undefined;
 		this._controller = undefined;
 		this._evaluationEntity = undefined;
+		this._attachmentsInfo = {
+			canAddFeedbackFile: false,
+			canRecordFeedbackVideo: false,
+			canRecordFeedbackAudio: false,
+			attachments: []
+		};
 		this._displayToast = false;
 		this._toastMessage = '';
 		this._mutex = new Awaiter();
@@ -266,6 +271,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
 		const bypassCache = true;
 		this.evaluationEntity = await this._controller.fetchEvaluationEntity(bypassCache);
+		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
 	}
 
 	_noFeedbackComponent() {
@@ -310,6 +316,32 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				this.evaluationEntity = await this._controller.transientSaveFeedback(entity, newFeedbackVal);
 			}
 		);
+	}
+
+	async _transientAddAttachment(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+
+				const files = e.detail.files;
+				this.evaluationEntity = await this._controller.transientAddFeedbackAttachment(entity, files);
+			}
+		);
+
+		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
+	}
+
+	async _transientRemoveAttachment(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+
+				const fileIdentifier = e.detail.file;
+				this.evaluationEntity = await this._controller.transientRemoveFeedbackAttachment(entity, fileIdentifier);
+			}
+		);
+
+		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
 	}
 
 	async _transientSaveGrade(e) {
@@ -676,6 +708,11 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	render() {
+		const canAddFeedbackFile = this._attachmentsInfo.canAddFeedbackFile;
+		const canRecordFeedbackVideo = this._attachmentsInfo.canRecordFeedbackVideo;
+		const canRecordFeedbackAudio = this._attachmentsInfo.canRecordFeedbackAudio;
+		const attachments = this._attachmentsInfo.attachments;
+
 		return html`
 			<d2l-template-primary-secondary
 				resizable
@@ -709,23 +746,28 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					<consistent-evaluation-right-panel
 						evaluation-href=${ifDefined(this.evaluationHref)}
 						.feedbackText=${this._feedbackText}
-						rubric-href=${ifDefined(this.rubricHref)}
+						.rubricHrefs=${this.rubricHrefs}
+						.feedbackAttachments=${attachments}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}
 						coa-eval-override-href=${ifDefined(this.coaDemonstrationHref)}
-						attachments-href=${ifDefined(this._getAttachmentsLink())}
 						.richTextEditorConfig=${this._getRichTextEditorConfig()}
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}
 						.token=${this.token}
 						?rubric-read-only=${this.rubricReadOnly}
-						?hide-rubric=${this.rubricHref === undefined}
+						?hide-rubric=${this.rubricHrefs === undefined}
 						?hide-grade=${this._noGradeComponent()}
 						?hide-outcomes=${this.outcomesHref === undefined}
 						?hide-feedback=${this._noFeedbackComponent()}
 						?hide-coa-eval-override=${this.coaDemonstrationHref === undefined}
 						?allow-evaluation-write=${this._allowEvaluationWrite()}
+						?allow-add-file=${canAddFeedbackFile}
+						?allow-record-video=${canRecordFeedbackVideo}
+						?allow-record-audio=${canRecordFeedbackAudio}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
+						@on-d2l-consistent-eval-feedback-attachments-add=${this._transientAddAttachment}
+						@on-d2l-consistent-eval-feedback-attachments-remove=${this._transientRemoveAttachment}
 						@on-d2l-consistent-eval-grade-changed=${this._transientSaveGrade}
 						@d2l-outcomes-coa-eval-override-change=${this._transientSaveCoaEvalOverride}
 					></consistent-evaluation-right-panel>
