@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-us">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
@@ -11,12 +11,16 @@
 			import '../../components/right-panel/consistent-evaluation-right-panel.js';
 			import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 			import SirenParse from 'siren-parser';
+
 			fetch('data/grade/evaluationEntity.json').then(response => response.json()).then(entity => {
 				const parsedEntity = SirenParse(entity);
 				const grade = new Grade(GradeType.Number, 47, 100, null, null, parsedEntity);
 				const panels = document.getElementsByTagName('consistent-evaluation-right-panel');
 				for (let i = 0; i < panels.length; i++) {
 					panels[i].grade = grade;
+					panels[i].rubricHrefs = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
+					panels[i].richTextEditorConfig = 'data/feedback/richText.json';
+					panels[i].feedbackAttachments = [];
 				}});
 		</script>
 		<style>
@@ -24,7 +28,7 @@
 				font-size: 20px;
 			}
 			div {
-				width: 300px;
+				width: 340px;
 				margin: 10px;
 				padding: 0px;
 			}
@@ -33,88 +37,119 @@
 	<body class="d2l-typography">
 		<div id="renders-right-panel">
 			<consistent-evaluation-right-panel
-				rubric-href="data/rubric.json"
-				rubric-assessment-href="data/assessment.json"
+				allow-evaluation-write
+				allow-add-file
+				allow-record-video
+				allow-record-audio
+				attachments-href="href"
+				evaluation-href="href"
 				outcomes-href="data/outcomes/actor-activity-usage.json"
-				feedback-text=""
 				token="token"
+				hide-coa-eval-override
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="rubric-read-only">
 			<consistent-evaluation-right-panel
-				rubric-href="data/rubric.json"
-				rubric-assessment-href="data/assessment.json"
+				allow-evaluation-write
+				allow-add-file
+				allow-record-video
+				allow-record-audio
+				attachments-href="href"
+				evaluation-href="href"
 				outcomes-href="data/outcomes/actor-activity-usage.json"
-				feedback-text=""
 				token="token"
+				hide-coa-eval-override
 				rubric-read-only
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="rich-text-editor-disabled">
 			<consistent-evaluation-right-panel
-				rubric-href="data/rubric.json"
-				rubric-assessment-href="data/assessment.json"
+				allow-evaluation-write
+				allow-add-file
+				allow-record-video
+				allow-record-audio
+				attachments-href="href"
+				evaluation-href="href"
 				outcomes-href="data/outcomes/actor-activity-usage.json"
-				feedback-text=""
 				token="token"
+				hide-coa-eval-override
 				rich-text-editor-disabled
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="hiding-rubric">
 			<consistent-evaluation-right-panel
-				rubric-href="data/rubric.json"
-				rubric-assessment-href="data/assessment.json"
+				allow-evaluation-write
+				allow-add-file
+				allow-record-video
+				allow-record-audio
+				attachments-href="href"
+				evaluation-href="href"
 				outcomes-href="data/outcomes/actor-activity-usage.json"
-				feedback-text=""
-				grade=""
 				token="token"
+				hide-coa-eval-override
 				hide-rubric
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="hiding-grade">
 			<consistent-evaluation-right-panel
-				rubric-href="data/rubric.json"
-				rubric-assessment-href="data/assessment.json"
+				allow-evaluation-write
+				allow-add-file
+				allow-record-video
+				allow-record-audio
+				attachments-href="href"
+				evaluation-href="href"
 				outcomes-href="data/outcomes/actor-activity-usage.json"
-				feedback-text=""
 				token="token"
+				hide-coa-eval-override
 				hide-grade
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="hiding-feedback">
 			<consistent-evaluation-right-panel
-				rubric-href="data/rubric.json"
-				rubric-assessment-href="data/assessment.json"
+				allow-evaluation-write
+				allow-add-file
+				allow-record-video
+				allow-record-audio
+				attachments-href="href"
+				evaluation-href="href"
 				outcomes-href="data/outcomes/actor-activity-usage.json"
-				feedback-text=""
 				token="token"
+				hide-coa-eval-override
 				hide-feedback
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="hiding-outcomes">
 			<consistent-evaluation-right-panel
-				rubric-href="data/rubric.json"
-				rubric-assessment-href="data/assessment.json"
+				allow-evaluation-write
+				allow-add-file
+				allow-record-video
+				allow-record-audio
+				attachments-href="href"
+				evaluation-href="href"
 				outcomes-href="data/outcomes/actor-activity-usage.json"
-				feedback-text=""
 				token="token"
+				hide-coa-eval-override
 				hide-outcomes
 			></consistent-evaluation-right-panel>
 		</div>
 
 		<div id="hiding-all">
 			<consistent-evaluation-right-panel
-				rubric-href="data/rubric.json"
-				rubric-assessment-href="data/assessment.json"
+				allow-evaluation-write
+				allow-add-file
+				allow-record-video
+				allow-record-audio
+				attachments-href="href"
+				evaluation-href="href"
 				outcomes-href="data/outcomes/actor-activity-usage.json"
-				feedback-text=""
 				token="token"
+				hide-coa-eval-override
 				hide-rubric
 				hide-grade
 				hide-feedback

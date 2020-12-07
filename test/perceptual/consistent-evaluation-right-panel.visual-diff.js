@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const VisualDiff = require('@brightspace-ui/visual-diff');
 
-describe.only('d2l-consistent-evaluation-right-panel', () => {
+describe('d2l-consistent-evaluation-right-panel', () => {
 
 	const visualDiff = new VisualDiff('consistent-evaluation-right-panel', __dirname);
 
@@ -28,12 +28,10 @@ describe.only('d2l-consistent-evaluation-right-panel', () => {
 			headless: true,
 			args: ['--no-sandbox', '--disable-setuid-sandbox', '--lang=en-GB']
 		});
-		page = await visualDiff.createPage(browser, { viewport: { width, height: 900 } });
+		page = await visualDiff.createPage(browser, { viewport: { width, height: 9000 } });
 		await page.goto(`${visualDiff.getBaseUrl()}/test/perceptual/consistent-evaluation-right-panel.visual-diff.html`, { waitUntil: ['networkidle0', 'load'] });
 		await page.bringToFront();
 	}
-
-	after(async() => await browser.close());
 
 	categories.forEach((cat) => {
 		describe(cat.name, () => {
