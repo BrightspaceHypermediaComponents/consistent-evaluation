@@ -71,7 +71,6 @@ export class ConsistentEvaluation extends LitElement {
 			submissions: true
 		};
 		this._telemetry = new ConsistentEvalTelemetry(this._dataTelemetryEndpoint);
-		this._perfRenderEventName = 'consistentEvalMain';
 	}
 
 	async updated(changedProperties) {
@@ -143,7 +142,7 @@ export class ConsistentEvaluation extends LitElement {
 			}
 		}
 		this._loading = false;
-		this._telemetry.logLoadEvent(this._perfRenderEventName);
+		this._telemetry.logLoadEvent('consistentEvalMain');
 	}
 
 	_setLoading() {

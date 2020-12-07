@@ -8,7 +8,7 @@ export class ConsistentEvalTelemetry {
 
 	//Mark that a page has been loaded
 	logLoadEvent(type) {
-		if (!type) return;
+		if (!type) { return; }
 
 		const measureName = `d2l-consistent-eval-${type}.page.rendered`;
 		performance.measure(measureName);
@@ -17,7 +17,7 @@ export class ConsistentEvalTelemetry {
 
 	//Submit an event measure
 	markEventEndAndLog(type) {
-		if (!type) return;
+		if (!type) { return; }
 
 		const measureName = `d2l-consistent-eval-event-${type}`;
 		const eventStartMarkName = this._getEventStartMarkName(type);
@@ -27,18 +27,18 @@ export class ConsistentEvalTelemetry {
 
 	//Begin measuring an event
 	markEventStart(type) {
-		if (!type) return;
+		if (!type) { return; }
 		const eventStartMarkName = this._getEventStartMarkName(type);
 		performance.clearMarks(eventStartMarkName);
 		performance.mark(eventStartMarkName);
 	}
 
 	_getEventStartMarkName(type) {
-		return `d2l-consistent-eval-event-${type}`;
+		return `d2l-consistent-eval-event-${type}-mark`;
 	}
 
 	async _logUserEvent(href, action, type, performanceMeasureName) {
-		if (!href || !action || !type || !performanceMeasureName) return;
+		if (!href || !action || !type || !performanceMeasureName) { return; }
 
 		const eventBody = new Events.PerformanceEventBody()
 			.setAction(action)

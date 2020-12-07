@@ -34,6 +34,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 						return retVal;
 					}
 				}
+			},
+			_dataTelemetryEndpoint: {
+				attribute: 'data-telemetry-endpoint',
+				type: String
 			}
 		};
 	}
@@ -135,7 +139,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._token = undefined;
 		this._submissionEntities = [];
 		this._perfRenderEventName = 'submissionsComponentRender';
-		this._telemetry = new ConsistentEvalTelemetry();
+		this._telemetry = new ConsistentEvalTelemetry(this._dataTelemetryEndpoint);
 		this._telemetry.markEventStart(this._perfRenderEventName);
 	}
 
@@ -213,7 +217,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 
 	_finishedLoading() {
-		this._telemetry.markEventEndAndLog(undefined, this._perfRenderEventName);
+		this._telemetry.markEventEndAndLog(this._perfRenderEventName);
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
 			composed: true,
 			bubbles: true,

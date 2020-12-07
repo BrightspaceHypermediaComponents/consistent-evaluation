@@ -7,7 +7,6 @@ import { bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/compone
 import { css, html, LitElement } from 'lit-element';
 import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWithNoEvidence, textSubmission } from '../controllers/constants';
 import { findFile, getSubmissions } from '../helpers/submissionsAndFilesHelpers.js';
-import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
@@ -56,10 +55,6 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			currentFileId: {
 				attribute: 'current-file-id',
 				type: String
-			},
-			_dataTelemetryEndpoint: {
-				attribute: 'data-telemetry-endpoint',
-				type: String
 			}
 		};
 	}
@@ -102,11 +97,6 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 				width: 100%;
 			}
 		`];
-	}
-
-	constructor() {
-		super();
-		this.telemetry = new ConsistentEvalTelemetry(this._dataTelemetryEndpoint);
 	}
 
 	async updated(changedProperties) {
