@@ -7,10 +7,9 @@ describe('d2l-consistent-evaluation-right-panel', () => {
 
 	let browser, page;
 
-	let tests = [
+	const tests = [
 		'renders-right-panel',
 		'rubric-read-only',
-		'rich-text-editor-disabled',
 		'hiding-rubric',
 		'hiding-grade',
 		'hiding-feedback',
@@ -19,7 +18,7 @@ describe('d2l-consistent-evaluation-right-panel', () => {
 		'hiding-all'
 	];
 
-	let categories = [
+	const categories = [
 		{ name: 'desktop', width: 900 },
 		{ name: 'mobile', width: 700 }
 	];
@@ -29,7 +28,7 @@ describe('d2l-consistent-evaluation-right-panel', () => {
 			headless: true,
 			args: ['--no-sandbox', '--disable-setuid-sandbox', '--lang=en-GB']
 		});
-		page = await visualDiff.createPage(browser, { viewport: { width, height: 7000 } });
+		page = await visualDiff.createPage(browser, { viewport: { width, height: 6000 } });
 		await page.goto(`${visualDiff.getBaseUrl()}/test/perceptual/consistent-evaluation-right-panel.visual-diff.html`, { waitUntil: ['networkidle0', 'load'] });
 		await page.bringToFront();
 	}
