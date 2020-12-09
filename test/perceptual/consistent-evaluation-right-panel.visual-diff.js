@@ -15,6 +15,7 @@ describe('d2l-consistent-evaluation-right-panel', () => {
 		'hiding-grade',
 		'hiding-feedback',
 		'hiding-outcomes',
+		'hiding-coa-override',
 		'hiding-all'
 	];
 
@@ -28,7 +29,7 @@ describe('d2l-consistent-evaluation-right-panel', () => {
 			headless: true,
 			args: ['--no-sandbox', '--disable-setuid-sandbox', '--lang=en-GB']
 		});
-		page = await visualDiff.createPage(browser, { viewport: { width, height: 9000 } });
+		page = await visualDiff.createPage(browser, { viewport: { width, height: 7000 } });
 		await page.goto(`${visualDiff.getBaseUrl()}/test/perceptual/consistent-evaluation-right-panel.visual-diff.html`, { waitUntil: ['networkidle0', 'load'] });
 		await page.bringToFront();
 	}

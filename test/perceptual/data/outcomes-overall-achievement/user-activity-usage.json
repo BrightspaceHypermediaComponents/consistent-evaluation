@@ -1,0 +1,33 @@
+{
+	"class": [
+		"user-assignment-activity",
+		"activity"
+    ],
+	"links": [
+		{
+			"rel": [
+				"https://activities.api.brightspace.com/rels/user-activity-usage",
+				"self"
+			],
+			"href": "data/outcomes-overall-achievement/user-activity-usage.json"
+        },
+        {
+            "rel": [
+                "user-progress-outcome"
+            ],
+            "href": "data/outcomes-overall-achievement/user-progress-outcome/upo0.json"
+		},
+		{
+            "rel": [
+                "https://activities.api.brightspace.com/rels/evaluation"
+            ],
+            "href": "data/outcomes-overall-achievement/evaluation.json"
+        },
+        {
+            "rel": [
+                "https://api.brightspace.com/rels/user"
+            ],
+            "href": "data/user.json"
+        }
+	]
+}

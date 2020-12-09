@@ -1,0 +1,28 @@
+{
+    "class": [
+        "level-of-achievement"
+    ],
+    "rel": [
+        "item"
+    ],
+    "properties": {
+        "color": "#ffb366",
+        "levelId": "level11",
+        "name": "Mediocre",
+        "sortOrder": 200
+    },
+    "links": [
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/outcomes-overall-achievement/levels/level11.json"
+        },
+        {
+            "rel": [
+                "achievement-scale"
+            ],
+            "href": "data/outcomes-overall-achievement/loa/scale1.json"
+        }
+    ]
+}

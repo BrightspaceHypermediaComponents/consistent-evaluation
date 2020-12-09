@@ -1,0 +1,74 @@
+{
+  "class": [
+    "user-activity-usage",
+    "checkpoint-item",
+    "activity"
+  ],
+  "properties": {
+    "iteratorTotal": 1,
+    "iteratorIndex": 1
+  },
+  "entities": [
+    {
+      "class": [
+        "completion",
+        "incomplete"
+      ],
+      "rel": [
+        "item",
+        "https://activities.api.brightspace.com/rels/completion"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": [
+        "https://assessments.api.brightspace.com/rels/checkpoint"
+      ],
+      "href": "unused"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/activity-usage"
+      ],
+      "href": "unused"
+    },
+    {
+      "rel": [
+        "https://api.brightspace.com/rels/user"
+      ],
+      "href": "data/user.json"
+    },
+    {
+      "rel": [
+        "https://api.brightspace.com/rels/organization"
+      ],
+      "href": "unused"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/evaluation"
+      ],
+      "href": "data/outcomes-overall-achievement/evaluation_published.json"
+    },
+    {
+      "rel": [
+        "https://alignments.api.brightspace.com/rels/alignments"
+      ],
+      "href": "data/outcomes/alignments.json"
+    },
+    {
+      "rel": [
+        "user-progress-outcome"
+      ],
+      "href": "data/outcomes-overall-achievement/user-progress-outcome/upo0.json"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/actor-activity-usage-collection",
+        "self"
+      ],
+      "href": "data/outcomes-overall-achievement/actor-activity-usage_published.json"
+    }
+  ]
+}
