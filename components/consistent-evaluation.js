@@ -22,10 +22,6 @@ export class ConsistentEvaluation extends LitElement {
 				attribute: 'return-href-text',
 				type: String
 			},
-			_dataTelemetryEndpoint: {
-				attribute: 'data-telemetry-endpoint',
-				type: String
-			},
 			_rubricReadOnly: { type: Boolean },
 			_childHrefs: { type: Object },
 			_submissionInfo: { type: Object },
@@ -70,7 +66,7 @@ export class ConsistentEvaluation extends LitElement {
 			main : true,
 			submissions: true
 		};
-		this._telemetry = new ConsistentEvalTelemetry(this._dataTelemetryEndpoint);
+		this._telemetry = new ConsistentEvalTelemetry();
 	}
 
 	async updated(changedProperties) {
@@ -167,7 +163,6 @@ export class ConsistentEvaluation extends LitElement {
 				return-href=${ifDefined(this.returnHref)}
 				return-href-text=${ifDefined(this.returnHrefText)}
 				current-file-id=${ifDefined(this.currentFileId)}
-				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
 				.rubricHrefs=${this._childHrefs && this._childHrefs.rubricHrefs}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}

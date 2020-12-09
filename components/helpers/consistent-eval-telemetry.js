@@ -2,10 +2,6 @@ import Events from 'd2l-telemetry-browser-client';
 
 export class ConsistentEvalTelemetry {
 
-	constructor(dataTelemetryEndpoint) {
-		this._dataTelemetryEndpoint = dataTelemetryEndpoint;
-	}
-
 	//Mark that a page has been loaded
 	logLoadEvent(type) {
 		if (!type) { return; }
@@ -49,7 +45,7 @@ export class ConsistentEvalTelemetry {
 			.setDate(new Date())
 			.setSourceId('consistent-eval')
 			.setBody(eventBody);
-		const client = await D2L.Telemetry.CreateClient({endpoint: this._dataTelemetryEndpoint});
+		const client = await D2L.Telemetry.CreateClient();
 		client.logUserEvent(event);
 	}
 

@@ -34,10 +34,6 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 						return retVal;
 					}
 				}
-			},
-			_dataTelemetryEndpoint: {
-				attribute: 'data-telemetry-endpoint',
-				type: String
 			}
 		};
 	}
@@ -139,7 +135,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._token = undefined;
 		this._submissionEntities = [];
 		this._perfRenderEventName = 'submissionsComponentRender';
-		this._telemetry = new ConsistentEvalTelemetry(this._dataTelemetryEndpoint);
+		this._telemetry = new ConsistentEvalTelemetry();
 		this._telemetry.markEventStart(this._perfRenderEventName);
 	}
 
