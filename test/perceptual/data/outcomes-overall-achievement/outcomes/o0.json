@@ -1,0 +1,31 @@
+{
+    "class": [
+        "outcome"
+    ],
+    "properties": {
+        "notation": "D2L.MBU.0",
+        "altNotation": "",
+        "label": "Standard",
+        "listId": "",
+		"description": "Students will demonstrate a clearer understanding of the career exploration process and how their own skills and interests match up to a chosen major/career path.",
+        "subjects": [
+            "Career Education"
+        ],
+        "source": "asn"
+    },
+    "links": [
+        {
+            "rel": [
+                "about"
+            ],
+            "type": "text/html",
+            "href": "http://asn.desire2learn.com/resources/S2788207"
+        },
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/outcomes-overall-achievement/outcomes/o0.json"
+        }
+    ]
+}

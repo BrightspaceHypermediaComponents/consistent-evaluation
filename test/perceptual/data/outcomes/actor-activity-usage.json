@@ -1,0 +1,172 @@
+{
+  "class": [
+    "user-assignment-activity",
+    "activity"
+  ],
+  "entities": [
+    {
+      "class": [
+        "assignment-submission-list"
+      ],
+      "rel": [
+        "https://assignments.api.brightspace.com/rels/assignment-submission-list"
+      ],
+      "links": [
+        {
+          "class": [
+            "assignment-submission",
+            "latest"
+          ],
+          "rel": [
+            "https://assignments.api.brightspace.com/rels/assignment-submission-list"
+          ],
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.assignments.api.proddev.d2l/6613/folders/submissions/6"
+        },
+        {
+          "class": [
+            "assignment-submission"
+          ],
+          "rel": [
+            "https://assignments.api.brightspace.com/rels/assignment-submission-list"
+          ],
+          "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.assignments.api.proddev.d2l/6613/folders/submissions/4"
+        }
+      ]
+    },
+    {
+      "class": [
+        "relative-uri"
+      ],
+      "rel": [
+        "item",
+        "https://assessments.api.brightspace.com/rels/assessment-application"
+      ],
+      "properties": {
+        "path": "/d2l/lms/dropbox/admin/mark/folder_user_mark.d2l?ou=6613&db=3&d2l_itemId=175&d2l_iterId=0&etid=2"
+      }
+    },
+    {
+      "class": [
+        "evaluation"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/evaluation"
+      ],
+      "properties": {
+        "state": "Draft"
+      }
+    },
+    {
+      "class": [
+        "date",
+        "localized-formatted-date"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/date"
+      ],
+      "properties": {
+        "date": "2020-08-17T19:29:10.300Z",
+        "localizedDate": "2020-08-17T15:29:10.300"
+      }
+    },
+    {
+      "class": [
+        "completion",
+        "complete"
+      ],
+      "rel": [
+        "item"
+      ],
+      "entities": [
+        {
+          "class": [
+            "date",
+            "completion-date"
+          ],
+          "rel": [
+            "https://api.brightspace.com/rels/date"
+          ],
+          "properties": {
+            "date": "2020-08-17T19:29:10.300Z"
+          }
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/actor-activity-usage",
+        "self"
+      ],
+      "href": "demo/data/outcomes/actor-activity-usage.json"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/activity-usage"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_3/usages/6613"
+    },
+    {
+      "rel": [
+        "https://api.brightspace.com/rels/user"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.users.api.proddev.d2l/175"
+    },
+    {
+      "rel": [
+        "https://api.brightspace.com/rels/organization"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.organizations.api.proddev.d2l/6613"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/evaluation"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_3/usages/6613/users/user_175/evaluation"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/associations"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_3/usages/6613/users/175/associations"
+    },
+    {
+      "rel": [
+        "https://api.brightspace.com/rels/assessment"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.assessments.api.proddev.d2l/assessment/5/eu.K2TFYlwCtEmsIcpBKmN0J4KhtlIXA-aLRTKCR8wr4zg/UnVicmljfERyb3Bib3h8M3w%3d"
+    },
+    {
+      "rel": [
+        "https://api.brightspace.com/rels/assignment"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.assignments.api.proddev.d2l/6613/folders/3"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/feedback"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_3/usages/6613/users/user_175/feedback"
+    },
+    {
+      "rel": [
+        "https://alignments.api.brightspace.com/rels/alignments"
+      ],
+      "href": "data/outcomes/alignments.json"
+    }
+  ],
+  "actions": [
+    {
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_3/usages/6613/users/175/associations",
+      "name": "query-associations",
+      "method": "GET",
+      "fields": [
+        {
+          "type": "text",
+          "name": "type"
+        }
+      ]
+    }
+  ]
+}

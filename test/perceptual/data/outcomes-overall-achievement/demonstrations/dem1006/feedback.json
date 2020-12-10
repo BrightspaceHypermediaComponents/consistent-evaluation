@@ -1,0 +1,36 @@
+{
+    "class": [
+        "feedback-list",
+        "collection"
+    ],
+    "entities": [
+        {
+            "class": [
+                "richtext",
+                "feedback"
+            ],
+            "rel": [
+                "item"
+            ],
+            "properties": {
+                "text": "",
+                "html": "Good progress! You have a clear understanding on your future&nbsp;<b>Career Options</b>, click&nbsp;<a href=\"\">here</a> for more feedback"
+            }
+        }
+    ],
+    "links": [
+        {
+            "rel": [
+                "up",
+                "https://user-progress.api.brightspace.com/rels/outcome-activity"
+            ],
+            "href": "unused"
+        },
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/outcomes-overall-achievement/demonstrations/dem1006/feedback.json"
+        }
+    ]
+}

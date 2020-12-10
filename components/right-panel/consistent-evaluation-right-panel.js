@@ -86,7 +86,17 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				type: Boolean
 			},
 			token: {
-				type: Object
+				type: Object,
+				converter: {
+					formatAttribute(value) {
+						const retVal = String(value);
+						return retVal;
+					},
+					toAttribute(value) {
+						const retVal = Object(value);
+						return retVal;
+					}
+				}
 			}
 		};
 	}

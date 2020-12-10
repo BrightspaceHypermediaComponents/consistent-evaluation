@@ -1,0 +1,36 @@
+{
+    "class": [
+        "feedback-list",
+        "collection"
+    ],
+    "entities": [
+        {
+            "class": [
+                "richtext",
+                "feedback"
+            ],
+            "rel": [
+                "item"
+            ],
+            "properties": {
+                "text": "Watermelon (Citrullus lanatus) is a plant species in the family Cucurbitaceae, a vine-like flowering plant originally domesticated in West Africa. It is a highly cultivated fruit worldwide, having more than 1000 varieties.",
+                "html": ""
+            }
+        }
+    ],
+    "links": [
+        {
+            "rel": [
+                "up",
+                "https://user-progress.api.brightspace.com/rels/outcome-activity"
+            ],
+            "href": "unused"
+        },
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/outcomes-overall-achievement/demonstrations/dem1001/feedback.json"
+        }
+    ]
+}

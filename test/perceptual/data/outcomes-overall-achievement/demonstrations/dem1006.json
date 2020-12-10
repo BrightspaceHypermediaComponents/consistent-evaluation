@@ -1,0 +1,225 @@
+{
+	"class": [
+		"demonstration",
+		"assessed",
+		"published"
+	],
+	"rel": [
+		"item"
+	],
+	"properties": {
+		"dateAssessed": "2020-06-09T12:51:00.623Z"
+	},
+	"entities": [
+		{
+			"class": [
+				"demonstratable-level"
+			],
+			"rel": [
+				"item"
+			],
+			"properties": {
+				"levelId": "level10"
+			},
+			"actions": [
+                {
+                    "type": "application/json",
+                    "href": "#",
+                    "name": "select",
+                    "method": "POST",
+                    "fields": [
+                        {
+                            "type": "hidden",
+                            "name": "levelId",
+                            "value": "0"
+                        },
+                        {
+                            "type": "hidden",
+                            "name": "select",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+			"links": [
+				{
+					"rel": [
+						"https://achievements.api.brightspace.com/rels/level"
+					],
+					"href": "data/outcomes-overall-achievement/levels/level10.json"
+				}
+			]
+		},
+		{
+			"class": [
+				"demonstratable-level"
+			],
+			"rel": [
+				"item"
+			],
+			"properties": {
+				"levelId": "level11"
+			},
+			"actions": [
+                {
+                    "type": "application/json",
+                    "href": "#",
+                    "name": "select",
+                    "method": "POST",
+                    "fields": [
+                        {
+                            "type": "hidden",
+                            "name": "levelId",
+                            "value": "1"
+                        },
+                        {
+                            "type": "hidden",
+                            "name": "select",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+			"links": [
+				{
+					"rel": [
+						"https://achievements.api.brightspace.com/rels/level"
+					],
+					"href": "data/outcomes-overall-achievement/levels/level11.json"
+				}
+			]
+		},
+		{
+			"class": [
+				"demonstratable-level",
+				"selected"
+			],
+			"rel": [
+				"item"
+			],
+			"properties": {
+				"levelId": "level12"
+			},
+			"actions": [
+                {
+                    "type": "application/json",
+                    "href": "#",
+                    "name": "select",
+                    "method": "POST",
+                    "fields": [
+                        {
+                            "type": "hidden",
+                            "name": "levelId",
+                            "value": "2"
+                        },
+                        {
+                            "type": "hidden",
+                            "name": "select",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+			"links": [
+				{
+					"rel": [
+						"https://achievements.api.brightspace.com/rels/level"
+					],
+					"href": "data/outcomes-overall-achievement/levels/level12.json"
+				}
+			]
+		},
+		{
+			"class": [
+				"demonstratable-level"
+			],
+			"rel": [
+				"item"
+			],
+			"properties": {
+				"levelId": "level13"
+			},
+			"actions": [
+                {
+                    "type": "application/json",
+                    "href": "#",
+                    "name": "select",
+                    "method": "POST",
+                    "fields": [
+                        {
+                            "type": "hidden",
+                            "name": "levelId",
+                            "value": "3"
+                        },
+                        {
+                            "type": "hidden",
+                            "name": "select",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+			"links": [
+				{
+					"rel": [
+						"https://achievements.api.brightspace.com/rels/level"
+					],
+					"href": "data/outcomes-overall-achievement/levels/level13.json"
+				}
+			]
+		},
+		{
+			"class": [
+				"demonstratable-level"
+			],
+			"rel": [
+				"item"
+			],
+			"properties": {
+				"levelId": "level14"
+			},
+			"actions": [
+                {
+                    "type": "application/json",
+                    "href": "#",
+                    "name": "select",
+                    "method": "POST",
+                    "fields": [
+                        {
+                            "type": "hidden",
+                            "name": "levelId",
+                            "value": "4"
+                        },
+                        {
+                            "type": "hidden",
+                            "name": "select",
+                            "value": true
+                        }
+                    ]
+                }
+            ],
+			"links": [
+				{
+					"rel": [
+						"https://achievements.api.brightspace.com/rels/level"
+					],
+					"href": "data/outcomes-overall-achievement/levels/level14.json"
+				}
+			]
+		}
+	],
+	"links": [
+		{
+			"rel": [
+				"self"
+			],
+			"href": "data/outcomes-overall-achievement/demonstrations/dem1006.json"
+		},
+		{
+			"rel": [
+				"https://user-progress.api.brightspace.com/rels/feedback"
+			],
+			"href": "data/outcomes-overall-achievement/demonstrations/dem1006/feedback.json"
+		}
+	]
+}

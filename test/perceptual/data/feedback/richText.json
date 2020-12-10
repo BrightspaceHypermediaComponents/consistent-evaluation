@@ -1,0 +1,12 @@
+{
+  "orgUnit": {
+    "OrgId": "6606",
+    "OrgUnitId": "6609"
+  },
+  "d2l_filter": {
+    "endpoint": "/d2l/lp/htmleditor/converttoabsolute?ou=6609"
+  },
+  "d2l_isf": {
+    "endpoint": "/d2l/common/dialogs/isf/selectItem.d2l?ou=6609&filterMode=Strict"
+  }
+}

@@ -1,0 +1,46 @@
+{
+    "class": [
+        "achievement-scale"
+    ],
+    "properties": {
+        "name": "Default",
+        "isDefault": true
+    },
+    "entities": [
+        {
+            "class": [
+                "level-of-achievement"
+            ],
+            "rel": [
+                "item"
+            ],
+            "href": "data/outcomes-overall-achievement/levels/level0.json"
+        },
+        {
+            "class": [
+                "level-of-achievement"
+            ],
+            "rel": [
+                "item"
+            ],
+            "href": "data/outcomes-overall-achievement/levels/level1.json"
+        },
+        {
+            "class": [
+                "level-of-achievement"
+            ],
+            "rel": [
+                "item"
+            ],
+            "href": "data/outcomes-overall-achievement/levels/level2.json"
+        }
+    ],
+    "links": [
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/outcomes-overall-achievement/loa/scale0.json"
+        }
+    ]
+}

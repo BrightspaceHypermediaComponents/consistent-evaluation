@@ -1,0 +1,93 @@
+{
+    "class": [
+        "evaluation"
+    ],
+    "properties": {
+        "state": "Published"
+    },
+    "entities": [
+        {
+            "class": [
+                "evaluation-entity",
+                "annotated"
+            ],
+            "rel": [
+                "feedback"
+            ],
+            "properties": {
+                "text": "Good Job",
+                "html": "<p>Good Job</p>"
+            },
+            "entities": [
+                {
+                    "class": [
+                        "richtext-editor-config"
+                    ],
+                    "rel": [
+                        "https://api.brightspace.com/rels/richtext-editor-config"
+                    ],
+                    "properties": {
+                        "orgUnit": {
+                            "OrgId": "6606",
+                            "OrgUnitId": "6609"
+                        },
+                        "d2l_filter": {
+                            "endpoint": "/d2l/lp/htmleditor/converttoabsolute?ou=6609"
+                        },
+                        "d2l_isf": {
+                            "endpoint": "/d2l/common/dialogs/isf/selectItem.d2l?ou=6609&filterMode=Strict"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "href": "unused",
+            "name": "update",
+            "method": "PUT",
+            "fields": [
+                {
+                    "type": "hidden",
+                    "name": "currentState"
+                }
+            ]
+        },
+        {
+            "href": "unused",
+            "name": "retract",
+            "method": "PUT",
+            "fields": [
+                {
+                    "type": "hidden",
+                    "name": "currentState"
+                }
+            ]
+        }
+    ],
+    "links": [
+        {
+            "rel": [
+                "https://activities.api.brightspace.com/rels/attachments"
+            ],
+            "href": "unused"
+        },
+        {
+            "rel": [
+                "https://activities.api.brightspace.com/rels/evaluation",
+                "self"
+            ],
+            "href": "data/outcomes-overall-achievement/evaluation.json"
+        },
+        {
+            "rel": [
+                "https://activities.api.brightspace.com/rels/actor-activity-usage"
+            ],
+            "href": "unused"
+        }
+    ],
+    "rel": [
+        "https://assignments.api.brightspace.com/rels/evaluation"
+    ]
+}

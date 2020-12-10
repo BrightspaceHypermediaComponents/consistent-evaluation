@@ -1,0 +1,34 @@
+{
+  "class": [
+    "alignment"
+  ],
+  "properties": {
+    "relationshipType": "referenced"
+  },
+  "links": [
+    {
+      "rel": [
+        "collection"
+      ],
+      "href": "data/outcomes-overall-achievement/alignments.json"
+    },
+    {
+      "rel": [
+        "https://outcomes.api.brightspace.com/rels/intent"
+      ],
+      "href": "unused"
+    },
+    {
+      "rel": [
+        "self"
+      ],
+      "href": "data/outcomes-overall-achievement/alignment.json"
+    },
+    {
+      "rel": [
+        "https://achievements.api.brightspace.com/rels/demonstration"
+      ],
+      "href": "data/outcomes-overall-achievement/demonstrations/dem1006.json"
+    }
+  ]
+}

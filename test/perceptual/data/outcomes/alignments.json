@@ -1,0 +1,34 @@
+{
+  "class": [
+    "collection",
+    "alignments"
+  ],
+  "entities": [
+    {
+      "class": [
+        "alignment"
+      ],
+      "rel": [
+        "item"
+      ],
+      "href": "data/outcomes/alignment.json",
+      "properties": {
+        "relationshipType": "referenced"
+      }
+    }
+  ],
+  "links": [
+    {
+      "rel": [
+        "self"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.alignments.api.proddev.d2l/user-activity-usage/6606_2000_3/6613/175"
+    },
+    {
+      "rel": [
+        "https://activities.api.brightspace.com/rels/user-activity-usage"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.activities.api.proddev.d2l/activities/6606_2000_3/usages/6613/users/175"
+    }
+  ]
+}

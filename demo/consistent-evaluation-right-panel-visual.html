@@ -16,6 +16,9 @@
 				const panels = document.getElementsByTagName('consistent-evaluation-right-panel');
 				for (let i = 0; i < panels.length; i++) {
 					panels[i].grade = grade;
+					panels[i].rubricHrefs = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
+					panels[i].richTextEditorConfig = 'data/feedback/richText.json';
+					panels[i].feedbackAttachments = [];
 				}});
 		</script>
 		<title>d2l-consistent-evaluation</title>
@@ -29,10 +32,14 @@
 			<h2>Default right panel</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubric-href="data/rubric.json"
-					rubric-assessment-href="data/assessment.json"
-					outcomes-href="data/outcomes/suggested-level.json"
-					feedback-text=""
+					allow-evaluation-write
+					allow-add-file
+					allow-record-video
+					allow-record-audio
+					attachments-href="href"
+					evaluation-href="href"
+					outcomes-href="data/outcomes/actor-activity-usage.json"
+					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
 					token="token"
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
@@ -40,10 +47,14 @@
 			<h2>Rubric Read only</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubric-href="data/rubric.json"
-					rubric-assessment-href="data/assessment.json"
-					outcomes-href="data/outcomes/suggested-level.json"
-					feedback-text=""
+					allow-evaluation-write
+					allow-add-file
+					allow-record-video
+					allow-record-audio
+					attachments-href="href"
+					evaluation-href="href"
+					outcomes-href="data/outcomes/actor-activity-usage.json"
+					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
 					token="token"
 					rubric-read-only
 				></consistent-evaluation-right-panel>
@@ -52,10 +63,14 @@
 			<h2>Rich Text Editor Disabled</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubric-href="data/rubric.json"
-					rubric-assessment-href="data/assessment.json"
-					outcomes-href="data/outcomes/suggested-level.json"
-					feedback-text=""
+					allow-evaluation-write
+					allow-add-file
+					allow-record-video
+					allow-record-audio
+					attachments-href="href"
+					evaluation-href="href"
+					outcomes-href="data/outcomes/actor-activity-usage.json"
+					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
 					token="token"
 					rich-text-editor-disabled
 				></consistent-evaluation-right-panel>
@@ -64,10 +79,14 @@
 			<h2>Hiding the Rubric</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubric-href="data/rubric.json"
-					rubric-assessment-href="data/assessment.json"
-					outcomes-href="data/outcomes/suggested-level.json"
-					feedback-text=""
+					allow-evaluation-write
+					allow-add-file
+					allow-record-video
+					allow-record-audio
+					attachments-href="href"
+					evaluation-href="href"
+					outcomes-href="data/outcomes/actor-activity-usage.json"
+					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
 					token="token"
 					hide-rubric
 				></consistent-evaluation-right-panel>
@@ -76,10 +95,14 @@
 			<h2>Hiding the Grade</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubric-href="data/rubric.json"
-					rubric-assessment-href="data/assessment.json"
-					outcomes-href="data/outcomes/suggested-level.json"
-					feedback-text=""
+					allow-evaluation-write
+					allow-add-file
+					allow-record-video
+					allow-record-audio
+					attachments-href="href"
+					evaluation-href="href"
+					outcomes-href="data/outcomes/actor-activity-usage.json"
+					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
 					token="token"
 					hide-grade
 				></consistent-evaluation-right-panel>
@@ -88,10 +111,14 @@
 			<h2>Hiding the Feedback</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubric-href="data/rubric.json"
-					rubric-assessment-href="data/assessment.json"
-					outcomes-href="data/outcomes/suggested-level.json"
-					feedback-text=""
+					allow-evaluation-write
+					allow-add-file
+					allow-record-video
+					allow-record-audio
+					attachments-href="href"
+					evaluation-href="href"
+					outcomes-href="data/outcomes/actor-activity-usage.json"
+					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
 					token="token"
 					hide-feedback
 				></consistent-evaluation-right-panel>
@@ -100,27 +127,52 @@
 			<h2>Hiding the Outcomes</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubric-href="data/rubric.json"
-					rubric-assessment-href="data/assessment.json"
-					outcomes-href="data/outcomes/suggested-level.json"
-					feedback-text=""
+					allow-evaluation-write
+					allow-add-file
+					allow-record-video
+					allow-record-audio
+					attachments-href="href"
+					evaluation-href="href"
+					outcomes-href="data/outcomes/actor-activity-usage.json"
+					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
 					token="token"
 					hide-outcomes
+				></consistent-evaluation-right-panel>
+			</d2l-demo-snippet>
+
+			<h2>Hiding Course Overall Achievement Override</h2>
+			<d2l-demo-snippet>
+				<consistent-evaluation-right-panel
+					allow-evaluation-write
+					allow-add-file
+					allow-record-video
+					allow-record-audio
+					attachments-href="href"
+					evaluation-href="href"
+					outcomes-href="data/outcomes/actor-activity-usage.json"
+					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
+					token="token"
+					hide-coa-eval-override
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
 
 			<h2>Hiding Everything</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
-					rubric-href="data/rubric.json"
-					rubric-assessment-href="data/assessment.json"
-					outcomes-href="data/outcomes/suggested-level.json"
-					feedback-text=""
+					allow-evaluation-write
+					allow-add-file
+					allow-record-video
+					allow-record-audio
+					attachments-href="href"
+					evaluation-href="href"
+					outcomes-href="data/outcomes/actor-activity-usage.json"
+					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
 					token="token"
 					hide-rubric
 					hide-grade
 					hide-feedback
 					hide-outcomes
+					hide-coa-eval-override
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
 

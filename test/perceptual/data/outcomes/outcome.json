@@ -1,0 +1,31 @@
+{
+  "class": [
+    "outcome"
+  ],
+  "properties": {
+    "notation": "",
+    "altNotation": "",
+    "label": "Overall Expectation",
+    "listId": "A1.",
+    "description": "demonstrate the ability to use different data types in expressions in simple computer programs",
+    "subjects": [
+      "Computer Studies"
+    ],
+    "source": "asn"
+  },
+  "links": [
+    {
+      "rel": [
+        "about"
+      ],
+      "type": "text/html",
+      "href": "http://asn.desire2learn.com/resources/S2690687"
+    },
+    {
+      "rel": [
+        "self"
+      ],
+      "href": "https://41c25168-e162-4d7c-b031-5a30e2dda04a.outcomes.api.proddev.d2l/outcomes/b5ca6a98-c17b-45f0-8537-ac9f89669f4f/dbfcbaf6-e203-427a-9c34-e77fca8ef96b"
+    }
+  ]
+}

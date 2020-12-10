@@ -1,0 +1,28 @@
+{
+    "class": [
+        "level-of-achievement"
+    ],
+    "rel": [
+        "item"
+    ],
+    "properties": {
+        "color": "#99ddff",
+        "levelId": "level14",
+        "name": "Exceptional",
+        "sortOrder": 500
+    },
+    "links": [
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/outcomes-overall-achievement/levels/level14.json"
+        },
+        {
+            "rel": [
+                "achievement-scale"
+            ],
+            "href": "data/outcomes-overall-achievement/loa/scale0.json"
+        }
+    ]
+}
