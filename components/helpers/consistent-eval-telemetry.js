@@ -17,13 +17,13 @@ export class ConsistentEvalTelemetry {
 	}
 
 	//Submit an event measure
-	markEventEndAndLog(type) {
+	markEventEndAndLog(type, submissionCount) {
 		if (!type) { return; }
 
 		const measureName = `d2l-consistent-eval-event-${type}`;
 		const eventStartMarkName = this._getEventStartMarkName(type);
 		performance.measure(measureName, eventStartMarkName);
-		this._logUserEvent(window.location.hostname, 'MeasureTiming', type, measureName);
+		this._logUserEvent(window.location.hostname, 'MeasureTiming', type, measureName, submissionCount);
 	}
 
 	//Begin measuring an event
