@@ -1,4 +1,5 @@
 import Events from 'd2l-telemetry-browser-client';
+import { submissions } from '../controllers/constants';
 
 export class ConsistentEvalTelemetry {
 
@@ -43,8 +44,10 @@ export class ConsistentEvalTelemetry {
 		const eventBody = new Events.PerformanceEventBody()
 			.setAction(action)
 			.setObject(href, type)
-			.addCustom('SubmissionCount', `${submissionCount}`)
 			.addUserTiming(performance.getEntriesByName(performanceMeasureName));
+		if (submissionCount) {
+			eventBody.addCustom('SubmissionCount', `${submissionCount}`);
+		}
 		const event = new Events.TelemetryEvent()
 			.setType('PerformanceEvent')
 			.setDate(new Date())
