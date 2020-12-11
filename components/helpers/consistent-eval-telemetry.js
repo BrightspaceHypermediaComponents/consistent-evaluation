@@ -1,5 +1,4 @@
 import Events from 'd2l-telemetry-browser-client';
-import { submissions } from '../controllers/constants';
 
 export class ConsistentEvalTelemetry {
 
