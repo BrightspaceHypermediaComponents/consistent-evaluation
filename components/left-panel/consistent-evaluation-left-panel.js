@@ -55,6 +55,10 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			currentFileId: {
 				attribute: 'current-file-id',
 				type: String
+			},
+			dataTelemetryEndpoint: {
+				attribute: 'data-telemetry-endpoint',
+				type: String
 			}
 		};
 	}
@@ -199,6 +203,7 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			submission-type=${this.submissionInfo && this.submissionInfo.submissionType}
 			.submissionList=${this.submissionInfo && this.submissionInfo.submissionList}
 			.token=${this.token}
+			data-telemetry-endpoint=${this.dataTelemetryEndpoint}
 			?skeleton=${this.skeleton}
 		></d2l-consistent-evaluation-submissions-page>`;
 	}

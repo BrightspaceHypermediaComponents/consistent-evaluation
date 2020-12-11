@@ -34,6 +34,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 						return retVal;
 					}
 				}
+			},
+			dataTelemetryEndpoint: {
+				attribute: 'data-telemetry-endpoint',
+				type: String
 			}
 		};
 	}
@@ -135,8 +139,6 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._token = undefined;
 		this._submissionEntities = [];
 		this._perfRenderEventName = 'submissionsComponentRender';
-		this._telemetry = new ConsistentEvalTelemetry();
-		this._telemetry.markEventStart(this._perfRenderEventName);
 	}
 
 	get submissionList() {
@@ -167,6 +169,9 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 
 	async _initializeSubmissionEntities() {
+		this._telemetry = new ConsistentEvalTelemetry(this.dataTelemetryEndpoint);
+		this._telemetry.markEventStart(this._perfRenderEventName);
+
 		this._submissionEntities = [];
 		if (this._submissionList !== undefined) {
 			for (const submissionLink of this._submissionList) {
@@ -213,7 +218,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 
 	_finishedLoading() {
-		this._telemetry.markEventEndAndLog(this._perfRenderEventName);
+		this._telemetry.markEventEndAndLog(this._perfRenderEventName, this._submissionList.length);
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
 			composed: true,
 			bubbles: true,
