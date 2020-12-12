@@ -51,7 +51,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'special-access-href',
 				type: String
 			},
-			rubricHrefs: {
+			rubricInfos: {
 				attribute: false,
 				type: Array
 			},
@@ -146,6 +146,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'data-telemetry-endpoint',
 				type: String
 			},
+			_activeScoringRubric: {
+				attribute: 'active-scoring-rubric',
+				type: String
+			}
 		};
 	}
 
@@ -271,6 +275,18 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		return this.organizationName;
 	}
 
+	get _activeScoringRubric() {
+		if (this.evaluationEntity) {
+			const activeScoringRubricEntity = this.evaluationEntity.getSubEntityByRel('active-scoring-rubric');
+			if (activeScoringRubricEntity) {
+				if (activeScoringRubricEntity.properties) {
+					return activeScoringRubricEntity.properties.activeScoringRubric;
+				}
+			}
+		}
+		return undefined;
+	}
+
 	async _initializeController() {
 		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
 		const bypassCache = true;
@@ -373,6 +389,17 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				const fileId = this.currentFileId;
 
 				this.evaluationEntity = await this._controller.transientSaveAnnotations(entity, annotationsData, fileId);
+			}
+		);
+	}
+
+	async _transientSaveActiveScoringRubric(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				const rubricId = e.detail.rubricId;
+
+				this.evaluationEntity = await this._controller.transientSaveActiveScoringRubric(entity, rubricId);
 			}
 		);
 	}
@@ -751,7 +778,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					<consistent-evaluation-right-panel
 						evaluation-href=${ifDefined(this.evaluationHref)}
 						.feedbackText=${this._feedbackText}
-						.rubricHrefs=${this.rubricHrefs}
+						.rubricInfos=${this.rubricInfos}
+						active-scoring-rubric=${ifDefined(this._activeScoringRubric)}
 						.feedbackAttachments=${attachments}
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}
@@ -761,7 +789,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						.gradeItemInfo=${this.gradeItemInfo}
 						.token=${this.token}
 						?rubric-read-only=${this.rubricReadOnly}
-						?hide-rubric=${this.rubricHrefs === undefined}
 						?hide-grade=${this._noGradeComponent()}
 						?hide-outcomes=${this.outcomesHref === undefined}
 						?hide-feedback=${this._noFeedbackComponent()}
@@ -775,6 +802,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						@on-d2l-consistent-eval-feedback-attachments-remove=${this._transientRemoveAttachment}
 						@on-d2l-consistent-eval-grade-changed=${this._transientSaveGrade}
 						@d2l-outcomes-coa-eval-override-change=${this._transientSaveCoaEvalOverride}
+						@d2l-consistent-eval-active-scoring-rubric-change=${this._transientSaveActiveScoringRubric}
 					></consistent-evaluation-right-panel>
 				</div>
 				<div slot="footer">

@@ -50,7 +50,6 @@ export class ConsistentEvaluationHrefController {
 		let evaluationHref = undefined;
 		let nextHref = undefined;
 		let previousHref = undefined;
-		let rubricHrefs = undefined;
 		let alignmentsHref = undefined;
 		let userHref = undefined;
 		let groupHref = undefined;
@@ -65,25 +64,11 @@ export class ConsistentEvaluationHrefController {
 			evaluationHref = this._getHref(root, evaluationRel);
 			nextHref = this._getHref(root, nextRel);
 			previousHref = this._getHref(root, previousRel);
-			rubricHrefs = this._getHrefs(root, assessmentRel);
 			actorHref = this._getHref(root, actorRel);
 			userHref = this._getHref(root, userRel);
 			alignmentsHref = this._getHref(root, alignmentsRel);
 			groupHref = this._getHref(root, groupRel);
 			userProgressOutcomeHref = this._getHref(root, userProgressOutcomeRel);
-
-			if (rubricHrefs) {
-				rubricHrefs = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
-					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, bypassCache);
-					if (assessmentEntity && assessmentEntity.entity) {
-						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
-						return {
-							rubricHref,
-							rubricAssessmentHref
-						};
-					}
-				}));
-			}
 
 			if (alignmentsHref) {
 				const alignmentsEntity = await this._getEntityFromHref(alignmentsHref, bypassCache);
@@ -121,7 +106,6 @@ export class ConsistentEvaluationHrefController {
 			nextHref,
 			alignmentsHref,
 			previousHref,
-			rubricHrefs,
 			userHref,
 			groupHref,
 			userProgressOutcomeHref,
@@ -249,5 +233,37 @@ export class ConsistentEvaluationHrefController {
 			}
 		}
 		return undefined;
+	}
+
+	async getRubricInfos() {
+		let rubricInfos = undefined;
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			const rubricHrefs = this._getHrefs(root.entity, assessmentRel);
+			if (rubricHrefs) {
+				rubricInfos = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
+					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, false);
+					if (assessmentEntity && assessmentEntity.entity) {
+						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
+						const rubricEntity = await this._getEntityFromHref(rubricHref, false);
+						const rubricTitle = rubricEntity.entity.properties.name;
+						const rubricId = rubricEntity.entity.properties.rubricId.toString();
+						const rubricOutOf = rubricEntity.entity.properties.outOf;
+						const rubricScoringMethod = rubricEntity.entity.properties.scoringMethod;
+
+						return {
+							rubricHref,
+							rubricAssessmentHref,
+							rubricTitle,
+							rubricId,
+							rubricOutOf,
+							rubricScoringMethod
+						};
+					}
+				}));
+			}
+		}
+
+		return rubricInfos.filter(rubricInfo => rubricInfo !== undefined);
 	}
 }

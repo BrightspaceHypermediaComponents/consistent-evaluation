@@ -13,6 +13,7 @@ export const ConsistentEvaluationControllerErrors = {
 	FEEDBACK_ENTITY_NOT_FOUND: 'Evaluation entity must have feedback entity to update feedback.',
 	GRADE_ENTITY_NOT_FOUND: 'Evaluation entity must have grade entity to update grade.',
 	NO_PROPERTIES_FOR_ENTITY: 'Entity does not have properties attached to it.',
+	ACTIVE_SCORING_RUBRIC_NOT_FOUND: 'Evaluation entity must have active scoring rubric entity to update active scoring rubric',
 	ACTION_NOT_FOUND: (actionName) => `Could not find the ${actionName} action from the evaluation entity.`,
 	FIELD_IN_ACTION_NOT_FOUND: (actionName, fieldName) => `Expected the ${actionName} action to have a ${fieldName} field.`
 };
@@ -212,6 +213,23 @@ export class ConsistentEvaluationController {
 		}];
 
 		return await performSirenAction(this.token, saveAnnotationsAction, fields, true);
+	}
+
+	async transientSaveActiveScoringRubric(evaluationEntity, rubricId) {
+		if (!evaluationEntity) {
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
+		}
+		const targetEntity = evaluationEntity.getSubEntityByRel('active-scoring-rubric');
+		if (!targetEntity) {
+			throw new Error(ConsistentEvaluationControllerErrors.ACTIVE_SCORING_RUBRIC_NOT_FOUND);
+		}
+
+		if (!rubricId) {
+			//API requires a value
+			rubricId = '';
+		}
+
+		return await this._performAction(targetEntity, 'SetActiveScoringRubric', 'value', rubricId);
 	}
 
 	async transientDiscardAnnotations(evaluationEntity) {

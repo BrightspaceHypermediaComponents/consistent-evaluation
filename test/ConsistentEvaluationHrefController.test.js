@@ -1,7 +1,7 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { assessmentRel, editSpecialAccessApplicationRel, evaluationRel, nextRel, previousRel, rubricRel } from '../components/controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
+import { editSpecialAccessApplicationRel, evaluationRel, nextRel, previousRel, rubricRel } from '../components/controllers/constants.js';
 import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
 
@@ -65,47 +65,6 @@ describe('ConsistentEvaluationHrefController', () => {
 
 				controller._getRootEntity.restore();
 			});
-		});
-
-		it('sets all the rubric hrefs and the rubric assessment hrefs properly', async() => {
-			const expectedAssessmentHrefOne = 'the_assessment_href_to_find_one';
-			const expectedAssessmentHrefTwo = 'the_assessment_href_to_find_two';
-			const expectedRubricHrefOne = 'the_rubric_href_to_find_one';
-			const expectedRubricHrefTwo = 'the_rubric_href_to_find_two';
-
-			const controller = new ConsistentEvaluationHrefController('href', 'token');
-			sinon.stub(controller, '_getRootEntity').returns({
-				entity: {
-					hasLinkByRel: (r) => r === assessmentRel,
-					getLinksByRel: (r) => (r === assessmentRel ? [ {href: expectedAssessmentHrefOne}, {href: expectedAssessmentHrefTwo} ] : undefined),
-					hasSubEntityByRel: () => false,
-				}
-			});
-			sinon.stub(controller, '_getEntityFromHref')
-				.withArgs(expectedAssessmentHrefOne, true)
-				.returns({
-					entity: {
-						hasLinkByRel: (r) => r === rubricRel,
-						getLinkByRel: (r) => (r === rubricRel ? {href : expectedRubricHrefOne} : undefined)
-					}
-				})
-				.withArgs(expectedAssessmentHrefTwo, true)
-				.returns({
-					entity: {
-						hasLinkByRel: (r) => r === rubricRel,
-						getLinkByRel: (r) => (r === rubricRel ? {href : expectedRubricHrefTwo} : undefined)
-					}
-				});
-
-			const hrefs = await controller.getHrefs(true);
-
-			assert.equal(hrefs.rubricHrefs[0].rubricAssessmentHref, expectedAssessmentHrefOne);
-			assert.equal(hrefs.rubricHrefs[0].rubricHref, expectedRubricHrefOne);
-			assert.equal(hrefs.rubricHrefs[1].rubricAssessmentHref, expectedAssessmentHrefTwo);
-			assert.equal(hrefs.rubricHrefs[1].rubricHref, expectedRubricHrefTwo);
-
-			controller._getRootEntity.restore();
-			controller._getEntityFromHref.restore();
 		});
 
 	});
@@ -234,6 +193,90 @@ describe('ConsistentEvaluationHrefController', () => {
 
 			const actualOrganizationName = await controller.getAssignmentOrganizationName('organization');
 			assert.equal(actualOrganizationName, expectedOrganizationName);
+		});
+	});
+
+	describe('getRubricInfos gets correct rubric info', () => {
+
+		it('sets all the rubricinfos correctly', async() => {
+			const expectedAssessmentHrefOne = 'the_assessment_href_to_find_one';
+			const expectedAssessmentHrefTwo = 'the_assessment_href_to_find_two';
+			const expectedRubricHrefOne = 'the_rubric_href_to_find_one';
+			const expectedRubricHrefTwo = 'the_rubric_href_to_find_two';
+			const assessmentEntityOne = {name:'entity1'};
+			const assessmentEntityTwo = {name:'entity2'};
+			const rubricEntityOne = {
+				properties: {
+					name: 'rubric_one',
+					rubricId: 1,
+					outOf: 10,
+					scoringMethod: 100
+				}
+			};
+			const rubricEntityTwo = {
+				properties: {
+					name: 'rubric_two',
+					rubricId: 2,
+					outOf: 20,
+					scoringMethod: 200
+				}
+			};
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: {}
+			});
+
+			sinon.stub(controller, '_getHrefs').returns([
+				expectedAssessmentHrefOne,
+				expectedAssessmentHrefTwo
+			]);
+
+			sinon.stub(controller, '_getEntityFromHref')
+				.withArgs(expectedAssessmentHrefOne, false)
+				.returns({
+					entity: assessmentEntityOne
+				})
+				.withArgs(expectedAssessmentHrefTwo, false)
+				.returns({
+					entity: assessmentEntityTwo
+				})
+				.withArgs(expectedRubricHrefOne, false)
+				.returns({
+					entity: rubricEntityOne
+				})
+				.withArgs(expectedRubricHrefTwo, false)
+				.returns({
+					entity: rubricEntityTwo
+				});
+
+			sinon.stub(controller, '_getHref')
+				.withArgs(assessmentEntityOne, rubricRel)
+				.returns(
+					expectedRubricHrefOne
+				)
+				.withArgs(assessmentEntityTwo, rubricRel)
+				.returns(
+					expectedRubricHrefTwo
+				);
+
+			const rubricInfos = await controller.getRubricInfos();
+
+			assert.equal(rubricInfos.length, 2);
+			assert.equal(rubricInfos[0].rubricHref, expectedRubricHrefOne);
+			assert.equal(rubricInfos[1].rubricHref, expectedRubricHrefTwo);
+
+			assert.equal(rubricInfos[0].rubricAssessmentHref, expectedAssessmentHrefOne);
+			assert.equal(rubricInfos[1].rubricAssessmentHref, expectedAssessmentHrefTwo);
+
+			assert.equal(rubricInfos[0].rubricTitle, rubricEntityOne.properties.name);
+			assert.equal(rubricInfos[0].rubricId, rubricEntityOne.properties.rubricId);
+			assert.equal(rubricInfos[0].rubricOutOf, rubricEntityOne.properties.outOf);
+			assert.equal(rubricInfos[0].rubricScoringMethod, rubricEntityOne.properties.scoringMethod);
+			assert.equal(rubricInfos[1].rubricTitle, rubricEntityTwo.properties.name);
+			assert.equal(rubricInfos[1].rubricId, rubricEntityTwo.properties.rubricId);
+			assert.equal(rubricInfos[1].rubricOutOf, rubricEntityTwo.properties.outOf);
+			assert.equal(rubricInfos[1].rubricScoringMethod, rubricEntityTwo.properties.scoringMethod);
 		});
 	});
 });

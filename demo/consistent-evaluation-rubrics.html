@@ -12,12 +12,12 @@
 			const tests = document.getElementsByTagName('d2l-consistent-evaluation-rubric');
 			for (let i = 0; i < tests.length; i++) {
 				if (tests[i].id === 'multiple-rubrics') {
-					tests[i].rubricHrefs = [
-						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'},
-						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
+					tests[i].rubricInfos = [
+						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json', rubricTitle: 'firstRubric'},
+						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json', rubricTitle: 'secondRubric'}];
 					continue;
 				}
-				tests[i].rubricHrefs = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
+				tests[i].rubricInfos = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
 			}
 		</script>
 		<title>d2l-consistent-rubric</title>
@@ -37,6 +37,7 @@
 	<body class="d2l-typography">
 		<d2l-demo-page page-title="consistent-evaluation-rubric">
 
+			<h2>Single Rubric</h2>
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-rubric
 					header="Rubrics"
@@ -44,6 +45,7 @@
 				></d2l-consistent-evaluation-rubric>
 			</d2l-demo-snippet>
 
+			<h2>Single Rubric half-width</h2>
 			<d2l-demo-snippet>
 				<div class="half-width">
 					<d2l-consistent-evaluation-rubric
@@ -52,6 +54,8 @@
 					></d2l-consistent-evaluation-rubric>
 				</div>
 			</d2l-demo-snippet>
+
+			<h2>Single Rubric quarter-width</h2>
 
 			<d2l-demo-snippet>
 				<div class="quarter-width">
@@ -62,11 +66,22 @@
 				</div>
 			</d2l-demo-snippet>
 
+			<h2>Multiple Rubrics</h2>
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-rubric
 					id="multiple-rubrics"
 					header="Rubrics"
 					token="abcde"
+				></d2l-consistent-evaluation-rubric>
+			</d2l-demo-snippet>
+
+			<h2>Multiple Rubrics with grading dropdown</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-rubric
+					id="multiple-rubrics"
+					header="Rubrics"
+					token="abcde"
+					show-active-scoring-rubric-options=true
 				></d2l-consistent-evaluation-rubric>
 			</d2l-demo-snippet>
 

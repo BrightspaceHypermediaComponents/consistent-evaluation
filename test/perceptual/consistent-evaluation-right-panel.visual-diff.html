@@ -18,7 +18,7 @@
 				const panels = document.getElementsByTagName('consistent-evaluation-right-panel');
 				for (let i = 0; i < panels.length; i++) {
 					panels[i].grade = grade;
-					panels[i].rubricHrefs = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
+					panels[i].rubricInfos = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json', rubricTitle: 'firstRubric'}];
 					panels[i].richTextEditorConfig = 'data/feedback/richText.json';
 					panels[i].feedbackAttachments = [];
 				}});

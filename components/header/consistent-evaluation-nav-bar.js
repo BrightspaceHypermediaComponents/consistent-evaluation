@@ -48,9 +48,9 @@ class ConsistentEvaluationNavBar extends LocalizeConsistentEvaluation(LitElement
 			.d2l-short-back {
 				display: none;
 			}
-			.d2l-iterator-text {
-				padding-left: 4rem;
-				padding-right: 4rem;
+			.d2l-iterator-space {
+				margin-left: 2.5rem;
+				margin-right: 2.5rem;
 			}
 			.d2l-heading-3 {
 				padding-top: 0.25rem;
@@ -67,18 +67,20 @@ class ConsistentEvaluationNavBar extends LocalizeConsistentEvaluation(LitElement
 			}
 
 			@media (max-width: 929px) {
-				.d2l-iterator-text {
-					padding-left: 1rem;
-					padding-right: 1rem;
+				.d2l-iterator-space {
+					margin-left: 1rem;
+					margin-right: 1rem;
 				}
 			}
 
 			@media (max-width: 556px) {
+				.d2l-iterator-space {
+					margin-left: 0;
+					margin-right: 0;
+					min-width: 1rem;
+				}
 				.d2l-iterator-text {
 					display: none;
-				}
-				.d2l-iterator-space {
-					min-width: 1rem;
 				}
 				.d2l-short-back {
 					display: inline-block;

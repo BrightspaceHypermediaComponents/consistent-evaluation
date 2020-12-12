@@ -28,6 +28,7 @@ export class ConsistentEvaluation extends LitElement {
 			},
 			_rubricReadOnly: { type: Boolean },
 			_childHrefs: { type: Object },
+			_rubricInfos: { type: Array },
 			_submissionInfo: { type: Object },
 			_gradeItemInfo: { type: Object },
 			_assignmentName: { type: String },
@@ -61,6 +62,7 @@ export class ConsistentEvaluation extends LitElement {
 		this._rubricReadOnly = false;
 		this._richTextEditorDisabled = false;
 		this._childHrefs = undefined;
+		this._rubricInfos = undefined;
 		this._submissionInfo = undefined;
 		this._gradeItemInfo = undefined;
 		this.returnHref = undefined;
@@ -80,6 +82,7 @@ export class ConsistentEvaluation extends LitElement {
 		if (changedProperties.has('href')) {
 			const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 			this._childHrefs = await controller.getHrefs();
+			this._rubricInfos = await controller.getRubricInfos();
 			this._submissionInfo = await controller.getSubmissionInfo();
 			this._gradeItemInfo = await controller.getGradeItemInfo();
 			this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
@@ -172,6 +175,7 @@ export class ConsistentEvaluation extends LitElement {
 				current-file-id=${ifDefined(this.currentFileId)}
 				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
 				.rubricHrefs=${this._childHrefs && this._childHrefs.rubricHrefs}
+				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
 				.assignmentName=${this._assignmentName}
