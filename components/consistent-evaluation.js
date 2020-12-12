@@ -74,7 +74,9 @@ export class ConsistentEvaluation extends LitElement {
 
 	async updated(changedProperties) {
 		super.updated();
-
+		if (changedProperties.has('dataTelemetryEndpoint')) {
+			this._telemetry = new ConsistentEvalTelemetry(this.dataTelemetryEndpoint);
+		}
 		if (changedProperties.has('href')) {
 			const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 			this._childHrefs = await controller.getHrefs();
@@ -97,7 +99,6 @@ export class ConsistentEvaluation extends LitElement {
 			}
 
 			this._loadingComponents.main = false;
-			this._telemetry = new ConsistentEvalTelemetry(this.dataTelemetryEndpoint);
 			this._finishedLoading();
 		}
 	}
@@ -142,7 +143,9 @@ export class ConsistentEvaluation extends LitElement {
 			}
 		}
 		this._loading = false;
-		this._telemetry.logLoadEvent('consistentEvalMain', this._submissionInfo.submissionList.length);
+		if (this._telemetry) {
+			this._telemetry.logLoadEvent('consistentEvalMain', this._submissionInfo.submissionList.length);
+		}
 	}
 
 	_setLoading() {
