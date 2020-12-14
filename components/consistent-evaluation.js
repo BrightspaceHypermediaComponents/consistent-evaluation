@@ -174,7 +174,6 @@ export class ConsistentEvaluation extends LitElement {
 				return-href-text=${ifDefined(this.returnHrefText)}
 				current-file-id=${ifDefined(this.currentFileId)}
 				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
-				.rubricHrefs=${this._childHrefs && this._childHrefs.rubricHrefs}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
