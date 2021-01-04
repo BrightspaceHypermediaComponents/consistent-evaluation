@@ -4,12 +4,13 @@ import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import './consistent-evaluation-submission-item.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
+import { toggleFlagActionName, toggleIsReadActionName } from '../controllers/constants.js';
 import { Classes } from 'd2l-hypermedia-constants';
 import { ConsistentEvalTelemetry } from '../helpers/consistent-eval-telemetry.js';
+import { findFile } from '../helpers/submissionsAndFilesHelpers.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
-import { toggleIsReadActionName } from '../controllers/constants.js';
 
 export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(LitElement)) {
 	static get properties() {
@@ -193,7 +194,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 
 	async _getSubmissionEntity(submissionHref) {
-		const byPassCache = true;
+		const byPassCache = false;
 		return await window.D2L.Siren.EntityStore.fetch(submissionHref, this._token, byPassCache);
 	}
 
@@ -257,8 +258,31 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			throw new Error('Invalid entity provided for attachment');
 		}
 
+		// Assume toggle worked so we can update UI instantly
+		if (actionName === toggleIsReadActionName) {
+			attachmentEntity.properties.read = !attachmentEntity.properties.read;
+			await this.requestUpdate();
+		} else if (actionName === toggleFlagActionName) {
+			attachmentEntity.properties.flagged = !attachmentEntity.properties.flagged;
+			await this.requestUpdate();
+		}
+
 		const action = attachmentEntity.getActionByName(actionName);
-		await this._doSirenActionAndRefreshFileStatus(action);
+		const newSubmissionEntity = await this._doSirenActionAndRefreshFileStatus(action);
+		const newAttachmentEntity = findFile(fileId, [{ entity: newSubmissionEntity }]);
+
+		// Detect if our assumption was correct
+		if (
+			actionName === toggleIsReadActionName
+			&& attachmentEntity.properties.read !== newAttachmentEntity.properties.read
+		) {
+			console.warn('Toggle read failed');
+		} else if (
+			actionName === toggleFlagActionName
+			&& attachmentEntity.properties.flagged !== newAttachmentEntity.properties.flagged
+		) {
+			console.warn('Toggle flag failed');
+		}
 	}
 
 	async _downloadAction(e) {
@@ -281,6 +305,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		const submissionSelfLink = newSubmissionEntity.getLinkByRel('self');
 		await this._updateSubmissionEntity(newSubmissionEntity, submissionSelfLink.href) ;
 		await this.requestUpdate();
+		return newSubmissionEntity;
 	}
 
 	_renderListItems() {

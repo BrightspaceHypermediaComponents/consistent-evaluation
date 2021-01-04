@@ -114,6 +114,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			token: {
 				type: Object
 			},
+			rubricPopoutLocation: {
+				attribute: 'rubric-popout-location',
+				type: String
+			},
 			_displayToast: {
 				type: Boolean
 			},
@@ -784,6 +788,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						rubric-assessment-href=${ifDefined(this.rubricAssessmentHref)}
 						outcomes-href=${ifDefined(this.outcomesHref)}
 						coa-eval-override-href=${ifDefined(this.coaDemonstrationHref)}
+						rubric-popout-location=${ifDefined(this.rubricPopoutLocation)}
 						.richTextEditorConfig=${this._getRichTextEditorConfig()}
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}

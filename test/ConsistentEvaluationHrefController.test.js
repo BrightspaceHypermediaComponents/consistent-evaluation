@@ -260,7 +260,7 @@ describe('ConsistentEvaluationHrefController', () => {
 					expectedRubricHrefTwo
 				);
 
-			const rubricInfos = await controller.getRubricInfos();
+			const rubricInfos = await controller.getRubricInfos(false);
 
 			assert.equal(rubricInfos.length, 2);
 			assert.equal(rubricInfos[0].rubricHref, expectedRubricHrefOne);

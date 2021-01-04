@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="/node_modules/@brightspace-ui/core/components/demo/styles.css" type="text/css">
+		<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+		<script type="module">
+			import '@brightspace-ui/core/components/demo/demo-page.js';
+			import '@brightspace-ui/core/components/typography/styles.js';
+			import '@brightspace-ui/core/components/typography/typography.js';
+			import '../components/right-panel/consistent-evaluation-popup-rubric.js';
+
+			const tests = document.getElementsByTagName('d2l-consistent-evaluation-popup-rubric');
+			for (let i = 0; i < tests.length; i++) {
+				if (tests[i].id === 'multiple-rubrics') {
+					tests[i]._rubricInfos = [
+						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'},
+						{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
+					continue;
+				}
+				tests[i]._rubricInfos = [{rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json'}];
+			}
+		</script>
+		<title>d2l-consistent-rubric</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<meta charset="UTF-8">
+	</head>
+	<body class="d2l-typography">
+		<d2l-demo-page page-title="consistent-evaluation-popup-rubric">
+
+			<h2>Single Rubric</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-popup-rubric
+					header="Rubrics"
+					token="abcde"
+				></d2l-consistent-evaluation-popup-rubric>
+			</d2l-demo-snippet>
+
+			<h2>Multiple Rubrics</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-popup-rubric
+					id="multiple-rubrics"
+					token="abcde"
+				></d2l-consistent-evaluation-popup-rubric>
+			</d2l-demo-snippet>
+
+		</d2l-demo-page>
+	</body>
+</html>

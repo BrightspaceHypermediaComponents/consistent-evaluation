@@ -127,7 +127,7 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 	}
 
 	_renderSkeleton() {
-		if (submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
+		if (this.submissionInfo && submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
 			return html `
 				<div class="d2l-skeleton-learner-context-bar" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
 					<div class="d2l-skeleton-user-profile-image d2l-skeletize"></div>

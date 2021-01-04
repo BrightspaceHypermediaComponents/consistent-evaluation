@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>consistent-evaluation-feedback visual diff tests</title>
+		<script type="module">
+			import '@brightspace-ui/core/components/typography/styles.js';
+			import '@brightspace-ui/core/components/typography/typography.js';
+			import '../../components/right-panel/consistent-evaluation-feedback-presentational.js';
+
+			const feedback = document.getElementById('feedback');
+			feedback.feedbackText = 'With attachments';
+			feedback.richTextEditorConfig = 'data/feedback/richText.json';
+			feedback.attachments = [ { id: '0', name: 'Testing Document.docx', url: 'www.somefaketestingurl.fake', canDeleteAttachment: true} ];
+
+			const noAttachments = document.getElementById('noAttachments');
+			noAttachments.feedbackText = 'No attachments';
+			noAttachments.richTextEditorConfig = 'data/feedback/richText.json';
+			noAttachments.attachments = [];
+		</script>
+		<style>
+			html {
+				font-size: 20px;
+			}
+			div {
+				padding: 50px;
+				justify-content: center;
+			}
+		</style>
+	</head>
+	<body class="d2l-typography">
+
+		<div id="standard">
+			<d2l-consistent-evaluation-feedback-presentational
+				id="feedback"
+				can-edit-feedback
+				can-add-file
+				can-record-video
+				can-record-audio
+				href="href"
+				token="token"
+				attachments-href="href"
+			></d2l-consistent-evaluation-feedback-presentational>
+		</div>
+
+		<div id="no-attachments">
+			<d2l-consistent-evaluation-feedback-presentational
+				id="noAttachments"
+				can-edit-feedback
+				can-add-file
+				can-record-video
+				can-record-audio
+				href="href"
+				token="token"
+				attachments-href="href"
+			></d2l-consistent-evaluation-feedback-presentational>
+		</div>
+
+	</body>
+</html>

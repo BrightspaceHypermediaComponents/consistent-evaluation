@@ -82,7 +82,7 @@ export class ConsistentEvaluation extends LitElement {
 		if (changedProperties.has('href')) {
 			const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 			this._childHrefs = await controller.getHrefs();
-			this._rubricInfos = await controller.getRubricInfos();
+			this._rubricInfos = await controller.getRubricInfos(false);
 			this._submissionInfo = await controller.getSubmissionInfo();
 			this._gradeItemInfo = await controller.getGradeItemInfo();
 			this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
@@ -158,6 +158,11 @@ export class ConsistentEvaluation extends LitElement {
 		this._loading = true;
 	}
 
+	async _refreshRubrics() {
+		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
+		this._rubricInfos = await controller.getRubricInfos(true);
+	}
+
 	render() {
 		return html`
 			<d2l-consistent-evaluation-page
@@ -174,6 +179,7 @@ export class ConsistentEvaluation extends LitElement {
 				return-href-text=${ifDefined(this.returnHrefText)}
 				current-file-id=${ifDefined(this.currentFileId)}
 				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
+				rubric-popout-location=${ifDefined(this._childHrefs && this._childHrefs.rubricPopoutLocation)}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
@@ -188,6 +194,7 @@ export class ConsistentEvaluation extends LitElement {
 				@d2l-consistent-evaluation-previous-student-click=${this._onPreviousStudentClick}
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}
+				@d2l-consistent-eval-rubric-popup-closed=${this._refreshRubrics}
 			></d2l-consistent-evaluation-page>
 		`;
 	}
