@@ -172,14 +172,11 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	updated(changedProperties) {
 		if (changedProperties.has('dataTelemetryEndpoint')) {
 			this._telemetry = new ConsistentEvalTelemetry(this.dataTelemetryEndpoint);
+			this._telemetry.markEventStart(this._perfRenderEventName);
 		}
 	}
 
 	async _initializeSubmissionEntities() {
-		if (this._telemetry) {
-			this._telemetry.markEventStart(this._perfRenderEventName);
-		}
-
 		this._submissionEntities = [];
 		if (this._submissionList !== undefined) {
 			for (const submissionLink of this._submissionList) {
