@@ -146,7 +146,7 @@ export class ConsistentEvaluation extends LitElement {
 			}
 		}
 		this._loading = false;
-		if (this._telemetry) {
+		if (this._telemetry && this._submissionInfo.submissionList.length) {
 			this._telemetry.logLoadEvent('consistentEvalMain', this._submissionInfo.submissionList.length);
 		}
 	}
