@@ -21,6 +21,7 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 					}
 				}
 			},
+			_userName: {type: String},
 			_rubricInfos: { type: Array },
 		};
 	}
@@ -37,6 +38,17 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 		if (changedProperties.has('href')) {
 			const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 			this._rubricInfos = await controller.getRubricInfos();
+			this._userName = await controller.getUserName();
+			this.setTitle();
+		}
+
+	}
+
+	setTitle() {
+		if (this._userName) {
+			const title = document.createElement('title');
+			title.textContent = `${this.localize('rubricsAssess')} - ${this._userName}`;
+			document.head.insertBefore(title, document.head.firstChild);
 		}
 	}
 

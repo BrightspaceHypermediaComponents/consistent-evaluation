@@ -54,6 +54,7 @@ export default {
 	"rubricSummary": "1 rubric attached",
 	"rubricsSummary": "{num} rubrics attached",
 	"rubricTitle": "Rubric Title",
+	"rubricsAssess": "Assess Rubrics",
 	"saveBtn": "Save",
 	"saveDraft": "Save Draft",
 	"saved":  "Evaluation saved as draft",
