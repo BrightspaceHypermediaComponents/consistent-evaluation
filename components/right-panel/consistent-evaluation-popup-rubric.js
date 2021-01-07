@@ -47,7 +47,7 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 	setTitle() {
 		if (this._userName) {
 			const title = document.createElement('title');
-			title.textContent = `${this.localize('rubricsAssess')} - ${this._userName}`;
+			title.textContent = `${this.localize('rubricsAssess', 'username', this._userName)}`;
 			document.head.insertBefore(title, document.head.firstChild);
 		}
 	}
