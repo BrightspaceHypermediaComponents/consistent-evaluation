@@ -109,16 +109,6 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		super.disconnectedCallback();
 	}
 
-	connectedCallback() {
-		super.connectedCallback();
-		window.addEventListener('beforeunload', this._closePopout);
-	}
-
-	disconnectedCallback() {
-		window.removeEventListener('beforeunload', this._closePopout);
-		super.disconnectedCallback();
-	}
-
 	updated(changedProperties) {
 		super.updated(changedProperties);
 		if (changedProperties.has('activeScoringRubric')) {
