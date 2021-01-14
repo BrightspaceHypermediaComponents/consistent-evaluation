@@ -314,7 +314,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _onNextStudentClick() {
-		this.shadowRoot.querySelector('consistent-evaluation-right-panel')._closeRubric();
+		const rubricComponent = this.shadowRoot.querySelector('consistent-evaluation-right-panel')
+			.shadowRoot.querySelector('d2l-consistent-evaluation-rubric');
+
+		if (rubricComponent) {
+			rubricComponent._closeRubric();
+		}
+
 		this._resetFocusToUser();
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-next-student-click', {
 			composed: true,
@@ -323,7 +329,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _onPreviousStudentClick() {
-		this.shadowRoot.querySelector('consistent-evaluation-right-panel')._closeRubric();
+		const rubricComponent = this.shadowRoot.querySelector('consistent-evaluation-right-panel')
+			.shadowRoot.querySelector('d2l-consistent-evaluation-rubric');
+
+		if (rubricComponent) {
+			rubricComponent._closeRubric();
+		}
+
 		this._resetFocusToUser();
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-previous-student-click', {
 			composed: true,

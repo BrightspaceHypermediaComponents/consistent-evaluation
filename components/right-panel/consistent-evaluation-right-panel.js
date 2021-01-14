@@ -237,29 +237,6 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		}
 	}
 
-	_closeRubric() {
-		if (!this.rubricInfos || this.rubricInfos.length === 0) {
-			return;
-		}
-		try {
-			const rubrics = this.shadowRoot.querySelector('d2l-consistent-evaluation-rubric')
-				.shadowRoot.querySelectorAll('d2l-consistent-evaluation-right-panel-block d2l-rubric');
-
-			[...rubrics].map(rubric => {
-				const accordionCollapse = rubric
-					.shadowRoot.querySelector('d2l-rubric-adapter')
-					.shadowRoot.querySelector('div d2l-labs-accordion d2l-labs-accordion-collapse');
-				const rubricCollapse = accordionCollapse
-					.shadowRoot.querySelector('div.content iron-collapse');
-				accordionCollapse.removeAttribute('opened');
-				rubricCollapse.opened = false;
-			});
-
-		} catch (err) {
-			console.log('Unable to close rubrics');
-		}
-	}
-
 	_syncGradeToRubricScore(e) {
 		if (!this.allowEvaluationWrite) {
 			return;
