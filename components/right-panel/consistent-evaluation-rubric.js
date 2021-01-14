@@ -91,15 +91,16 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 		super();
 		this.isPopout = false;
 		this.rubricWindowPopout = undefined;
+		this.closeRubricWindow = this._closePopout.bind(this);
 	}
 
 	connectedCallback() {
 		super.connectedCallback();
-		window.addEventListener('beforeunload', this._closePopout);
+		window.addEventListener('beforeunload', this.closeRubricWindow);
 	}
 
 	disconnectedCallback() {
-		window.removeEventListener('beforeunload', this._closePopout);
+		//window.removeEventListener('beforeunload', this.closeRubricWindow);
 		super.disconnectedCallback();
 	}
 
