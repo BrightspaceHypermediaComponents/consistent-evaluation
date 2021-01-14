@@ -100,7 +100,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 	}
 
 	disconnectedCallback() {
-		//window.removeEventListener('beforeunload', this.closeRubricWindow);
+		window.removeEventListener('beforeunload', this.closeRubricWindow);
 		super.disconnectedCallback();
 	}
 
