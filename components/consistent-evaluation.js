@@ -26,6 +26,10 @@ export class ConsistentEvaluation extends LitElement {
 				attribute: 'data-telemetry-endpoint',
 				type: String
 			},
+			loggingEndpoint: {
+				attribute: 'logging-endpoint',
+				type: String
+			},
 			_rubricReadOnly: { type: Boolean },
 			_childHrefs: { type: Object },
 			_rubricInfos: { type: Array },
@@ -179,6 +183,7 @@ export class ConsistentEvaluation extends LitElement {
 				return-href-text=${ifDefined(this.returnHrefText)}
 				current-file-id=${ifDefined(this.currentFileId)}
 				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
+				logging-endpoint=${ifDefined(this.loggingEndpoint)}
 				rubric-popout-location=${ifDefined(this._childHrefs && this._childHrefs.rubricPopoutLocation)}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
