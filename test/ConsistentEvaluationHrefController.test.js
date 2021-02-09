@@ -146,6 +146,7 @@ describe('ConsistentEvaluationHrefController', () => {
 			const emailPath = 'emailPath';
 			const pagerPath = 'pagerPath';
 			const userProgressPath = 'userProgress';
+			const userProfilePath = 'userProfilePath';
 
 			const controller = new ConsistentEvaluationHrefController('href', 'token');
 
@@ -161,8 +162,10 @@ describe('ConsistentEvaluationHrefController', () => {
 							return { properties: { path: pagerPath } };
 						} else if (r === emailRel) {
 							return { properties: { path: emailPath } };
-						} else {
+						} else if (r === Rels.userProgress) {
 							return { properties: { path: userProgressPath } };
+						} else {
+							return { properties: { path: userProfilePath } };
 						}
 					}
 				}
@@ -172,6 +175,7 @@ describe('ConsistentEvaluationHrefController', () => {
 			assert.equal(enrolledUser.enrolledUserHref, enrolledUserHref);
 			assert.equal(enrolledUser.pagerPath, pagerPath);
 			assert.equal(enrolledUser.userProgressPath, userProgressPath);
+			assert.equal(enrolledUser.userProfilePath, userProfilePath);
 			assert.equal(enrolledUser.emailPath, emailPath);
 		});
 	});

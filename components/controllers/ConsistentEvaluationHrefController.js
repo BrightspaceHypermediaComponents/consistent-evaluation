@@ -260,10 +260,12 @@ export class ConsistentEvaluationHrefController {
 				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(pagerRel);
 				const userProgressEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProgress);
 				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(emailRel, false);
+				const userProfileEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProfile);
 
 				let pagerPath = undefined;
 				let userProgressPath = undefined;
 				let emailPath = undefined;
+				let userProfilePath = undefined;
 				if (pagerEntity) {
 					pagerPath = pagerEntity.properties.path;
 				}
@@ -273,11 +275,15 @@ export class ConsistentEvaluationHrefController {
 				if (emailEntity) {
 					emailPath = emailEntity.properties.path;
 				}
+				if (userProfileEntity) {
+					userProfilePath = userProfileEntity.properties.path;
+				}
 				return {
 					enrolledUserHref,
 					emailPath,
 					pagerPath,
-					userProgressPath
+					userProgressPath,
+					userProfilePath
 				};
 			} else if (groupHref) {
 				const groupEntity = await this._getEntityFromHref(groupHref, false);

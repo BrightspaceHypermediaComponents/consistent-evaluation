@@ -26,6 +26,10 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 			userProgressHref: {
 				attribute: false,
 				type: String
+			},
+			userProfileHref: {
+				attribute: false,
+				type: String
 			}
 		};
 	}
@@ -38,6 +42,12 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 
 	_openUserProgress() {
 		window.open(this.userProgressHref);
+	}
+
+	_openUserProfile() {
+		if (this.userProfileHref) {
+			window.open(this.userProfileHref);
+		}
 	}
 
 	dispatchMouseLeaveEvent() {
@@ -84,6 +94,7 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 			@d2l-labs-user-profile-card-message=${this._openMessageDialog}
 			@d2l-labs-user-profile-card-email=${this._openEmailDialog}
 			@d2l-labs-user-profile-card-progress=${this._openUserProgress}
+			@d2l-labs-user-profile-card-profile=${this._openUserProfile}
 			tagline=${this.tagline}
 			?show-email=${this.emailHref}
 			?show-im=${this.instantMessageHref}

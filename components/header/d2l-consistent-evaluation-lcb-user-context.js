@@ -133,10 +133,12 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		let emailHref = undefined;
 		let instantMessageHref = undefined;
 		let userProgressHref = undefined;
+		let userProfileHref = undefined;
 		if (this.enrolledUser) {
 			emailHref = this.enrolledUser.emailPath;
 			instantMessageHref = this.enrolledUser.pagerPath;
 			userProgressHref = this.enrolledUser.userProgressPath;
+			userProfileHref = this.enrolledUser.userProfilePath;
 		}
 
 		return this._showProfileCard ?
@@ -147,6 +149,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				.emailHref=${emailHref}
 				.instantMessageHref=${instantMessageHref}
 				.userProgressHref=${userProgressHref}
+				.userProfileHref=${userProfileHref}
 				@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}>
 			</d2l-consistent-evaluation-user-profile-card>
 			` :
