@@ -69,10 +69,12 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				display: flex;
 			}
 			.d2l-consistent-evaluation-user-profile-card-container {
-				background: white;
 				position: absolute;
-				top: 6rem;
 				z-index: 1;
+			}
+			d2l-consistent-evaluation-user-profile-card {
+				position: relative;
+				top: 7rem;
 			}
 		`];
 	}
@@ -81,16 +83,6 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		super();
 
 		this._setEntityType(UserEntity);
-	}
-
-	firstUpdated() {
-		const userContextContainer = this.shadowRoot.querySelector('.d2l-user-context-container');
-		userContextContainer.addEventListener('focusin', () => {
-			this._toggleOnProfileCard();
-		});
-		userContextContainer.addEventListener('focusout', () => {
-			this._toggleOffProfileCard();
-		});
 	}
 
 	set _entity(entity) {
@@ -172,16 +164,18 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		<div class="d2l-user-context-container"
 			tabindex="0"
 			aria-label=${ifDefined(this._displayName)}
-			@mouseover=${this._toggleOnProfileCard}>
+			@mouseenter=${this._toggleOnProfileCard}
+			@mouseleave=${this._toggleOffProfileCard}>
 
 			${this._renderProfileImage()}
 			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</h2>
 			${this._getExemptText()}
+
+			<div class="d2l-consistent-evaluation-user-profile-card-container">
+				${this._renderProfileCard()}
+			</div>
 		</div>
 
-		<div class="d2l-consistent-evaluation-user-profile-card-container">
-			${this._renderProfileCard()}
-		</div>
 		`;
 	}
 }
