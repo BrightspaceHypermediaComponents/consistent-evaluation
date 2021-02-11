@@ -70,11 +70,12 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			}
 			.d2l-consistent-evaluation-user-profile-card-container {
 				position: absolute;
+				top: 2rem;
 				z-index: 1;
 			}
 			d2l-consistent-evaluation-user-profile-card {
 				position: relative;
-				top: 7rem;
+				top: 1.75rem;
 			}
 		`];
 	}
@@ -155,8 +156,11 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		this._showProfileCard = true;
 	}
 
-	_toggleOffProfileCard() {
-		this._showProfileCard = false;
+	_toggleOffProfileCard(event) {
+		//Don't close/flciker the profile card when mousing off of it and onto the user-context-container
+		if(event.type!='d2l-consistent-eval-profile-card-mouse-leave'){
+			this._showProfileCard = false;
+		}
 	}
 
 	render() {
@@ -164,14 +168,13 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		<div class="d2l-user-context-container"
 			tabindex="0"
 			aria-label=${ifDefined(this._displayName)}
-			@mouseenter=${this._toggleOnProfileCard}
+			@mouseover=${this._toggleOnProfileCard}
 			@mouseleave=${this._toggleOffProfileCard}>
 
 			${this._renderProfileImage()}
 			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</h2>
 			${this._getExemptText()}
-
-			<div class="d2l-consistent-evaluation-user-profile-card-container">
+			<div class="d2l-consistent-evaluation-user-profile-card-container" @click=${this._toggleOffProfileCard}>
 				${this._renderProfileCard()}
 			</div>
 		</div>
