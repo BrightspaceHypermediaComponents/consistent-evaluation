@@ -70,7 +70,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			}
 			.d2l-consistent-evaluation-user-profile-card-container {
 				position: absolute;
-				top: 2rem;
+				top: 4rem;
 				z-index: 1;
 			}
 			d2l-consistent-evaluation-user-profile-card {
