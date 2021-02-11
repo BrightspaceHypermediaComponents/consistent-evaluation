@@ -7,6 +7,7 @@ import { bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/compone
 import { css, html, LitElement } from 'lit-element';
 import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWithNoEvidence, textSubmission } from '../controllers/constants';
 import { findFile, getSubmissions } from '../helpers/submissionsAndFilesHelpers.js';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
@@ -50,6 +51,10 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			},
 			userProgressOutcomeHref: {
 				attribute: 'user-progress-outcome-href',
+				type: String
+			},
+			downloadAllSubmissionLink: {
+				attribute: 'download-all-submissions-location',
 				type: String
 			},
 			currentFileId: {
@@ -208,6 +213,7 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			.submissionList=${this.submissionInfo && this.submissionInfo.submissionList}
 			.token=${this.token}
 			data-telemetry-endpoint=${this.dataTelemetryEndpoint}
+			download-all-submissions-location=${ifDefined(this.downloadAllSubmissionLink)}
 			?skeleton=${this.skeleton}
 			?hide-use-grade=${this.hideUseGrade}
 		></d2l-consistent-evaluation-submissions-page>`;

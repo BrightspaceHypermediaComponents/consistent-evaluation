@@ -30,11 +30,16 @@ export class ConsistentEvaluation extends LitElement {
 				attribute: 'logging-endpoint',
 				type: String
 			},
+			useNewHtmlEditor: {
+				attribute: 'use-new-html-editor',
+				type: Boolean
+			},
 			_rubricReadOnly: { type: Boolean },
 			_childHrefs: { type: Object },
 			_rubricInfos: { type: Array },
 			_submissionInfo: { type: Object },
 			_gradeItemInfo: { type: Object },
+			_enrolledUser: { type: Object},
 			_assignmentName: { type: String },
 			_organizationName: { type: String },
 			_userName: { type: String },
@@ -92,6 +97,7 @@ export class ConsistentEvaluation extends LitElement {
 			this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
 			this._organizationName = await controller.getAssignmentOrganizationName('organization');
 			this._userName = await controller.getUserName();
+			this._enrolledUser = await controller.getEnrolledUser();
 			this._iteratorTotal = await controller.getIteratorInfo('total');
 			this._iteratorIndex = await controller.getIteratorInfo('index');
 			const stripped = this._stripFileIdFromUrl();
@@ -126,13 +132,34 @@ export class ConsistentEvaluation extends LitElement {
 	}
 
 	_onNextStudentClick() {
+		this._updateCurrentUrl(this._childHrefs?.nextHref);
 		this.href = this._childHrefs?.nextHref;
 		this._setLoading();
 	}
 
 	_onPreviousStudentClick() {
+		this._updateCurrentUrl(this._childHrefs?.previousHref);
 		this.href = this._childHrefs?.previousHref;
 		this._setLoading();
+	}
+
+	_updateCurrentUrl(targetHref) {
+		const targetHrefUrl = new URL(targetHref);
+		if (targetHrefUrl) {
+			const queryString = targetHrefUrl.search;
+			const searchParams = new URLSearchParams(queryString);
+			const nextActorUsageId = searchParams.get('currentActorUsageId');
+
+			if (nextActorUsageId) {
+				const currentUrl = new URL(window.location.href);
+				const currentUrlQueryString = currentUrl.search;
+				const currentUrlSearchParams = new URLSearchParams(currentUrlQueryString);
+				currentUrlSearchParams.set('currentActorActivityUsage', nextActorUsageId);
+				currentUrl.search = currentUrlSearchParams.toString();
+
+				window.history.replaceState(null, null, currentUrl.toString());
+			}
+		}
 	}
 
 	_shouldHideLearnerContextBar() {
@@ -185,6 +212,7 @@ export class ConsistentEvaluation extends LitElement {
 				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
 				logging-endpoint=${ifDefined(this.loggingEndpoint)}
 				rubric-popout-location=${ifDefined(this._childHrefs && this._childHrefs.rubricPopoutLocation)}
+				download-all-submissions-location=${ifDefined(this._childHrefs && this._childHrefs.downloadAllSubmissionLink)}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
@@ -194,8 +222,11 @@ export class ConsistentEvaluation extends LitElement {
 				.iteratorTotal=${this._iteratorTotal}
 				.iteratorIndex=${this._iteratorIndex}
 				.token=${this.token}
+				.href=${this.href}
+				.enrolledUser=${this._enrolledUser}
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
+				?use-new-html-editor=${this.useNewHtmlEditor}
 				@d2l-consistent-evaluation-previous-student-click=${this._onPreviousStudentClick}
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}

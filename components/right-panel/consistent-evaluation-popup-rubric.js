@@ -1,6 +1,7 @@
 import './consistent-evaluation-rubric.js';
 import { html, LitElement } from 'lit-element';
 import { ConsistentEvaluationHrefController } from '../controllers/ConsistentEvaluationHrefController.js';
+import { convertToken } from '../helpers/converterHelpers.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluation(LitElement) {
@@ -10,16 +11,8 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 			href: { type: String },
 			token: {
 				type: Object,
-				converter: {
-					fromAttribute(value) {
-						const retVal = String(value);
-						return retVal;
-					},
-					toAttribute(value) {
-						const retVal = Object(value);
-						return retVal;
-					}
-				}
+				reflect: true,
+				converter: (value) => convertToken(value),
 			},
 			_pageTitle: { type: String },
 			_rubricInfos: { type: Array },

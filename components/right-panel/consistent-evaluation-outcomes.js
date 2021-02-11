@@ -2,6 +2,7 @@ import './consistent-evaluation-right-panel-block';
 import 'd2l-activity-alignments/d2l-activity-alignments.js';
 import { html, LitElement } from 'lit-element';
 import { bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
+import { convertToken } from '../helpers/converterHelpers.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 class ConsistentEvaluationOutcomes extends LocalizeConsistentEvaluation(LitElement) {
@@ -15,16 +16,8 @@ class ConsistentEvaluationOutcomes extends LocalizeConsistentEvaluation(LitEleme
 			},
 			token: {
 				type: Object,
-				converter: {
-					formatAttribute(value) {
-						const retVal = String(value);
-						return retVal;
-					},
-					toAttribute(value) {
-						const retVal = Object(value);
-						return retVal;
-					}
-				}
+				reflect: true,
+				converter: (value) => convertToken(value),
 			},
 			description: {
 				type: String

@@ -2,6 +2,7 @@ import './d2l-consistent-evaluation-lcb-user-context.js';
 import './d2l-consistent-evaluation-lcb-file-context.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import { css, html, LitElement } from 'lit-element';
+import { convertToken } from '../helpers/converterHelpers.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { submissionTypesWithNoEvidence } from '../controllers/constants';
@@ -23,17 +24,9 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 				type: String
 			},
 			token: {
-				converter: {
-					fromAttribute(value) {
-						const retVal = String(value);
-						return retVal;
-					},
-					toAttribute(value) {
-						const retVal = Object(value);
-						return retVal;
-					}
-				},
-				type: Object
+				type: Object,
+				reflect: true,
+				converter: (value) => convertToken(value)
 			},
 			submissionInfo: {
 				attribute: false,
@@ -41,6 +34,10 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 			},
 			currentFileId: {
 				type: String
+			},
+			enrolledUser: {
+				attribute: false,
+				type: Object
 			}
 		};
 	}
@@ -150,6 +147,7 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 				<d2l-consistent-evaluation-lcb-user-context
 					.href=${this._getActorHref()}
 					.token=${this.token}
+					.enrolledUser=${this.enrolledUser}
 					?is-exempt=${this._getIsExempt()}
 					?is-group-activity=${this.groupHref}
 				></d2l-consistent-evaluation-lcb-user-context>

@@ -1,5 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel, assessorUserRel, demonstrationRel, editSpecialAccessApplicationRel, evaluationRel, groupRel, nextRel, previousRel, rubricRel, userProgressOutcomeRel, userRel } from './constants.js';
+import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel, assessorUserRel, assignmentSubmissionListRel, demonstrationRel, editSpecialAccessApplicationRel, emailRel, enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, rubricRel, userProgressOutcomeRel, userRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -58,6 +58,7 @@ export class ConsistentEvaluationHrefController {
 		let coaDemonstrationHref = undefined;
 		let specialAccessHref = undefined;
 		let rubricPopoutLocation = undefined;
+		let downloadAllSubmissionLink = undefined;
 
 		if (root && root.entity) {
 			root = root.entity;
@@ -103,6 +104,12 @@ export class ConsistentEvaluationHrefController {
 			if (root.hasSubEntityByRel(assessmentRubricApplicationRel)) {
 				rubricPopoutLocation = root.getSubEntityByRel(assessmentRubricApplicationRel).properties.path;
 			}
+
+			if (root.hasSubEntityByRel(assignmentSubmissionListRel)) {
+				if (root.getSubEntityByRel(assignmentSubmissionListRel).properties) {
+					downloadAllSubmissionLink = root.getSubEntityByRel(assignmentSubmissionListRel).properties.downloadAll;
+				}
+			}
 		}
 
 		return {
@@ -116,7 +123,8 @@ export class ConsistentEvaluationHrefController {
 			userProgressOutcomeHref,
 			coaDemonstrationHref,
 			specialAccessHref,
-			rubricPopoutLocation
+			rubricPopoutLocation,
+			downloadAllSubmissionLink
 		};
 	}
 
@@ -242,6 +250,65 @@ export class ConsistentEvaluationHrefController {
 		return undefined;
 	}
 
+	async getEnrolledUser() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			const enrolledUserHref = this._getHref(root.entity, enrolledUserRel);
+			const groupHref = this._getHref(root.entity, groupRel);
+			if (enrolledUserHref) {
+				const enrolledUserEntity = await this._getEntityFromHref(enrolledUserHref, false);
+				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(pagerRel);
+				const userProgressEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProgress);
+				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(emailRel, false);
+				const userProfileEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProfile);
+				const displayNameEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.displayName);
+
+				let displayName = undefined;
+				let pagerPath = undefined;
+				let userProgressPath = undefined;
+				let emailPath = undefined;
+				let userProfilePath = undefined;
+
+				if (displayNameEntity) {
+					displayName = displayNameEntity.properties.name;
+				}
+				if (pagerEntity) {
+					pagerPath = pagerEntity.properties.path;
+				}
+				if (userProgressEntity) {
+					userProgressPath = userProgressEntity.properties.path;
+				}
+				if (emailEntity) {
+					emailPath = emailEntity.properties.path;
+				}
+				if (userProfileEntity) {
+					userProfilePath = userProfileEntity.properties.path;
+				}
+				return {
+					displayName,
+					enrolledUserHref,
+					emailPath,
+					pagerPath,
+					userProgressPath,
+					userProfilePath
+				};
+			} else if (groupHref) {
+				const groupEntity = await this._getEntityFromHref(groupHref, false);
+				const pagerEntity = groupEntity.entity.getSubEntityByRel(pagerRel);
+				let pagerPath = undefined;
+				if (pagerEntity) {
+					pagerPath = pagerEntity.properties.path;
+				}
+				return {
+					groupHref,
+					pagerPath
+				};
+			}
+
+			return undefined;
+		}
+	}
+
 	async getIteratorInfo(iteratorProperty) {
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
@@ -276,6 +343,8 @@ export class ConsistentEvaluationHrefController {
 						const rubricOutOf = rubricEntity.entity.properties.outOf;
 						const rubricScoringMethod = rubricEntity.entity.properties.scoringMethod;
 
+						const hasUnscoredCriteria = assessmentEntity.entity.hasClass('incomplete');
+
 						let assessorDisplayName = null;
 						const assessorUserHref = this._getHref(assessmentEntity.entity, assessorUserRel);
 						if (assessorUserHref) {
@@ -290,7 +359,8 @@ export class ConsistentEvaluationHrefController {
 							rubricId,
 							rubricOutOf,
 							rubricScoringMethod,
-							assessorDisplayName
+							assessorDisplayName,
+							hasUnscoredCriteria
 						};
 					}
 				}));

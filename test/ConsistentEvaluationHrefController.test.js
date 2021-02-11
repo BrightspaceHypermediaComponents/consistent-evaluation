@@ -1,7 +1,7 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
-import { editSpecialAccessApplicationRel, evaluationRel, nextRel, previousRel, rubricRel } from '../components/controllers/constants.js';
+import { editSpecialAccessApplicationRel, emailRel, evaluationRel, nextRel, pagerRel, previousRel, rubricRel } from '../components/controllers/constants.js';
 import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
 
@@ -140,6 +140,50 @@ describe('ConsistentEvaluationHrefController', () => {
 		});
 	});
 
+	describe('getEnrolledUser gets correct enrolled user info', () => {
+		it('sets the enrolled user info', async() => {
+			const enrolledUserHref = 'enrolledUserHref';
+			const emailPath = 'emailPath';
+			const pagerPath = 'pagerPath';
+			const userProgressPath = 'userProgress';
+			const userProfilePath = 'userProfilePath';
+			const displayName = 'displayName';
+
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: { }
+			});
+
+			sinon.stub(controller, '_getHref').returns(enrolledUserHref);
+			sinon.stub(controller, '_getEntityFromHref').returns({
+				entity: {
+					getSubEntityByRel: (r) => {
+						if (r === pagerRel) {
+							return { properties: { path: pagerPath } };
+						} else if (r === emailRel) {
+							return { properties: { path: emailPath } };
+						} else if (r === Rels.userProgress) {
+							return { properties: { path: userProgressPath } };
+						} else if (r === Rels.displayName) {
+							return { properties: { name: displayName } };
+						} else {
+							return { properties: { path: userProfilePath } };
+						}
+					}
+				}
+			});
+
+			const enrolledUser = await controller.getEnrolledUser();
+			assert.equal(enrolledUser.enrolledUserHref, enrolledUserHref);
+			assert.equal(enrolledUser.pagerPath, pagerPath);
+			assert.equal(enrolledUser.userProgressPath, userProgressPath);
+			assert.equal(enrolledUser.userProfilePath, userProfilePath);
+			assert.equal(enrolledUser.emailPath, emailPath);
+			assert.equal(enrolledUser.displayName, displayName);
+		});
+	});
+
 	describe('getAssignmentOrganizationName gets correct info', () => {
 		it('sets the assignment name', async() => {
 			const assignmentHref = 'expected_assignment_href';
@@ -203,8 +247,14 @@ describe('ConsistentEvaluationHrefController', () => {
 			const expectedAssessmentHrefTwo = 'the_assessment_href_to_find_two';
 			const expectedRubricHrefOne = 'the_rubric_href_to_find_one';
 			const expectedRubricHrefTwo = 'the_rubric_href_to_find_two';
-			const assessmentEntityOne = {name:'entity1'};
-			const assessmentEntityTwo = {name:'entity2'};
+			const assessmentEntityOne = {
+				name:'entity1',
+				hasClass: () => true
+			};
+			const assessmentEntityTwo = {
+				name:'entity2',
+				hasClass: () => false
+			};
 			const rubricEntityOne = {
 				properties: {
 					name: 'rubric_one',
@@ -277,6 +327,9 @@ describe('ConsistentEvaluationHrefController', () => {
 			assert.equal(rubricInfos[1].rubricId, rubricEntityTwo.properties.rubricId);
 			assert.equal(rubricInfos[1].rubricOutOf, rubricEntityTwo.properties.outOf);
 			assert.equal(rubricInfos[1].rubricScoringMethod, rubricEntityTwo.properties.scoringMethod);
+
+			assert.equal(rubricInfos[0].hasUnscoredCriteria, assessmentEntityOne.hasClass('incomplete'));
+			assert.equal(rubricInfos[1].hasUnscoredCriteria, assessmentEntityTwo.hasClass('incomplete'));
 		});
 	});
 });

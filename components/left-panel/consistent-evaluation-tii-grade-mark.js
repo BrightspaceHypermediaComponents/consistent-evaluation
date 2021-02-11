@@ -1,5 +1,6 @@
 import '@brightspace-ui/core/components/button/button-subtle.js';
 import '@brightspace-ui/core/components/button/button-icon.js';
+import '@brightspace-ui/core/components/icons/icon.js';
 import { bodyCompactStyles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
@@ -37,6 +38,10 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 				attribute: 'hide-use-grade',
 				type: Boolean
 			},
+			hasFeedback: {
+				attribute: 'has-feedback',
+				type: Boolean
+			},
 			_overallScore: {
 				attribute: true,
 				type: String
@@ -50,6 +55,15 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 				d2l-button-subtle {
 					display: flex;
 				}
+			}
+			d2l-icon {
+				margin-right: 8px;
+				padding-bottom: 2px;
+			}
+			.d2l-consistent-evaluation-tii-grade-mark-overall-score-container {
+				display: inline-block;
+				padding-bottom: 6px;
+				vertical-align: bottom;
 			}
 		`];
 	}
@@ -90,6 +104,15 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 			composed: true,
 			bubbles: true
 		}));
+	}
+
+	_renderFeedbackIcon() {
+		return (this.hasFeedback) ? html`
+			<d2l-icon
+				icon="tier1:feedback"
+				title=${this.localize('turnitinFeedbackSummary')}
+			></d2l-icon>` :
+			html ``;
 	}
 
 	_renderUseGradeButton() {
@@ -135,12 +158,13 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 	render() {
 		return html`
 			<div class="d2l-label-text">${this.localize('turnitinGradeMark')}</div>
-			<div class="d2l-body-compact">
+			${this._renderFeedbackIcon()}
+			<div class="d2l-body-compact d2l-consistent-evaluation-tii-grade-mark-overall-score-container">
 				${this._overallScore}
-				${this._renderEditButton()}
-				${this._renderRefreshButton()}
-				${this._renderUseGradeButton()}
 			</div>
+			${this._renderEditButton()}
+			${this._renderRefreshButton()}
+			${this._renderUseGradeButton()}
 		`;
 	}
 }

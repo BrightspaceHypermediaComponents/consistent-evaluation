@@ -1,4 +1,5 @@
 import { ConsistentEvaluationController, ConsistentEvaluationControllerErrors } from '../components/controllers/ConsistentEvaluationController';
+import { File, Link } from './helpers/attachment-types';
 import { publishActionName, retractActionName, saveActionName, saveFeedbackActionName, saveGradeActionName, updateActionName } from '../components/controllers/constants';
 import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
@@ -27,6 +28,53 @@ describe('ConsistentEvaluationController', () => {
 			assert.throws(() => {
 				new ConsistentEvaluationController(20, 'token');
 			}, ConsistentEvaluationControllerErrors.INVALID_TYPE_EVALUATION_HREF);
+		});
+	});
+
+	describe('transientAddFeedbackAttachment', () => {
+		const makeController = () => {
+			const controller = new ConsistentEvaluationController('href', 'token');
+			controller._performAction = sinon.spy();
+			return controller;
+		};
+		const fakeTargetEntity = 'FAKE TARGET ENTITY';
+		const fakeId = 'FAKE ID';
+		const fakeFeedbackEntity = {
+			getSubEntityByRel: (/* rel */) => fakeTargetEntity
+		};
+
+		it('can add file attachments as feedback', async() => {
+			const controller = makeController();
+			const fakeFile = new File(fakeId, 'database');
+			await controller.transientAddFeedbackAttachment(fakeFeedbackEntity, [fakeFile]);
+			assert.isTrue(controller._performAction.called, 'attachment feedback should be used');
+			assert.deepEqual(controller._performAction.getCall(0).args, [
+				fakeTargetEntity,
+				'add-file',
+				'value',
+				JSON.stringify({
+					FileId: fakeId,
+					FileSystemType: 'database'
+				})
+			]);
+		});
+
+		it('can add link attachments as feedback', async() => {
+			const controller = makeController();
+			const fakeLink = new Link(fakeId, 'Some link', 'http://foo', 'd2l:brightspace:...');
+			await controller.transientAddFeedbackAttachment(fakeFeedbackEntity, [fakeLink]);
+			assert.isTrue(controller._performAction.called, 'attachment feedback should be used');
+			assert.deepEqual(controller._performAction.getCall(0).args, [
+				fakeTargetEntity,
+				'add-link',
+				'value',
+				JSON.stringify({
+					LinkId: fakeId,
+					Name: 'Some link',
+					Url: 'http://foo',
+					Urn: 'd2l:brightspace:...'
+				})
+			]);
 		});
 	});
 

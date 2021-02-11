@@ -5,6 +5,7 @@ import './consistent-evaluation-grade-result.js';
 import './consistent-evaluation-coa-eval-override.js';
 import { css, html, LitElement } from 'lit-element';
 import { getRubricAssessmentScore, mapRubricScoreToGrade} from '../helpers/rubricGradeSyncHelpers.js';
+import { convertToken } from '../helpers/converterHelpers.js';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
@@ -90,18 +91,14 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 				attribute: 'rubric-popout-location',
 				type: String
 			},
+			useNewHtmlEditor: {
+				attribute: 'use-new-html-editor',
+				type: Boolean
+			},
 			token: {
 				type: Object,
-				converter: {
-					formatAttribute(value) {
-						const retVal = String(value);
-						return retVal;
-					},
-					toAttribute(value) {
-						const retVal = Object(value);
-						return retVal;
-					}
-				}
+				reflect: true,
+				converter: (value) => convertToken(value),
 			}
 		};
 	}
@@ -133,6 +130,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 		this.canAddFeedbackFile = false;
 		this.canRecordFeedbackVideo = false;
 		this.canRecordFeedbackAudio = false;
+		this.useNewHtmlEditor = false;
 		this.rubricsOpen = 0;
 	}
 
@@ -193,6 +191,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					?can-add-file=${this.canAddFeedbackFile}
 					?can-record-video=${this.canRecordFeedbackVideo}
 					?can-record-audio=${this.canRecordFeedbackAudio}
+					?use-new-html-editor=${this.useNewHtmlEditor}
 					.feedbackText=${this.feedbackText}
 					.attachments=${this.feedbackAttachments}
 					.richTextEditorConfig=${this.richTextEditorConfig}

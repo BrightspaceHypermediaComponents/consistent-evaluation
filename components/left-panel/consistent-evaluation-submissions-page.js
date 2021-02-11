@@ -7,12 +7,14 @@ import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { tiiRefreshAction, tiiRel, tiiSubmitActionName, toggleFlagActionName, toggleIsReadActionName } from '../controllers/constants.js';
 import { Classes } from 'd2l-hypermedia-constants';
 import { ConsistentEvalTelemetry } from '../helpers/consistent-eval-telemetry.js';
+import { convertToken } from '../helpers/converterHelpers.js';
 import { findFile } from '../helpers/submissionsAndFilesHelpers.js';
+import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 
-export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(LitElement)) {
+export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 	static get properties() {
 		return {
 			submissionList: {
@@ -23,18 +25,14 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				attribute: 'submission-type',
 				type: String
 			},
+			downloadAllSubmissionLink: {
+				attribute: 'download-all-submissions-location',
+				type: String
+			},
 			token: {
 				type: Object,
-				converter: {
-					fromAttribute(value) {
-						const retVal = String(value);
-						return retVal;
-					},
-					toAttribute(value) {
-						const retVal = Object(value);
-						return retVal;
-					}
-				}
+				reflect: true,
+				converter: (value) => convertToken(value)
 			},
 			hideUseGrade: {
 				attribute: 'hide-use-grade',
@@ -43,6 +41,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			dataTelemetryEndpoint: {
 				attribute: 'data-telemetry-endpoint',
 				type: String
+			},
+			_downloading : {
+				attribute: false,
+				type: Boolean
 			}
 		};
 	}
@@ -135,6 +137,9 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			:host([skeleton]) {
 				height: 100%;
 			}
+			#download-all-button {
+				margin: 0 0.65rem 0.65rem 0.65rem;
+			}
 		`];
 	}
 
@@ -144,6 +149,8 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._token = undefined;
 		this._submissionEntities = [];
 		this._perfRenderEventName = 'submissionsComponentRender';
+		this._downloading = false;
+		this._expectedCookieName = 'd2lConsistentEvaluationDownloadAll';
 	}
 
 	get submissionList() {
@@ -194,8 +201,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 	}
 
-	async _getSubmissionEntity(submissionHref) {
-		const byPassCache = false;
+	async _getSubmissionEntity(submissionHref, byPassCache = false) {
 		return await window.D2L.Siren.EntityStore.fetch(submissionHref, this._token, byPassCache);
 	}
 
@@ -358,6 +364,67 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		return newSubmissionEntity;
 	}
 
+	_handleAllSubmissionDownload() {
+		this._deleteCookie();
+		this._downloading = true;
+		window.location.href = this.downloadAllSubmissionLink;
+		this._checkDownloadStatus();
+	}
+
+	_checkDownloadStatus() {
+		const cookieValue = this._getCookieValue();
+		switch (cookieValue) {
+			case null:
+				setTimeout(this._checkDownloadStatus.bind(this), 1000);
+				break;
+			case 'failed':
+				this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-download-all-failed', {
+					composed: true,
+					bubbles: true
+				}));
+				this._deleteCookie();
+				this._downloading = false;
+				break;
+			case 'succeeded':
+			default:
+				this._deleteCookie();
+				this._downloading = false;
+				this._refreshAllSubmissionEntities();
+				break;
+		}
+	}
+
+	async _refreshAllSubmissionEntities() {
+		if (this._submissionList !== undefined) {
+			for (let i = 0; i < this._submissionList.length; i++) {
+				if (this._submissionList[i].href) {
+					const submission = await this._getSubmissionEntity(this._submissionList[i].href, true);
+					this._submissionEntities[i] = submission;
+				}
+			}
+			this.requestUpdate();
+		}
+	}
+
+	_deleteCookie() {
+		const d = new Date();
+		d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * -1);
+		document.cookie = `${this._expectedCookieName}= ;path=/;expires=${d.toGMTString()}`;
+	}
+
+	_getCookieValue() {
+		const b = document.cookie.match(`(^|;)\\s*${this._expectedCookieName}\\s*=\\s*([^;]+)`);
+		return b ? b.pop() : null;
+	}
+
+	_getDownloadButtonText() {
+		if (this._downloading) {
+			return this.localize('downloadAllPleaseWait');
+		} else {
+			return this.localize('downloadAll');
+		}
+	}
+
 	_renderListItems() {
 		const itemTemplate = [];
 		for (let i = 0; i < this._submissionEntities.length; i++) {
@@ -429,6 +496,14 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				<d2l-list separators="between">
 					${this._renderListItems()}
 				</d2l-list>
+				<d2l-button-subtle
+					id="download-all-button"
+					icon="tier2:download"
+					?hidden="${this._submissionEntities.length === 0}"
+					?disabled="${this._downloading}"
+					text="${this._getDownloadButtonText()}"
+					@click="${this._handleAllSubmissionDownload}">
+				</d2l-button-subtle>
 			</div>
 		`;
 	}

@@ -1,4 +1,5 @@
 import 'd2l-users/components/d2l-profile-image.js';
+import './consistent-evaluation-user-profile-card.js';
 import { bodyCompactStyles, bodyStandardStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { EntityMixinLit } from 'siren-sdk/src/mixin/entity-mixin-lit.js';
@@ -19,9 +20,17 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				attribute: 'is-group-activity',
 				type: Boolean
 			},
+			enrolledUser: {
+				attribute: false,
+				type: Object
+			},
 			_displayName: {
 				attribute: false,
 				type: String
+			},
+			_showProfileCard: {
+				attribute: false,
+				type: Boolean
 			}
 		};
 	}
@@ -52,8 +61,18 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				margin-left: 0;
 				margin-right: 0.5rem;
 			}
-			h2:focus {
+			.d2l-user-context-container:focus {
 				outline: none;
+			}
+			.d2l-user-context-container {
+				align-items: center;
+				display: flex;
+			}
+			.d2l-consistent-evaluation-user-profile-card-container {
+				background: white;
+				position: absolute;
+				top: 6rem;
+				z-index: 1;
 			}
 		`];
 	}
@@ -62,6 +81,16 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		super();
 
 		this._setEntityType(UserEntity);
+	}
+
+	firstUpdated() {
+		const userContextContainer = this.shadowRoot.querySelector('.d2l-user-context-container');
+		userContextContainer.addEventListener('focusin', () => {
+			this._toggleOnProfileCard();
+		});
+		userContextContainer.addEventListener('focusout', () => {
+			this._toggleOffProfileCard();
+		});
 	}
 
 	set _entity(entity) {
@@ -100,11 +129,59 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		}
 	}
 
+	_renderProfileCard() {
+		let emailHref = undefined;
+		let instantMessageHref = undefined;
+		let userProgressHref = undefined;
+		let userProfileHref = undefined;
+		let displayName = undefined;
+		if (this.enrolledUser) {
+			emailHref = this.enrolledUser.emailPath;
+			instantMessageHref = this.enrolledUser.pagerPath;
+			userProgressHref = this.enrolledUser.userProgressPath;
+			userProfileHref = this.enrolledUser.userProfilePath;
+			displayName = this.enrolledUser.displayName;
+		}
+
+		return (this._showProfileCard && !this.isGroupActivity) ?
+			html`
+			<d2l-consistent-evaluation-user-profile-card
+				.token=${this.token}
+				display-name=${displayName}
+				.emailHref=${emailHref}
+				.instantMessageHref=${instantMessageHref}
+				.userProgressHref=${userProgressHref}
+				.userProfileHref=${userProfileHref}
+				.userHref=${this.href}
+				@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}>
+			</d2l-consistent-evaluation-user-profile-card>
+			` :
+			html``;
+	}
+
+	_toggleOnProfileCard() {
+		this._showProfileCard = true;
+	}
+
+	_toggleOffProfileCard() {
+		this._showProfileCard = false;
+	}
+
 	render() {
 		return html`
+		<div class="d2l-user-context-container"
+			tabindex="0"
+			aria-label=${ifDefined(this._displayName)}
+			@mouseover=${this._toggleOnProfileCard}>
+
 			${this._renderProfileImage()}
-			<h2 tabindex="0" class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</h2>
+			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</h2>
 			${this._getExemptText()}
+		</div>
+
+		<div class="d2l-consistent-evaluation-user-profile-card-container">
+			${this._renderProfileCard()}
+		</div>
 		`;
 	}
 }
