@@ -158,7 +158,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 
 	_toggleOffProfileCard(event) {
 		//Don't close/flciker the profile card when mousing off of it and onto the user-context-container
-		if(event.type!='d2l-consistent-eval-profile-card-mouse-leave'){
+		if (event.type !== 'd2l-consistent-eval-profile-card-mouse-leave') {
 			this._showProfileCard = false;
 		}
 	}
