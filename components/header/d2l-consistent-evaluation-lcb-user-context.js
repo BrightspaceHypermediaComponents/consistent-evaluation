@@ -1,5 +1,8 @@
 import 'd2l-users/components/d2l-profile-image.js';
 import './consistent-evaluation-user-profile-card.js';
+import '@brightspace-ui/core/components/dropdown/dropdown-menu.js';
+import '@brightspace-ui/core/components/dropdown/dropdown-context-menu.js';
+
 import { bodyCompactStyles, bodyStandardStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { EntityMixinLit } from 'siren-sdk/src/mixin/entity-mixin-lit.js';
@@ -68,6 +71,9 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				align-items: center;
 				display: flex;
 			}
+			.d2l-user-group-context-menu {
+				padding-left: 0.25rem;
+			}
 			.d2l-consistent-evaluation-user-profile-card-container {
 				position: absolute;
 				top: 4rem;
@@ -108,6 +114,18 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		this._displayName = actorEntity.getDisplayName();
 	}
 
+	_onClickGroupEmail() {
+		console.warn('Email Group Not Implemented!');
+	}
+
+	_onClickGroupIM() {
+		console.warn('IM Group Not Implemented!');
+	}
+
+	_onClickGroupMembers() {
+		console.warn('View Group Members Not Implemented!');
+	}
+
 	_getExemptText() {
 		if (this.isExempt) {
 			return html`<span class="d2l-body-standard d2l-consistent-evaluation-lcb-is-exempt">(${this.localize('exempt')})</span>`;
@@ -145,17 +163,34 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 
 		return (this._showProfileCard && !this.isGroupActivity) ?
 			html`
-			<d2l-consistent-evaluation-user-profile-card
-				.token=${this.token}
-				display-name=${displayName}
-				.emailHref=${emailHref}
-				.instantMessageHref=${instantMessageHref}
-				.userProgressHref=${userProgressHref}
-				.userProfileHref=${userProfileHref}
-				.userHref=${this.href}
-				@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}
-				@d2l-consistent-eval-profile-card-tab-leave=${this._toggleOffProfileCard}>
-			</d2l-consistent-evaluation-user-profile-card>
+			<div class="d2l-consistent-evaluation-user-profile-card-container" @click=${this._toggleOffProfileCard}>
+				<d2l-consistent-evaluation-user-profile-card
+					.token=${this.token}
+					display-name=${displayName}
+					.emailHref=${emailHref}
+					.instantMessageHref=${instantMessageHref}
+					.userProgressHref=${userProgressHref}
+					.userProfileHref=${userProfileHref}
+					.userHref=${this.href}
+					@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}
+					@d2l-consistent-eval-profile-card-tab-leave=${this._toggleOffProfileCard}>
+				</d2l-consistent-evaluation-user-profile-card>
+			</div>
+			` :
+			html``;
+	}
+
+	_renderGroupOptions() {
+		return this.isGroupActivity ? html`
+			<d2l-dropdown-context-menu class="d2l-user-group-context-menu" text=${this.localize('openGroupOptions')}>
+				<d2l-dropdown-menu id="dropdown">
+					<d2l-menu label=${this.localize('groupOptions')}>
+						<d2l-menu-item text=${this.localize('emailGroup')} @click=${this._onClickGroupEmail}></d2l-menu-item>
+						<d2l-menu-item text=${this.localize('seeAllGroupMembers')} @click=${this._onClickGroupMembers}></d2l-menu-item>
+						<d2l-menu-item text=${this.localize('instantMessage')} @click=${this._onClickGroupIM}></d2l-menu-item>
+					</d2l-menu>
+				</d2l-dropdown-menu>
+			</d2l-dropdown-context-menu>
 			` :
 			html``;
 	}
@@ -182,13 +217,10 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			${this._renderProfileImage()}
 			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</h2>
 			${this._getExemptText()}
-
-			<div class="d2l-consistent-evaluation-user-profile-card-container" @click=${this._toggleOffProfileCard}>
-				${this._renderProfileCard()}
-			</div>
+			${this._renderProfileCard()}
+			${this._renderGroupOptions()}
 
 		</div>
-
 		`;
 	}
 }
