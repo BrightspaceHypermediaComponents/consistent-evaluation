@@ -6,6 +6,7 @@ import '@brightspace-ui/core/components/dropdown/dropdown-context-menu.js';
 import { bodyCompactStyles, bodyStandardStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { EntityMixinLit } from 'siren-sdk/src/mixin/entity-mixin-lit.js';
+import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
@@ -38,6 +39,18 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			_showProfileCard: {
 				attribute: false,
 				type: Boolean
+			},
+			_groupEmailItemID: {
+				attribute: false,
+				type: String
+			},
+			_groupIMItemID: {
+				attribute: false,
+				type: String
+			},
+			_groupMembersItemID: {
+				attribute: false,
+				type: String
 			}
 		};
 	}
@@ -102,6 +115,9 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		userContextContainer.addEventListener('focus', () => {
 			this._toggleOnProfileCard();
 		});
+		this._groupEmailItemID = getUniqueId();
+		this._groupIMItemID = getUniqueId();
+		this._groupMembersItemID = getUniqueId();
 	}
 
 	set _entity(entity) {
@@ -119,7 +135,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		this._displayName = actorEntity.getDisplayName();
 	}
 
-	_onClickGroupEmail() {
+	_openGroupEmail() {
 		if (this.emailPopout) {
 			if (!this.emailPopout.closed) {
 				this.emailPopout.focus();
@@ -140,7 +156,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		);
 	}
 
-	_onClickGroupIM() {
+	_openGroupIM() {
 		if (this.messagePopout) {
 			if (!this.messagePopout.closed) {
 				this.messagePopout.focus();
@@ -161,7 +177,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		);
 	}
 
-	_onClickGroupMembers() {
+	_openGroupMembers() {
 		const viewMembersPath = this.groupInfo ? this.groupInfo.viewMembersPath : undefined;
 
 		if (!viewMembersPath) {
@@ -248,14 +264,28 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			html``;
 	}
 
+	_onGroupOptionSelect(e) {
+		switch (e.target.id) {
+			case this._groupEmailItemID:
+				this._openGroupEmail();
+				break;
+			case this._groupMembersItemID:
+				this._openGroupMembers();
+				break;
+			case this._groupIMItemID:
+				this._openGroupIM();
+				break;
+		}
+	}
+
 	_renderGroupOptions() {
 		return this.isGroupActivity ? html`
 			<d2l-dropdown-context-menu class="d2l-user-group-context-menu" text=${this.localize('openGroupOptions')}>
-				<d2l-dropdown-menu id="dropdown">
-					<d2l-menu label=${this.localize('groupOptions')}>
-						<d2l-menu-item text=${this.localize('emailGroup')} @click=${this._onClickGroupEmail}></d2l-menu-item>
-						<d2l-menu-item text=${this.localize('seeAllGroupMembers')} @click=${this._onClickGroupMembers}></d2l-menu-item>
-						<d2l-menu-item text=${this.localize('instantMessage')} @click=${this._onClickGroupIM}></d2l-menu-item>
+				<d2l-dropdown-menu>
+					<d2l-menu @d2l-menu-item-select=${this._onGroupOptionSelect} label=${this.localize('groupOptions')}>
+						<d2l-menu-item id=${this._groupEmailItemID} text=${this.localize('emailGroup')}></d2l-menu-item>
+						<d2l-menu-item id=${this._groupMembersItemID} text=${this.localize('seeAllGroupMembers')}></d2l-menu-item>
+						<d2l-menu-item id=${this._groupIMItemID} text=${this.localize('instantMessage')}></d2l-menu-item>
 					</d2l-menu>
 				</d2l-dropdown-menu>
 			</d2l-dropdown-context-menu>
