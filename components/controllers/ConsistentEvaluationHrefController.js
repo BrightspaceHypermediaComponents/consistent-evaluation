@@ -289,7 +289,6 @@ export class ConsistentEvaluationHrefController {
 				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(emailRel, false);
 				const userProfileEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProfile);
 				const displayNameEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.displayName);
-
 				const userProgressEntity = root.entity.getSubEntityByRel(userProgressAssessmentsRel, false);
 
 				let displayName = undefined;
