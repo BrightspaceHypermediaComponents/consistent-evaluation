@@ -120,6 +120,12 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		this._groupMembersItemID = getUniqueId();
 	}
 
+	updated() {
+		if (this.groupInfo) {
+			this._hasPagerPath = this.groupInfo.pagerPath ? true : false;
+		}
+	}
+
 	set _entity(entity) {
 		if (this._entityHasChanged(entity)) {
 			this._onActorEntityChanged(entity);
@@ -285,7 +291,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 					<d2l-menu @d2l-menu-item-select=${this._onGroupOptionSelect} label=${this.localize('groupOptions')}>
 						<d2l-menu-item id=${this._groupEmailItemID} text=${this.localize('emailGroup')}></d2l-menu-item>
 						<d2l-menu-item id=${this._groupMembersItemID} text=${this.localize('seeAllGroupMembers')}></d2l-menu-item>
-						<d2l-menu-item id=${this._groupIMItemID} text=${this.localize('instantMessage')}></d2l-menu-item>
+						<d2l-menu-item id=${this._groupIMItemID} text=${this.localize('instantMessage')} ?hidden=${!this._hasPagerPath}></d2l-menu-item>
 					</d2l-menu>
 				</d2l-dropdown-menu>
 			</d2l-dropdown-context-menu>
