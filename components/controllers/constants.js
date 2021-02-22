@@ -32,6 +32,7 @@ export const assessmentRubricApplicationRel = 'https://assessments.api.brightspa
 export const assignmentSubmissionListRel = 'https://assignments.api.brightspace.com/rels/assignment-submission-list';
 export const userProgressOutcomeRel = 'user-progress-outcome';
 export const userProgressOutcomeActivitiesRel = 'https://user-progress.api.brightspace.com/rels/outcome-activities';
+export const userProgressAssessmentsRel = 'https://assessments.api.brightspace.com/rels/user-progress';
 export const demonstrationRel = 'https://achievements.api.brightspace.com/rels/demonstration';
 export const tiiRel = 'https://assignments.api.brightspace.com/rels/turnitin';
 export const nextRel = 'next';

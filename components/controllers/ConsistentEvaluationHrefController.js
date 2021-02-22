@@ -2,7 +2,7 @@ import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel,
 	assessorUserRel, assignmentSubmissionListRel, demonstrationRel, editSpecialAccessApplicationRel,
 	emailRel, enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, rubricRel,
-	userProgressOutcomeRel, userRel, viewMembersRel } from './constants.js';
+	userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -286,10 +286,11 @@ export class ConsistentEvaluationHrefController {
 			if (enrolledUserHref) {
 				const enrolledUserEntity = await this._getEntityFromHref(enrolledUserHref, false);
 				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(pagerRel);
-				const userProgressEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProgress);
 				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(emailRel, false);
 				const userProfileEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProfile);
 				const displayNameEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.displayName);
+
+				const userProgressEntity = root.entity.getSubEntityByRel(userProgressAssessmentsRel, false);
 
 				let displayName = undefined;
 				let pagerPath = undefined;
