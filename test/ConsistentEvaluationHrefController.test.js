@@ -1,7 +1,7 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
-import { editSpecialAccessApplicationRel, emailRel, evaluationRel, nextRel, pagerRel, previousRel, rubricRel, viewMembersRel } from '../components/controllers/constants.js';
+import { editSpecialAccessApplicationRel, emailRel, evaluationRel, nextRel, pagerRel, previousRel, rubricRel, userProgressAssessmentsRel, viewMembersRel } from '../components/controllers/constants.js';
 import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
 
@@ -187,7 +187,13 @@ describe('ConsistentEvaluationHrefController', () => {
 			const controller = new ConsistentEvaluationHrefController('href', 'token');
 
 			sinon.stub(controller, '_getRootEntity').returns({
-				entity: { }
+				entity: {
+					getSubEntityByRel: (r) => {
+						if (r === userProgressAssessmentsRel) {
+							return { properties: { path: userProgressPath } };
+						}
+					}
+				}
 			});
 
 			sinon.stub(controller, '_getHref').returns(enrolledUserHref);
@@ -198,8 +204,6 @@ describe('ConsistentEvaluationHrefController', () => {
 							return { properties: { path: pagerPath } };
 						} else if (r === emailRel) {
 							return { properties: { path: emailPath } };
-						} else if (r === Rels.userProgress) {
-							return { properties: { path: userProgressPath } };
 						} else if (r === Rels.displayName) {
 							return { properties: { name: displayName } };
 						} else {
