@@ -5,9 +5,10 @@ import '@brightspace-ui/core/components/icons/icon.js';
 import { css, html, LitElement } from 'lit-element';
 import { labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { selectStyles } from '@brightspace-ui/core/components/inputs/input-select-styles.js';
 
-class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement) {
+class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(LitElement)) {
 	static get properties() {
 		return {
 			header: {
@@ -58,6 +59,10 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(LitElement
 				display: flex;
 				margin-left: auto;
 				margin-right: 0;
+			}
+
+			:host([dir="rtl"]) .d2l-consistent-evaluation-open-rubrics {
+				float: left;
 			}
 
 			.d2l-consistent-evaluation-open-rubrics {

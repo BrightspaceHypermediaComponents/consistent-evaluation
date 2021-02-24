@@ -99,6 +99,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: false,
 				type: Object
 			},
+			groupInfo: {
+				attribute: false,
+				type: Object
+			},
 			assignmentName: {
 				attribute: false,
 				type: String
@@ -226,6 +230,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._transientSaveAwaiter = new TransientSaveAwaiter();
 		this._isUpdateClicked = false;
 		this._isPublishClicked = false;
+		this._shouldWaitForAnnotations = false;
 	}
 
 	get evaluationEntity() {
@@ -474,6 +479,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 
+		await this._waitForAnnotations();
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
@@ -526,6 +532,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		}));
 		this._isPublishClicked = false;
 
+		await this._waitForAnnotations();
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
@@ -554,6 +561,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 
+		await this._waitForAnnotations();
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
@@ -585,6 +593,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 
+		await this._waitForAnnotations();
 		await this._mutex.dispatch(async() => { this._navigationTarget = e.detail.key; });
 	}
 
@@ -641,6 +650,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					.currentFileId=${this.currentFileId}
 					.submissionInfo=${this.submissionInfo}
 					.enrolledUser=${this.enrolledUser}
+					.groupInfo=${this.groupInfo}
 					?skeleton=${this.skeleton}
 				></d2l-consistent-evaluation-learner-context-bar>
 			`;
@@ -788,6 +798,19 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		return undefined;
 	}
 
+	_updateAnnotationsViewerEditingStart() {
+		this._shouldWaitForAnnotations = true;
+	}
+
+	async _waitForAnnotations() {
+		if (this._shouldWaitForAnnotations) {
+			await new Promise(resolve => {
+				this._shouldWaitForAnnotations = false;
+				setTimeout(resolve, 2000);
+			});
+		}
+	}
+
 	_handleDownloadAllFailure() {
 		this._showToast(this.localize('downloadAllFailure'));
 	}
@@ -826,6 +849,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						.currentFileId=${this.currentFileId}
 						?hide-use-grade=${this._noGradeComponent()}
 						@d2l-consistent-eval-annotations-update=${this._transientSaveAnnotations}
+						@d2l-consistent-eval-annotations-will-change=${this._updateAnnotationsViewerEditingStart}
 						@d2l-consistent-evaluation-use-tii-grade=${this._transientSaveGrade}
 						@d2l-consistent-evaluation-refresh-grade-item=${this._refreshEvaluationEntity}
 						@d2l-consistent-evaluation-download-all-failed=${this._handleDownloadAllFailure}

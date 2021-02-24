@@ -1,7 +1,7 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
-import { editSpecialAccessApplicationRel, emailRel, evaluationRel, nextRel, pagerRel, previousRel, rubricRel } from '../components/controllers/constants.js';
+import { editSpecialAccessApplicationRel, emailRel, evaluationRel, nextRel, pagerRel, previousRel, rubricRel, userProgressAssessmentsRel, viewMembersRel } from '../components/controllers/constants.js';
 import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
 
@@ -140,6 +140,41 @@ describe('ConsistentEvaluationHrefController', () => {
 		});
 	});
 
+	describe('getGroupInfo gets correct group info', async() => {
+		const groupInfoHref = 'groupInfoHref';
+		const viewMembersPath = 'viewMembersPath';
+		const emailPath = 'emailPath';
+		const pagerPath = 'pagerPath';
+
+		const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+		sinon.stub(controller, '_getRootEntity').returns ({
+			entity: { }
+		});
+
+		sinon.stub(controller, '_getHref').returns(groupInfoHref);
+
+		sinon.stub(controller, '_getEntityFromHref').returns({
+			entity: {
+				getSubEntityByRel: (r) => {
+					if (r === viewMembersRel) {
+						return { properties: { path: viewMembersPath }};
+					} else if (r === emailRel) {
+						return { properties: { path: emailPath } };
+					} else if (r === pagerRel) {
+						return { properties: { path: pagerPath } };
+					}
+				}
+			}
+		});
+
+		const groupInfo = await controller.getGroupInfo();
+
+		assert.equal(groupInfo.viewMembersPath, viewMembersPath);
+		assert.equal(groupInfo.emailPath, emailPath);
+		assert.equal(groupInfo.pagerPath, pagerPath);
+	});
+
 	describe('getEnrolledUser gets correct enrolled user info', () => {
 		it('sets the enrolled user info', async() => {
 			const enrolledUserHref = 'enrolledUserHref';
@@ -152,7 +187,13 @@ describe('ConsistentEvaluationHrefController', () => {
 			const controller = new ConsistentEvaluationHrefController('href', 'token');
 
 			sinon.stub(controller, '_getRootEntity').returns({
-				entity: { }
+				entity: {
+					getSubEntityByRel: (r) => {
+						if (r === userProgressAssessmentsRel) {
+							return { properties: { path: userProgressPath } };
+						}
+					}
+				}
 			});
 
 			sinon.stub(controller, '_getHref').returns(enrolledUserHref);
@@ -163,8 +204,6 @@ describe('ConsistentEvaluationHrefController', () => {
 							return { properties: { path: pagerPath } };
 						} else if (r === emailRel) {
 							return { properties: { path: emailPath } };
-						} else if (r === Rels.userProgress) {
-							return { properties: { path: userProgressPath } };
 						} else if (r === Rels.displayName) {
 							return { properties: { name: displayName } };
 						} else {

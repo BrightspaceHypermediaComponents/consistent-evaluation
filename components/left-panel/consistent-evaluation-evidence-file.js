@@ -61,6 +61,8 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 			return this._handleTokenRequest(e);
 		} else if (e.data.type === 'annotations-update') {
 			return this._handleAnnotationsUpdate(e);
+		} else if (e.data.type === 'annotations-will-change') {
+			return this._handleAnnotationsWillChange(e);
 		}
 	}
 
@@ -91,6 +93,16 @@ export class ConsistentEvaluationEvidenceFile extends LitElement {
 				detail: e.data.value
 			}))
 		);
+	}
+
+	_handleAnnotationsWillChange(e) {
+		if (e.data.value === 'TEXT_EDIT_START') {
+			this.dispatchEvent(new CustomEvent('d2l-consistent-eval-annotations-will-change', {
+				composed: true,
+				bubbles: true,
+				detail: e.data.value
+			}));
+		}
 	}
 
 	flush() {

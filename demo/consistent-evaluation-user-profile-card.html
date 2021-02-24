@@ -14,10 +14,24 @@
 	<body>
 		<d2l-demo-page page-title="d2l-consistent-evaluation-user-profile-card">
 
+			<h2>Default user profile card</h2>
             <d2l-demo-snippet>
 				<d2l-consistent-evaluation-user-profile-card
 					display-name="Team Nimbus"
-					tag-line="This is a tag-line that I put">
+					emailHref="emailHref"
+					instantMessageHref="instantMessageHref"
+					userProgressHref="userProgressHref"
+					userProfileHref="userProfileHref"
+					userHref="userHref">
+				</d2l-consistent-evaluation-user-profile-card>
+			</d2l-demo-snippet>
+
+			<h2>No links</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-user-profile-card
+					display-name="Team Nimbus"
+					userProfileHref="userProfileHref"
+					userHref="userHref">
 				</d2l-consistent-evaluation-user-profile-card>
             </d2l-demo-snippet>
 

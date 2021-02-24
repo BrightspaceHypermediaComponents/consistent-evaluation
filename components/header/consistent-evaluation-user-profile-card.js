@@ -13,23 +13,18 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 				type: String
 			},
 			emailHref: {
-				attribute: false,
 				type: String
 			},
 			instantMessageHref: {
-				attribute: false,
 				type: String
 			},
 			userProgressHref: {
-				attribute: false,
 				type: String
 			},
 			userProfileHref: {
-				attribute: false,
 				type: String
 			},
 			userHref: {
-				attribute: false,
 				type: String
 			}
 		};
@@ -39,6 +34,16 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 		super();
 		this.messagePopout = undefined;
 		this.emailPopout = undefined;
+	}
+
+	firstUpdated() {
+		const userProfileCard = this.shadowRoot.querySelector('d2l-labs-user-profile-card');
+		userProfileCard.addEventListener('focusout', () => {
+			this.dispatchEvent(new CustomEvent('d2l-consistent-eval-profile-card-tab-leave', {
+				composed: true,
+				bubbles: true,
+			}));
+		});
 	}
 
 	_openUserProgress() {
@@ -68,7 +73,7 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 
 		this.messagePopout = window.open(
 			this.instantMessageHref,
-			'emailPopout',
+			'messagePopout',
 			'width=400,height=200,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
 		);
 	}
@@ -83,7 +88,7 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 
 		this.emailPopout = window.open(
 			this.emailHref,
-			'messagePopout',
+			'emailPopout',
 			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
 		);
 	}

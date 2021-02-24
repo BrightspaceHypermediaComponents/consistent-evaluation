@@ -40,6 +40,7 @@ export class ConsistentEvaluation extends LitElement {
 			_submissionInfo: { type: Object },
 			_gradeItemInfo: { type: Object },
 			_enrolledUser: { type: Object},
+			_groupInfo: {type: Object},
 			_assignmentName: { type: String },
 			_organizationName: { type: String },
 			_userName: { type: String },
@@ -74,6 +75,7 @@ export class ConsistentEvaluation extends LitElement {
 		this._rubricInfos = undefined;
 		this._submissionInfo = undefined;
 		this._gradeItemInfo = undefined;
+		this._groupInfo = undefined;
 		this.returnHref = undefined;
 		this.returnHrefText = undefined;
 		this._loading = true;
@@ -98,6 +100,7 @@ export class ConsistentEvaluation extends LitElement {
 			this._organizationName = await controller.getAssignmentOrganizationName('organization');
 			this._userName = await controller.getUserName();
 			this._enrolledUser = await controller.getEnrolledUser();
+			this._groupInfo = await controller.getGroupInfo();
 			this._iteratorTotal = await controller.getIteratorInfo('total');
 			this._iteratorIndex = await controller.getIteratorInfo('index');
 			const stripped = this._stripFileIdFromUrl();
@@ -224,6 +227,7 @@ export class ConsistentEvaluation extends LitElement {
 				.token=${this.token}
 				.href=${this.href}
 				.enrolledUser=${this._enrolledUser}
+				.groupInfo=${this._groupInfo}
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				?use-new-html-editor=${this.useNewHtmlEditor}

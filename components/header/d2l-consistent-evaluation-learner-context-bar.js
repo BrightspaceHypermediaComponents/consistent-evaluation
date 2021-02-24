@@ -38,6 +38,10 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 			enrolledUser: {
 				attribute: false,
 				type: Object
+			},
+			groupInfo: {
+				attribute: false,
+				type: Object
 			}
 		};
 	}
@@ -148,6 +152,7 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 					.href=${this._getActorHref()}
 					.token=${this.token}
 					.enrolledUser=${this.enrolledUser}
+					.groupInfo=${this.groupInfo}
 					?is-exempt=${this._getIsExempt()}
 					?is-group-activity=${this.groupHref}
 				></d2l-consistent-evaluation-lcb-user-context>
