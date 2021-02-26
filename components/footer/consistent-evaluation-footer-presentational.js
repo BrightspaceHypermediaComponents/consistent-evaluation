@@ -6,6 +6,10 @@ import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-eva
 export class ConsistentEvaluationFooterPresentational extends LocalizeConsistentEvaluation(LitElement) {
 	static get properties() {
 		return {
+			anonymousInfo: {
+				attribute: false,
+				type: Object
+			},
 			published: {
 				type: Boolean
 			},
@@ -70,7 +74,19 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 		const text = this.published ? this.localize('update') : this.localize('publish');
 		const eventEmitter = this.published ? this._emitUpdateEvent : this._emitPublishEvent;
 		const id = `consistent-evaluation-footer-${text.toLowerCase()}`;
-		return this.allowEvaluationWrite ? html`<d2l-button primary id=${id} @click=${eventEmitter} >${text}</d2l-button>` : html``;
+
+		const shouldDisablePublishButton = this.anonymousInfo ? this.anonymousInfo.isAnonymous && !this.anonymousInfo.assignmentHasPublishedSubmission : false;
+		const buttonHtml = html`<d2l-button primary id=${id} @click=${eventEmitter} ?disabled=${shouldDisablePublishButton} >${text}</d2l-button>`;
+
+		if (!this.allowEvaluationWrite) {
+			return html ``;
+		} else if (shouldDisablePublishButton) {
+			return html`
+				${buttonHtml}
+				<d2l-tooltip for=${id} visibile=false> ${this.localize('anonymousMarkingPublishButtonSummary')}</d2l-tooltip>`;
+		} else {
+			return buttonHtml;
+		}
 	}
 
 	_getSaveDraftOrRetractButton() {

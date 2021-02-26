@@ -1,7 +1,9 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
+import { anonymousMarkingRel, checkedClassName, editSpecialAccessApplicationRel, emailRel,
+	evaluationRel, nextRel, pagerRel, previousRel, publishedClassName, rubricRel,
+	userProgressAssessmentsRel, viewMembersRel } from '../components/controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
-import { editSpecialAccessApplicationRel, emailRel, evaluationRel, nextRel, pagerRel, previousRel, rubricRel, userProgressAssessmentsRel, viewMembersRel } from '../components/controllers/constants.js';
 import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
 
@@ -277,6 +279,38 @@ describe('ConsistentEvaluationHrefController', () => {
 			const actualOrganizationName = await controller.getAssignmentOrganizationName('organization');
 			assert.equal(actualOrganizationName, expectedOrganizationName);
 		});
+	});
+
+	describe('getAnonymousInfo gets correct group info', async() => {
+		const assignmentHref = 'assignmentHref';
+
+		const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+		sinon.stub(controller, '_getRootEntity').returns ({
+			entity: { }
+		});
+
+		sinon.stub(controller, '_getHref').returns(assignmentHref);
+
+		sinon.stub(controller, '_getEntityFromHref').returns({
+			entity: {
+				hasSubEntityByRel: () => true,
+				getSubEntityByRel: (r) => {
+					if (r === anonymousMarkingRel) {
+						return { hasClass: (e) => {
+							if (e === checkedClassName || e === publishedClassName) {
+								return true;
+							}
+						} };
+					}
+				}
+			}
+		});
+
+		const anonymousInfo = await controller.getAnonymousInfo();
+
+		assert.equal(anonymousInfo.isAnonymous, true);
+		assert.equal(anonymousInfo.assignmentHasPublishedSubmission, true);
 	});
 
 	describe('getRubricInfos gets correct rubric info', () => {

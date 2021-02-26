@@ -76,6 +76,7 @@ export class ConsistentEvaluation extends LitElement {
 		this._submissionInfo = undefined;
 		this._gradeItemInfo = undefined;
 		this._groupInfo = undefined;
+		this._anonymousInfo = undefined;
 		this.returnHref = undefined;
 		this.returnHrefText = undefined;
 		this._loading = true;
@@ -101,6 +102,7 @@ export class ConsistentEvaluation extends LitElement {
 			this._userName = await controller.getUserName();
 			this._enrolledUser = await controller.getEnrolledUser();
 			this._groupInfo = await controller.getGroupInfo();
+			this._anonymousInfo = await controller.getAnonymousInfo();
 			this._iteratorTotal = await controller.getIteratorInfo('total');
 			this._iteratorIndex = await controller.getIteratorInfo('index');
 			const stripped = this._stripFileIdFromUrl();
@@ -228,6 +230,7 @@ export class ConsistentEvaluation extends LitElement {
 				.href=${this.href}
 				.enrolledUser=${this._enrolledUser}
 				.groupInfo=${this._groupInfo}
+				.anonymousInfo=${this._anonymousInfo}
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				?use-new-html-editor=${this.useNewHtmlEditor}

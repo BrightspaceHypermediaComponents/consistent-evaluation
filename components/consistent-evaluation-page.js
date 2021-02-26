@@ -103,6 +103,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: false,
 				type: Object
 			},
+			anonymousInfo: {
+				attribute: false,
+				type: Object
+			},
 			assignmentName: {
 				attribute: false,
 				type: String
@@ -646,6 +650,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					user-href=${ifDefined(this.userHref)}
 					group-href=${ifDefined(this.groupHref)}
 					special-access-href=${ifDefined(this.specialAccessHref)}
+					.anonymousInfo=${this.anonymousInfo}
 					.token=${this.token}
 					.currentFileId=${this.currentFileId}
 					.submissionInfo=${this.submissionInfo}
@@ -868,6 +873,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						coa-eval-override-href=${ifDefined(this.coaDemonstrationHref)}
 						rubric-popout-location=${ifDefined(this.rubricPopoutLocation)}
 						.richTextEditorConfig=${this._getRichTextEditorConfig()}
+						special-access-href=${ifDefined(this.specialAccessHref)}
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}
 						.token=${this.token}
@@ -892,6 +898,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				<div slot="footer">
 					${this._renderToast()}
 					<d2l-consistent-evaluation-footer-presentational
+						.anonymousInfo=${this.anonymousInfo}
 						?show-next-student=${this.nextStudentHref}
 						?published=${this._isEvaluationPublished()}
 						?allow-evaluation-write=${this._allowEvaluationWrite()}

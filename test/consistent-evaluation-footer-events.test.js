@@ -14,6 +14,11 @@ const getUpdateButton = (el) => getButton(el, 'consistent-evaluation-footer-upda
 
 const getNextStudentButton = (el) => getButton(el, 'consistent-evaluation-footer-next-student');
 
+const anonymousInfoAnonymousAssignment = {
+	isAnonymous: true,
+	assignmentHasPublishedSubmission: false
+};
+
 const defaultComponent = html`
 	<d2l-consistent-evaluation-footer-presentational
 		allow-evaluation-write
@@ -26,6 +31,14 @@ const publishedComponent = html`
 		allow-evaluation-write
 		allow-evaluation-delete
 		published
+	></d2l-consistent-evaluation-footer-presentational>
+`;
+
+const anonymousAssignmentComponent = html`
+	<d2l-consistent-evaluation-footer-presentational
+		.anonymousInfo=${anonymousInfoAnonymousAssignment}
+		allow-evaluation-write
+		allow-evaluation-delete
 	></d2l-consistent-evaluation-footer-presentational>
 `;
 
@@ -119,6 +132,13 @@ describe('d2l-consistent-evaluation-footer event tests', () => {
 			expect(retractButton).to.be.null();
 			const updateButton = getUpdateButton(el);
 			expect(updateButton).to.be.null();
+		});
+	});
+
+	it('should show disabled publish button', function() {
+		fixture(anonymousAssignmentComponent).then(el => {
+			const publishButtion = getPublishButton(el);
+			expect(publishButtion).to.have.property('disabled', true);
 		});
 	});
 });

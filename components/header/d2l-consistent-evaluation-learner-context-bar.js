@@ -23,6 +23,10 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 				attribute: 'special-access-href',
 				type: String
 			},
+			anonymousInfo: {
+				attribute: false,
+				type: Object
+			},
 			token: {
 				type: Object,
 				reflect: true,
@@ -151,6 +155,7 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 				<d2l-consistent-evaluation-lcb-user-context
 					.href=${this._getActorHref()}
 					.token=${this.token}
+					.anonymousInfo=${this.anonymousInfo}
 					.enrolledUser=${this.enrolledUser}
 					.groupInfo=${this.groupInfo}
 					?is-exempt=${this._getIsExempt()}

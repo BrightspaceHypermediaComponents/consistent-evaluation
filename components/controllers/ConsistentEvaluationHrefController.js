@@ -1,8 +1,9 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { actorRel, alignmentsRel, assessmentRel, assessmentRubricApplicationRel,
-	assessorUserRel, assignmentSubmissionListRel, demonstrationRel, editSpecialAccessApplicationRel,
-	emailRel, enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, rubricRel,
-	userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
+import { actorRel, alignmentsRel, anonymousMarkingRel, assessmentRel,
+	assessmentRubricApplicationRel, assessorUserRel, assignmentRel, assignmentSubmissionListRel,
+	checkedClassName, demonstrationRel, editSpecialAccessApplicationRel, emailRel,
+	enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, publishedClassName,
+	rubricRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -347,6 +348,30 @@ export class ConsistentEvaluationHrefController {
 					return root.entity.properties?.iteratorIndex;
 				default:
 					break;
+			}
+		}
+		return undefined;
+	}
+
+	async getAnonymousInfo() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			const assignmentHref = this._getHref(root.entity, assignmentRel);
+			if (assignmentHref) {
+				const assignmentEntity = await this._getEntityFromHref(assignmentHref);
+				if (assignmentEntity.entity.hasSubEntityByRel(anonymousMarkingRel)) {
+					const anonymousAssignmentEntity = assignmentEntity.entity.getSubEntityByRel(anonymousMarkingRel);
+					const isAnonymous = anonymousAssignmentEntity.hasClass(checkedClassName);
+					const assignmentHasPublishedSubmission = anonymousAssignmentEntity.hasClass(publishedClassName);
+					return {
+						isAnonymous,
+						assignmentHasPublishedSubmission
+					};
+				} else {
+					return {
+						isAnonymous: false
+					};
+				}
 			}
 		}
 		return undefined;
