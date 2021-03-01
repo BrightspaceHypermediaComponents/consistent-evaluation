@@ -225,7 +225,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 	_renderOverflowButtonIcon() {
 		return html`
 			<div class="d2l-consistent-evaluation-right-panel-clearfix">
-				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu">
+				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu" text=${this.localize('moreOptions')}>
 					${this._renderOverflowMenu()}
 				</d2l-dropdown-more>
 			</div>

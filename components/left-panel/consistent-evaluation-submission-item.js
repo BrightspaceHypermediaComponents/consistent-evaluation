@@ -118,9 +118,6 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			padding-bottom: 0.3rem;
 			padding-top: 0.5rem;
 		}
-		.d2l-consistent-evaluation-submission-item-submissions-list {
-			z-index: 0;
-		}
 		.d2l-attachment-read-status {
 			color: var(--d2l-color-carnelian);
 			position: absolute;
@@ -519,7 +516,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 	_renderFileSubmission() {
 		return html`
 		${this._renderFileSubmissionTitle()}
-		<d2l-list class="d2l-consistent-evaluation-submission-item-submissions-list" aria-role="list" separators="all">
+		<d2l-list aria-role="list" separators="all">
 		${this._renderAttachments()}
 		</d2l-list>
 		${this._renderComment()}
