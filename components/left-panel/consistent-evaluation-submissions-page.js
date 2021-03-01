@@ -54,6 +54,8 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			:host {
 				background-color: var(--d2l-color-sylvite);
 				display: inline-block;
+				position: relative;
+				z-index: 1;
 			}
 			:host([hidden]) {
 				display: none;

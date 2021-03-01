@@ -472,7 +472,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 	_addMenuOptions(read, flagged, downloadHref, id) {
 		const oppositeReadState = read ? this.localize('markUnread') : this.localize('markRead');
 		const oppositeFlagState = flagged ? this.localize('unflag') : this.localize('flag');
-		return html`<div slot="actions" style="z-index: inherit;">
+		return html`<div slot="actions">
 			<d2l-dropdown-more text="${this.localize('moreOptions')}">
 			<d2l-dropdown-menu id="dropdown" boundary="{&quot;right&quot;:10}">
 				<d2l-menu label="${this.localize('moreOptions')}">
