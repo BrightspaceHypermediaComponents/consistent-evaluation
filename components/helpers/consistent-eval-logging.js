@@ -1,11 +1,6 @@
 export class ConsistentEvalLogging {
-
-	static get properties() {
-		return {
-			loggingEndpoint: {
-				type: String
-			}
-		};
+	constructor(loggingEndpoint) {
+		this.loggingEndpoint = loggingEndpoint;
 	}
 
 	logError(error, additionalContext) {
