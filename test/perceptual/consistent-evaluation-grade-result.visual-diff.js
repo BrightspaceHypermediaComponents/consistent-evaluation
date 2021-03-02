@@ -24,6 +24,11 @@ describe('d2l-consistent-evaluation-grade-result', () => {
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
+	it('renders skeleton grade result', async function() {
+		const rect = await visualDiff.getRect(page, '#skeleton');
+		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
+	});
+
 	it('renders grade-letter result', async function() {
 		const rect = await visualDiff.getRect(page, '#grade-letter');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });

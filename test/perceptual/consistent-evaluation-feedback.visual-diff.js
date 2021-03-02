@@ -24,6 +24,11 @@ describe('consistent-evaluation-feedback', () => {
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
+	it('renders consistent evaluation skeleton', async function() {
+		const rect = await visualDiff.getRect(page, '#skeleton');
+		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
+	});
+
 	it('renders consistent evaluation feedback without feedback attachments', async function() {
 		const rect = await visualDiff.getRect(page, '#no-attachments');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });

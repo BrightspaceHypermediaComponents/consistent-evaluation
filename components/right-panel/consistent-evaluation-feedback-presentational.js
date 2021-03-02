@@ -2,14 +2,15 @@ import 'd2l-activities/components/d2l-activity-editor/d2l-activity-text-editor.j
 import './consistent-evaluation-right-panel-block';
 import './consistent-evaluation-attachments-editor.js';
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { html, LitElement } from 'lit-element';
+import { css, html, LitElement } from 'lit-element';
 import { convertToken } from '../helpers/converterHelpers.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
-class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvaluation(LitElement) {
+class ConsistentEvaluationFeedbackPresentational extends SkeletonMixin(LocalizeConsistentEvaluation(LitElement)) {
 	static get properties() {
 		return {
 			canEditFeedback: {
@@ -57,6 +58,39 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				type: String
 			}
 		};
+	}
+
+	static get styles() {
+		return  [super.styles, css`
+			:host([skeleton]) .d2l-skeleton-feedback-title {
+				height: 0.5rem;
+				margin-top: 2rem;
+				width: 4rem;
+			}
+
+			:host([skeleton]) .d2l-skeleton-file-upload {
+				height: 2rem;
+				margin-top: 0.375rem;
+			}
+
+			:host([skeleton]) .d2l-skeleton-feedback-box {
+				border-radius: 8px;
+				border-style: solid;
+				border-width: 2px;
+				height: 8rem;
+				margin-top: 0.75rem;
+			}
+
+			@media (max-width: 767px) {
+				:host([skeleton]) .d2l-skeleton-consistent-evaluation-right-panel-block {
+					display: none;
+				}
+			}
+
+			:host([skeleton]) .d2l-consistent-evaluation-feedback-block {
+				display: none;
+			}
+		`];
 	}
 
 	constructor() {
@@ -179,6 +213,15 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		}
 	}
 
+	_renderSkeleton() {
+		return html `
+			<div class="d2l-skeleton-consistent-evaluation-right-panel-block" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
+				<div class="d2l-skeleton-feedback-title d2l-skeletize"></div>
+				<div class="d2l-skeleton-feedback-box d2l-skeletize-container"></div>
+				<div class="d2l-skeleton-file-upload d2l-skeletize"></div>
+			</div>`;
+	}
+
 	render() {
 		if (this.href && this.token && this.richTextEditorConfig) {
 			const attachmentsComponent = this.canEditFeedback || this.attachments.length !== 0
@@ -195,7 +238,9 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				: null;
 			this._setFeedbackSummaryInfo();
 			return html`
+				${this._renderSkeleton()}
 				<d2l-consistent-evaluation-right-panel-block
+					class="d2l-consistent-evaluation-feedback-block"
 					supportingInfo=${ifDefined(this._feedbackSummaryInfo)}
 					title="${this.localize('overallFeedback')}">
 						${this._getHtmlEditor()}

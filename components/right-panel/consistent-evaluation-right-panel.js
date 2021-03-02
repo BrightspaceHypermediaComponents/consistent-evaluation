@@ -10,8 +10,9 @@ import { convertToken } from '../helpers/converterHelpers.js';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 
-export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation(LitElement) {
+export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsistentEvaluation(LitElement)) {
 
 	static get properties() {
 		return {
@@ -191,6 +192,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					.token=${this.token}
 					?show-active-scoring-rubric-options=${showActiveScoringRubric}
 					?read-only=${this.rubricReadOnly}
+					?skeleton=${this.skeleton}
 					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
 					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
 					@d2l-rubric-compact-expanded-changed=${this._updateRubricOpenState}
@@ -208,6 +210,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					.grade=${this.grade}
 					.gradeItemInfo=${this.gradeItemInfo}
 					?read-only=${!this.allowEvaluationWrite}
+					?skeleton=${this.skeleton}
 				></d2l-consistent-evaluation-grade-result>
 			`;
 		}
@@ -320,6 +323,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					?can-add-file=${this.canAddFeedbackFile}
 					?can-record-video=${this.canRecordFeedbackVideo}
 					?can-record-audio=${this.canRecordFeedbackAudio}
+					?skeleton=${this.skeleton}
 					?use-new-html-editor=${this.useNewHtmlEditor}
 					.feedbackText=${this.feedbackText}
 					.attachments=${this.feedbackAttachments}
@@ -338,6 +342,7 @@ export class ConsistentEvaluationRightPanel extends LocalizeConsistentEvaluation
 					header=${this.localize('outcomes')}
 					href=${this.outcomesHref}
 					.token=${this.token}
+					?skeleton=${this.skeleton}
 				></d2l-consistent-evaluation-outcomes>
 			`;
 		}

@@ -33,4 +33,9 @@ describe('d2l-consistent-evaluation-rubric', () => {
 		const rect = await visualDiff.getRect(page, '#multiple-rubrics-with-grading-options');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
+
+	it('renders rubric skeleton', async function() {
+		const rect = await visualDiff.getRect(page, '#skeleton');
+		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
+	});
 });
