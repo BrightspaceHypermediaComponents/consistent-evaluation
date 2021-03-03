@@ -99,7 +99,7 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 	_getPublishOrUpdateButton() {
 		let text;
 		if(this.currentlySaving && (this._lastClicked === 'Publish' || this._lastClicked === 'Update')) {
-			text = this.published ? 'Updating' : 'Publishing';
+			text = this.published ? this.localize('updating') : this.localize('publishing');;
 		} else {
 			text = this.published ? this.localize('update') : this.localize('publish');
 		}
@@ -129,7 +129,7 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 		if (this.published) {
 			if (this.allowEvaluationDelete) {
 				if(this.currentlySaving && (this._lastClicked === 'Retract')) {
-					text = 'Retracting';
+					text = this.localize('retracting');
 				} else {
 					text = this.localize('retract');
 				}
@@ -140,7 +140,7 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 		} else {
 			if (this.allowEvaluationWrite) {
 				if(this.currentlySaving && (this._lastClicked === 'Draft')) {
-					text = 'Saving';
+					text = this.localize('saving');
 				} else {
 					text = this.localize('saveDraft');
 				}
