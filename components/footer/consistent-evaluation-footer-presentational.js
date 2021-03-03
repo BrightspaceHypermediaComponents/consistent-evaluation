@@ -1,6 +1,7 @@
 import '@brightspace-ui/core/components/button/button.js';
 import '@brightspace-ui/core/components/button/button-icon.js';
 import { css, html, LitElement } from 'lit-element';
+import { publishActionName, retractActionName, saveActionName, updateActionName } from '../controllers/constants.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationFooterPresentational extends LocalizeConsistentEvaluation(LitElement) {
@@ -24,6 +25,14 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 			showNextStudent: {
 				attribute: 'show-next-student',
 				type: Boolean
+			},
+			currentlySaving: {
+				attribute: 'currently-saving',
+				type: Boolean
+			},
+			_lastClicked:{
+				attribute: false,
+				type: String
 			}
 		};
 	}
@@ -64,14 +73,38 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 		}));
 	}
 
-	_emitPublishEvent()     { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-publish'); }
-	_emitRetractEvent()     { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-retract'); }
-	_emitUpdateEvent()      { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-update'); }
-	_emitSaveDraftEvent()   { this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-save-draft'); }
-	_emitNextStudentEvent() { this._dispatchButtonClickNavigationEvent('next'); }
+	_emitPublishEvent() {
+		this._lastClicked = publishActionName;
+		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-publish');
+	}
+
+	_emitRetractEvent() {
+		this._lastClicked = retractActionName;
+		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-retract');
+	}
+
+	_emitUpdateEvent() {
+		this._lastClicked = updateActionName;
+		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-update');
+	}
+
+	_emitSaveDraftEvent() {
+		this._lastClicked = saveActionName;
+		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-save-draft');
+	}
+
+	_emitNextStudentEvent() {
+		this._dispatchButtonClickNavigationEvent('next');
+	}
 
 	_getPublishOrUpdateButton() {
-		const text = this.published ? this.localize('update') : this.localize('publish');
+		let text;
+		if (this.currentlySaving && (this._lastClicked === publishActionName || this._lastClicked === updateActionName)) {
+			text = this.published ? this.localize('updating') : this.localize('publishing');
+		} else {
+			text = this.published ? this.localize('update') : this.localize('publish');
+		}
+
 		const eventEmitter = this.published ? this._emitUpdateEvent : this._emitPublishEvent;
 		const id = `consistent-evaluation-footer-${text.toLowerCase()}`;
 
@@ -96,14 +129,22 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 
 		if (this.published) {
 			if (this.allowEvaluationDelete) {
-				text = this.localize('retract');
+				if (this.currentlySaving && (this._lastClicked === retractActionName)) {
+					text = this.localize('retracting');
+				} else {
+					text = this.localize('retract');
+				}
 				eventEmitter =  this._emitRetractEvent;
 			} else {
 				return html ``;
 			}
 		} else {
 			if (this.allowEvaluationWrite) {
-				text = this.localize('saveDraft');
+				if (this.currentlySaving && (this._lastClicked === saveActionName)) {
+					text = this.localize('saving');
+				} else {
+					text = this.localize('saveDraft');
+				}
 				eventEmitter =  this._emitSaveDraftEvent;
 			} else {
 				return html ``;

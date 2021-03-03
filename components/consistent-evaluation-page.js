@@ -198,6 +198,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			_navigationTarget: {
 				type: String,
 				attribute: false
+			},
+			_currentlySaving: {
+				type: Boolean,
+				attribute: false
 			}
 		};
 	}
@@ -243,6 +247,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._isUpdateClicked = false;
 		this._isPublishClicked = false;
 		this._shouldWaitForAnnotations = false;
+		this._currentlySaving = false;
 	}
 
 	get evaluationEntity() {
@@ -490,13 +495,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			composed: true,
 			bubbles: true
 		}));
-
+		this._currentlySaving = true;
 		await this._waitForAnnotations();
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
 				this.evaluationEntity = await this._controller.save(entity);
+				this._currentlySaving = false;
 				if (!(this.evaluationEntity instanceof Error)) {
 					this._showToast(this.localize('saved'));
 					this._fireSaveEvaluationEvent();
@@ -521,12 +527,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 		this._isUpdateClicked = false;
-
+		this._currentlySaving = true;
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
 				this.evaluationEntity = await this._controller.update(entity);
+				this._currentlySaving = false;
 				if (!(this.evaluationEntity instanceof Error)) {
 					this._showToast(this.localize('updated'));
 					this._fireSaveEvaluationEvent();
@@ -543,13 +550,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			bubbles: true
 		}));
 		this._isPublishClicked = false;
-
+		this._currentlySaving = true;
 		await this._waitForAnnotations();
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
 				this.evaluationEntity = await this._controller.publish(entity);
+				this._currentlySaving = false;
 				if (!(this.evaluationEntity instanceof Error)) {
 					this._showToast(this.localize('published'));
 					this._fireSaveEvaluationEvent();
@@ -561,24 +569,19 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		);
 	}
 
-	_closeDialogs() {
-		this._isUpdateClicked = false;
-		this._isPublishClicked = false;
-		this._navigationTarget = null;
-	}
-
 	async _retractEvaluation() {
 		window.dispatchEvent(new CustomEvent('d2l-flush', {
 			composed: true,
 			bubbles: true
 		}));
-
+		this._currentlySaving = true;
 		await this._waitForAnnotations();
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
 				this.evaluationEntity = await this._controller.retract(entity);
+				this._currentlySaving = false;
 				if (!(this.evaluationEntity instanceof Error)) {
 					this._showToast(this.localize('retracted'));
 					this._fireSaveEvaluationEvent();
@@ -588,6 +591,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				this.submissionInfo.evaluationState = draftState;
 			}
 		);
+	}
+
+	_closeDialogs() {
+		this._isUpdateClicked = false;
+		this._isPublishClicked = false;
+		this._navigationTarget = null;
 	}
 
 	_showToast(message) {
@@ -835,6 +844,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		const attachments = this._attachmentsInfo.attachments;
 		return html`
 			<d2l-template-primary-secondary
+				id="evaluation-template"
 				resizable
 				@d2l-consistent-evaluation-evidence-back-to-user-submissions=${this._setSubmissionsView}
 				@d2l-consistent-evaluation-file-selected=${this._selectFile}
@@ -913,6 +923,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?published=${this._isEvaluationPublished()}
 						?allow-evaluation-write=${this._allowEvaluationWrite()}
 						?allow-evaluation-delete=${this._allowEvaluationDelete()}
+						?currently-saving=${this._currentlySaving}
 						@d2l-consistent-evaluation-on-publish=${this._updateIsPublishClicked}
 						@d2l-consistent-evaluation-on-save-draft=${this._saveEvaluation}
 						@d2l-consistent-evaluation-on-retract=${this._retractEvaluation}
@@ -921,6 +932,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					></d2l-consistent-evaluation-footer-presentational>
 				</div>
 			</d2l-template-primary-secondary>
+			<d2l-backdrop
+				for-target="evaluation-template"
+				?shown=${this._currentlySaving}
+				no-animate-hide
+				delay-transition
+				slow-transition>
+			</d2l-backdrop>
 			<d2l-dialog-confirm
 				title-text=${this.localize('unsavedAnnotationsTitle')}
 				text=${this.localize('unsavedAnnotationsBody')}

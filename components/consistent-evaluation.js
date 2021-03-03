@@ -74,6 +74,10 @@ export class ConsistentEvaluation extends LitElement {
 	constructor() {
 		super();
 
+		// Only show the scrollbar when necessary
+		document.body.style.overflow = 'auto';
+		document.documentElement.style.overflow = 'auto'; // needed for FF bug
+
 		this.href = undefined;
 		this.token = undefined;
 		this._rubricReadOnly = false;
