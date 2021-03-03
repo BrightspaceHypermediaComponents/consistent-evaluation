@@ -1,6 +1,7 @@
 import '@brightspace-ui/core/components/button/button.js';
 import '@brightspace-ui/core/components/button/button-icon.js';
 import { css, html, LitElement } from 'lit-element';
+import { publishActionName, retractActionName, saveActionName, updateActionName } from '../controllers/constants.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationFooterPresentational extends LocalizeConsistentEvaluation(LitElement) {
@@ -73,22 +74,22 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 	}
 
 	_emitPublishEvent() {
-		this._lastClicked = 'Publish';
+		this._lastClicked = publishActionName;
 		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-publish');
 	}
 
 	_emitRetractEvent() {
-		this._lastClicked = 'Retract';
+		this._lastClicked = retractActionName;
 		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-retract');
 	}
 
 	_emitUpdateEvent() {
-		this._lastClicked = 'Update';
+		this._lastClicked = updateActionName;
 		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-update');
 	}
 
 	_emitSaveDraftEvent() {
-		this._lastClicked = 'Draft';
+		this._lastClicked = saveActionName;
 		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-save-draft');
 	}
 
@@ -98,7 +99,7 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 
 	_getPublishOrUpdateButton() {
 		let text;
-		if (this.currentlySaving && (this._lastClicked === 'Publish' || this._lastClicked === 'Update')) {
+		if (this.currentlySaving && (this._lastClicked === publishActionName || this._lastClicked === updateActionName)) {
 			text = this.published ? this.localize('updating') : this.localize('publishing');
 		} else {
 			text = this.published ? this.localize('update') : this.localize('publish');
@@ -128,7 +129,7 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 
 		if (this.published) {
 			if (this.allowEvaluationDelete) {
-				if (this.currentlySaving && (this._lastClicked === 'Retract')) {
+				if (this.currentlySaving && (this._lastClicked === retractActionName)) {
 					text = this.localize('retracting');
 				} else {
 					text = this.localize('retract');
@@ -139,7 +140,7 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 			}
 		} else {
 			if (this.allowEvaluationWrite) {
-				if (this.currentlySaving && (this._lastClicked === 'Draft')) {
+				if (this.currentlySaving && (this._lastClicked === saveActionName)) {
 					text = this.localize('saving');
 				} else {
 					text = this.localize('saveDraft');
