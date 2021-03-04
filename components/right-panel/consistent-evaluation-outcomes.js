@@ -86,6 +86,7 @@ class ConsistentEvaluationOutcomes extends SkeletonMixin(LocalizeConsistentEvalu
 			${this._renderSkeleton()}
 			<d2l-consistent-evaluation-right-panel-block
 				class="d2l-consistent-evaluation-outcomes-block"
+				aria-hidden="${this.skeleton}"
 				supportingInfo=${this.localize('outcomesSummary')}
 				title=${this.header}>
 					<d2l-activity-alignments

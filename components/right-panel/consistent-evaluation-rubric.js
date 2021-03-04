@@ -388,6 +388,7 @@ class ConsistentEvaluationRubric extends SkeletonMixin(LocalizeConsistentEvaluat
 			${!this.isPopout ? this._renderSkeleton() : ''}
 			<d2l-consistent-evaluation-right-panel-block
 				class="d2l-consistent-evaluation-rubric-block"
+				aria-hidden="${this.skeleton}"
 				title=${this.isPopout ? '' : this.header}
 				supportingInfo=${this._getSummaryText()}>
 					${this._renderPopoutIcon()}

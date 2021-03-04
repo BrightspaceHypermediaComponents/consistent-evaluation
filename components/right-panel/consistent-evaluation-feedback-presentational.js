@@ -241,6 +241,7 @@ class ConsistentEvaluationFeedbackPresentational extends SkeletonMixin(LocalizeC
 				${this._renderSkeleton()}
 				<d2l-consistent-evaluation-right-panel-block
 					class="d2l-consistent-evaluation-feedback-block"
+					aria-hidden="${this.skeleton}"
 					supportingInfo=${ifDefined(this._feedbackSummaryInfo)}
 					title="${this.localize('overallFeedback')}">
 						${this._getHtmlEditor()}
