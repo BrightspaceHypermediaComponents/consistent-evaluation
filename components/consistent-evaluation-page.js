@@ -160,6 +160,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			_toastMessage: {
 				type: String
 			},
+			_toastType: {
+				type: String
+			},
+			_toastNoAutoClose: {
+				type: Boolean
+			},
 			_feedbackText: {
 				attribute: false
 			},
@@ -241,6 +247,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		};
 		this._displayToast = false;
 		this._toastMessage = '';
+		this._toastType = 'default';
+		this._toastNoAutoClose = false;
 		this._mutex = new Awaiter();
 		this.unsavedChangesHandler = this._confirmUnsavedChangesBeforeUnload.bind(this);
 		this._transientSaveAwaiter = new TransientSaveAwaiter();
@@ -503,11 +511,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				const entity = await this._controller.fetchEvaluationEntity(false);
 				this.evaluationEntity = await this._controller.save(entity);
 				this._currentlySaving = false;
-				if (!(this.evaluationEntity instanceof Error)) {
-					this._showToast(this.localize('saved'));
-					this._fireSaveEvaluationEvent();
+
+				if (!this.evaluationEntity) {
+					this._showToast(this.localize('saveError'), true);
 				} else {
-					this._showToast(this.localize('saveError'));
+					this._showToast(this.localize('saved'), false);
+					this._fireSaveEvaluationEvent();
 				}
 			}
 		);
@@ -535,10 +544,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				this.evaluationEntity = await this._controller.update(entity);
 				this._currentlySaving = false;
 				if (!(this.evaluationEntity instanceof Error)) {
-					this._showToast(this.localize('updated'));
+					this._showToast(this.localize('updated'), false);
 					this._fireSaveEvaluationEvent();
 				} else {
-					this._showToast(this.localize('updatedError'));
+					this._showToast(this.localize('updatedError'), true);
 				}
 			}
 		);
@@ -559,10 +568,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				this.evaluationEntity = await this._controller.publish(entity);
 				this._currentlySaving = false;
 				if (!(this.evaluationEntity instanceof Error)) {
-					this._showToast(this.localize('published'));
+					this._showToast(this.localize('published'), false);
 					this._fireSaveEvaluationEvent();
 				} else {
-					this._showToast(this.localize('publishError'));
+					this._showToast(this.localize('publishError'), true);
 				}
 				this.submissionInfo.evaluationState = publishedState;
 			}
@@ -583,10 +592,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				this.evaluationEntity = await this._controller.retract(entity);
 				this._currentlySaving = false;
 				if (!(this.evaluationEntity instanceof Error)) {
-					this._showToast(this.localize('retracted'));
+					this._showToast(this.localize('retracted'), false);
 					this._fireSaveEvaluationEvent();
 				} else {
-					this._showToast(this.localize('retractError'));
+					this._showToast(this.localize('retractError'), true);
 				}
 				this.submissionInfo.evaluationState = draftState;
 			}
@@ -599,8 +608,17 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._navigationTarget = null;
 	}
 
-	_showToast(message) {
+	_showToast(message, isError) {
 		this._toastMessage = message;
+
+		if (isError) {
+			this._toastType = 'critical';
+			this._toastNoAutoClose = true;
+		} else {
+			this._toastType = 'default';
+			this._toastNoAutoClose = false;
+		}
+
 		this._displayToast = true;
 	}
 
@@ -657,6 +675,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		return html`<d2l-alert-toast
 			?open=${this._displayToast}
 			button-text=""
+			?no-auto-close=${this._toastNoAutoClose}
+			type=${this._toastType}
 			@d2l-alert-toast-close=${this._onToastClose}>${this._toastMessage}</d2l-alert-toast>`;
 	}
 
@@ -834,7 +854,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	_handleDownloadAllFailure() {
-		this._showToast(this.localize('downloadAllFailure'));
+		this._showToast(this.localize('downloadAllFailure'), true);
 	}
 
 	render() {

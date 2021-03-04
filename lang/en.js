@@ -78,6 +78,7 @@ export default {
 	"rubricsAssess": "Assess Rubrics for {username}",
 	"saveBtn": "Save",
 	"saveDraft": "Save Draft",
+	"saveError": "OMG ITS ON FIRE",
 	"saving": "Saving",
 	"saved":  "Evaluation saved as draft",
 	"seeAllGroupMembers": "See All Group Members",

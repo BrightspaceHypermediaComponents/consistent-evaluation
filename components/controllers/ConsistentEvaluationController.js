@@ -100,7 +100,14 @@ export class ConsistentEvaluationController {
 	}
 
 	async _performSirenAction(action, field = null) {
-		return await performSirenAction(this.token, action, field, true);
+		const response = await performSirenAction(this.token, action, field, true)
+			.catch((error) => {
+				console.log(error);
+				//this._logError(error.message);
+				return undefined;
+			});
+
+		return response;
 	}
 
 	async _performAction(entity, actionName, fieldName = '', fieldValue = null) {
