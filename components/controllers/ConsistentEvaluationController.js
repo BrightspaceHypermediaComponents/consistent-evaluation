@@ -279,7 +279,12 @@ export class ConsistentEvaluationController {
 			this._logError(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
 		}
 
-		return await this._performAction(evaluationEntity, saveActionName);
+		const newEvaluationEntity = await this._performAction(evaluationEntity, saveActionName);
+		if (newEvaluationEntity) {
+			return newEvaluationEntity;
+		}
+
+		return false;
 	}
 
 	async update(evaluationEntity) {

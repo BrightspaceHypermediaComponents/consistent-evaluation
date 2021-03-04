@@ -509,12 +509,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.evaluationEntity = await this._controller.save(entity);
+				const newEvaluationEntity = await this._controller.save(entity);
 				this._currentlySaving = false;
 
-				if (!this.evaluationEntity) {
+				if (!newEvaluationEntity) {
 					this._showToast(this.localize('saveError'), true);
 				} else {
+					this.evaluationEntity = newEvaluationEntity;
 					this._showToast(this.localize('saved'), false);
 					this._fireSaveEvaluationEvent();
 				}
