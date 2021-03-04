@@ -28,4 +28,9 @@ describe('d2l-consistent-evaluation-outcomes', () => {
 		const rect = await visualDiff.getRect(page, '#outcome-with-description');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
+
+	it('renders skeleton outcomes', async function() {
+		const rect = await visualDiff.getRect(page, '#skeleton');
+		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
+	});
 });

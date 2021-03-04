@@ -15,6 +15,11 @@
 			feedback.richTextEditorConfig = 'data/feedback/richText.json';
 			feedback.attachments = [ { id: '0', name: 'Testing Document.docx', url: 'www.somefaketestingurl.fake', canDeleteAttachment: true} ];
 
+			const skeleton = document.getElementById('feedbackSkeleton');
+			skeleton.feedbackText = 'As Skeleton';
+			skeleton.richTextEditorConfig = 'data/feedback/richText.json';
+			skeleton.attachments = [];
+
 			const noAttachments = document.getElementById('noAttachments');
 			noAttachments.feedbackText = 'No attachments';
 			noAttachments.richTextEditorConfig = 'data/feedback/richText.json';
@@ -42,6 +47,16 @@
 				href="href"
 				token="token"
 				attachments-href="href"
+			></d2l-consistent-evaluation-feedback-presentational>
+		</div>
+
+		<div id="skeleton">
+			<d2l-consistent-evaluation-feedback-presentational
+				id="feedbackSkeleton"
+				href="href"
+				token="token"
+				attachments-href="href"
+				skeleton
 			></d2l-consistent-evaluation-feedback-presentational>
 		</div>
 

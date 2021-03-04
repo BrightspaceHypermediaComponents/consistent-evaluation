@@ -7,8 +7,9 @@ import { labelStyles } from '@brightspace-ui/core/components/typography/styles.j
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { selectStyles } from '@brightspace-ui/core/components/inputs/input-select-styles.js';
+import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 
-class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(LitElement)) {
+class ConsistentEvaluationRubric extends SkeletonMixin(LocalizeConsistentEvaluation(RtlMixin(LitElement))) {
 	static get properties() {
 		return {
 			header: {
@@ -45,7 +46,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 	}
 
 	static get styles() {
-		return  [labelStyles, selectStyles, css`
+		return  [labelStyles, selectStyles, super.styles, css`
 			.d2l-consistent-evaluation-rubric:nth-child(n + 2) {
 				margin-top: 0.7rem;
 			}
@@ -89,6 +90,47 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 			.d2l-consistent-evaluation-close-rubrics {
 				float: right;
 				margin: 0 0.5rem 0.5rem 0.5rem;
+			}
+
+			:host([skeleton]) .d2l-skeleton-rubrics-title {
+				height: 0.5rem;
+				margin-bottom: 1rem;
+				width: 4rem;
+			}
+
+			:host([skeleton]) .d2l-skeleton-rubric-icon {
+				height: 1.5rem;
+				margin: 0 0.75rem;
+				width: 1.5rem;
+			}
+
+			:host([skeleton]) .d2l-skeleton-rubric-title {
+				height: 0.5rem;
+				width: 8rem;
+			}
+
+			:host([skeleton]) .d2l-skeleton-rubric-score {
+				height: 0.5rem;
+				margin-top: 0.5rem;
+				width: 2rem;
+			}
+
+			:host([skeleton]) .d2l-skeleton-rubric-container {
+				border-radius: 8px;
+				border-style: solid;
+				border-width: 2px;
+				display: flex;
+				padding: 0.825rem;
+			}
+
+			:host([skeleton]) .d2l-consistent-evaluation-rubric-block {
+				display: none;
+			}
+
+			@media (max-width: 767px) {
+				:host([skeleton]) .d2l-skeleton-consistent-evaluation-right-panel-block {
+					display: none;
+				}
 			}
 		`];
 	}
@@ -299,6 +341,20 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 		};
 	}
 
+	_renderSkeleton() {
+		return html `
+			<div class="d2l-skeleton-consistent-evaluation-right-panel-block" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
+				<div class="d2l-skeleton-rubrics-title d2l-skeletize"></div>
+				<div class="d2l-skeleton-rubric-container d2l-skeletize-container">
+					<div class="d2l-skeleton-rubric-icon d2l-skeletize"></div>
+					<div>
+						<div class="d2l-skeleton-rubric-title d2l-skeletize"></div>
+						<div class="d2l-skeleton-rubric-score d2l-skeletize"></div>
+					</div>
+				</div>
+			</div>`;
+	}
+
 	_closeRubricPopout() {
 		window.close();
 	}
@@ -343,7 +399,10 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 
 	render() {
 		return html`
+			${!this.isPopout ? this._renderSkeleton() : ''}
 			<d2l-consistent-evaluation-right-panel-block
+				class="d2l-consistent-evaluation-rubric-block"
+				aria-hidden="${this.skeleton}"
 				title=${this.isPopout ? '' : this.header}
 				supportingInfo=${this._getSummaryText()}>
 					${this._renderPopoutIcon()}
