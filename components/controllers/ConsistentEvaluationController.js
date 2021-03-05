@@ -93,14 +93,7 @@ export class ConsistentEvaluationController {
 	}
 
 	async _performSirenAction(action, field = null) {
-		const response = await performSirenAction(this.token, action, field, true)
-			.catch((error) => {
-				const message = error.message;
-				const statusCode = error.json.properties.status;
-				throw new Error(statusCode + message);
-			});
-
-		return response;
+		return await performSirenAction(this.token, action, field, true);
 	}
 
 	async _performAction(entity, actionName, fieldName = '', fieldValue = null) {
@@ -288,11 +281,12 @@ export class ConsistentEvaluationController {
 			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
 		}
 
-		const newEvaluationEntity = await this._performAction(evaluationEntity, actionName);
-		if (newEvaluationEntity) {
-			return newEvaluationEntity;
+		let newEvaluationEntity;
+		try {
+			newEvaluationEntity = await this._performAction(evaluationEntity, actionName);
+		} catch (e) {
+			console.error(`${e.json.properties.code} ${e.json.properties.status}${e.message}`);
 		}
-
-		return false;
+		return newEvaluationEntity;
 	}
 }
