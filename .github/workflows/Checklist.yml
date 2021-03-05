@@ -21,9 +21,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `
-            ## PR Checklist:
-            
-            **Consistent-evaluation PR Checklist**
+            ## Consistent-evaluation PR Checklist:
+
             - [ ] I have made the necessary changes to the Demo pages
             - [ ] I have updated the tests to reflect the changes in this PR (Unit & Visual-diff)
             - [ ] I have included langterms where applicable
