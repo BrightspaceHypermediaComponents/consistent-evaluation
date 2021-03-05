@@ -97,9 +97,7 @@ export class ConsistentEvaluationController {
 			.catch((error) => {
 				const message = error.message;
 				const statusCode = error.json.properties.status;
-
-				//throw new Error(statusCode + message);
-				return undefined;
+				throw new Error(statusCode + message);
 			});
 
 		return response;

@@ -507,7 +507,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				const newEvaluationEntity = await this._controller.save(entity);
 				this._currentlySaving = false;
 
-				_checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
 			}
 		);
 	}
@@ -523,10 +523,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.evaluationEntity = await this._controller.update(entity);
+				const newEvaluationEntity = await this._controller.update(entity);
 				this._currentlySaving = false;
 
-				_checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
 			}
 		);
 	}
@@ -542,10 +542,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.evaluationEntity = await this._controller.publish(entity);
+				const newEvaluationEntity = await this._controller.publish(entity);
 				this._currentlySaving = false;
 
-				_checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
 				this.submissionInfo.evaluationState = publishedState;
 			}
 		);
@@ -557,10 +557,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.evaluationEntity = await this._controller.retract(entity);
+				const newEvaluationEntity = await this._controller.retract(entity);
 				this._currentlySaving = false;
 
-				checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
+				this.checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
 				this.submissionInfo.evaluationState = draftState;
 			}
 		);
