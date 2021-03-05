@@ -365,7 +365,8 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			return html`
 			<d2l-status-indicator bold
 				state="alert"
-				text="${this.lateness} ${this.localize('late')}">
+				text="${this.lateness} ${this.localize('late')}"
+				alt-text="${this.localize('late')}">
 			</d2l-status-indicator>`;
 		} else {
 			return html ``;
@@ -374,7 +375,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 
 	_renderEvaluationState() {
 		if (this.evaluationState === 'Unevaluated') {
-			return html`<d2l-status-indicator state="default" text="${this.localize('unevaluated')}"></d2l-status-indicator>`;
+			return html`<d2l-status-indicator state="default" text="${this.localize('unevaluated')}" alt-text="${this.localize('unevaluated')}"></d2l-status-indicator>`;
 		} else {
 			return html``;
 		}
@@ -382,7 +383,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 
 	_renderFlaggedStatus(flag) {
 		if (flag) {
-			return html`<d2l-status-indicator state="alert" text="${this.localize('flagged')}"></d2l-status-indicator>`;
+			return html`<d2l-status-indicator state="alert" text="${this.localize('flagged')}" alt-text="${this.localize('flagged')}" ></d2l-status-indicator>`;
 		}
 	}
 
