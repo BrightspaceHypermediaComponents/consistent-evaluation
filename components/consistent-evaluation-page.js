@@ -581,8 +581,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			this._showToast(this.localize(errorTerm), true);
 		} else {
 			this.evaluationEntity = newEvaluationEntity;
-			this._showToast(this.localize(successTerm), false);
 			this._fireSaveEvaluationEvent();
+			this._showToast(this.localize(successTerm), false);
 		}
 	}
 

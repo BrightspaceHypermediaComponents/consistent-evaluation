@@ -93,7 +93,13 @@ export class ConsistentEvaluationController {
 	}
 
 	async _performSirenAction(action, field = null) {
-		return await performSirenAction(this.token, action, field, true);
+		let newEvaluationEntity;
+		try {
+			newEvaluationEntity = await performSirenAction(this.token, action, field, true);
+		} catch (e) {
+			console.error(`HTTP Status Code: "${e.json.properties.code} ${e.json.properties.status}" Message: "${e.message}"`);
+		}
+		return newEvaluationEntity;
 	}
 
 	async _performAction(entity, actionName, fieldName = '', fieldValue = null) {
@@ -261,32 +267,26 @@ export class ConsistentEvaluationController {
 	}
 
 	async save(evaluationEntity) {
-		return this._tryPerformAction(evaluationEntity, saveActionName);
+		return this._performActionHelper(evaluationEntity, saveActionName);
 	}
 
 	async update(evaluationEntity) {
-		return this._tryPerformAction(evaluationEntity, updateActionName);
+		return this._performActionHelper(evaluationEntity, updateActionName);
 	}
 
 	async publish(evaluationEntity) {
-		return this._tryPerformAction(evaluationEntity, publishActionName);
+		return this._performActionHelper(evaluationEntity, publishActionName);
 	}
 
 	async retract(evaluationEntity) {
-		return this._tryPerformAction(evaluationEntity, retractActionName);
+		return this._performActionHelper(evaluationEntity, retractActionName);
 	}
 
-	async _tryPerformAction(evaluationEntity, actionName) {
+	async _performActionHelper(evaluationEntity, actionName) {
 		if (!evaluationEntity) {
 			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
 		}
 
-		let newEvaluationEntity;
-		try {
-			newEvaluationEntity = await this._performAction(evaluationEntity, actionName);
-		} catch (e) {
-			console.error(`${e.json.properties.code} ${e.json.properties.status}${e.message}`);
-		}
-		return newEvaluationEntity;
+		return await this._performAction(evaluationEntity, actionName);
 	}
 }
