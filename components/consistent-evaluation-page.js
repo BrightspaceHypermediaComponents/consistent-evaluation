@@ -499,26 +499,15 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _saveEvaluation() {
-		window.dispatchEvent(new CustomEvent('d2l-flush', {
-			composed: true,
-			bubbles: true
-		}));
-		this._currentlySaving = true;
-		await this._waitForAnnotations();
-		await this._transientSaveAwaiter.awaitAllTransientSaves();
+		this._flushAndWait();
+
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
 				const newEvaluationEntity = await this._controller.save(entity);
 				this._currentlySaving = false;
 
-				if (!newEvaluationEntity) {
-					this._showToast(this.localize('saveError'), true);
-				} else {
-					this.evaluationEntity = newEvaluationEntity;
-					this._showToast(this.localize('saved'), false);
-					this._fireSaveEvaluationEvent();
-				}
+				_checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
 			}
 		);
 	}
@@ -527,59 +516,57 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._isUpdateClicked = true;
 	}
 
-	async _updateIsPublishClicked() {
-		this._isPublishClicked = true;
-	}
-
 	async _updateEvaluation() {
-		window.dispatchEvent(new CustomEvent('d2l-flush', {
-			composed: true,
-			bubbles: true
-		}));
+		this._flushAndWait();
 		this._isUpdateClicked = false;
-		this._currentlySaving = true;
-		await this._transientSaveAwaiter.awaitAllTransientSaves();
+
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
 				this.evaluationEntity = await this._controller.update(entity);
 				this._currentlySaving = false;
-				if (!(this.evaluationEntity instanceof Error)) {
-					this._showToast(this.localize('updated'), false);
-					this._fireSaveEvaluationEvent();
-				} else {
-					this._showToast(this.localize('updatedError'), true);
-				}
+
+				_checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
 			}
 		);
 	}
 
+	async _updateIsPublishClicked() {
+		this._isPublishClicked = true;
+	}
+
 	async _publishEvaluation() {
-		window.dispatchEvent(new CustomEvent('d2l-flush', {
-			composed: true,
-			bubbles: true
-		}));
+		this._flushAndWait();
 		this._isPublishClicked = false;
-		this._currentlySaving = true;
-		await this._waitForAnnotations();
-		await this._transientSaveAwaiter.awaitAllTransientSaves();
+
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
 				this.evaluationEntity = await this._controller.publish(entity);
 				this._currentlySaving = false;
-				if (!(this.evaluationEntity instanceof Error)) {
-					this._showToast(this.localize('published'), false);
-					this._fireSaveEvaluationEvent();
-				} else {
-					this._showToast(this.localize('publishError'), true);
-				}
+
+				_checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
 				this.submissionInfo.evaluationState = publishedState;
 			}
 		);
 	}
 
 	async _retractEvaluation() {
+		this._flushAndWait();
+
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				this.evaluationEntity = await this._controller.retract(entity);
+				this._currentlySaving = false;
+
+				checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
+				this.submissionInfo.evaluationState = draftState;
+			}
+		);
+	}
+
+	async _flushAndWait() {
 		window.dispatchEvent(new CustomEvent('d2l-flush', {
 			composed: true,
 			bubbles: true
@@ -587,20 +574,16 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._currentlySaving = true;
 		await this._waitForAnnotations();
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.evaluationEntity = await this._controller.retract(entity);
-				this._currentlySaving = false;
-				if (!(this.evaluationEntity instanceof Error)) {
-					this._showToast(this.localize('retracted'), false);
-					this._fireSaveEvaluationEvent();
-				} else {
-					this._showToast(this.localize('retractError'), true);
-				}
-				this.submissionInfo.evaluationState = draftState;
-			}
-		);
+	}
+
+	_checkEvaluationEntityAndDisplayToast(newEvaluationEntity, errorTerm, successTerm) {
+		if (!newEvaluationEntity) {
+			this._showToast(this.localize(errorTerm), true);
+		} else {
+			this.evaluationEntity = newEvaluationEntity;
+			this._showToast(this.localize(successTerm), false);
+			this._fireSaveEvaluationEvent();
+		}
 	}
 
 	_closeDialogs() {

@@ -38,17 +38,10 @@ export class ConsistentEvaluationController {
 		return await window.D2L.Siren.EntityStore.fetch(this.evaluationHref, this.token, bypassCache);
 	}
 
-	_logError(message) {
-		if (this.loggingEndpoint) {
-			this.logger.logError(message);
-		}
-		throw new Error(message);
-	}
-
 	async fetchEvaluationEntity(bypassCache = false) {
 		const evaluationResource = await this._fetchEvaluationEntity(bypassCache);
 		if (!evaluationResource || !evaluationResource.entity) {
-			this._logError(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ENTITY);
+			throw new Error(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ENTITY);
 		}
 		const evaluationEntity = evaluationResource.entity;
 
@@ -57,7 +50,7 @@ export class ConsistentEvaluationController {
 
 	async fetchAttachmentsEntity(evaluationEntity) {
 		if (!evaluationEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ENTITY);
+			throw new Error(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ENTITY);
 		}
 		const attachmentsEntity = evaluationEntity.getSubEntityByRel('attachments');
 
@@ -67,7 +60,7 @@ export class ConsistentEvaluationController {
 	async fetchAttachments(evaluationEntity) {
 		const attachmentsEntity = await this.fetchAttachmentsEntity(evaluationEntity);
 		if (!attachmentsEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ATTACHMENTS_ENTITY);
+			throw new Error(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ATTACHMENTS_ENTITY);
 		}
 
 		const canAddFeedbackFile = attachmentsEntity.hasActionByName('add-file');
@@ -102,8 +95,10 @@ export class ConsistentEvaluationController {
 	async _performSirenAction(action, field = null) {
 		const response = await performSirenAction(this.token, action, field, true)
 			.catch((error) => {
-				console.log(error);
-				//this._logError(error.message);
+				const message = error.message;
+				const statusCode = error.json.properties.status;
+
+				//throw new Error(statusCode + message);
 				return undefined;
 			});
 
@@ -115,7 +110,7 @@ export class ConsistentEvaluationController {
 			const action = entity.getActionByName(actionName);
 			if (fieldName) {
 				if (!action.hasFieldByName(fieldName)) {
-					this._logError(ConsistentEvaluationControllerErrors.FIELD_IN_ACTION_NOT_FOUND(action.name, fieldName));
+					throw new Error(ConsistentEvaluationControllerErrors.FIELD_IN_ACTION_NOT_FOUND(action.name, fieldName));
 				} else {
 					const field = action.getFieldByName(fieldName);
 					field.value = fieldValue;
@@ -125,13 +120,13 @@ export class ConsistentEvaluationController {
 				return await this._performSirenAction(action);
 			}
 		} else {
-			this._logError(ConsistentEvaluationControllerErrors.ACTION_NOT_FOUND(actionName));
+			throw new Error(ConsistentEvaluationControllerErrors.ACTION_NOT_FOUND(actionName));
 		}
 	}
 
 	parseGrade(entity) {
 		if (!entity.properties) {
-			this._logError(ConsistentEvaluationControllerErrors.NO_PROPERTIES_FOR_ENTITY);
+			throw new Error(ConsistentEvaluationControllerErrors.NO_PROPERTIES_FOR_ENTITY);
 		}
 
 		return new Grade(
@@ -146,14 +141,14 @@ export class ConsistentEvaluationController {
 
 	async transientSaveFeedback(evaluationEntity, feedbackValue) {
 		if (!evaluationEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
 		}
 		if (typeof feedbackValue !== 'string') {
-			this._logError(ConsistentEvaluationControllerErrors.INVALID_FEEDBACK_TEXT);
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_FEEDBACK_TEXT);
 		}
 		const targetEntity = evaluationEntity.getSubEntityByRel('feedback');
 		if (!targetEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.FEEDBACK_ENTITY_NOT_FOUND);
+			throw new Error(ConsistentEvaluationControllerErrors.FEEDBACK_ENTITY_NOT_FOUND);
 		}
 
 		return await this._performAction(targetEntity, saveFeedbackActionName, saveFeedbackFieldName, feedbackValue);
@@ -161,14 +156,14 @@ export class ConsistentEvaluationController {
 
 	async transientAddFeedbackAttachment(evaluationEntity, files) {
 		if (!evaluationEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
 		}
 
 		let updatedEntity = evaluationEntity;
 		for (const attachment of files) {
 			const targetEntity = updatedEntity.getSubEntityByRel('attachments');
 			if (!targetEntity) {
-				this._logError(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ATTACHMENTS_ENTITY);
+				throw new Error(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ATTACHMENTS_ENTITY);
 			}
 
 			if (attachment.GetFileSystemType) {
@@ -199,12 +194,12 @@ export class ConsistentEvaluationController {
 
 	async transientRemoveFeedbackAttachment(evaluationEntity, fileIdentifier) {
 		if (!evaluationEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
 		}
 
 		const targetEntity = evaluationEntity.getSubEntityByRel('attachments');
 		if (!targetEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ATTACHMENTS_ENTITY);
+			throw new Error(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ATTACHMENTS_ENTITY);
 		}
 
 		if (targetEntity.entities) {
@@ -219,11 +214,11 @@ export class ConsistentEvaluationController {
 
 	async transientSaveGrade(evaluationEntity, gradeValue) {
 		if (!evaluationEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
 		}
 		const targetEntity = evaluationEntity.getSubEntityByRel('grade');
 		if (!targetEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.GRADE_ENTITY_NOT_FOUND);
+			throw new Error(ConsistentEvaluationControllerErrors.GRADE_ENTITY_NOT_FOUND);
 		}
 
 		return await this._performAction(targetEntity, saveGradeActionName, saveGradeFieldName, gradeValue);
@@ -248,11 +243,11 @@ export class ConsistentEvaluationController {
 
 	async transientSaveActiveScoringRubric(evaluationEntity, rubricId) {
 		if (!evaluationEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
 		}
 		const targetEntity = evaluationEntity.getSubEntityByRel('active-scoring-rubric');
 		if (!targetEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.ACTIVE_SCORING_RUBRIC_NOT_FOUND);
+			throw new Error(ConsistentEvaluationControllerErrors.ACTIVE_SCORING_RUBRIC_NOT_FOUND);
 		}
 
 		if (!rubricId) {
@@ -275,38 +270,31 @@ export class ConsistentEvaluationController {
 	}
 
 	async save(evaluationEntity) {
+		return this._tryPerformAction(evaluationEntity, saveActionName);
+	}
+
+	async update(evaluationEntity) {
+		return this._tryPerformAction(evaluationEntity, updateActionName);
+	}
+
+	async publish(evaluationEntity) {
+		return this._tryPerformAction(evaluationEntity, publishActionName);
+	}
+
+	async retract(evaluationEntity) {
+		return this._tryPerformAction(evaluationEntity, retractActionName);
+	}
+
+	async _tryPerformAction(evaluationEntity, actionName) {
 		if (!evaluationEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
 		}
 
-		const newEvaluationEntity = await this._performAction(evaluationEntity, saveActionName);
+		const newEvaluationEntity = await this._performAction(evaluationEntity, actionName);
 		if (newEvaluationEntity) {
 			return newEvaluationEntity;
 		}
 
 		return false;
-	}
-
-	async update(evaluationEntity) {
-		if (!evaluationEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
-		}
-
-		return await this._performAction(evaluationEntity, updateActionName);
-	}
-
-	async publish(evaluationEntity) {
-		if (!evaluationEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
-		}
-		return await this._performAction(evaluationEntity, publishActionName);
-	}
-
-	async retract(evaluationEntity) {
-		if (!evaluationEntity) {
-			this._logError(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
-		}
-
-		return await this._performAction(evaluationEntity, retractActionName);
 	}
 }
