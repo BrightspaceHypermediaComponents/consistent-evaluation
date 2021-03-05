@@ -1,0 +1,30 @@
+
+name: PR Reminder Checklist
+
+on:
+ pull_request:
+    types: [opened]
+
+jobs:
+  fyi:
+    name: Posts a PR Reminder checklist
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: Brightspace/third-party-actions@actions/github-script
+        # Do this at the step level so that the job shows as passing in the PR
+        # UI (which is less distracting than cancelled)
+        with:
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `
+            ## Consistent-evaluation PR Checklist:
+
+            - [ ] I have made the necessary changes to the Demo pages
+            - [ ] I have updated the tests to reflect the changes in this PR (Unit & Visual-diff)
+            - [ ] I have included langterms where applicable
+              `
+            })
