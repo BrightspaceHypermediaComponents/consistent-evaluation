@@ -473,9 +473,9 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		const oppositeReadState = read ? this.localize('markUnread') : this.localize('markRead');
 		const oppositeFlagState = flagged ? this.localize('unflag') : this.localize('flag');
 		return html`<div slot="actions">
-			<d2l-dropdown-more text="${this.localize('moreOptions')}">
+			<d2l-dropdown-more text="${this.localize('fileOptions')}">
 			<d2l-dropdown-menu id="dropdown" boundary="{&quot;right&quot;:10}">
-				<d2l-menu label="${this.localize('moreOptions')}">
+				<d2l-menu label="${this.localize('fileOptions')}">
 					${this.submissionType === textSubmission ? html`
 						<d2l-menu-item-link text="${this.localize('viewFullSubmission')}"
 							href="javascript:void(0);"

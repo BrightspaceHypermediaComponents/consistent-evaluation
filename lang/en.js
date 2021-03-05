@@ -43,6 +43,8 @@ export default {
 	"markRead": "Mark as Read",
 	"markUnread": "Mark as Unread",
 	"moreOptions": "More Options",
+	"fileOptions": "File Options",
+	"evaluationOptions": "Evaluation Options",
 	"nextStudent": "Next Student",
 	"noActiveGradingRubric": "No grading rubric",
 	"noEvidence": "There is no evidence uploaded for this submission type",

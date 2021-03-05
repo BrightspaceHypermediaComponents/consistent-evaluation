@@ -221,7 +221,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 	_renderOverflowMenu() {
 		return html`
 			<d2l-dropdown-menu>
-				<d2l-menu @d2l-menu-item-select=${this._onOverflowOptionSelect} label=${this.localize('moreOptions')}>
+				<d2l-menu @d2l-menu-item-select=${this._onOverflowOptionSelect} label=${this.localize('evaluationOptions')}>
 					<d2l-menu-item id=${this._editActivityId} text=${this.localize('editActivity')} ?hidden=${!this.editActivityPath}></d2l-menu-item>
 					<d2l-menu-item id=${this._specialAccessId} text=${this.localize('specialAccessDates')} ?hidden=${!this.specialAccessHref}></d2l-menu-item>
 				</d2l-menu>
@@ -232,7 +232,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 	_renderOverflowButtonIcon() {
 		return html`
 			<div class="d2l-consistent-evaluation-right-panel-clearfix">
-				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu" text=${this.localize('moreOptions')}>
+				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu" text=${this.localize('evaluationOptions')}>
 					${this._renderOverflowMenu()}
 				</d2l-dropdown-more>
 			</div>
@@ -241,7 +241,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 
 	_renderOverflowButtonMobile() {
 		return html`
-			<d2l-dropdown-button-subtle class="d2l-consistent-evaluation-right-panel-overflow-menu-mobile" text=${this.localize('moreOptions')}>
+			<d2l-dropdown-button-subtle class="d2l-consistent-evaluation-right-panel-overflow-menu-mobile" text=${this.localize('evaluationOptions')}>
 				${this._renderOverflowMenu()}
 			</d2l-dropdown-button-subtle>
 		`;

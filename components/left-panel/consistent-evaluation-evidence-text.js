@@ -40,7 +40,7 @@ export class ConsistentEvaluationEvidenceText extends LocalizeConsistentEvaluati
 	render() {
 		return html`
 			<d2l-consistent-evaluation-evidence-top-bar>
-				<d2l-dropdown-more class="d2l-consistent-eval-text-evidence-options" text="${this.localize('moreOptions')}">
+				<d2l-dropdown-more class="d2l-consistent-eval-text-evidence-options" text="${this.localize('fileOptions')}">
 					<d2l-dropdown-menu id="dropdown" boundary="{&quot;right&quot;:10}">
 						<d2l-menu>
 							<d2l-menu-item-link text="${this.localize('download')}" href="${this.downloadUrl}"></d2l-menu-item-link>
