@@ -322,7 +322,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			@mouseleave=${this._toggleOffProfileCard}>
 
 			${this._renderProfileImage()}
-			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name">${ifDefined(this._displayName)}</h2>
+			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name" title="${ifDefined(this._displayName)}">${ifDefined(this._displayName)}</h2>
 			${this._getExemptText()}
 			${this._renderProfileCard()}
 			${this._renderGroupOptions()}
