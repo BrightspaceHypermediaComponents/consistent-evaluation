@@ -1,6 +1,7 @@
 import './consistent-evaluation-page.js';
 import { attachmentClassName, attachmentListRel } from './controllers/constants';
 import { css, html, LitElement } from 'lit-element';
+import { Awaiter } from './awaiter.js';
 import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { getSubmissions } from './helpers/submissionsAndFilesHelpers.js';
@@ -88,6 +89,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._editActivityPath = undefined;
 		this.returnHref = undefined;
 		this.returnHrefText = undefined;
+		this._mutex = new Awaiter();
 		this._loading = true;
 		this._loadingComponents = {
 			main : true,
@@ -162,22 +164,30 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		return false;
 	}
 
-	_onNextStudentClick() {
-		const nextStudentHref = this._childHrefs?.nextHref;
-		if (nextStudentHref) {
-			this._updateCurrentUrl(nextStudentHref);
-			this.href = nextStudentHref;
-			this._setLoading();
-		}
+	async _onNextStudentClick() {
+		await this._mutex.dispatch(
+			async() => {
+				const nextStudentHref = this._childHrefs?.nextHref;
+				if (nextStudentHref) {
+					this._updateCurrentUrl(nextStudentHref);
+					this.href = nextStudentHref;
+					this._setLoading();
+				}
+			}
+		);
 	}
 
-	_onPreviousStudentClick() {
-		const previousStudentHref = this._childHrefs?.previousHref;
-		if (previousStudentHref) {
-			this._updateCurrentUrl(previousStudentHref);
-			this.href = previousStudentHref;
-			this._setLoading();
-		}
+	async _onPreviousStudentClick() {
+		await this._mutex.dispatch(
+			async() => {
+				const previousStudentHref = this._childHrefs?.previousHref;
+				if (previousStudentHref) {
+					this._updateCurrentUrl(previousStudentHref);
+					this.href = previousStudentHref;
+					this._setLoading();
+				}
+			}
+		);
 	}
 
 	_updateCurrentUrl(targetHref) {
