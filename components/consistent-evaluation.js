@@ -1,7 +1,7 @@
 import './consistent-evaluation-page.js';
 import { attachmentClassName, attachmentListRel } from './controllers/constants';
-import { Awaiter } from './awaiter.js';
 import { css, html, LitElement } from 'lit-element';
+import { Awaiter } from './awaiter.js';
 import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { getSubmissions } from './helpers/submissionsAndFilesHelpers.js';
