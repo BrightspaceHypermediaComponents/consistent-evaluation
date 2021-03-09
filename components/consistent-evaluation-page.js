@@ -138,10 +138,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'rubric-popout-location',
 				type: String
 			},
-			loggingEndpoint: {
-				attribute: 'logging-endpoint',
-				type: String
-			},
 			downloadAllSubmissionLink: {
 				attribute: 'download-all-submissions-location',
 				type: String
@@ -159,6 +155,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			},
 			_toastMessage: {
 				type: String
+			},
+			_toastType: {
+				type: String
+			},
+			_toastNoAutoClose: {
+				type: Boolean
 			},
 			_feedbackText: {
 				attribute: false
@@ -241,6 +243,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		};
 		this._displayToast = false;
 		this._toastMessage = '';
+		this._toastType = 'default';
+		this._toastNoAutoClose = false;
 		this._mutex = new Awaiter();
 		this.unsavedChangesHandler = this._confirmUnsavedChangesBeforeUnload.bind(this);
 		this._transientSaveAwaiter = new TransientSaveAwaiter();
@@ -344,7 +348,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _initializeController() {
-		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token, this.loggingEndpoint);
+		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
 		const bypassCache = true;
 		this.evaluationEntity = await this._controller.fetchEvaluationEntity(bypassCache);
 		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
@@ -491,24 +495,15 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _saveEvaluation() {
-		window.dispatchEvent(new CustomEvent('d2l-flush', {
-			composed: true,
-			bubbles: true
-		}));
-		this._currentlySaving = true;
-		await this._waitForAnnotations();
-		await this._transientSaveAwaiter.awaitAllTransientSaves();
+		this._flushAndWait();
+
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.evaluationEntity = await this._controller.save(entity);
+				const newEvaluationEntity = await this._controller.save(entity);
 				this._currentlySaving = false;
-				if (!(this.evaluationEntity instanceof Error)) {
-					this._showToast(this.localize('saved'));
-					this._fireSaveEvaluationEvent();
-				} else {
-					this._showToast(this.localize('saveError'));
-				}
+
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
 			}
 		);
 	}
@@ -517,59 +512,57 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._isUpdateClicked = true;
 	}
 
-	async _updateIsPublishClicked() {
-		this._isPublishClicked = true;
-	}
-
 	async _updateEvaluation() {
-		window.dispatchEvent(new CustomEvent('d2l-flush', {
-			composed: true,
-			bubbles: true
-		}));
+		this._flushAndWait();
 		this._isUpdateClicked = false;
-		this._currentlySaving = true;
-		await this._transientSaveAwaiter.awaitAllTransientSaves();
+
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.evaluationEntity = await this._controller.update(entity);
+				const newEvaluationEntity = await this._controller.update(entity);
 				this._currentlySaving = false;
-				if (!(this.evaluationEntity instanceof Error)) {
-					this._showToast(this.localize('updated'));
-					this._fireSaveEvaluationEvent();
-				} else {
-					this._showToast(this.localize('updatedError'));
-				}
+
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
 			}
 		);
 	}
 
+	async _updateIsPublishClicked() {
+		this._isPublishClicked = true;
+	}
+
 	async _publishEvaluation() {
-		window.dispatchEvent(new CustomEvent('d2l-flush', {
-			composed: true,
-			bubbles: true
-		}));
+		this._flushAndWait();
 		this._isPublishClicked = false;
-		this._currentlySaving = true;
-		await this._waitForAnnotations();
-		await this._transientSaveAwaiter.awaitAllTransientSaves();
+
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.evaluationEntity = await this._controller.publish(entity);
+				const newEvaluationEntity = await this._controller.publish(entity);
 				this._currentlySaving = false;
-				if (!(this.evaluationEntity instanceof Error)) {
-					this._showToast(this.localize('published'));
-					this._fireSaveEvaluationEvent();
-				} else {
-					this._showToast(this.localize('publishError'));
-				}
+
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
 				this.submissionInfo.evaluationState = publishedState;
 			}
 		);
 	}
 
 	async _retractEvaluation() {
+		this._flushAndWait();
+
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				const newEvaluationEntity = await this._controller.retract(entity);
+				this._currentlySaving = false;
+
+				this.checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
+				this.submissionInfo.evaluationState = draftState;
+			}
+		);
+	}
+
+	async _flushAndWait() {
 		window.dispatchEvent(new CustomEvent('d2l-flush', {
 			composed: true,
 			bubbles: true
@@ -577,20 +570,16 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._currentlySaving = true;
 		await this._waitForAnnotations();
 		await this._transientSaveAwaiter.awaitAllTransientSaves();
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.evaluationEntity = await this._controller.retract(entity);
-				this._currentlySaving = false;
-				if (!(this.evaluationEntity instanceof Error)) {
-					this._showToast(this.localize('retracted'));
-					this._fireSaveEvaluationEvent();
-				} else {
-					this._showToast(this.localize('retractError'));
-				}
-				this.submissionInfo.evaluationState = draftState;
-			}
-		);
+	}
+
+	_checkEvaluationEntityAndDisplayToast(newEvaluationEntity, errorTerm, successTerm) {
+		if (!newEvaluationEntity) {
+			this._showToast(this.localize(errorTerm), true);
+		} else {
+			this.evaluationEntity = newEvaluationEntity;
+			this._fireSaveEvaluationEvent();
+			this._showToast(this.localize(successTerm), false);
+		}
 	}
 
 	_closeDialogs() {
@@ -599,8 +588,17 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._navigationTarget = null;
 	}
 
-	_showToast(message) {
+	_showToast(message, isError) {
 		this._toastMessage = message;
+
+		if (isError) {
+			this._toastType = 'critical';
+			this._toastNoAutoClose = true;
+		} else {
+			this._toastType = 'default';
+			this._toastNoAutoClose = false;
+		}
+
 		this._displayToast = true;
 	}
 
@@ -657,6 +655,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		return html`<d2l-alert-toast
 			?open=${this._displayToast}
 			button-text=""
+			?no-auto-close=${this._toastNoAutoClose}
+			type=${this._toastType}
 			@d2l-alert-toast-close=${this._onToastClose}>${this._toastMessage}</d2l-alert-toast>`;
 	}
 
@@ -834,7 +834,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	_handleDownloadAllFailure() {
-		this._showToast(this.localize('downloadAllFailure'));
+		this._showToast(this.localize('downloadAllFailure'), true);
 	}
 
 	render() {

@@ -29,10 +29,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				attribute: 'data-telemetry-endpoint',
 				type: String
 			},
-			loggingEndpoint: {
-				attribute: 'logging-endpoint',
-				type: String
-			},
 			useNewHtmlEditor: {
 				attribute: 'use-new-html-editor',
 				type: Boolean
@@ -253,7 +249,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				return-href=${ifDefined(this.returnHref)}
 				return-href-text=${ifDefined(this.returnHrefText)}
 				data-telemetry-endpoint=${ifDefined(this.dataTelemetryEndpoint)}
-				logging-endpoint=${ifDefined(this.loggingEndpoint)}
 				rubric-popout-location=${ifDefined(this._childHrefs && this._childHrefs.rubricPopoutLocation)}
 				download-all-submissions-location=${ifDefined(this._childHrefs && this._childHrefs.downloadAllSubmissionLink)}
 				edit-activity-path=${ifDefined(this._editActivityPath)}
