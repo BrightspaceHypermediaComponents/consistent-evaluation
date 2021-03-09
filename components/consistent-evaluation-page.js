@@ -558,7 +558,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				const newEvaluationEntity = await this._controller.retract(entity);
 				this._currentlySaving = false;
 
-				this.checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
 				this.submissionInfo.evaluationState = draftState;
 			}
 		);
