@@ -510,6 +510,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 	async _updateIsUpdateClicked() {
 		this._isUpdateClicked = true;
+		this._currentlySaving = true;
 	}
 
 	async _updateEvaluation() {
@@ -529,6 +530,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 	async _updateIsPublishClicked() {
 		this._isPublishClicked = true;
+		this._currentlySaving = true;
 	}
 
 	async _publishEvaluation() {
@@ -556,7 +558,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				const newEvaluationEntity = await this._controller.retract(entity);
 				this._currentlySaving = false;
 
-				this.checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
 				this.submissionInfo.evaluationState = draftState;
 			}
 		);
@@ -586,6 +588,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._isUpdateClicked = false;
 		this._isPublishClicked = false;
 		this._navigationTarget = null;
+		this._currentlySaving = false;
 	}
 
 	_showToast(message, isError) {
