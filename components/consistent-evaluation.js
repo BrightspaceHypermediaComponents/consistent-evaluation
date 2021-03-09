@@ -5,8 +5,9 @@ import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js'
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { getSubmissions } from './helpers/submissionsAndFilesHelpers.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
+import { LocalizeConsistentEvaluation } from '../lang/localize-consistent-evaluation.js';
 
-export class ConsistentEvaluation extends LitElement {
+export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElement) {
 
 	static get properties() {
 		return {
@@ -211,8 +212,17 @@ export class ConsistentEvaluation extends LitElement {
 			}
 		}
 		this._loading = false;
+		this._setTitle();
 		if (this._telemetry && this._submissionInfo.submissionList) {
 			this._telemetry.logLoadEvent('consistentEvalMain', this._submissionInfo.submissionList.length);
+		}
+	}
+
+	_setTitle() {
+		if (this._userName && this._assignmentName) {
+			const title = document.createElement('title');
+			title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._assignmentName });
+			document.head.insertBefore(title, document.head.firstChild);
 		}
 	}
 

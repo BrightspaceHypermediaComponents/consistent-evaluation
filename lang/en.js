@@ -11,6 +11,7 @@ export default {
 	"addQuicklink": "Attach Link to Existing Activity",
 	"anonymousMarkingPublishButtonSummary": "Use the \"Publish All\" button found in Assignments or Quick Eval to publish submissions when using anonymous marking.",
 	"attachedGradeItem": "{gradeItemName} attached",
+	"assignmentPageTitle": "Assignment Evaluation - {userName} - {activityName}",
 	"backToUserSubmissions": "Back to User Submissions",
 	"cancelBtn": "Cancel",
 	"closeBtn": "Close",
