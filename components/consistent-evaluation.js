@@ -163,15 +163,21 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 	}
 
 	_onNextStudentClick() {
-		this._updateCurrentUrl(this._childHrefs?.nextHref);
-		this.href = this._childHrefs?.nextHref;
-		this._setLoading();
+		const nextStudentHref = this._childHrefs?.nextHref;
+		if (nextStudentHref) {
+			this._updateCurrentUrl(nextStudentHref);
+			this.href = nextStudentHref;
+			this._setLoading();
+		}
 	}
 
 	_onPreviousStudentClick() {
-		this._updateCurrentUrl(this._childHrefs?.previousHref);
-		this.href = this._childHrefs?.previousHref;
-		this._setLoading();
+		const previousStudentHref = this._childHrefs?.previousHref;
+		if (previousStudentHref) {
+			this._updateCurrentUrl(previousStudentHref);
+			this.href = previousStudentHref;
+			this._setLoading();
+		}
 	}
 
 	_updateCurrentUrl(targetHref) {
