@@ -495,7 +495,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _saveEvaluation() {
-		this._flushAndWait();
+		await this._flushAndWait();
 
 		await this._mutex.dispatch(
 			async() => {
@@ -514,7 +514,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _updateEvaluation() {
-		this._flushAndWait();
+		await this._flushAndWait();
 		this._isUpdateClicked = false;
 
 		await this._mutex.dispatch(
@@ -534,7 +534,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _publishEvaluation() {
-		this._flushAndWait();
+		await this._flushAndWait();
 		this._isPublishClicked = false;
 
 		await this._mutex.dispatch(
@@ -550,7 +550,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _retractEvaluation() {
-		this._flushAndWait();
+		await this._flushAndWait();
 
 		await this._mutex.dispatch(
 			async() => {
