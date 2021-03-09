@@ -138,10 +138,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'rubric-popout-location',
 				type: String
 			},
-			loggingEndpoint: {
-				attribute: 'logging-endpoint',
-				type: String
-			},
 			downloadAllSubmissionLink: {
 				attribute: 'download-all-submissions-location',
 				type: String
@@ -352,7 +348,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	async _initializeController() {
-		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token, this.loggingEndpoint);
+		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
 		const bypassCache = true;
 		this.evaluationEntity = await this._controller.fetchEvaluationEntity(bypassCache);
 		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
