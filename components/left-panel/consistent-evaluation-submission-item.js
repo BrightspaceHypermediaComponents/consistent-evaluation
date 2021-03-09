@@ -9,6 +9,7 @@ import '@brightspace-ui/core/components/menu/menu.js';
 import '@brightspace-ui/core/components/menu/menu-item.js';
 import '@brightspace-ui/core/components/menu/menu-item-link.js';
 import '@brightspace-ui/core/components/more-less/more-less.js';
+import '@brightspace-ui/core/components/offscreen/offscreen.js';
 import '@brightspace-ui/core/components/status-indicator/status-indicator.js';
 import './consistent-evaluation-tii-grade-mark.js';
 import './consistent-evaluation-tii-similarity.js';
@@ -335,12 +336,12 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		<d2l-list-item-content>
 			<div class="d2l-submission-attachment-icon-container">
 				<h3 class="d2l-heading-3">${this.localize('textSubmission')} ${this.displayNumber}</h3>
-				${this._renderReadStatus(read)}
+				${this._renderReadStatus(read, file.properties.name)}
 			</div>
 			<div slot="supporting-info">
 				${this._renderLateStatus()}
 				${this._renderEvaluationState()}
-				${this._renderFlaggedStatus(flagged)}
+				${this._renderFlaggedStatus(flagged, file.properties.name)}
 				<span class="d2l-body-small">${this._formatDateTime()}</span>
 			</div>
 		</d2l-list-item-content>
@@ -348,9 +349,12 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		</d2l-list-item>`;
 	}
 
-	_renderReadStatus(read) {
+	_renderReadStatus(read, fileName) {
+		let readIndicator = html``;
+		let langTermText = 'fileMarkedAsRead';
 		if (!read) {
-			return html`
+			langTermText = 'fileMarkedAsUnread';
+			readIndicator = html`
 			<d2l-icon
 				icon="tier1:dot"
 				class="d2l-attachment-read-status"
@@ -358,6 +362,8 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 				aria-label="Unread">
 			</d2l-icon>`;
 		}
+
+		return html`${readIndicator}<d2l-offscreen aria-live="assertive">${this.localize(langTermText, 'fileName', fileName)}</d2l-offscreen>`;
 	}
 
 	_renderLateStatus() {
@@ -380,10 +386,15 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		}
 	}
 
-	_renderFlaggedStatus(flag) {
+	_renderFlaggedStatus(flag, fileName) {
+		let flagIndicator = html``;
+		let langTermText = 'unflaggedFile';
 		if (flag) {
-			return html`<d2l-status-indicator state="alert" text="${this.localize('flagged')}"></d2l-status-indicator>`;
+			langTermText = 'flaggedFile';
+			flagIndicator =  html`<d2l-status-indicator state="alert" text="${this.localize('flagged')}"></d2l-status-indicator>`;
 		}
+
+		return html`${flagIndicator} <d2l-offscreen aria-live="assertive">${this.localize(langTermText, 'fileName', fileName)}</d2l-offscreen>`;
 	}
 
 	_renderTii(id, name, file) {
@@ -421,6 +432,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 	_renderAttachments() {
 		return html`${this.attachments.map((file) => {
 			const {id, name, size, extension, flagged, read, href} = file.properties;
+			const fileName = this._getFileTitle(name);
 
 			return html`
 			<d2l-list-item>
@@ -428,7 +440,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 					<d2l-icon class="d2l-submission-attachment-icon-container-inner"
 						icon="tier2:${getFileIconTypeFromExtension(extension)}"
 						aria-label="${getFileIconTypeFromExtension(extension)}"></d2l-icon>
-					${this._renderReadStatus(read)}
+					${this._renderReadStatus(read, fileName)}
 				</div>
 				<div class="d2l-submission-attachment-list-item-flexbox">
 					<d2l-list-item-content
@@ -439,9 +451,9 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 						@click="${
 	// eslint-disable-next-line lit/no-template-arrow
 	() => this._dispatchFileSelectedEvent(id)}">
-						<div class="truncate" aria-label="heading">${this._getFileTitle(name)}</div>
+						<div class="truncate" aria-label="heading">${fileName}</div>
 						<div slot="supporting-info">
-							${this._renderFlaggedStatus(flagged)}
+							${this._renderFlaggedStatus(flagged, fileName)}
 							${extension.toUpperCase()}
 							<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>
 							${this._getReadableFileSizeString(size)}
