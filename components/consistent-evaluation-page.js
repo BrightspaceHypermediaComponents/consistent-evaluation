@@ -252,7 +252,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._isPublishClicked = false;
 		this._shouldWaitForAnnotations = false;
 		this._currentlySaving = false;
-		this._hasClickedButton = false;
 	}
 
 	get evaluationEntity() {
