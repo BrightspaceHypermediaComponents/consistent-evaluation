@@ -5,13 +5,13 @@ import './consistent-evaluation-submissions-page.js';
 import './consistent-evaluation-outcomes-overall-achievement.js';
 import { bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
-import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWithNoEvidence, textSubmission } from '../controllers/constants';
-import { findFile, getSubmissions } from '../helpers/submissionsAndFilesHelpers.js';
+import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWithNoEvidence, textSubmission } from '../../controllers/constants';
+import { findFile, getSubmissions } from '../../helpers/submissionsAndFilesHelpers.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
-import { toggleIsReadActionName } from '../controllers/constants.js';
+import { toggleIsReadActionName } from '../../controllers/constants.js';
 
 function getSubmissionTypeName(type) {
 	switch (type) {
