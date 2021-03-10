@@ -6,7 +6,9 @@ import './consistent-evaluation-coa-eval-override.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-context-menu.js';
 import { css, html, LitElement } from 'lit-element';
 import { getRubricAssessmentScore, mapRubricScoreToGrade} from '../helpers/rubricGradeSyncHelpers.js';
+import { appId } from '../controllers/constants.js';
 import { convertToken } from '../helpers/converterHelpers.js';
+import { createClient } from '@brightspace-ui/logging';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
@@ -178,6 +180,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		this._specialAccessId = getUniqueId();
 		this._editActivityId = getUniqueId();
 		this.rubricsOpen = 0;
+		this.logger = createClient(appId);
 	}
 
 	_renderRubric() {
@@ -266,7 +269,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		const specialAccess = this.specialAccessHref;
 
 		if (!specialAccess) {
-			console.error('Consistent-Eval: Expected special access item dialog URL, but none found');
+			this.logger.log('Consistent-Eval: Expected special access item dialog URL, but none found');
 			return;
 		}
 

@@ -5,6 +5,8 @@ import '@brightspace-ui/core/components/dropdown/dropdown-context-menu.js';
 
 import { bodyCompactStyles, bodyStandardStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
+import { appId } from '../controllers/constants.js';
+import { createClient } from '@brightspace-ui/logging';
 import { EntityMixinLit } from 'siren-sdk/src/mixin/entity-mixin-lit.js';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
@@ -112,6 +114,8 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		this.messagePopout = undefined;
 		this.emailPopout = undefined;
 		this._setEntityType(UserEntity);
+		this.logger = createClient(appId);
+
 	}
 
 	firstUpdated() {
@@ -149,7 +153,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		const emailPath = this.groupInfo ? this.groupInfo.emailPath : undefined;
 
 		if (!emailPath) {
-			console.error('Consistent-Eval: Expected emailPath for groups, but none found');
+			this.logger.log('Consistent-Eval: Expected emailPath for groups, but none found');
 			return;
 		}
 
@@ -170,7 +174,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		const pagerPath = this.groupInfo ? this.groupInfo.pagerPath : undefined;
 
 		if (!pagerPath) {
-			console.error('Consistent-Eval: Expected pagerPath for groups, but none found');
+			this.logger.log('Consistent-Eval: Expected pagerPath for groups, but none found');
 			return;
 		}
 
@@ -185,7 +189,7 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		const viewMembersPath = this.groupInfo ? this.groupInfo.viewMembersPath : undefined;
 
 		if (!viewMembersPath) {
-			console.error('Consistent-Eval: Expected view-members item dialog URL, but none found');
+			this.logger.log('Consistent-Eval: Expected view-members item dialog URL, but none found');
 			return;
 		}
 

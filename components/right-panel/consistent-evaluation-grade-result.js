@@ -2,6 +2,8 @@ import '@brightspace-ui-labs/grade-result/d2l-grade-result.js';
 import './consistent-evaluation-right-panel-block';
 import { css, html, LitElement } from 'lit-element';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
+import { appId } from '../controllers/constants.js';
+import { createClient } from '@brightspace-ui/logging';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
@@ -88,6 +90,7 @@ export class ConsistentEvaluationGradeResult extends SkeletonMixin(LocalizeConsi
 		this._gradeButtonTooltip = undefined;
 		this._reportsButtonTooltip = undefined;
 		this._isGradeAutoCompleted = false;
+		this.logger = createClient(appId);
 	}
 
 	connectedCallback() {
@@ -200,7 +203,7 @@ export class ConsistentEvaluationGradeResult extends SkeletonMixin(LocalizeConsi
 		const dialogUrl = this.gradeItemInfo && this.gradeItemInfo.evaluationUrl;
 
 		if (!dialogUrl) {
-			console.error('Consistent-Eval: Expected grade item evalutaion dialog URL, but none found');
+			this.logger.log('Consistent-Eval: Expected grade item evalutaion dialog URL, but none found');
 			return;
 		}
 
@@ -241,7 +244,7 @@ export class ConsistentEvaluationGradeResult extends SkeletonMixin(LocalizeConsi
 		const dialogUrl = this.gradeItemInfo && this.gradeItemInfo.statsUrl;
 
 		if (!dialogUrl) {
-			console.error('Consistent-Eval: Expected grade item statistics dialog URL, but none found');
+			this.logger.log('Consistent-Eval: Expected grade item statistics dialog URL, but none found');
 			return;
 		}
 
