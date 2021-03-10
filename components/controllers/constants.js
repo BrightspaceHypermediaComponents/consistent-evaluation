@@ -63,3 +63,4 @@ export const tiiReportNotSubmitted = 'NotSubmitted';
 export const tiiSubmitActionName = 'TurnitinSubmit';
 export const tiiRefreshAction = 'TurnitinRefresh';
 export const pdfExtension = 'pdf';
+export const appId = 'consistent-evaluation';
