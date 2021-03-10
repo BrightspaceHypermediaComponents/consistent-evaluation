@@ -10,7 +10,7 @@ import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/templates/primary-secondary/primary-secondary.js';
 import '@brightspace-ui/core/components/dialog/dialog-confirm.js';
 import '@brightspace-ui/core/components/button/button.js';
-import { attachmentsRel, draftState, publishActionName, publishedState, retractActionName, saveActionName, toggleIsReadActionName, toggleFlagActionName, updateActionName } from './controllers/constants.js';
+import { attachmentsRel, draftState, publishActionName, publishedState, retractActionName, saveActionName, toggleIsReadActionName, updateActionName } from './controllers/constants.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { Awaiter } from './awaiter.js';
@@ -841,19 +841,18 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	_handleSubmissionItemToggle(e) {
-		console.log(e.detail.state);
 		let langTermText;
-		if(e.detail.action === toggleIsReadActionName) {
-			if(e.detail.state === "true") {
-				langTermText = "fileMarkedAsUnread";
-			} else{
-				langTermText = "fileMarkedAsRead";
+		if (e.detail.action === toggleIsReadActionName) {
+			if (e.detail.state === 'true') {
+				langTermText = 'fileMarkedAsUnread';
+			} else {
+				langTermText = 'fileMarkedAsRead';
 			}
 		} else {
-			if(e.detail.state === "true" ) {
-				langTermText = "unflaggedFile";
+			if (e.detail.state === 'true') {
+				langTermText = 'unflaggedFile';
 			} else {
-				langTermText = "flaggedFile";
+				langTermText = 'flaggedFile';
 			}
 		}
 
