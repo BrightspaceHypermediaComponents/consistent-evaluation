@@ -10,7 +10,7 @@ import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/templates/primary-secondary/primary-secondary.js';
 import '@brightspace-ui/core/components/dialog/dialog-confirm.js';
 import '@brightspace-ui/core/components/button/button.js';
-import { attachmentsRel, draftState, publishActionName, publishedState, retractActionName, saveActionName, updateActionName } from './controllers/constants.js';
+import { attachmentsRel, draftState, publishActionName, publishedState, retractActionName, saveActionName, toggleIsReadActionName, updateActionName } from './controllers/constants.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { Awaiter } from './awaiter.js';
@@ -845,6 +845,25 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._showToast(this.localize('downloadAllFailure'), true);
 	}
 
+	_handleSubmissionItemToggle(e) {
+		let langTermText;
+		if (e.detail.action === toggleIsReadActionName) {
+			if (e.detail.state === 'true') {
+				langTermText = 'fileMarkedAsUnread';
+			} else {
+				langTermText = 'fileMarkedAsRead';
+			}
+		} else {
+			if (e.detail.state === 'true') {
+				langTermText = 'unflaggedFile';
+			} else {
+				langTermText = 'flaggedFile';
+			}
+		}
+
+		this._showToast(this.localize(langTermText, 'fileName', e.detail.name), false);
+	}
+
 	render() {
 		const canAddFeedbackFile = this._attachmentsInfo.canAddFeedbackFile;
 		const canRecordFeedbackVideo = this._attachmentsInfo.canRecordFeedbackVideo;
@@ -886,6 +905,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						@d2l-consistent-evaluation-use-tii-grade=${this._transientSaveGrade}
 						@d2l-consistent-evaluation-refresh-grade-item=${this._refreshEvaluationEntity}
 						@d2l-consistent-evaluation-download-all-failed=${this._handleDownloadAllFailure}
+						@d2l-consistent-evaluation-evidence-toggle-action=${this._handleSubmissionItemToggle}
 						data-telemetry-endpoint=${this.dataTelemetryEndpoint}
 					></d2l-consistent-evaluation-left-panel>
 				</div>
