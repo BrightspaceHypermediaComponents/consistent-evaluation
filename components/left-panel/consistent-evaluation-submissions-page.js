@@ -295,9 +295,9 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 
 	async _downloadAction(e) {
-		const fileId = e.detail.fileId;
+		const attachmentId = e.detail.attachmentId;
 
-		const attachmentEntity = this._getAttachmentEntity(fileId);
+		const attachmentEntity = this._getAttachmentEntity(attachmentId);
 		if (!attachmentEntity) {
 			throw new Error('Invalid entity provided for attachment');
 		}
@@ -449,7 +449,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 							?late=${latenessTimespan !== undefined}
 							?hide-use-grade=${this.hideUseGrade}
 							@d2l-consistent-evaluation-evidence-toggle-action=${this._toggleAction}
-							@d2l-consistent-evaluation-evidence-file-download=${this._downloadAction}
+							@d2l-consistent-evaluation-evidence-attachment-download=${this._downloadAction}
 							@d2l-consistent-evaluation-evidence-refresh-grade-mark=${this._refreshGradeMarkTiiAction}
 							@d2l-consistent-evaluation-evidence-tii-submit-file-action=${this._submitFileTiiAction}
 						></d2l-consistent-evaluation-submission-item>`);

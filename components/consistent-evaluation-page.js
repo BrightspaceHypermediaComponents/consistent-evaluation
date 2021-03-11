@@ -695,6 +695,11 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._changeFile(newFileId);
 	}
 
+	async _selectLinkAttachment(e) {
+		const linkAttachmentUrl = e.detail.url;
+		window.open(linkAttachmentUrl, '_blank');
+	}
+
 	_changeFile(newFileId) {
 		this.currentFileId = newFileId;
 	}
@@ -851,6 +856,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				resizable
 				@d2l-consistent-evaluation-evidence-back-to-user-submissions=${this._setSubmissionsView}
 				@d2l-consistent-evaluation-file-selected=${this._selectFile}
+				@d2l-consistent-evaluation-link-attachment-selected=${this._selectLinkAttachment}
 			>
 				<div slot="header">
 					<d2l-consistent-evaluation-nav-bar
