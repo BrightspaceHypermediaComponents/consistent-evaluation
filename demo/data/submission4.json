@@ -1,0 +1,182 @@
+{
+  "class": [
+    "assignment-submission"
+  ],
+  "properties": {
+    "submissionNumber": 4,
+    "evaluationStatus": "Evaluated"
+  },
+  "entities": [
+    {
+      "class": [
+        "attachment-list"
+      ],
+      "rel": [
+        "https://assignments.api.brightspace.com/rels/attachment-list"
+      ],
+      "entities": [
+        {
+          "class": [
+            "attachment"
+          ],
+          "rel": [
+            "https://assignments.api.brightspace.com/rels/attachment"
+          ],
+          "properties": {
+            "id": "4",
+            "name": "test video note link attachment",
+            "size": 0,
+            "extension": "url",
+            "flagged": false,
+            "read": false,
+            "href": "type=video",
+            "fileViewer": "type=video"
+          },
+          "actions": [
+            {
+              "href": "",
+              "name": "ToggleRead",
+              "method": "POST",
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "isRead",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "href": "",
+              "name": "ToggleFlagged",
+              "method": "POST",
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "isFlagged",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "class": [
+            "attachment"
+          ],
+          "rel": [
+            "https://assignments.api.brightspace.com/rels/attachment"
+          ],
+          "properties": {
+            "id": "5",
+            "name": "test audio note link attachment",
+            "size": 0,
+            "extension": "url",
+            "flagged": false,
+            "read": false,
+            "href": "type=audio",
+            "fileViewer": "type=audio"
+          },
+          "actions": [
+            {
+              "href": "",
+              "name": "ToggleRead",
+              "method": "POST",
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "isRead",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "href": "",
+              "name": "ToggleFlagged",
+              "method": "POST",
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "isFlagged",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "class": [
+            "attachment"
+          ],
+          "rel": [
+            "https://assignments.api.brightspace.com/rels/attachment"
+          ],
+          "properties": {
+            "id": "6",
+            "name": "test misc link attachment",
+            "size": 0,
+            "extension": "url",
+            "flagged": false,
+            "read": false,
+            "href": "https://d2l.com",
+            "fileViewer": "https://d2l.com"
+          },
+          "actions": [
+            {
+              "href": "",
+              "name": "ToggleRead",
+              "method": "POST",
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "isRead",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "href": "",
+              "name": "ToggleFlagged",
+              "method": "POST",
+              "fields": [
+                {
+                  "type": "hidden",
+                  "name": "isFlagged",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "class": [
+        "date",
+        "submission-date"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/date"
+      ],
+      "properties": {
+        "date": "2020-12-25T15:54:58.800Z"
+      }
+    }
+  ],
+  "links": [
+    {
+      "class": [
+        "assignment-submission"
+      ],
+      "rel": [
+        "self"
+      ],
+      "href": "href"
+    },
+    {
+      "rel": [
+        "https://api.brightspace.com/rels/user"
+      ],
+      "href": ""
+    }
+  ]
+}
