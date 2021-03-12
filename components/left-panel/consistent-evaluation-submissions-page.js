@@ -337,6 +337,23 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 	}
 
+	async _selectLinkAttachment(e) {
+		const linkId = e.detail.linkId;
+		const url = e.detail.url;
+		const linkAttachmentEntity = this._getAttachmentEntity(linkId);
+		if (!linkAttachmentEntity) {
+			throw new Error('Invalid entity provided for link attachment');
+		}
+
+		const action = linkAttachmentEntity.getActionByName(toggleIsReadActionName);
+		if (action.fields.some(f => f.name === 'isRead' && f.value)) {
+			// If the action value is true it means it can be called to set the IsRead value to true, otherwise it is already read and we dont want to unread it
+			await this._doSirenActionAndRefreshFileStatus(action);
+		}
+
+		window.open(url, '_blank');
+	}
+
 	async _submitFileTiiAction(e) {
 		const fileId = e.detail.fileId;
 
@@ -452,6 +469,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 							@d2l-consistent-evaluation-evidence-attachment-download=${this._downloadAction}
 							@d2l-consistent-evaluation-evidence-refresh-grade-mark=${this._refreshGradeMarkTiiAction}
 							@d2l-consistent-evaluation-evidence-tii-submit-file-action=${this._submitFileTiiAction}
+							@d2l-consistent-evaluation-link-attachment-selected=${this._selectLinkAttachment}
 						></d2l-consistent-evaluation-submission-item>`);
 				} else {
 					console.warn('Consistent Evaluation submission date property not found');

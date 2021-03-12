@@ -266,9 +266,10 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		}));
 	}
 
-	_dispatchLinkAttachmentClickedEvent(url) {
+	_dispatchLinkAttachmentClickedEvent(linkId, url) {
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-link-attachment-selected', {
 			detail: {
+				linkId: linkId,
 				url: url
 			},
 			composed: true,
@@ -276,10 +277,11 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		}));
 	}
 
-	_dispatchLinkAttachmentKeydownEvent(e, url) {
+	_dispatchLinkAttachmentKeydownEvent(e, linkId, url) {
 		if (e.key === 'Enter' || e.key === ' ') {
 			this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-link-attachment-selected', {
 				detail: {
+					linkId: linkId,
 					url: url
 				},
 				composed: true,
@@ -468,8 +470,8 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			let onKeydownHandler;
 			if (this._isLinkAttachment(attachment)) {
 				displayedName = name;
-				onClickHandler = () => this._dispatchLinkAttachmentClickedEvent(href);
-				onKeydownHandler = (e) => this._dispatchLinkAttachmentKeydownEvent(e, href);
+				onClickHandler = () => this._dispatchLinkAttachmentClickedEvent(id, href);
+				onKeydownHandler = (e) => this._dispatchLinkAttachmentKeydownEvent(e, id, href);
 			} else {
 				displayedName = this._getFileTitle(name);
 				onClickHandler = () => this._dispatchFileSelectedEvent(id);
