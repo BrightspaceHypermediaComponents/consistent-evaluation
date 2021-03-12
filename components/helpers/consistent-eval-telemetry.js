@@ -43,7 +43,8 @@ export class ConsistentEvalTelemetry {
 			.setAction(action)
 			.setObject(href, type)
 			.addUserTiming(performance.getEntriesByName(performanceMeasureName))
-			.addCustom('Referer', document.referrer);
+			.addCustom('Referer', document.referrer)
+			.addCustom('UserAgent', navigator.userAgent);
 		if (submissionCount) {
 			eventBody.addCustom('SubmissionCount', `${submissionCount}`);
 		}
