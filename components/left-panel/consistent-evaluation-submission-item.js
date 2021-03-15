@@ -341,9 +341,10 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 	}
 
 	_getLinkIconTypeFromUrl(url) {
-		if (url.toLowerCase().includes('type=audio')) {
+		const lowerCaseUrl = url.toLowerCase();
+		if (lowerCaseUrl.includes('type=audio')) {
 			return 'file-audio';
-		} else if (url.toLowerCase().includes('type=video')) {
+		} else if (lowerCaseUrl.includes('type=video')) {
 			return 'file-video';
 		} else {
 			return 'link';
