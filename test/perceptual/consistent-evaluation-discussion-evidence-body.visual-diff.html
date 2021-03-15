@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>d2l-consistent-evaluation visual diff tests</title>
+		<script type="module">
+			import '@brightspace-ui/core/components/typography/styles.js';
+			import '@brightspace-ui/core/components/typography/typography.js';
+			import '../../components/left-panel/discussions/consistent-evaluation-discussion-evidence-body.js';
+		</script>
+		<style>
+			html {
+				font-size: 20px;
+			}
+			div {
+				padding: 50px;
+				display: flex;
+				justify-content: center;
+			}
+		</style>
+	</head>
+	<body class="d2l-typography">
+
+		<div id="discussion-post">
+			<d2l-consistent-evaluation-discussion-evidence-body>
+			</d2l-consistent-evaluation-discussion-evidence-body>
+		</div>
+
+		<div id="reply">
+			<d2l-consistent-evaluation-discussion-evidence-body
+				is-reply>
+			</d2l-consistent-evaluation-discussion-evidence-body>
+		</div>
+
+	</body>
+</html>

@@ -1,6 +1,7 @@
 import '@brightspace-ui/core/components/button/button.js';
 import '@brightspace-ui-labs/facet-filter-sort/components/sort-by-dropdown/sort-by-dropdown.js';
 import '@brightspace-ui-labs/facet-filter-sort/components/sort-by-dropdown/sort-by-dropdown-option.js';
+import './consistent-evaluation-discussion-evidence-body';
 import { css, html, LitElement } from 'lit-element';
 import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
@@ -77,9 +78,14 @@ export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeCon
 			>${this.localize('loadMore')}</d2l-button>`;
 	}
 
+	_renderDiscussionPost() {
+		return html`<d2l-consistent-evaluation-discussion-evidence-body is-reply></d2l-consistent-evaluation-discussion-evidence-body>`;
+	}
+
 	render() {
 		return html`
 			${this._renderSortDropDownList()}
+			${this._renderDiscussionPost()}
 			${this._renderNoAssessablePosts()}
 			${this._renderLoadMoreButton()}
 		`;
