@@ -1,5 +1,6 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentAFieldName, saveFeedbackAttachmentFileActionName, saveFeedbackAttachmentLinkActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, updateActionName } from './constants.js';
+import { appId, publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentAFieldName, saveFeedbackAttachmentFileActionName, saveFeedbackAttachmentLinkActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, updateActionName } from './constants.js';
+import { createClient } from '@brightspace-ui/logging';
 import { Grade } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 
@@ -20,6 +21,8 @@ export const ConsistentEvaluationControllerErrors = {
 
 export class ConsistentEvaluationController {
 	constructor(evaluationHref, token) {
+		this.logger = createClient(appId);
+
 		if (!evaluationHref) {
 			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_HREF);
 		}
@@ -95,7 +98,7 @@ export class ConsistentEvaluationController {
 		try {
 			newEvaluationEntity = await performSirenAction(this.token, action, field, true);
 		} catch (e) {
-			console.error(`HTTP Status Code: "${e.json.properties.code} ${e.json.properties.status}" Message: "${e.message}"`);
+			this.logger.error(e, `HTTP Status Code: "${e.json.properties.code} ${e.json.properties.status}" Message: "${e.message}"`);
 		}
 		return newEvaluationEntity;
 	}

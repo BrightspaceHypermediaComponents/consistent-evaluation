@@ -1,14 +1,15 @@
 import '@brightspace-ui-labs/grade-result/d2l-grade-result.js';
 import './consistent-evaluation-right-panel-block';
-import { css, html, LitElement } from 'lit-element';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
+import { html, LitElement } from 'lit-element';
+import { appId } from '../controllers/constants.js';
+import { createClient } from '@brightspace-ui/logging';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
-import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
-export class ConsistentEvaluationGradeResult extends SkeletonMixin(LocalizeConsistentEvaluation(LitElement)) {
+export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluation(LitElement) {
 
 	static get properties() {
 		return {
@@ -45,30 +46,6 @@ export class ConsistentEvaluationGradeResult extends SkeletonMixin(LocalizeConsi
 		};
 	}
 
-	static get styles() {
-		return [super.styles, css`
-			:host([skeleton]) .d2l-skeleton-grade-title {
-				height: 0.5rem;
-				margin-top: 1.5rem;
-				width: 4rem;
-			}
-			:host([skeleton]) .d2l-skeleton-grade-presentation {
-				height: 0.5rem;
-				margin-top: 1.5rem;
-				width: 8rem;
-			}
-			:host([skeleton]) .d2l-consistent-evaluation-grade-result-block {
-				display: none;
-			}
-
-			@media (max-width: 767px) {
-				:host([skeleton]) .d2l-skeleton-consistent-evaluation-right-panel-block {
-					display: none;
-				}
-			}
-		`];
-	}
-
 	constructor() {
 		super();
 		this.grade = new Grade(GradeType.Number, 0, 0, null, null, null);
@@ -88,6 +65,7 @@ export class ConsistentEvaluationGradeResult extends SkeletonMixin(LocalizeConsi
 		this._gradeButtonTooltip = undefined;
 		this._reportsButtonTooltip = undefined;
 		this._isGradeAutoCompleted = false;
+		this.logger = createClient(appId);
 	}
 
 	connectedCallback() {
@@ -138,14 +116,6 @@ export class ConsistentEvaluationGradeResult extends SkeletonMixin(LocalizeConsi
 		this._gradeSummaryInfo = summary;
 	}
 
-	_renderSkeleton() {
-		return html `
-			<div class="d2l-skeleton-consistent-evaluation-right-panel-block" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
-				<div class="d2l-skeleton-grade-title d2l-skeletize"></div>
-				<div class="d2l-skeleton-grade-presentation d2l-skeletize"></div>
-			</div>`;
-	}
-
 	render() {
 		const gradeType = this.grade.getScoreType();
 		let score = this.grade.getScore();
@@ -158,10 +128,8 @@ export class ConsistentEvaluationGradeResult extends SkeletonMixin(LocalizeConsi
 		this._setGradeSummaryInfo(gradeType, score, scoreOutOf);
 
 		return html`
-			${this._renderSkeleton()}
 			<d2l-consistent-evaluation-right-panel-block
 				class="d2l-consistent-evaluation-grade-result-block"
-				aria-hidden="${this.skeleton}"
 				supportingInfo=${ifDefined(this._gradeSummaryInfo)}
 				title="${this.localize('overallGrade')}">
 					<d2l-labs-d2l-grade-result-presentational
@@ -200,7 +168,7 @@ export class ConsistentEvaluationGradeResult extends SkeletonMixin(LocalizeConsi
 		const dialogUrl = this.gradeItemInfo && this.gradeItemInfo.evaluationUrl;
 
 		if (!dialogUrl) {
-			console.error('Consistent-Eval: Expected grade item evalutaion dialog URL, but none found');
+			this.logger.log('Consistent-Eval: Expected grade item evalutaion dialog URL, but none found');
 			return;
 		}
 
@@ -241,7 +209,7 @@ export class ConsistentEvaluationGradeResult extends SkeletonMixin(LocalizeConsi
 		const dialogUrl = this.gradeItemInfo && this.gradeItemInfo.statsUrl;
 
 		if (!dialogUrl) {
-			console.error('Consistent-Eval: Expected grade item statistics dialog URL, but none found');
+			this.logger.log('Consistent-Eval: Expected grade item statistics dialog URL, but none found');
 			return;
 		}
 

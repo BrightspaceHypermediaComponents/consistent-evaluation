@@ -103,35 +103,39 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			this._telemetry = new ConsistentEvalTelemetry(this.dataTelemetryEndpoint);
 		}
 		if (changedProperties.has('href')) {
-			const controller = new ConsistentEvaluationHrefController(this.href, this.token);
-			this._childHrefs = await controller.getHrefs();
-			this._rubricInfos = await controller.getRubricInfos(false);
-			this._submissionInfo = await controller.getSubmissionInfo();
-			this._gradeItemInfo = await controller.getGradeItemInfo();
-			this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
-			this._organizationName = await controller.getAssignmentOrganizationName('organization');
-			this._userName = await controller.getUserName();
-			this._enrolledUser = await controller.getEnrolledUser();
-			this._groupInfo = await controller.getGroupInfo();
-			this._anonymousInfo = await controller.getAnonymousInfo();
-			this._iteratorTotal = await controller.getIteratorInfo('total');
-			this._iteratorIndex = await controller.getIteratorInfo('index');
-			this._editActivityPath = await controller.getEditActivityPath();
-			const stripped = this._stripFileIdFromUrl();
-			const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
-			if (!stripped && !hasOneFileAndSubmission) {
-				this.currentFileId = undefined;
-				this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
-			} else {
-				this._loadingComponents.submissions = false;
-			}
+			await this._mutex.dispatch(
+				async() => {
+					const controller = new ConsistentEvaluationHrefController(this.href, this.token);
+					this._childHrefs = await controller.getHrefs();
+					this._rubricInfos = await controller.getRubricInfos(false);
+					this._submissionInfo = await controller.getSubmissionInfo();
+					this._gradeItemInfo = await controller.getGradeItemInfo();
+					this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
+					this._organizationName = await controller.getAssignmentOrganizationName('organization');
+					this._userName = await controller.getUserName();
+					this._enrolledUser = await controller.getEnrolledUser();
+					this._groupInfo = await controller.getGroupInfo();
+					this._anonymousInfo = await controller.getAnonymousInfo();
+					this._iteratorTotal = await controller.getIteratorInfo('total');
+					this._iteratorIndex = await controller.getIteratorInfo('index');
+					this._editActivityPath = await controller.getEditActivityPath();
+					const stripped = this._stripFileIdFromUrl();
+					const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
+					if (!stripped && !hasOneFileAndSubmission) {
+						this.currentFileId = undefined;
+						this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
+					} else {
+						this._loadingComponents.submissions = false;
+					}
 
-			if (!this._submissionInfo || !this._submissionInfo.submissionList) {
-				this._loadingComponents.submissions = false;
-			}
+					if (!this._submissionInfo || !this._submissionInfo.submissionList) {
+						this._loadingComponents.submissions = false;
+					}
 
-			this._loadingComponents.main = false;
-			this._finishedLoading();
+					this._loadingComponents.main = false;
+					this._finishedLoading();
+				}
+			);
 		}
 	}
 

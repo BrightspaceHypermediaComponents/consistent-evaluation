@@ -3,10 +3,13 @@ import './consistent-evaluation-outcomes.js';
 import './consistent-evaluation-rubric.js';
 import './consistent-evaluation-grade-result.js';
 import './consistent-evaluation-coa-eval-override.js';
+import './consistent-evaluation-right-panel-skeleton.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-context-menu.js';
 import { css, html, LitElement } from 'lit-element';
 import { getRubricAssessmentScore, mapRubricScoreToGrade} from '../helpers/rubricGradeSyncHelpers.js';
+import { appId } from '../controllers/constants.js';
 import { convertToken } from '../helpers/converterHelpers.js';
+import { createClient } from '@brightspace-ui/logging';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
@@ -123,7 +126,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 	}
 
 	static get styles() {
-		return  css`
+		return  [super.styles, css`
 			.d2l-consistent-evaluation-right-panel-overflow-menu-mobile {
 				display: none;
 			}
@@ -159,7 +162,31 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				margin-bottom: -0.25rem;
 				margin-top: -0.5rem;
 			}
-		`;
+
+			:host([skeleton]) d2l-consistent-evaluation-rubric {
+				display: none;
+			}
+
+			:host([skeleton]) d2l-consistent-evaluation-grade-result {
+				display: none;
+			}
+
+			:host([skeleton]) d2l-consistent-evaluation-feedback-presentational {
+				display: none;
+			}
+
+			:host([skeleton]) d2l-consistent-evaluation-outcomes {
+				display: none;
+			}
+
+			:host([skeleton]) .d2l-consistent-evaluation-right-panel-clearfix {
+				display: none;
+			}
+
+			:host([skeleton]) d2l-consistent-evaluation-coa-eval-override {
+				display: none;
+			}
+		`];
 	}
 
 	constructor() {
@@ -178,6 +205,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		this._specialAccessId = getUniqueId();
 		this._editActivityId = getUniqueId();
 		this.rubricsOpen = 0;
+		this.logger = createClient(appId);
 	}
 
 	_renderRubric() {
@@ -185,6 +213,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 			const showActiveScoringRubric = (this.grade.getScoreOutOf() && this.activeScoringRubric);
 			return html`
 				<d2l-consistent-evaluation-rubric
+					aria-hidden="${this.skeleton}"
 					header=${this.localize('rubrics')}
 					.rubricInfos=${this.rubricInfos}
 					active-scoring-rubric=${this.activeScoringRubric}
@@ -192,7 +221,6 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 					.token=${this.token}
 					?show-active-scoring-rubric-options=${showActiveScoringRubric}
 					?read-only=${this.rubricReadOnly}
-					?skeleton=${this.skeleton}
 					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
 					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
 					@d2l-rubric-compact-expanded-changed=${this._updateRubricOpenState}
@@ -207,10 +235,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		if (!this.hideGrade) {
 			return html`
 				<d2l-consistent-evaluation-grade-result
+					aria-hidden="${this.skeleton}"
 					.grade=${this.grade}
 					.gradeItemInfo=${this.gradeItemInfo}
 					?read-only=${!this.allowEvaluationWrite}
-					?skeleton=${this.skeleton}
 				></d2l-consistent-evaluation-grade-result>
 			`;
 		}
@@ -231,7 +259,8 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 
 	_renderOverflowButtonIcon() {
 		return html`
-			<div class="d2l-consistent-evaluation-right-panel-clearfix">
+			<div class="d2l-consistent-evaluation-right-panel-clearfix"
+				aria-hidden="${this.skeleton}">
 				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu" text=${this.localize('evaluationOptions')}>
 					${this._renderOverflowMenu()}
 				</d2l-dropdown-more>
@@ -266,7 +295,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		const specialAccess = this.specialAccessHref;
 
 		if (!specialAccess) {
-			console.error('Consistent-Eval: Expected special access item dialog URL, but none found');
+			this.logger.log('Consistent-Eval: Expected special access item dialog URL, but none found');
 			return;
 		}
 
@@ -306,6 +335,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		if (!this.hideCoaOverride) {
 			return html`
 				<d2l-consistent-evaluation-coa-eval-override
+					aria-hidden="${this.skeleton}"
 					href=${this.coaOverrideHref}
 					.token=${this.token}
 				></d2l-consistent-evaluation-coa-eval-override>
@@ -317,13 +347,13 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		if (!this.hideFeedback) {
 			return html`
 				<d2l-consistent-evaluation-feedback-presentational
+					aria-hidden="${this.skeleton}"
 					.href=${this.evaluationHref}
 					.token=${this.token}
 					?can-edit-feedback=${this.allowEvaluationWrite}
 					?can-add-file=${this.canAddFeedbackFile}
 					?can-record-video=${this.canRecordFeedbackVideo}
 					?can-record-audio=${this.canRecordFeedbackAudio}
-					?skeleton=${this.skeleton}
 					?use-new-html-editor=${this.useNewHtmlEditor}
 					.feedbackText=${this.feedbackText}
 					.attachments=${this.feedbackAttachments}
@@ -339,10 +369,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		if (!this.hideOutcomes) {
 			return html`
 				<d2l-consistent-evaluation-outcomes
+					aria-hidden="${this.skeleton}"
 					header=${this.localize('outcomes')}
 					href=${this.outcomesHref}
 					.token=${this.token}
-					?skeleton=${this.skeleton}
 				></d2l-consistent-evaluation-outcomes>
 			`;
 		}
@@ -350,9 +380,17 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		return html``;
 	}
 
+	_renderSkeleton() {
+		return html`
+			<consistent-evaluation-right-panel-skeleton
+				?skeleton=${this.skeleton}
+			></consistent-evaluation-right-panel-skeleton>`;
+	}
+
 	render() {
 		return html`
 			<div class="d2l-consistent-evaluation-right-panel">
+				${this._renderSkeleton()}
 				${this._renderOverflowButtonIcon()}
 				${this._renderRubric()}
 				${this._renderGrade()}

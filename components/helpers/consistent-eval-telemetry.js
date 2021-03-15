@@ -39,11 +39,12 @@ export class ConsistentEvalTelemetry {
 
 	async _logUserEvent(href, action, type, performanceMeasureName, submissionCount) {
 		if (!href || !action || !type || !performanceMeasureName) { return; }
-
 		const eventBody = new Events.PerformanceEventBody()
 			.setAction(action)
 			.setObject(href, type)
-			.addUserTiming(performance.getEntriesByName(performanceMeasureName));
+			.addUserTiming(performance.getEntriesByName(performanceMeasureName))
+			.addCustom('Referer', document.referrer)
+			.addCustom('UserAgent', navigator.userAgent);
 		if (submissionCount) {
 			eventBody.addCustom('SubmissionCount', `${submissionCount}`);
 		}

@@ -9,6 +9,7 @@ describe('d2l-consistent-evaluation-right-panel', () => {
 
 	const tests = [
 		'renders-right-panel',
+		'renders-skeleton',
 		'rubric-read-only',
 		'hiding-rubric',
 		'hiding-grade',
