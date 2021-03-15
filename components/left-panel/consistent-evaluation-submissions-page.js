@@ -45,6 +45,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			_downloading : {
 				attribute: false,
 				type: Boolean
+			},
+			_downloadAllFilesButtonIsVisible : {
+				attribute: false,
+				type: Boolean
 			}
 		};
 	}
@@ -152,6 +156,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._submissionEntities = [];
 		this._perfRenderEventName = 'submissionsComponentRender';
 		this._downloading = false;
+		this._downloadAllFilesButtonIsVisible = false;
 		this._expectedCookieName = 'd2lConsistentEvaluationDownloadAll';
 	}
 
@@ -199,8 +204,21 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				}
 			}
 
+			this._downloadAllFilesButtonIsVisible = ((this._submissionEntities.length > 0) && (this._hasAtLeastOneFileAttachment()));
 			this._finishedLoading();
 		}
+	}
+
+	_hasAtLeastOneFileAttachment() {
+		for (const submissionEntity of this._submissionEntities) {
+			const attachments = this._getAttachments(submissionEntity.entity);
+			for (const attachmentEntity of attachments) {
+				if (attachmentEntity.properties.extension.toLowerCase() !== 'url') {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	async _getSubmissionEntity(submissionHref, byPassCache = false) {
@@ -519,7 +537,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				<d2l-button-subtle
 					id="download-all-button"
 					icon="tier2:download"
-					?hidden="${this._submissionEntities.length === 0}"
+					?hidden="${!this._downloadAllFilesButtonIsVisible}"
 					?disabled="${this._downloading}"
 					text="${this._getDownloadButtonText()}"
 					@click="${this._handleAllSubmissionDownload}">
