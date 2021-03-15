@@ -3,7 +3,7 @@ import './consistent-evaluation-evidence-non-viewable.js';
 import './consistent-evaluation-evidence-text.js';
 import './consistent-evaluation-submissions-page.js';
 import './consistent-evaluation-outcomes-overall-achievement.js';
-import { appId, toggleIsReadActionName } from '../controllers/constants.js';
+import { appId, toggleIsReadActionName } from '../../controllers/constants.js';
 import { bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWithNoEvidence, textSubmission } from '../../controllers/constants';
