@@ -293,10 +293,14 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 	_dispatchToggleEvent(e) {
 		const action = e.target.getAttribute('data-action');
 		const fileId = e.target.getAttribute('data-key');
+		const state = e.target.getAttribute('data-state');
+		const name = e.target.getAttribute('data-name');
 		const event = new CustomEvent('d2l-consistent-evaluation-evidence-toggle-action', {
 			detail: {
 				fileId: fileId,
-				action: action
+				action: action,
+				state: state,
+				name: name
 			},
 			composed: true,
 			bubbles: true
