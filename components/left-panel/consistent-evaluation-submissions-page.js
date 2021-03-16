@@ -45,6 +45,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			_downloading : {
 				attribute: false,
 				type: Boolean
+			},
+			_downloadAllFilesButtonIsVisible : {
+				attribute: false,
+				type: Boolean
 			}
 		};
 	}
@@ -152,6 +156,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		this._submissionEntities = [];
 		this._perfRenderEventName = 'submissionsComponentRender';
 		this._downloading = false;
+		this._downloadAllFilesButtonIsVisible = false;
 		this._expectedCookieName = 'd2lConsistentEvaluationDownloadAll';
 	}
 
@@ -199,8 +204,22 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				}
 			}
 
+			this._downloadAllFilesButtonIsVisible = ((this._submissionEntities.length > 0) && (this._hasAtLeastOneFileAttachment()));
 			this._finishedLoading();
 		}
+	}
+
+	_hasAtLeastOneFileAttachment() {
+		for (const submissionEntity of this._submissionEntities) {
+			const attachments = this._getAttachments(submissionEntity.entity);
+			for (const attachmentEntity of attachments) {
+				// The first condition is for text submission attachments, which don't possess an 'extension' property.
+				if ((!attachmentEntity.properties.extension) || (attachmentEntity.properties.extension.toLowerCase() !== 'url')) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	async _getSubmissionEntity(submissionHref, byPassCache = false) {
@@ -295,9 +314,9 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 
 	async _downloadAction(e) {
-		const fileId = e.detail.fileId;
+		const attachmentId = e.detail.attachmentId;
 
-		const attachmentEntity = this._getAttachmentEntity(fileId);
+		const attachmentEntity = this._getAttachmentEntity(attachmentId);
 		if (!attachmentEntity) {
 			throw new Error('Invalid entity provided for attachment');
 		}
@@ -335,6 +354,23 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				bubbles: true
 			}));
 		}
+	}
+
+	async _selectLinkAttachment(e) {
+		const linkId = e.detail.linkId;
+		const url = e.detail.url;
+		const linkAttachmentEntity = this._getAttachmentEntity(linkId);
+		if (!linkAttachmentEntity) {
+			throw new Error('Invalid entity provided for link attachment');
+		}
+
+		const action = linkAttachmentEntity.getActionByName(toggleIsReadActionName);
+		if (action.fields.some(f => f.name === 'isRead' && f.value)) {
+			// If the action value is true it means it can be called to set the IsRead value to true, otherwise it is already read and we dont want to unread it
+			await this._doSirenActionAndRefreshFileStatus(action);
+		}
+
+		window.open(url, '_blank');
 	}
 
 	async _submitFileTiiAction(e) {
@@ -449,9 +485,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 							?late=${latenessTimespan !== undefined}
 							?hide-use-grade=${this.hideUseGrade}
 							@d2l-consistent-evaluation-evidence-toggle-action=${this._toggleAction}
-							@d2l-consistent-evaluation-evidence-file-download=${this._downloadAction}
+							@d2l-consistent-evaluation-evidence-attachment-download=${this._downloadAction}
 							@d2l-consistent-evaluation-evidence-refresh-grade-mark=${this._refreshGradeMarkTiiAction}
 							@d2l-consistent-evaluation-evidence-tii-submit-file-action=${this._submitFileTiiAction}
+							@d2l-consistent-evaluation-link-attachment-selected=${this._selectLinkAttachment}
 						></d2l-consistent-evaluation-submission-item>`);
 				} else {
 					console.warn('Consistent Evaluation submission date property not found');
@@ -501,7 +538,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				<d2l-button-subtle
 					id="download-all-button"
 					icon="tier2:download"
-					?hidden="${this._submissionEntities.length === 0}"
+					?hidden="${!this._downloadAllFilesButtonIsVisible}"
 					?disabled="${this._downloading}"
 					text="${this._getDownloadButtonText()}"
 					@click="${this._handleAllSubmissionDownload}">

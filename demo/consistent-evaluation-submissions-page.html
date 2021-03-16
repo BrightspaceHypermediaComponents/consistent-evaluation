@@ -9,9 +9,13 @@
 			import '../components/left-panel/consistent-evaluation-submissions-page.js';
 			const fileSubmissionsPage = document.getElementById('fileSubmissions');
 			fileSubmissionsPage.submissionList = [
+				{'href': 'data/submission4.json'},
 				{'href': 'data/submission3.json'},
 				{'href': 'data/submission2.json'},
 				{'href': 'data/submission1.json'}];
+			const fileSubmissionsLinksOnlyPage = document.getElementById('fileSubmissionsLinksOnly');
+			fileSubmissionsLinksOnlyPage.submissionList = [
+				{'href': 'data/submission4.json'}];
 			const textSubmissionsPage = document.getElementById('textSubmissions');
 			textSubmissionsPage.submissionList = [
 				{'href': 'data/submission-text2.json'},
@@ -28,6 +32,14 @@
 			<h2>File Submissions</h2>
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-submissions-page id="fileSubmissions"
+				token="token"
+				submission-type="0"
+				></d2l-consistent-evaluation-submissions-page>
+			</d2l-demo-snippet>
+
+			<h2>File Submissions with Links Only</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-submissions-page id="fileSubmissionsLinksOnly"
 				token="token"
 				submission-type="0"
 				></d2l-consistent-evaluation-submissions-page>
