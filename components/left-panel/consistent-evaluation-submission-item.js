@@ -311,7 +311,6 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 	_dispatchDownloadEvent(e) {
 		const attachmentId = e.target.getAttribute('data-key');
 		const downloadHref = e.target.getAttribute('data-href');
-		const extension = e.target.getAttribute('data-extension');
 		const event = new CustomEvent('d2l-consistent-evaluation-evidence-attachment-download', {
 			detail: {
 				attachmentId: attachmentId
@@ -321,11 +320,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		});
 		this.dispatchEvent(event);
 
-		if (extension === 'url') {
-			window.open(downloadHref, '_blank');
-		} else {
-			window.location = downloadHref;
-		}
+		window.location = downloadHref;
 	}
 
 	_formatDateTime() {
@@ -541,7 +536,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 							@click="${
 	// eslint-disable-next-line lit/no-template-arrow
 	() => this._dispatchFileSelectedEvent(id)}"></d2l-menu-item-link>` : null}
-					<d2l-menu-item text="${this.localize('download')}" data-key="${id}" data-href="${downloadHref}" data-extension="${extension}" @d2l-menu-item-select="${this._dispatchDownloadEvent}"></d2l-menu-item>
+					<d2l-menu-item text="${this.localize('download')}" ?hidden="${extension === 'url'}" data-key="${id}" data-href="${downloadHref}" data-extension="${extension}" @d2l-menu-item-select="${this._dispatchDownloadEvent}"></d2l-menu-item>
 					<d2l-menu-item text="${oppositeReadState}" data-action="${toggleIsReadActionName}" data-key="${id}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
 					<d2l-menu-item text="${oppositeFlagState}" data-action="${toggleFlagActionName}" data-key="${id}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
 				</d2l-menu>
