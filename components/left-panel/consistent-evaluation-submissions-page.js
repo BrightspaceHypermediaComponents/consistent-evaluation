@@ -213,7 +213,8 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		for (const submissionEntity of this._submissionEntities) {
 			const attachments = this._getAttachments(submissionEntity.entity);
 			for (const attachmentEntity of attachments) {
-				if ((attachmentEntity.properties.extension) && (attachmentEntity.properties.extension.toLowerCase() !== 'url')) {
+				// The first condition is for text submission attachments, which don't possess an 'extension' property.
+				if ((!attachmentEntity.properties.extension) || (attachmentEntity.properties.extension.toLowerCase() !== 'url')) {
 					return true;
 				}
 			}
