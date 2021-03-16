@@ -22,6 +22,10 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 				attribute: 'user-progress-outcome-href',
 				type: String
 			},
+			displayConversionWarning: {
+				attribute: 'display-conversion-warning',
+				type: Boolean
+			},
 			downloadAllSubmissionLink: {
 				attribute: 'download-all-submissions-location',
 				type: String
@@ -52,11 +56,6 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 				.currentFileId=${this.currentFileId}
 				?hide-use-grade=${this.hideUseGrade}
 				?display-conversion-warning=${this.displayConversionWarning}
-				@d2l-consistent-eval-annotations-update=${this.transientSaveAnnotations}
-				@d2l-consistent-eval-annotations-will-change=${this.updateAnnotationsViewerEditingStart}
-				@d2l-consistent-evaluation-use-tii-grade=${this.transientSaveGrade}
-				@d2l-consistent-evaluation-refresh-grade-item=${this.refreshEvaluationEntity}
-				@d2l-consistent-evaluation-download-all-failed=${this.handleDownloadAllFailure}
 				data-telemetry-endpoint=${this.dataTelemetryEndpoint}
 			></d2l-consistent-evaluation-evidence-assignment>
 		`;
