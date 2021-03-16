@@ -82,7 +82,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 	_renderRepliedTo() {
 		return html `<div class="d2l-consistent-evaluation-reply-to-container">
 				<d2l-icon class="d2l-consistent-evaluation-evidence-body-reply-icon" icon="d2l-tier1:reply"></d2l-icon>
-				<span class="d2l-body-compact d2l-consistent-evaluation-evidence-body-reply-to-text">Replied to: </span>
+				<span class="d2l-body-compact d2l-consistent-evaluation-evidence-body-reply-to-text">${this.localize('repliedTo')}</span>
 				<span class="d2l-body-compact d2l-link d2l-truncate">Hannah Beiley's post</span>
 			</div>`;
 	}
@@ -111,8 +111,8 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 
 	_renderRating() {
 		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-rating-container">
-				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">Up Votes: 12</div>
-				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">Down Votes: 0</div>
+				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('upVotes')}12</div>
+				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('downVotes')}0</div>
 			</div>`;
 	}
 
