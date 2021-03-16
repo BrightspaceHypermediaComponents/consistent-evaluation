@@ -111,8 +111,8 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 
 	_renderRating() {
 		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-rating-container">
-				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('upVotes')}12</div>
-				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('downVotes')}0</div>
+				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('upVotes', 'numUpVotes', 12)}</div>
+				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('downVotes', 'numDownVotes', 0)}</div>
 			</div>`;
 	}
 
