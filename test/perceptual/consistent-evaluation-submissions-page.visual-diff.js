@@ -29,6 +29,11 @@ describe('d2l-consistent-evaluation-submissions-page', () => {
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
+	it('renders submissions page with file based submissions that only contain links', async function() {
+		const rect = await visualDiff.getRect(page, '#file-with-links-only');
+		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
+	});
+
 	it('renders submissions page with text based submissions', async function() {
 		const rect = await visualDiff.getRect(page, '#text');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
