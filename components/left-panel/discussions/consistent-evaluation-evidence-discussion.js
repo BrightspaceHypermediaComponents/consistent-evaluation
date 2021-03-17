@@ -79,10 +79,10 @@ export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeCon
 	}
 
 	_renderDiscussionPost() {
-		const repliedToPostName = "Hannah Beiley's post";
-		const postTitle = "The Mid-Atlantic Ridge may play a more active role in plate tectonics than thought";
-		const postBody = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non tincidunt nibh. Integer eu rhoncus enim. Morbi vitae rhoncus est, vel ornare nulla. Quisque scelerisque, sapien vel pellentesque porttitor, tortor odio pulvinar nisi, a consectetur augue nulla a tellus. In purus eros, convallis a lacinia vitae, interdum molestie nunc. Donec in magna accumsan, rhoncus massa a, blandit dui. Phasellus accumsan scelerisque ipsum, quis pulvinar ante rhoncus pharetra. Fusce nec magna nisi. In ut lacus pharetra nibh mattis aliquam. Aenean viverra consequat nibh et malesuada.";
-		const postDate = "Jan 28, 2020 1:24PM";
+		const repliedToPostName = 'Hannah Beiley\'s post';
+		const postTitle = 'The Mid-Atlantic Ridge may play a more active role in plate tectonics than thought';
+		const postBody = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non tincidunt nibh. Integer eu rhoncus enim. Morbi vitae rhoncus est, vel ornare nulla. Quisque scelerisque, sapien vel pellentesque porttitor, tortor odio pulvinar nisi, a consectetur augue nulla a tellus. In purus eros, convallis a lacinia vitae, interdum molestie nunc. Donec in magna accumsan, rhoncus massa a, blandit dui. Phasellus accumsan scelerisque ipsum, quis pulvinar ante rhoncus pharetra. Fusce nec magna nisi. In ut lacus pharetra nibh mattis aliquam. Aenean viverra consequat nibh et malesuada.';
+		const postDate = 'Jan 28, 2020 1:24PM';
 		const ratingInformation = { upVotes: 12, downVotes: 0 };
 		return html`<d2l-consistent-evaluation-discussion-evidence-body
 				is-reply

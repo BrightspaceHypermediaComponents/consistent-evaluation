@@ -13,19 +13,19 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				type: Boolean
 			},
 			repliedToPostName : {
-				attribute: "replied-to-post-name",
+				attribute: 'replied-to-post-name',
 				type: String
 			},
 			postTitle : {
-				attribute: "post-title",
+				attribute: 'post-title',
 				type: String
 			},
 			postBody: {
-				attribute: "post-body",
+				attribute: 'post-body',
 				type: String
 			},
 			postDate: {
-				attribute: "post-date",
+				attribute: 'post-date',
 				type: String
 			},
 			ratingInformation: {
