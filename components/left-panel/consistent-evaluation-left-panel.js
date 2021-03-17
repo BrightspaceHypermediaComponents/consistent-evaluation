@@ -14,10 +14,6 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 				type: Object
 			},
 			token: { type: Object },
-			fileNonViewable: {
-				attribute: false,
-				type: Object
-			},
 			userProgressOutcomeHref: {
 				attribute: 'user-progress-outcome-href',
 				type: String
