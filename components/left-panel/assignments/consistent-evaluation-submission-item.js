@@ -209,6 +209,10 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 
 	//Helper methods
 
+	_isLinkAttachment(attachment) {
+		return attachment.properties.extension === 'url';
+	}
+
 	_getFileTitle(filename) {
 		const index = filename.lastIndexOf('.');
 		if (index < 0) {
@@ -262,6 +266,30 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		}));
 	}
 
+	_dispatchLinkAttachmentClickedEvent(linkId, url) {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-link-attachment-selected', {
+			detail: {
+				linkId: linkId,
+				url: url
+			},
+			composed: true,
+			bubbles: true
+		}));
+	}
+
+	_dispatchLinkAttachmentKeydownEvent(e, linkId, url) {
+		if (e.key === 'Enter' || e.key === ' ') {
+			this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-link-attachment-selected', {
+				detail: {
+					linkId: linkId,
+					url: url
+				},
+				composed: true,
+				bubbles: true
+			}));
+		}
+	}
+
 	_dispatchToggleEvent(e) {
 		const action = e.target.getAttribute('data-action');
 		const fileId = e.target.getAttribute('data-key');
@@ -281,11 +309,11 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 	}
 
 	_dispatchDownloadEvent(e) {
-		const fileId = e.target.getAttribute('data-key');
+		const attachmentId = e.target.getAttribute('data-key');
 		const downloadHref = e.target.getAttribute('data-href');
-		const event = new CustomEvent('d2l-consistent-evaluation-evidence-file-download', {
+		const event = new CustomEvent('d2l-consistent-evaluation-evidence-attachment-download', {
 			detail: {
-				fileId: fileId
+				attachmentId: attachmentId
 			},
 			composed: true,
 			bubbles: true
@@ -305,6 +333,17 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			date,
 			{format: 'short'}) : '';
 		return `${formattedDate} ${formattedTime}`;
+	}
+
+	_getLinkIconTypeFromUrl(url) {
+		const lowerCaseUrl = url.toLowerCase();
+		if (lowerCaseUrl.includes('type=audio')) {
+			return 'file-audio';
+		} else if (lowerCaseUrl.includes('type=video')) {
+			return 'file-video';
+		} else {
+			return 'link';
+		}
 	}
 
 	//Helper rendering methods
@@ -334,7 +373,6 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		const read = file.properties.read;
 		const href = file.properties.href;
 		const id = file.properties.id;
-		const name = file.properties.name;
 		return html`
 		<d2l-list-item>
 		<d2l-list-item-content>
@@ -349,7 +387,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 				<span class="d2l-body-small">${this._formatDateTime()}</span>
 			</div>
 		</d2l-list-item-content>
-		${this._addMenuOptions(read, flagged, href, id, name)}
+		${this._addMenuOptions(read, flagged, href, id)}
 		</d2l-list-item>`;
 	}
 
@@ -424,14 +462,27 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 	}
 
 	_renderAttachments() {
-		return html`${this.attachments.map((file) => {
-			const {id, name, size, extension, flagged, read, href} = file.properties;
+		return html`${this.attachments.map((attachment) => {
+			const {id, name, size, extension, flagged, read, href} = attachment.properties;
+
+			let displayedName;
+			let onClickHandler;
+			let onKeydownHandler;
+			if (this._isLinkAttachment(attachment)) {
+				displayedName = name;
+				onClickHandler = () => this._dispatchLinkAttachmentClickedEvent(id, href);
+				onKeydownHandler = (e) => this._dispatchLinkAttachmentKeydownEvent(e, id, href);
+			} else {
+				displayedName = this._getFileTitle(name);
+				onClickHandler = () => this._dispatchFileSelectedEvent(id);
+				onKeydownHandler = (e) => this._dispatchFileSelectedKeyboardEvent(e);
+			}
 
 			return html`
 			<d2l-list-item>
 				<div slot="illustration" class="d2l-submission-attachment-icon-container">
 					<d2l-icon class="d2l-submission-attachment-icon-container-inner"
-						icon="tier2:${getFileIconTypeFromExtension(extension)}"
+						icon="tier2:${extension === 'url' ? this._getLinkIconTypeFromUrl(href) :  getFileIconTypeFromExtension(extension)}"
 						aria-label="${getFileIconTypeFromExtension(extension)}"></d2l-icon>
 					${this._renderReadStatus(read)}
 				</div>
@@ -440,21 +491,19 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 						class="d2l-submission-attachment-list-item-content"
 						file-id="${id}"
 						tabindex=0
-						@keydown=${this._dispatchFileSelectedKeyboardEvent}
-						@click="${
-	// eslint-disable-next-line lit/no-template-arrow
-	() => this._dispatchFileSelectedEvent(id)}">
-						<div class="truncate" aria-label="heading">${this._getFileTitle(name)}</div>
+						@keydown=${onKeydownHandler}
+						@click="${onClickHandler}">
+						<div class="truncate" aria-label="heading">${displayedName}</div>
 						<div slot="supporting-info">
 							${this._renderFlaggedStatus(flagged)}
 							${extension.toUpperCase()}
-							<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>
-							${this._getReadableFileSizeString(size)}
+							${this._isLinkAttachment(attachment) ? html`` : html`<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>`}
+							${this._isLinkAttachment(attachment) ? html`` : this._getReadableFileSizeString(size)}
 						</div>
 					</d2l-list-item-content>
-					${this._renderTii(id, name, file)}
+					${this._renderTii(id, name, attachment)}
 				</div>
-				${this._addMenuOptions(read, flagged, href, id, name)}
+				${this._addMenuOptions(read, flagged, href, extension, id)}
 			</d2l-list-item>`;
 		})}`;
 	}
@@ -474,7 +523,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		});
 	}
 
-	_addMenuOptions(read, flagged, downloadHref, id, name) {
+	_addMenuOptions(read, flagged, downloadHref, extension, id) {
 		const oppositeReadState = read ? this.localize('markUnread') : this.localize('markRead');
 		const oppositeFlagState = flagged ? this.localize('unflag') : this.localize('flag');
 		return html`<div slot="actions">
@@ -487,9 +536,9 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 							@click="${
 	// eslint-disable-next-line lit/no-template-arrow
 	() => this._dispatchFileSelectedEvent(id)}"></d2l-menu-item-link>` : null}
-					<d2l-menu-item text="${this.localize('download')}" data-key="${id}" data-href="${downloadHref}" @d2l-menu-item-select="${this._dispatchDownloadEvent}"></d2l-menu-item>
-					<d2l-menu-item text="${oppositeReadState}" data-action="${toggleIsReadActionName}" data-key="${id}" data-state="${read}" data-name="${name}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
-					<d2l-menu-item text="${oppositeFlagState}" data-action="${toggleFlagActionName}" data-key="${id}" data-state="${flagged}" data-name="${name}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
+					<d2l-menu-item text="${this.localize('download')}" ?hidden="${extension === 'url'}" data-key="${id}" data-href="${downloadHref}" data-extension="${extension}" @d2l-menu-item-select="${this._dispatchDownloadEvent}"></d2l-menu-item>
+					<d2l-menu-item text="${oppositeReadState}" data-action="${toggleIsReadActionName}" data-key="${id}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
+					<d2l-menu-item text="${oppositeFlagState}" data-action="${toggleFlagActionName}" data-key="${id}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
 				</d2l-menu>
 			</d2l-dropdown-menu>
 			</d2l-dropdown-more>
