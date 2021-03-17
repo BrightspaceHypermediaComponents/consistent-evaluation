@@ -11,6 +11,26 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			isReply : {
 				attribute: 'is-reply',
 				type: Boolean
+			},
+			repliedToPostName : {
+				attribute: "replied-to-post-name",
+				type: String
+			},
+			postTitle : {
+				attribute: "post-title",
+				type: String
+			},
+			postBody: {
+				attribute: "post-body",
+				type: String
+			},
+			postDate: {
+				attribute: "post-date",
+				type: String
+			},
+			ratingInformation: {
+				attribute: false,
+				type: Object
 			}
 		};
 	}
@@ -83,7 +103,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		return html `<div class="d2l-consistent-evaluation-reply-to-container">
 				<d2l-icon class="d2l-consistent-evaluation-evidence-body-reply-icon" icon="d2l-tier1:reply"></d2l-icon>
 				<span class="d2l-body-compact d2l-consistent-evaluation-evidence-body-reply-to-text">${this.localize('repliedTo')}</span>
-				<span class="d2l-body-compact d2l-link d2l-truncate">Hannah Beiley's post</span>
+				<span class="d2l-body-compact d2l-link d2l-truncate">${this.repliedToPostName}</span>
 			</div>`;
 	}
 
@@ -91,28 +111,26 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		if (this.isReply) {
 			return html `
 				${this._renderRepliedTo()}
-				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-title">Agreed. Some other evidences are emerging too.</div>
+				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-title">${this.postTitle}</div>
 			`;
 		} else {
 			return html `
-				<a class="d2l-body-compact d2l-link d2l-consistent-evaluation-discussion-evidence-body-title">
-					The Mid-Atlantic Ridge may play a more active role in plate tectonics than thought
-				</a>`;
+				<a class="d2l-body-compact d2l-link d2l-consistent-evaluation-discussion-evidence-body-title">${this.postTitle}</a>`;
 		}
 	}
 
 	_renderDate() {
-		return html `<div class="d2l-body-small">Jan 28, 2020 1:24PM</div>`;
+		return html `<div class="d2l-body-small">${this.postDate}</div>`;
 	}
 
 	_renderBody() {
-		return html `<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non tincidunt nibh. Integer eu rhoncus enim. Morbi vitae rhoncus est, vel ornare nulla. Quisque scelerisque, sapien vel pellentesque porttitor, tortor odio pulvinar nisi, a consectetur augue nulla a tellus. In purus eros, convallis a lacinia vitae, interdum molestie nunc. Donec in magna accumsan, rhoncus massa a, blandit dui. Phasellus accumsan scelerisque ipsum, quis pulvinar ante rhoncus pharetra. Fusce nec magna nisi. In ut lacus pharetra nibh mattis aliquam. Aenean viverra consequat nibh et malesuada.</div>`;
+		return html `<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-text">${this.postBody}</div>`;
 	}
 
 	_renderRating() {
 		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-rating-container">
-				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('upVotes', 'numUpVotes', 12)}</div>
-				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('downVotes', 'numDownVotes', 0)}</div>
+				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('upVotes', 'numUpVotes', this.ratingInformation.upVotes)}</div>
+				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('downVotes', 'numDownVotes', this.ratingInformation.downVotes)}</div>
 			</div>`;
 	}
 
