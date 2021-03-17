@@ -9,8 +9,8 @@ export const LocalizeConsistentEvaluation = superclass => class extends Localize
 				case 'ar':
 					translations = await import('./ar.js');
 					break;
-				case 'cy-gb':
-					translations = await import('./cy-gb.js');
+				case 'cy':
+					translations = await import('./cy.js');
 					break;
 				case 'da':
 					translations = await import('./da.js');
@@ -51,11 +51,11 @@ export const LocalizeConsistentEvaluation = superclass => class extends Localize
 				case 'tr':
 					translations = await import('./tr.js');
 					break;
+				case 'zh-cn':
+					translations = await import('./zh-cn.js');
+					break;
 				case 'zh-tw':
 					translations = await import('./zh-tw.js');
-					break;
-				case 'zh':
-					translations = await import('./zh.js');
 					break;
 			}
 			if (translations && translations.default) {
