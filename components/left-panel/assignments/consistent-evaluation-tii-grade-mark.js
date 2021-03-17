@@ -4,7 +4,7 @@ import '@brightspace-ui/core/components/icons/icon.js';
 import { bodyCompactStyles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluation(LitElement) {
 
