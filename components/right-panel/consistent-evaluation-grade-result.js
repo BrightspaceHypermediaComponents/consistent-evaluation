@@ -5,6 +5,7 @@ import { html, LitElement } from 'lit-element';
 import { appId } from '../controllers/constants.js';
 import { createClient } from '@brightspace-ui/logging';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
+import { getComposedActiveElement } from '@brightspace-ui/core/helpers/focus.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
@@ -191,7 +192,7 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 		];
 
 		D2L.LP.Web.UI.Legacy.MasterPages.Dialog.Open(
-			/*               opener: */ document.body,
+			/*               opener: */ getComposedActiveElement(),
 			/*             location: */ location,
 			/*          srcCallback: */ 'SrcCallback',
 			/*       resizeCallback: */ '',
@@ -226,7 +227,7 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 		];
 
 		D2L.LP.Web.UI.Legacy.MasterPages.Dialog.Open(
-			/*               opener: */ document.body,
+			/*               opener: */ getComposedActiveElement(),
 			/*             location: */ location,
 			/*          srcCallback: */ 'SrcCallback',
 			/*       resizeCallback: */ '',
