@@ -5,10 +5,10 @@ import { html, LitElement } from 'lit-element';
 import { appId } from '../controllers/constants.js';
 import { createClient } from '@brightspace-ui/logging';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
+import { getComposedActiveElement } from '@brightspace-ui/core/helpers/focus.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
-import { getComposedActiveElement } from '@brightspace-ui/core/helpers/focus.js';
 
 export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluation(LitElement) {
 
