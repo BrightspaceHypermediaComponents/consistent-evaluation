@@ -1,5 +1,5 @@
 import './header/d2l-consistent-evaluation-learner-context-bar.js';
-import './left-panel/assignments/consistent-evaluation-left-panel.js';
+import './left-panel/consistent-evaluation-left-panel.js';
 import './footer/consistent-evaluation-footer-presentational.js';
 import './right-panel/consistent-evaluation-right-panel.js';
 import './left-panel/assignments/consistent-evaluation-submissions-page.js';

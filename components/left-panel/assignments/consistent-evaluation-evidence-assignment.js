@@ -29,7 +29,7 @@ function getSubmissionTypeName(type) {
 	}
 }
 
-export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsistentEvaluation(LitElement)) {
+export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(LocalizeConsistentEvaluation(LitElement)) {
 
 	static get properties() {
 		return {
@@ -283,4 +283,4 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 	}
 }
 
-customElements.define('d2l-consistent-evaluation-left-panel', ConsistentEvaluationLeftPanel);
+customElements.define('d2l-consistent-evaluation-evidence-assignment', ConsistentEvaluationEvidenceAssignment);
