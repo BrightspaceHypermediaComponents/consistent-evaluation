@@ -4,7 +4,7 @@ import '@brightspace-ui/core/components/colors/colors';
 import '@brightspace-ui/core/components/tooltip/tooltip';
 import { css, html, LitElement } from 'lit-element/lit-element';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 
 class FeedbackActions extends LocalizeConsistentEvaluation(LitElement) {
 

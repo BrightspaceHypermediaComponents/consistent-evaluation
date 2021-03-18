@@ -2,7 +2,7 @@ import '@brightspace-ui/core/components/button/button.js';
 import '@brightspace-ui/core/components/button/button-icon.js';
 import { css, html, LitElement } from 'lit-element';
 import { publishActionName, retractActionName, saveActionName, updateActionName } from '../controllers/constants.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationFooterPresentational extends LocalizeConsistentEvaluation(LitElement) {
 	static get properties() {

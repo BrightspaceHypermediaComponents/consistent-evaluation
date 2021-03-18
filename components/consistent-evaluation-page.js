@@ -16,7 +16,7 @@ import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controll
 import { Awaiter } from './awaiter.js';
 import { ConsistentEvaluationController } from './controllers/ConsistentEvaluationController.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { LocalizeConsistentEvaluation } from '../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../localize-consistent-evaluation.js';
 import { Rels } from 'd2l-hypermedia-constants';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { TransientSaveAwaiter } from './transient-save-awaiter.js';

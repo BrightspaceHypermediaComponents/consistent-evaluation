@@ -10,7 +10,7 @@ import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWit
 import { findFile, getSubmissions } from '../../helpers/submissionsAndFilesHelpers.js';
 import { createClient } from '@brightspace-ui/logging';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 const logger = createClient(appId);

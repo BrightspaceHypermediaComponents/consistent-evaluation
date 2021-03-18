@@ -3,7 +3,7 @@ import '@brightspace-ui/core/components/dialog/dialog.js';
 import { html, LitElement } from 'lit-element/lit-element.js';
 import { ConsistentEvaluationController } from './controllers/ConsistentEvaluationController.js';
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
-import { LocalizeConsistentEvaluation } from '../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../localize-consistent-evaluation.js';
 
 const DIALOG_ACTION_LEAVE = 'leave';
 const DIALOG_ACTION_PUBLISH_OR_UPDATE = 'publish_or_update';

@@ -3,7 +3,7 @@ import '@brightspace-ui-labs/facet-filter-sort/components/sort-by-dropdown/sort-
 import '@brightspace-ui-labs/facet-filter-sort/components/sort-by-dropdown/sort-by-dropdown-option.js';
 import './consistent-evaluation-discussion-evidence-body';
 import { css, html, LitElement } from 'lit-element';
-import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 
 export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeConsistentEvaluation(LitElement)) {

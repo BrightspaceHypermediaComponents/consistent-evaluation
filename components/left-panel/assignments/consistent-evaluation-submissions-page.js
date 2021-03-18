@@ -9,7 +9,7 @@ import { Classes } from 'd2l-hypermedia-constants';
 import { ConsistentEvalTelemetry } from '../../helpers/consistent-eval-telemetry.js';
 import { convertToken } from '../../helpers/converterHelpers.js';
 import { findFile } from '../../helpers/submissionsAndFilesHelpers.js';
-import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';

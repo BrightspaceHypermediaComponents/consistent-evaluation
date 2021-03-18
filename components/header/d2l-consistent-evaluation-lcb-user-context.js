@@ -10,7 +10,7 @@ import { createClient } from '@brightspace-ui/logging';
 import { EntityMixinLit } from 'siren-sdk/src/mixin/entity-mixin-lit.js';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { UserEntity } from 'siren-sdk/src/users/UserEntity.js';
 

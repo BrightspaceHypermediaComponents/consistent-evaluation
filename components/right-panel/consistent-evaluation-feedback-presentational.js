@@ -6,7 +6,7 @@ import { html, LitElement } from 'lit-element';
 import { convertToken } from '../helpers/converterHelpers.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
 class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvaluation(LitElement) {

@@ -7,7 +7,7 @@ import '@brightspace-ui/core/components/tooltip/tooltip.js';
 import { css, html, LitElement } from 'lit-element';
 import { heading3Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 
 class ConsistentEvaluationNavBar extends LocalizeConsistentEvaluation(LitElement) {
 	static get properties() {

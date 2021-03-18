@@ -1,7 +1,7 @@
 import './consistent-evaluation-evidence-top-bar.js';
 import { bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
-import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationEvidenceNonViewable extends LocalizeConsistentEvaluation(LitElement) {
 

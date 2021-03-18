@@ -1,7 +1,7 @@
 import './consistent-evaluation-evidence-top-bar.js';
 import { css, html, LitElement } from 'lit-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
-import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { pdfExtension } from '../../controllers/constants';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 

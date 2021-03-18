@@ -12,7 +12,7 @@ import { convertToken } from '../helpers/converterHelpers.js';
 import { createClient } from '@brightspace-ui/logging';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 
 export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsistentEvaluation(LitElement)) {

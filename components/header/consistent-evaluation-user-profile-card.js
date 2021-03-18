@@ -2,7 +2,7 @@ import '@brightspace-ui-labs/user-profile-card/user-profile-card.js';
 import '@brightspace-ui/core/components/icons/icon.js';
 
 import { html, LitElement } from 'lit-element';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvaluation(LitElement) {
 

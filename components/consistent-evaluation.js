@@ -6,7 +6,7 @@ import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js'
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { getSubmissions } from './helpers/submissionsAndFilesHelpers.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { LocalizeConsistentEvaluation } from '../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElement) {
 

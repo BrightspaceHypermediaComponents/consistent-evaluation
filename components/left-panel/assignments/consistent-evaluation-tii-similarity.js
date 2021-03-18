@@ -3,7 +3,7 @@ import '@brightspace-ui/core/components/dialog/dialog.js';
 import { bodyCompactStyles, heading4Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { tiiErrorStatus, tiiPendingReportStatus, tiiPendingRetrievalStatus, tiiReportCompleteStatus, tiiReportNotSubmitted } from '../../controllers/constants.js';
-import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluation(LitElement) {
 

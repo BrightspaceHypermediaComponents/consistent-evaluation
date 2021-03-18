@@ -2,7 +2,7 @@ import './consistent-evaluation-rubric.js';
 import { html, LitElement } from 'lit-element';
 import { ConsistentEvaluationHrefController } from '../controllers/ConsistentEvaluationHrefController.js';
 import { convertToken } from '../helpers/converterHelpers.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluation(LitElement) {
 

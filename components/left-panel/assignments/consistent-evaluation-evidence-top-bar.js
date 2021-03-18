@@ -1,6 +1,6 @@
 import '@brightspace-ui/core/components/button/button-subtle.js';
 import { css, html, LitElement } from 'lit-element';
-import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationEvidenceTopBar extends LocalizeConsistentEvaluation(LitElement) {
 
