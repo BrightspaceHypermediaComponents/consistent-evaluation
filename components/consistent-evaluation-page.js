@@ -10,7 +10,7 @@ import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/templates/primary-secondary/primary-secondary.js';
 import '@brightspace-ui/core/components/dialog/dialog-confirm.js';
 import '@brightspace-ui/core/components/button/button.js';
-import { attachmentsRel, draftState, publishActionName, publishedState, retractActionName, saveActionName, toggleIsReadActionName, updateActionName } from './controllers/constants.js';
+import { assignmentActivity, attachmentsRel, draftState, publishActionName, publishedState, retractActionName, saveActionName, toggleIsReadActionName, updateActionName } from './controllers/constants.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { Awaiter } from './awaiter.js';
@@ -149,6 +149,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
 				type: Boolean
+			},
+			activityType: {
+				attribute: 'activity-type',
+				type: String
 			},
 			_displayToast: {
 				type: Boolean
@@ -334,6 +338,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						.token=${this.token}
 						user-progress-outcome-href=${ifDefined(this.userProgressOutcomeHref)}
 						download-all-submissions-location=${ifDefined(this.downloadAllSubmissionLink)}
+						activity-type=${this.activityType}
 						.currentFileId=${this.currentFileId}
 						?hide-use-grade=${this._noGradeComponent()}
 						?display-conversion-warning=${this.displayConversionWarning}
@@ -604,7 +609,9 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
 		const bypassCache = true;
 		this.evaluationEntity = await this._controller.fetchEvaluationEntity(bypassCache);
-		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
+		if (this.activityType === assignmentActivity) {
+			this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
+		}
 	}
 
 	_isEvaluationPublished() {
