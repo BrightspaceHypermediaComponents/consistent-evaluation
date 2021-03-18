@@ -1,5 +1,5 @@
 import './consistent-evaluation-page.js';
-import { attachmentClassName, attachmentListRel, tiiRel } from './controllers/constants';
+import { assignmentActivity, attachmentClassName, attachmentListRel, discussionActivity, tiiRel } from './controllers/constants';
 import { css, html, LitElement } from 'lit-element';
 import { Awaiter } from './awaiter.js';
 import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
@@ -51,6 +51,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			_iteratorTotal: { type: Number },
 			_iteratorIndex: { type: Number },
 			_editActivityPath: { type: String },
+			_activityType: { type: String },
 			fileId: {
 				attribute: 'file-id',
 				type: String
@@ -115,6 +116,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				rubric-popout-location=${ifDefined(this._childHrefs && this._childHrefs.rubricPopoutLocation)}
 				download-all-submissions-location=${ifDefined(this._childHrefs && this._childHrefs.downloadAllSubmissionLink)}
 				edit-activity-path=${ifDefined(this._editActivityPath)}
+				activity-type=${this._activityType}
 				.currentFileId=${this.currentFileId}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
@@ -151,27 +153,34 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 					const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 					this._childHrefs = await controller.getHrefs();
 					this._rubricInfos = await controller.getRubricInfos(false);
-					this._submissionInfo = await controller.getSubmissionInfo();
-					this._gradeItemInfo = await controller.getGradeItemInfo();
-					this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
-					this._organizationName = await controller.getAssignmentOrganizationName('organization');
-					this._userName = await controller.getUserName();
+					this._activityType = await controller.getActivityType();
 					this._enrolledUser = await controller.getEnrolledUser();
 					this._groupInfo = await controller.getGroupInfo();
 					this._anonymousInfo = await controller.getAnonymousInfo();
 					this._iteratorTotal = await controller.getIteratorInfo('total');
 					this._iteratorIndex = await controller.getIteratorInfo('index');
-					this._editActivityPath = await controller.getEditActivityPath();
-					const stripped = this._stripFileIdFromUrl();
-					const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
-					if (!stripped && !hasOneFileAndSubmission) {
-						this.currentFileId = undefined;
-						this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
-					} else {
-						this._loadingComponents.submissions = false;
-					}
 
-					if (!this._submissionInfo || !this._submissionInfo.submissionList) {
+					if (this._activityType === assignmentActivity) {
+						this._submissionInfo = await controller.getSubmissionInfo();
+						this._gradeItemInfo = await controller.getGradeItemInfo();
+						this._userName = await controller.getUserName();
+						this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
+						this._organizationName = await controller.getAssignmentOrganizationName('organization');
+						this._editActivityPath = await controller.getEditActivityPath();
+
+						const stripped = this._stripFileIdFromUrl();
+						const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
+						if (!stripped && !hasOneFileAndSubmission) {
+							this.currentFileId = undefined;
+							this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
+						} else {
+							this._loadingComponents.submissions = false;
+						}
+
+						if (!this._submissionInfo || !this._submissionInfo.submissionList) {
+							this._loadingComponents.submissions = false;
+						}
+					} else if (this._activityType === discussionActivity) {
 						this._loadingComponents.submissions = false;
 					}
 
@@ -194,7 +203,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		}
 		this._loading = false;
 		this._setTitle();
-		if (this._telemetry && this._submissionInfo.submissionList) {
+		if (this._activityType === assignmentActivity && this._telemetry && this._submissionInfo.submissionList) {
 			this._telemetry.logLoadEvent('consistentEvalMain', this._submissionInfo.submissionList.length);
 		}
 	}
