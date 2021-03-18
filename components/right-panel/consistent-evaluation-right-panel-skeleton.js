@@ -102,6 +102,41 @@ export class ConsistentEvaluationRightPanelSkeleton extends SkeletonMixin(LitEle
 		`];
 	}
 
+	render() {
+		return html`
+			<div class="d2l-skeleton-consistent-evaluation-right-panel-block" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
+				${this._renderRubricSkeleton()}
+				${this._renderGradeSkeleton()}
+				${this._renderFeedbackSkeleton()}
+				${this._renderOutcomesSkeleton()}
+			</div>
+		`;
+	}
+	_renderFeedbackSkeleton() {
+		return html`
+			<div class="d2l-skeleton-feedback-title d2l-skeletize"></div>
+			<div class="d2l-skeleton-feedback-box d2l-skeletize-container"></div>
+			<div class="d2l-skeleton-file-upload d2l-skeletize"></div>
+		`;
+	}
+	_renderGradeSkeleton() {
+		return html`
+			<div class="d2l-skeleton-grade-title d2l-skeletize"></div>
+			<div class="d2l-skeleton-grade-presentation d2l-skeletize"></div>
+		`;
+	}
+	_renderOutcomesSkeleton() {
+		return html`
+			<div class="d2l-skeleton-outcomes-title d2l-skeletize"></div>
+			<div class="d2l-skeleton-outcomes-container">
+				<div class="d2l-skeleton-outcomes-text d2l-skeletize"></div>
+				<div class="d2l-skeleton-outcomes-text d2l-skeletize"></div>
+				<div class="d2l-skeleton-outcomes-text d2l-skeletize"></div>
+				<div class="d2l-skeleton-outcomes-text-short d2l-skeletize"></div>
+				<div class="d2l-skeleton-outcomes-footer d2l-skeletize"></div>
+			</div>
+		`;
+	}
 	_renderRubricSkeleton() {
 		return html`
 			<div class="d2l-skeleton-rubrics-title d2l-skeletize"></div>
@@ -115,44 +150,6 @@ export class ConsistentEvaluationRightPanelSkeleton extends SkeletonMixin(LitEle
 		`;
 	}
 
-	_renderGradeSkeleton() {
-		return html`
-			<div class="d2l-skeleton-grade-title d2l-skeletize"></div>
-			<div class="d2l-skeleton-grade-presentation d2l-skeletize"></div>
-		`;
-	}
-
-	_renderFeedbackSkeleton() {
-		return html`
-			<div class="d2l-skeleton-feedback-title d2l-skeletize"></div>
-			<div class="d2l-skeleton-feedback-box d2l-skeletize-container"></div>
-			<div class="d2l-skeleton-file-upload d2l-skeletize"></div>
-		`;
-	}
-
-	_renderOutcomesSkeleton() {
-		return html`
-			<div class="d2l-skeleton-outcomes-title d2l-skeletize"></div>
-			<div class="d2l-skeleton-outcomes-container">
-				<div class="d2l-skeleton-outcomes-text d2l-skeletize"></div>
-				<div class="d2l-skeleton-outcomes-text d2l-skeletize"></div>
-				<div class="d2l-skeleton-outcomes-text d2l-skeletize"></div>
-				<div class="d2l-skeleton-outcomes-text-short d2l-skeletize"></div>
-				<div class="d2l-skeleton-outcomes-footer d2l-skeletize"></div>
-			</div>
-		`;
-	}
-
-	render() {
-		return html`
-			<div class="d2l-skeleton-consistent-evaluation-right-panel-block" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
-				${this._renderRubricSkeleton()}
-				${this._renderGradeSkeleton()}
-				${this._renderFeedbackSkeleton()}
-				${this._renderOutcomesSkeleton()}
-			</div>
-		`;
-	}
 }
 
 customElements.define('consistent-evaluation-right-panel-skeleton', ConsistentEvaluationRightPanelSkeleton);

@@ -11,17 +11,17 @@
 			import '../../components/header/d2l-consistent-evaluation-learner-context-bar.js';
 
 			const submissionList = [
-				{'href': 'data/submission3.json'},
-				{'href': 'data/submission2.json'},
-				{'href': 'data/submission1.json'}];
+				{ 'href': 'data/submission3.json' },
+				{ 'href': 'data/submission2.json' },
+				{ 'href': 'data/submission1.json' }];
 
 			const panels = document.getElementsByTagName('d2l-consistent-evaluation-learner-context-bar');
 			for (let i = 0; i < panels.length; i++) {
 				if (panels[i].id === 'lcb-is-exempt') {
-					panels[i].submissionInfo = { 'isExempt': 'true', submissionList: submissionList};
+					panels[i].submissionInfo = { 'isExempt': 'true', submissionList: submissionList };
 					continue;
 				}
-				panels[i].submissionInfo = {submissionList: submissionList};
+				panels[i].submissionInfo = { submissionList: submissionList };
 			}
 		</script>
 		<style>

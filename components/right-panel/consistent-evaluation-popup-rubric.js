@@ -2,7 +2,7 @@ import './consistent-evaluation-rubric.js';
 import { html, LitElement } from 'lit-element';
 import { ConsistentEvaluationHrefController } from '../controllers/ConsistentEvaluationHrefController.js';
 import { convertToken } from '../helpers/converterHelpers.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluation(LitElement) {
 
@@ -25,6 +25,19 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 		this.token = undefined;
 	}
 
+	render() {
+		if (!this._rubricInfos) {
+			return html ``;
+		}
+		return html`
+		    <d2l-consistent-evaluation-rubric
+				header=${this.localize('rubrics')}
+				.rubricInfos=${this._rubricInfos}
+				.token=${this.token}
+				is-popout
+			></d2l-consistent-evaluation-rubric>
+		`;
+	}
 	async updated(changedProperties) {
 		super.updated();
 
@@ -49,19 +62,6 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 		}
 	}
 
-	render() {
-		if (!this._rubricInfos) {
-			return html ``;
-		}
-		return html`
-		    <d2l-consistent-evaluation-rubric
-				header=${this.localize('rubrics')}
-				.rubricInfos=${this._rubricInfos}
-				.token=${this.token}
-				is-popout
-			></d2l-consistent-evaluation-rubric>
-		`;
-	}
 }
 
 customElements.define('d2l-consistent-evaluation-popup-rubric', ConsistentEvaluationPopupRubric);

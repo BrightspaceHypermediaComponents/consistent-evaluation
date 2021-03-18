@@ -5,7 +5,7 @@ import { appId, submissions } from '../controllers/constants';
 import { css, html, LitElement } from 'lit-element';
 import { findFile, getSubmissionFiles, getSubmissions } from '../helpers/submissionsAndFilesHelpers.js';
 import { createClient } from '@brightspace-ui/logging';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { selectStyles } from '@brightspace-ui/core/components/inputs/input-select-styles.js';
 
@@ -69,6 +69,25 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeConsist
 		this.logger = createClient(appId);
 	}
 
+	render() {
+		if (!this._files || this._files.length === 0) {
+			return html ``;
+		}
+
+		return html`
+			<select class="d2l-input-select d2l-truncate" aria-label=${this.localize('userSubmissions')} @change=${this._onSelectChange}>
+				<option label=${this.localize('userSubmissions')} value=${submissions} ?selected=${!this.currentFileId}></option>
+				${this._files.map(submission => html`
+					<optgroup label=${this.localize('submissionNumber', 'number', submission.submissionNumber)}>
+						${getSubmissionFiles(submission).map(sf => html`
+							<option value=${sf.properties.id} label=${this._truncateFileName(sf.properties.name)} ?selected=${sf.properties.id === this.currentFileId} class="select-option"></option>
+						`)}
+					</optgroup>
+				`)};
+			</select>
+			${this._renderLateButton()}
+ 		`;
+	}
 	async updated(changedProperties) {
 		super.updated(changedProperties);
 
@@ -84,18 +103,9 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeConsist
 		}
 	}
 
-	_onSelectChange(e) {
-		if (e.target.value === submissions) {
-			this.dispatchEvent(new Event('d2l-consistent-evaluation-evidence-back-to-user-submissions', {
-				composed: true,
-				bubbles: true
-			}));
-		} else {
-			const fileId = e.target.value;
-			this._dispatchFileSelectedEvent(fileId);
-		}
+	refreshSelect() {
+		this.shadowRoot.querySelector('select').value = this.currentFileId;
 	}
-
 	_dispatchFileSelectedEvent(fileId) {
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-file-selected', {
 			detail: {
@@ -105,18 +115,15 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeConsist
 			bubbles: true
 		}));
 	}
-
-	_renderLateButton() {
-		if (!this.currentFileId || !this._submissionLateness)
-		{
-			return html``;
+	_onSelectChange(e) {
+		if (e.target.value === submissions) {
+			this.dispatchEvent(new Event('d2l-consistent-evaluation-evidence-back-to-user-submissions', {
+				composed: true,
+				bubbles: true
+			}));
 		} else {
-			return html`
-				<d2l-button-subtle
-					text="${moment.duration(Number(this._submissionLateness), 'seconds').humanize()} ${this.localize('late')}"
-					icon="tier1:access-special"
-					@click="${this._openSpecialAccessDialog}"
-				></d2l-button-subtle>`;
+			const fileId = e.target.value;
+			this._dispatchFileSelectedEvent(fileId);
 		}
 	}
 
@@ -159,6 +166,19 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeConsist
 			/* forceTriggerOnCancel: */ false
 		);
 	}
+	_renderLateButton() {
+		if (!this.currentFileId || !this._submissionLateness)
+		{
+			return html``;
+		} else {
+			return html`
+				<d2l-button-subtle
+					text="${moment.duration(Number(this._submissionLateness), 'seconds').humanize()} ${this.localize('late')}"
+					icon="tier1:access-special"
+					@click="${this._openSpecialAccessDialog}"
+				></d2l-button-subtle>`;
+		}
+	}
 
 	_truncateFileName(fileName) {
 		const maxFileLength = 50;
@@ -170,29 +190,6 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeConsist
 		return  `${fileName.substring(0, maxFileLength)}…${ext}`;
 	}
 
-	refreshSelect() {
-		this.shadowRoot.querySelector('select').value = this.currentFileId;
-	}
-
-	render() {
-		if (!this._files || this._files.length === 0) {
-			return html ``;
-		}
-
-		return html`
-			<select class="d2l-input-select d2l-truncate" aria-label=${this.localize('userSubmissions')} @change=${this._onSelectChange}>
-				<option label=${this.localize('userSubmissions')} value=${submissions} ?selected=${!this.currentFileId}></option>
-				${this._files.map(submission => html`
-					<optgroup label=${this.localize('submissionNumber', 'number', submission.submissionNumber)}>
-						${getSubmissionFiles(submission).map(sf => html`
-							<option value=${sf.properties.id} label=${this._truncateFileName(sf.properties.name)} ?selected=${sf.properties.id === this.currentFileId} class="select-option"></option>
-						`)}
-					</optgroup>
-				`)};
-			</select>
-			${this._renderLateButton()}
- 		`;
-	}
 }
 
 customElements.define('d2l-consistent-evaluation-lcb-file-context', ConsistentEvaluationLcbFileContext);

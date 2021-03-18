@@ -6,7 +6,7 @@ import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js'
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { getSubmissions } from './helpers/submissionsAndFilesHelpers.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { LocalizeConsistentEvaluation } from '../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElement) {
 
@@ -43,8 +43,8 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			_rubricInfos: { type: Array },
 			_submissionInfo: { type: Object },
 			_gradeItemInfo: { type: Object },
-			_enrolledUser: { type: Object},
-			_groupInfo: {type: Object},
+			_enrolledUser: { type: Object },
+			_groupInfo: { type: Object },
 			_assignmentName: { type: String },
 			_organizationName: { type: String },
 			_userName: { type: String },
@@ -97,163 +97,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		};
 	}
 
-	async updated(changedProperties) {
-		super.updated();
-		if (changedProperties.has('dataTelemetryEndpoint')) {
-			this._telemetry = new ConsistentEvalTelemetry(this.dataTelemetryEndpoint);
-		}
-		if (changedProperties.has('href')) {
-			await this._mutex.dispatch(
-				async() => {
-					const controller = new ConsistentEvaluationHrefController(this.href, this.token);
-					this._childHrefs = await controller.getHrefs();
-					this._rubricInfos = await controller.getRubricInfos(false);
-					this._submissionInfo = await controller.getSubmissionInfo();
-					this._gradeItemInfo = await controller.getGradeItemInfo();
-					this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
-					this._organizationName = await controller.getAssignmentOrganizationName('organization');
-					this._userName = await controller.getUserName();
-					this._enrolledUser = await controller.getEnrolledUser();
-					this._groupInfo = await controller.getGroupInfo();
-					this._anonymousInfo = await controller.getAnonymousInfo();
-					this._iteratorTotal = await controller.getIteratorInfo('total');
-					this._iteratorIndex = await controller.getIteratorInfo('index');
-					this._editActivityPath = await controller.getEditActivityPath();
-					const stripped = this._stripFileIdFromUrl();
-					const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
-					if (!stripped && !hasOneFileAndSubmission) {
-						this.currentFileId = undefined;
-						this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
-					} else {
-						this._loadingComponents.submissions = false;
-					}
-
-					if (!this._submissionInfo || !this._submissionInfo.submissionList) {
-						this._loadingComponents.submissions = false;
-					}
-
-					this._loadingComponents.main = false;
-					this._finishedLoading();
-				}
-			);
-		}
-	}
-
-	async _hasOneFileAndOneSubmission() {
-		if (this._submissionInfo && this._submissionInfo.submissionList && this._submissionInfo.submissionList.length === 1) {
-			const submissions = await getSubmissions(this._submissionInfo, this.token);
-			const attachmentList = submissions[0].entity.getSubEntityByRel(attachmentListRel);
-			const numberOfSubmittedFiles = attachmentList.entities.length;
-			if (numberOfSubmittedFiles === 1) {
-				const fileId = attachmentList.getSubEntityByClass(attachmentClassName).properties.id;
-				this.currentFileId = fileId;
-				return true;
-			}
-		}
-		return false;
-	}
-
-	_stripFileIdFromUrl() {
-		if (this.fileId) {
-			const fileIdQueryName = 'fileId';
-			const urlWithoutFileQuery = window.location.href.replace(`&${fileIdQueryName}=${this.fileId}`, '');
-			history.replaceState({}, document.title, urlWithoutFileQuery);
-
-			this.currentFileId = this.fileId;
-			this.fileId = undefined;
-
-			return true;
-		}
-
-		return false;
-	}
-
-	async _onNextStudentClick() {
-		await this._mutex.dispatch(
-			async() => {
-				const nextStudentHref = this._childHrefs?.nextHref;
-				if (nextStudentHref) {
-					this._updateCurrentUrl(nextStudentHref);
-					this.href = nextStudentHref;
-					this._setLoading();
-				}
-			}
-		);
-	}
-
-	async _onPreviousStudentClick() {
-		await this._mutex.dispatch(
-			async() => {
-				const previousStudentHref = this._childHrefs?.previousHref;
-				if (previousStudentHref) {
-					this._updateCurrentUrl(previousStudentHref);
-					this.href = previousStudentHref;
-					this._setLoading();
-				}
-			}
-		);
-	}
-
-	_updateCurrentUrl(targetHref) {
-		const targetHrefUrl = new URL(targetHref);
-		if (targetHrefUrl) {
-			const queryString = targetHrefUrl.search;
-			const searchParams = new URLSearchParams(queryString);
-			const nextActorUsageId = searchParams.get('currentActorUsageId');
-
-			if (nextActorUsageId) {
-				const currentUrl = new URL(window.location.href);
-				const currentUrlQueryString = currentUrl.search;
-				const currentUrlSearchParams = new URLSearchParams(currentUrlQueryString);
-				currentUrlSearchParams.set('currentActorActivityUsage', nextActorUsageId);
-				currentUrl.search = currentUrlSearchParams.toString();
-
-				window.history.replaceState(null, null, currentUrl.toString());
-			}
-		}
-	}
-
-	_shouldHideLearnerContextBar() {
-		return this._childHrefs && this._childHrefs.userProgressOutcomeHref;
-	}
-
-	_finishedLoading(e) {
-		if (e) {
-			this._loadingComponents[e.detail.component] = false;
-		}
-
-		for (const component in this._loadingComponents) {
-			if (this._loadingComponents[component] === true) {
-				return;
-			}
-		}
-		this._loading = false;
-		this._setTitle();
-		if (this._telemetry && this._submissionInfo.submissionList) {
-			this._telemetry.logLoadEvent('consistentEvalMain', this._submissionInfo.submissionList.length);
-		}
-	}
-
-	_setTitle() {
-		if (this._userName && this._assignmentName) {
-			const title = document.createElement('title');
-			title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._assignmentName });
-			document.head.insertBefore(title, document.head.firstChild);
-		}
-	}
-
-	_setLoading() {
-		for (const component in this._loadingComponents) {
-			this._loadingComponents[component] = true;
-		}
-		this._loading = true;
-	}
-
-	async _refreshRubrics() {
-		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
-		this._rubricInfos = await controller.getRubricInfos(true);
-	}
-
 	render() {
 		return html`
 			<d2l-consistent-evaluation-page
@@ -297,6 +140,156 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			></d2l-consistent-evaluation-page>
 		`;
 	}
+	async updated(changedProperties) {
+		super.updated();
+		if (changedProperties.has('dataTelemetryEndpoint')) {
+			this._telemetry = new ConsistentEvalTelemetry(this.dataTelemetryEndpoint);
+		}
+		if (changedProperties.has('href')) {
+			await this._mutex.dispatch(
+				async() => {
+					const controller = new ConsistentEvaluationHrefController(this.href, this.token);
+					this._childHrefs = await controller.getHrefs();
+					this._rubricInfos = await controller.getRubricInfos(false);
+					this._submissionInfo = await controller.getSubmissionInfo();
+					this._gradeItemInfo = await controller.getGradeItemInfo();
+					this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
+					this._organizationName = await controller.getAssignmentOrganizationName('organization');
+					this._userName = await controller.getUserName();
+					this._enrolledUser = await controller.getEnrolledUser();
+					this._groupInfo = await controller.getGroupInfo();
+					this._anonymousInfo = await controller.getAnonymousInfo();
+					this._iteratorTotal = await controller.getIteratorInfo('total');
+					this._iteratorIndex = await controller.getIteratorInfo('index');
+					this._editActivityPath = await controller.getEditActivityPath();
+					const stripped = this._stripFileIdFromUrl();
+					const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
+					if (!stripped && !hasOneFileAndSubmission) {
+						this.currentFileId = undefined;
+						this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
+					} else {
+						this._loadingComponents.submissions = false;
+					}
+
+					if (!this._submissionInfo || !this._submissionInfo.submissionList) {
+						this._loadingComponents.submissions = false;
+					}
+
+					this._loadingComponents.main = false;
+					this._finishedLoading();
+				}
+			);
+		}
+	}
+
+	_finishedLoading(e) {
+		if (e) {
+			this._loadingComponents[e.detail.component] = false;
+		}
+
+		for (const component in this._loadingComponents) {
+			if (this._loadingComponents[component] === true) {
+				return;
+			}
+		}
+		this._loading = false;
+		this._setTitle();
+		if (this._telemetry && this._submissionInfo.submissionList) {
+			this._telemetry.logLoadEvent('consistentEvalMain', this._submissionInfo.submissionList.length);
+		}
+	}
+	async _hasOneFileAndOneSubmission() {
+		if (this._submissionInfo && this._submissionInfo.submissionList && this._submissionInfo.submissionList.length === 1) {
+			const submissions = await getSubmissions(this._submissionInfo, this.token);
+			const attachmentList = submissions[0].entity.getSubEntityByRel(attachmentListRel);
+			const numberOfSubmittedFiles = attachmentList.entities.length;
+			if (numberOfSubmittedFiles === 1) {
+				const fileId = attachmentList.getSubEntityByClass(attachmentClassName).properties.id;
+				this.currentFileId = fileId;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	async _onNextStudentClick() {
+		await this._mutex.dispatch(
+			async() => {
+				const nextStudentHref = this._childHrefs?.nextHref;
+				if (nextStudentHref) {
+					this._updateCurrentUrl(nextStudentHref);
+					this.href = nextStudentHref;
+					this._setLoading();
+				}
+			}
+		);
+	}
+	async _onPreviousStudentClick() {
+		await this._mutex.dispatch(
+			async() => {
+				const previousStudentHref = this._childHrefs?.previousHref;
+				if (previousStudentHref) {
+					this._updateCurrentUrl(previousStudentHref);
+					this.href = previousStudentHref;
+					this._setLoading();
+				}
+			}
+		);
+	}
+	async _refreshRubrics() {
+		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
+		this._rubricInfos = await controller.getRubricInfos(true);
+	}
+	_setLoading() {
+		for (const component in this._loadingComponents) {
+			this._loadingComponents[component] = true;
+		}
+		this._loading = true;
+	}
+	_setTitle() {
+		if (this._userName && this._assignmentName) {
+			const title = document.createElement('title');
+			title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._assignmentName });
+			document.head.insertBefore(title, document.head.firstChild);
+		}
+	}
+	_shouldHideLearnerContextBar() {
+		return this._childHrefs && this._childHrefs.userProgressOutcomeHref;
+	}
+	_stripFileIdFromUrl() {
+		if (this.fileId) {
+			const fileIdQueryName = 'fileId';
+			const urlWithoutFileQuery = window.location.href.replace(`&${fileIdQueryName}=${this.fileId}`, '');
+			history.replaceState({}, document.title, urlWithoutFileQuery);
+
+			this.currentFileId = this.fileId;
+			this.fileId = undefined;
+
+			return true;
+		}
+
+		return false;
+	}
+
+	_updateCurrentUrl(targetHref) {
+		const targetHrefUrl = new URL(targetHref);
+		if (targetHrefUrl) {
+			const queryString = targetHrefUrl.search;
+			const searchParams = new URLSearchParams(queryString);
+			const nextActorUsageId = searchParams.get('currentActorUsageId');
+
+			if (nextActorUsageId) {
+				const currentUrl = new URL(window.location.href);
+				const currentUrlQueryString = currentUrl.search;
+				const currentUrlSearchParams = new URLSearchParams(currentUrlQueryString);
+				currentUrlSearchParams.set('currentActorActivityUsage', nextActorUsageId);
+				currentUrl.search = currentUrlSearchParams.toString();
+
+				window.history.replaceState(null, null, currentUrl.toString());
+			}
+		}
+	}
+
 }
 
 customElements.define('d2l-consistent-evaluation', ConsistentEvaluation);

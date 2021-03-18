@@ -54,7 +54,7 @@ describe('ConsistentEvaluationHrefController', () => {
 						hasLinkByRel: (r) => r === rel,
 						getLinkByRel: (r) => (r === rel ? { href } : undefined),
 						hasSubEntityByRel: (r) => r === editSpecialAccessApplicationRel,
-						getSubEntityByRel: (r) => (r === editSpecialAccessApplicationRel ? { properties: {path: expectedSpecialAcessPath}} : undefined)
+						getSubEntityByRel: (r) => (r === editSpecialAccessApplicationRel ? { properties: { path: expectedSpecialAcessPath } } : undefined)
 					}
 				});
 
@@ -84,12 +84,12 @@ describe('ConsistentEvaluationHrefController', () => {
 					hasLinkByRel: (r) => r === Rels.assignment,
 					getLinkByRel: (r) => (r === Rels.assignment ? { href: assignmentHref } : undefined),
 					getSubEntityByClass: (r) => (r === Classes.assignments.submissionList ? { links: expectedSubmissions } : undefined),
-					getSubEntityByRel: (r) => (r === Rels.evaluation ? { properties: {state: expectedEvaluationState}} : undefined)
+					getSubEntityByRel: (r) => (r === Rels.evaluation ? { properties: { state: expectedEvaluationState } } : undefined)
 				}
 			});
 			sinon.stub(controller, '_getEntityFromHref').returns({
 				entity: {
-					properties: {submissionType: {title: 'File Submission', value : expectedSubmissionType}}
+					properties: { submissionType: { title: 'File Submission', value : expectedSubmissionType } }
 				}
 			});
 			const submissionInfo = await controller.getSubmissionInfo();
@@ -160,7 +160,7 @@ describe('ConsistentEvaluationHrefController', () => {
 			entity: {
 				getSubEntityByRel: (r) => {
 					if (r === viewMembersRel) {
-						return { properties: { path: viewMembersPath }};
+						return { properties: { path: viewMembersPath } };
 					} else if (r === emailRel) {
 						return { properties: { path: emailPath } };
 					} else if (r === pagerRel) {
@@ -243,7 +243,7 @@ describe('ConsistentEvaluationHrefController', () => {
 
 			getHrefStub.withArgs(activityUsageHref, false).returns({
 				entity: {
-					getSubEntityByRel: (r) => (r === editActivityRel ? { properties: {path: editActivityPath}} : undefined)
+					getSubEntityByRel: (r) => (r === editActivityRel ? { properties: { path: editActivityPath } } : undefined)
 				}
 			});
 

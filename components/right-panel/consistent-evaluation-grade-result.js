@@ -7,7 +7,7 @@ import { createClient } from '@brightspace-ui/logging';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { getComposedActiveElement } from '@brightspace-ui/core/helpers/focus.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
 export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluation(LitElement) {
@@ -79,44 +79,6 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 		super.disconnectedCallback();
 	}
 
-	flush() {
-		if (this._debounceJobs.grade && this._debounceJobs.grade.isActive()) {
-			this._debounceJobs.grade.flush();
-		}
-	}
-
-	onGradeChanged(e) {
-		const score = e.detail.value;
-		this._debounceJobs.grade = Debouncer.debounce(
-			this._debounceJobs.grade,
-			timeOut.after(800),
-			() => this._emitGradeChangeEvent(score)
-		);
-	}
-
-	_emitGradeChangeEvent(score) {
-		this.grade.setScore(score);
-		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-grade-changed', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				grade: this.grade
-			}
-		}));
-	}
-
-	_setGradeSummaryInfo(gradeType, score, scoreOutOf) {
-		let summary = '';
-		if (score === null || score === '') {
-			summary = this.localize('noGradeSummary');
-		} else if (gradeType === GradeType.Letter) {
-			summary = score;
-		} else {
-			summary = this.localize('gradeSummary', { grade: score, outOf: scoreOutOf });
-		}
-		this._gradeSummaryInfo = summary;
-	}
-
 	render() {
 		const gradeType = this.grade.getScoreType();
 		let score = this.grade.getScore();
@@ -163,6 +125,31 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 			</d2l-consistent-evaluation-right-panel-block>
 		`;
 	}
+	flush() {
+		if (this._debounceJobs.grade && this._debounceJobs.grade.isActive()) {
+			this._debounceJobs.grade.flush();
+		}
+	}
+
+	onGradeChanged(e) {
+		const score = e.detail.value;
+		this._debounceJobs.grade = Debouncer.debounce(
+			this._debounceJobs.grade,
+			timeOut.after(800),
+			() => this._emitGradeChangeEvent(score)
+		);
+	}
+
+	_emitGradeChangeEvent(score) {
+		this.grade.setScore(score);
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-grade-changed', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				grade: this.grade
+			}
+		}));
+	}
 
 	_openGradeEvaluationDialog() {
 
@@ -204,7 +191,6 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 			/* forceTriggerOnCancel: */ false
 		);
 	}
-
 	_openGradeStatisticsDialog() {
 
 		const dialogUrl = this.gradeItemInfo && this.gradeItemInfo.statsUrl;
@@ -238,6 +224,17 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 			/*              buttons: */ buttons,
 			/* forceTriggerOnCancel: */ false
 		);
+	}
+	_setGradeSummaryInfo(gradeType, score, scoreOutOf) {
+		let summary = '';
+		if (score === null || score === '') {
+			summary = this.localize('noGradeSummary');
+		} else if (gradeType === GradeType.Letter) {
+			summary = score;
+		} else {
+			summary = this.localize('gradeSummary', { grade: score, outOf: scoreOutOf });
+		}
+		this._gradeSummaryInfo = summary;
 	}
 
 }

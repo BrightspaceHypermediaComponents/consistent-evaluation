@@ -10,7 +10,7 @@ import { createClient } from '@brightspace-ui/logging';
 import { EntityMixinLit } from 'siren-sdk/src/mixin/entity-mixin-lit.js';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { UserEntity } from 'siren-sdk/src/users/UserEntity.js';
 
@@ -128,6 +128,23 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		this._groupMembersItemID = getUniqueId();
 	}
 
+	render() {
+		return html`
+		<div class="d2l-user-context-container"
+			tabindex="0"
+			aria-label=${ifDefined(this._displayName)}
+			@mouseover=${this._toggleOnProfileCard}
+			@mouseleave=${this._toggleOffProfileCard}>
+
+			${this._renderProfileImage()}
+			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name" title="${ifDefined(this._displayName)}">${ifDefined(this._displayName)}</h2>
+			${this._getExemptText()}
+			${this._renderProfileCard()}
+			${this._renderGroupOptions()}
+
+		</div>
+		`;
+	}
 	set _entity(entity) {
 		if (this._entityHasChanged(entity)) {
 			this._onActorEntityChanged(entity);
@@ -135,6 +152,13 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		}
 	}
 
+	_getExemptText() {
+		if (this.isExempt) {
+			return html`<span class="d2l-body-standard d2l-consistent-evaluation-lcb-is-exempt">(${this.localize('exempt')})</span>`;
+		} else {
+			return null;
+		}
+	}
 	_onActorEntityChanged(actorEntity, error) {
 		if (error || actorEntity === null) {
 			return;
@@ -143,6 +167,19 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		this._displayName = actorEntity.getDisplayName();
 	}
 
+	_onGroupOptionSelect(e) {
+		switch (e.target.id) {
+			case this._groupEmailItemID:
+				this._openGroupEmail();
+				break;
+			case this._groupMembersItemID:
+				this._openGroupMembers();
+				break;
+			case this._groupIMItemID:
+				this._openGroupIM();
+				break;
+		}
+	}
 	_openGroupEmail() {
 		if (this.emailPopout) {
 			if (!this.emailPopout.closed) {
@@ -219,27 +256,20 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		);
 	}
 
-	_getExemptText() {
-		if (this.isExempt) {
-			return html`<span class="d2l-body-standard d2l-consistent-evaluation-lcb-is-exempt">(${this.localize('exempt')})</span>`;
-		} else {
-			return null;
-		}
+	_renderGroupOptions() {
+		return (this.isGroupActivity && this.groupInfo) ? html`
+			<d2l-dropdown-context-menu class="d2l-user-group-context-menu" text=${this.localize('openGroupOptions')}>
+				<d2l-dropdown-menu>
+					<d2l-menu @d2l-menu-item-select=${this._onGroupOptionSelect} label=${this.localize('groupOptions')}>
+						<d2l-menu-item id=${this._groupEmailItemID} text=${this.localize('emailGroup')} ?hidden=${!this.groupInfo.emailPath}></d2l-menu-item>
+						<d2l-menu-item id=${this._groupMembersItemID} text=${this.localize('seeAllGroupMembers')} ?hidden=${!this.groupInfo.viewMembersPath}></d2l-menu-item>
+						<d2l-menu-item id=${this._groupIMItemID} text=${this.localize('instantMessage')} ?hidden=${!this.groupInfo.pagerPath}></d2l-menu-item>
+					</d2l-menu>
+				</d2l-dropdown-menu>
+			</d2l-dropdown-context-menu>
+			` :
+			html``;
 	}
-
-	_renderProfileImage() {
-		if (this.isGroupActivity) {
-			return html``;
-		} else {
-			return html `
-			<d2l-profile-image
-				href=${this.href}
-				.token=${this.token}
-				small
-			></d2l-profile-image>`;
-		}
-	}
-
 	_renderProfileCard() {
 		let emailHref = undefined;
 		let instantMessageHref = undefined;
@@ -276,38 +306,17 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			` :
 			html``;
 	}
-
-	_onGroupOptionSelect(e) {
-		switch (e.target.id) {
-			case this._groupEmailItemID:
-				this._openGroupEmail();
-				break;
-			case this._groupMembersItemID:
-				this._openGroupMembers();
-				break;
-			case this._groupIMItemID:
-				this._openGroupIM();
-				break;
+	_renderProfileImage() {
+		if (this.isGroupActivity) {
+			return html``;
+		} else {
+			return html `
+			<d2l-profile-image
+				href=${this.href}
+				.token=${this.token}
+				small
+			></d2l-profile-image>`;
 		}
-	}
-
-	_renderGroupOptions() {
-		return (this.isGroupActivity && this.groupInfo) ? html`
-			<d2l-dropdown-context-menu class="d2l-user-group-context-menu" text=${this.localize('openGroupOptions')}>
-				<d2l-dropdown-menu>
-					<d2l-menu @d2l-menu-item-select=${this._onGroupOptionSelect} label=${this.localize('groupOptions')}>
-						<d2l-menu-item id=${this._groupEmailItemID} text=${this.localize('emailGroup')} ?hidden=${!this.groupInfo.emailPath}></d2l-menu-item>
-						<d2l-menu-item id=${this._groupMembersItemID} text=${this.localize('seeAllGroupMembers')} ?hidden=${!this.groupInfo.viewMembersPath}></d2l-menu-item>
-						<d2l-menu-item id=${this._groupIMItemID} text=${this.localize('instantMessage')} ?hidden=${!this.groupInfo.pagerPath}></d2l-menu-item>
-					</d2l-menu>
-				</d2l-dropdown-menu>
-			</d2l-dropdown-context-menu>
-			` :
-			html``;
-	}
-
-	_toggleOnProfileCard() {
-		this._showProfileCard = true;
 	}
 
 	_toggleOffProfileCard(event) {
@@ -316,24 +325,10 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			this._showProfileCard = false;
 		}
 	}
-
-	render() {
-		return html`
-		<div class="d2l-user-context-container"
-			tabindex="0"
-			aria-label=${ifDefined(this._displayName)}
-			@mouseover=${this._toggleOnProfileCard}
-			@mouseleave=${this._toggleOffProfileCard}>
-
-			${this._renderProfileImage()}
-			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name" title="${ifDefined(this._displayName)}">${ifDefined(this._displayName)}</h2>
-			${this._getExemptText()}
-			${this._renderProfileCard()}
-			${this._renderGroupOptions()}
-
-		</div>
-		`;
+	_toggleOnProfileCard() {
+		this._showProfileCard = true;
 	}
+
 }
 
 customElements.define('d2l-consistent-evaluation-lcb-user-context', ConsistentEvaluationLcbUserContext);

@@ -2,7 +2,7 @@ import './assignments/consistent-evaluation-evidence-assignment.js';
 import './discussions/consistent-evaluation-evidence-discussion.js';
 import { html, LitElement } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 
 export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsistentEvaluation(LitElement)) {
@@ -41,6 +41,11 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 		};
 	}
 
+	render() {
+		return html`
+			${this._renderAssignments()}
+		`;
+	}
 	_renderAssignments() {
 		return html`
 			<d2l-consistent-evaluation-evidence-assignment
@@ -63,11 +68,6 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 		`;
 	}
 
-	render() {
-		return html`
-			${this._renderAssignments()}
-		`;
-	}
 }
 
 customElements.define('d2l-consistent-evaluation-left-panel', ConsistentEvaluationLeftPanel);

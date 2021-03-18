@@ -1,7 +1,7 @@
 import './consistent-evaluation-evidence-top-bar.js';
 import { bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
-import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationEvidenceNonViewable extends LocalizeConsistentEvaluation(LitElement) {
 
@@ -31,10 +31,6 @@ export class ConsistentEvaluationEvidenceNonViewable extends LocalizeConsistentE
 		`];
 	}
 
-	_donwloadFile() {
-		window.location = this.downloadUrl;
-	}
-
 	render() {
 		return html`
 			<d2l-consistent-evaluation-evidence-top-bar>
@@ -52,6 +48,10 @@ export class ConsistentEvaluationEvidenceNonViewable extends LocalizeConsistentE
 			</div>
 		`;
 	}
+	_donwloadFile() {
+		window.location = this.downloadUrl;
+	}
+
 }
 
 customElements.define('d2l-consistent-evaluation-evidence-non-viewable', ConsistentEvaluationEvidenceNonViewable);

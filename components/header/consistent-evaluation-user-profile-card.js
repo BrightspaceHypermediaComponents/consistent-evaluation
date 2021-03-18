@@ -2,7 +2,7 @@ import '@brightspace-ui-labs/user-profile-card/user-profile-card.js';
 import '@brightspace-ui/core/components/icons/icon.js';
 
 import { html, LitElement } from 'lit-element';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvaluation(LitElement) {
 
@@ -46,64 +46,6 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 		});
 	}
 
-	_openUserProgress() {
-		window.open(this.userProgressHref);
-	}
-
-	_openUserProfile() {
-		if (this.userProfileHref) {
-			window.open(this.userProfileHref);
-		}
-	}
-
-	dispatchMouseLeaveEvent() {
-		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-profile-card-mouse-leave', {
-			composed: true,
-			bubbles: true,
-		}));
-	}
-
-	_openMessageDialog() {
-		if (this.messagePopout) {
-			if (!this.messagePopout.closed) {
-				this.messagePopout.focus();
-				return;
-			}
-		}
-
-		this.messagePopout = window.open(
-			this.instantMessageHref,
-			'messagePopout',
-			'width=400,height=200,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
-		);
-	}
-
-	_openEmailDialog() {
-		if (this.emailPopout) {
-			if (!this.emailPopout.closed) {
-				this.emailPopout.focus();
-				return;
-			}
-		}
-
-		this.emailPopout = window.open(
-			this.emailHref,
-			'emailPopout',
-			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
-		);
-	}
-
-	_renderProfileImage() {
-		return html `
-			<d2l-profile-image
-				slot="illustration"
-				href=${this.userHref}
-				.token=${this.token}
-				x-large
-			></d2l-profile-image>
-		`;
-	}
-
 	render() {
 		return html`
 		<d2l-labs-user-profile-card
@@ -121,6 +63,61 @@ export class ConsistentEvaluationUserProfileCard extends LocalizeConsistentEvalu
 		</d2l-labs-user-profile-card>
 		`;
 	}
+	dispatchMouseLeaveEvent() {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-profile-card-mouse-leave', {
+			composed: true,
+			bubbles: true,
+		}));
+	}
+	_openEmailDialog() {
+		if (this.emailPopout) {
+			if (!this.emailPopout.closed) {
+				this.emailPopout.focus();
+				return;
+			}
+		}
+
+		this.emailPopout = window.open(
+			this.emailHref,
+			'emailPopout',
+			'width=1000,height=1000,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		);
+	}
+	_openMessageDialog() {
+		if (this.messagePopout) {
+			if (!this.messagePopout.closed) {
+				this.messagePopout.focus();
+				return;
+			}
+		}
+
+		this.messagePopout = window.open(
+			this.instantMessageHref,
+			'messagePopout',
+			'width=400,height=200,scrollbars=no,toolbar=no,screenx=0,screeny=0,location=no,titlebar=no,directories=no,status=no,menubar=no'
+		);
+	}
+	_openUserProfile() {
+		if (this.userProfileHref) {
+			window.open(this.userProfileHref);
+		}
+	}
+
+	_openUserProgress() {
+		window.open(this.userProgressHref);
+	}
+
+	_renderProfileImage() {
+		return html `
+			<d2l-profile-image
+				slot="illustration"
+				href=${this.userHref}
+				.token=${this.token}
+				x-large
+			></d2l-profile-image>
+		`;
+	}
+
 }
 
 customElements.define('d2l-consistent-evaluation-user-profile-card', ConsistentEvaluationUserProfileCard);

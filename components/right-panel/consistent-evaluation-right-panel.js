@@ -6,13 +6,13 @@ import './consistent-evaluation-coa-eval-override.js';
 import './consistent-evaluation-right-panel-skeleton.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-context-menu.js';
 import { css, html, LitElement } from 'lit-element';
-import { getRubricAssessmentScore, mapRubricScoreToGrade} from '../helpers/rubricGradeSyncHelpers.js';
+import { getRubricAssessmentScore, mapRubricScoreToGrade } from '../helpers/rubricGradeSyncHelpers.js';
 import { appId } from '../controllers/constants.js';
 import { convertToken } from '../helpers/converterHelpers.js';
 import { createClient } from '@brightspace-ui/logging';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 
 export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsistentEvaluation(LitElement)) {
@@ -208,74 +208,20 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		this.logger = createClient(appId);
 	}
 
-	_renderRubric() {
-		if (this.rubricInfos && this.rubricInfos.length > 0) {
-			const showActiveScoringRubric = (this.grade.getScoreOutOf() && this.activeScoringRubric);
-			return html`
-				<d2l-consistent-evaluation-rubric
-					aria-hidden="${this.skeleton}"
-					header=${this.localize('rubrics')}
-					.rubricInfos=${this.rubricInfos}
-					active-scoring-rubric=${this.activeScoringRubric}
-					rubric-popout-location=${this.rubricPopoutLocation}
-					.token=${this.token}
-					?show-active-scoring-rubric-options=${showActiveScoringRubric}
-					?read-only=${this.rubricReadOnly}
-					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
-					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
-					@d2l-rubric-compact-expanded-changed=${this._updateRubricOpenState}
-				></d2l-consistent-evaluation-rubric>
-			`;
-		}
-
-		return html``;
-	}
-
-	_renderGrade() {
-		if (!this.hideGrade) {
-			return html`
-				<d2l-consistent-evaluation-grade-result
-					aria-hidden="${this.skeleton}"
-					.grade=${this.grade}
-					.gradeItemInfo=${this.gradeItemInfo}
-					?read-only=${!this.allowEvaluationWrite}
-				></d2l-consistent-evaluation-grade-result>
-			`;
-		}
-
-		return html``;
-	}
-
-	_renderOverflowMenu() {
+	render() {
 		return html`
-			<d2l-dropdown-menu>
-				<d2l-menu @d2l-menu-item-select=${this._onOverflowOptionSelect} label=${this.localize('evaluationOptions')}>
-					<d2l-menu-item id=${this._editActivityId} text=${this.localize('editActivity')} ?hidden=${!this.editActivityPath}></d2l-menu-item>
-					<d2l-menu-item id=${this._specialAccessId} text=${this.localize('specialAccessDates')} ?hidden=${!this.specialAccessHref}></d2l-menu-item>
-				</d2l-menu>
-			</d2l-dropdown-menu>
-		`;
-	}
-
-	_renderOverflowButtonIcon() {
-		return html`
-			<div class="d2l-consistent-evaluation-right-panel-clearfix"
-				aria-hidden="${this.skeleton}">
-				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu" text=${this.localize('evaluationOptions')}>
-					${this._renderOverflowMenu()}
-				</d2l-dropdown-more>
+			<div class="d2l-consistent-evaluation-right-panel">
+				${this._renderSkeleton()}
+				${this._renderOverflowButtonIcon()}
+				${this._renderRubric()}
+				${this._renderGrade()}
+				${this._renderCoaOverride()}
+				${this._renderFeedback()}
+				${this._renderOutcome()}
+				${this._renderOverflowButtonMobile()}
 			</div>
 		`;
 	}
-
-	_renderOverflowButtonMobile() {
-		return html`
-			<d2l-dropdown-button-subtle class="d2l-consistent-evaluation-right-panel-overflow-menu-mobile" text=${this.localize('evaluationOptions')}>
-				${this._renderOverflowMenu()}
-			</d2l-dropdown-button-subtle>
-		`;
-	}
-
 	_onOverflowOptionSelect(e) {
 		switch (e.target.id) {
 			case this._specialAccessId:
@@ -286,11 +232,9 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				break;
 		}
 	}
-
 	_openEditActivity() {
 		window.open(this.editActivityPath);
 	}
-
 	_openSpecialAccessDialog() {
 		const specialAccess = this.specialAccessHref;
 
@@ -330,7 +274,6 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 			/* forceTriggerOnCancel: */ false
 		);
 	}
-
 	_renderCoaOverride() {
 		if (!this.hideCoaOverride) {
 			return html`
@@ -342,7 +285,6 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 			`;
 		}
 	}
-
 	_renderFeedback() {
 		if (!this.hideFeedback) {
 			return html`
@@ -364,6 +306,20 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 
 		return html``;
 	}
+	_renderGrade() {
+		if (!this.hideGrade) {
+			return html`
+				<d2l-consistent-evaluation-grade-result
+					aria-hidden="${this.skeleton}"
+					.grade=${this.grade}
+					.gradeItemInfo=${this.gradeItemInfo}
+					?read-only=${!this.allowEvaluationWrite}
+				></d2l-consistent-evaluation-grade-result>
+			`;
+		}
+
+		return html``;
+	}
 
 	_renderOutcome() {
 		if (!this.hideOutcomes) {
@@ -379,37 +335,61 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 
 		return html``;
 	}
+	_renderOverflowButtonIcon() {
+		return html`
+			<div class="d2l-consistent-evaluation-right-panel-clearfix"
+				aria-hidden="${this.skeleton}">
+				<d2l-dropdown-more class="d2l-consistent-evaluation-right-panel-overflow-menu" text=${this.localize('evaluationOptions')}>
+					${this._renderOverflowMenu()}
+				</d2l-dropdown-more>
+			</div>
+		`;
+	}
+	_renderOverflowButtonMobile() {
+		return html`
+			<d2l-dropdown-button-subtle class="d2l-consistent-evaluation-right-panel-overflow-menu-mobile" text=${this.localize('evaluationOptions')}>
+				${this._renderOverflowMenu()}
+			</d2l-dropdown-button-subtle>
+		`;
+	}
+	_renderOverflowMenu() {
+		return html`
+			<d2l-dropdown-menu>
+				<d2l-menu @d2l-menu-item-select=${this._onOverflowOptionSelect} label=${this.localize('evaluationOptions')}>
+					<d2l-menu-item id=${this._editActivityId} text=${this.localize('editActivity')} ?hidden=${!this.editActivityPath}></d2l-menu-item>
+					<d2l-menu-item id=${this._specialAccessId} text=${this.localize('specialAccessDates')} ?hidden=${!this.specialAccessHref}></d2l-menu-item>
+				</d2l-menu>
+			</d2l-dropdown-menu>
+		`;
+	}
+	_renderRubric() {
+		if (this.rubricInfos && this.rubricInfos.length > 0) {
+			const showActiveScoringRubric = (this.grade.getScoreOutOf() && this.activeScoringRubric);
+			return html`
+				<d2l-consistent-evaluation-rubric
+					aria-hidden="${this.skeleton}"
+					header=${this.localize('rubrics')}
+					.rubricInfos=${this.rubricInfos}
+					active-scoring-rubric=${this.activeScoringRubric}
+					rubric-popout-location=${this.rubricPopoutLocation}
+					.token=${this.token}
+					?show-active-scoring-rubric-options=${showActiveScoringRubric}
+					?read-only=${this.rubricReadOnly}
+					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
+					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
+					@d2l-rubric-compact-expanded-changed=${this._updateRubricOpenState}
+				></d2l-consistent-evaluation-rubric>
+			`;
+		}
+
+		return html``;
+	}
 
 	_renderSkeleton() {
 		return html`
 			<consistent-evaluation-right-panel-skeleton
 				?skeleton=${this.skeleton}
 			></consistent-evaluation-right-panel-skeleton>`;
-	}
-
-	render() {
-		return html`
-			<div class="d2l-consistent-evaluation-right-panel">
-				${this._renderSkeleton()}
-				${this._renderOverflowButtonIcon()}
-				${this._renderRubric()}
-				${this._renderGrade()}
-				${this._renderCoaOverride()}
-				${this._renderFeedback()}
-				${this._renderOutcome()}
-				${this._renderOverflowButtonMobile()}
-			</div>
-		`;
-	}
-
-	_updateRubricOpenState(e) {
-		if (e.detail) {
-			if (e.detail.expanded) {
-				this.rubricsOpen++;
-			} else if (this.rubricsOpen > 0) {
-				this.rubricsOpen--;
-			}
-		}
 	}
 
 	_syncGradeToRubricScore(e) {
@@ -426,22 +406,6 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 			e.detail.rubricInfo
 		);
 	}
-
-	async _updateScoreWithActiveScoringRubric(e) {
-		const newRubricId = e.detail.rubricId;
-		const currentRubricInfo = this.rubricInfos.find(rubric => rubric.rubricId === newRubricId);
-		if (!currentRubricInfo) {
-			// user selected "no grading rubric"
-			return;
-		}
-		const newScore = await getRubricAssessmentScore(currentRubricInfo, this.token);
-
-		this._updateGrade(
-			newScore,
-			currentRubricInfo
-		);
-	}
-
 	_updateGrade(newScore, rubricInfo) {
 
 		const newGrade = mapRubricScoreToGrade(
@@ -466,6 +430,31 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 			}
 		}));
 	}
+	_updateRubricOpenState(e) {
+		if (e.detail) {
+			if (e.detail.expanded) {
+				this.rubricsOpen++;
+			} else if (this.rubricsOpen > 0) {
+				this.rubricsOpen--;
+			}
+		}
+	}
+
+	async _updateScoreWithActiveScoringRubric(e) {
+		const newRubricId = e.detail.rubricId;
+		const currentRubricInfo = this.rubricInfos.find(rubric => rubric.rubricId === newRubricId);
+		if (!currentRubricInfo) {
+			// user selected "no grading rubric"
+			return;
+		}
+		const newScore = await getRubricAssessmentScore(currentRubricInfo, this.token);
+
+		this._updateGrade(
+			newScore,
+			currentRubricInfo
+		);
+	}
+
 }
 
 customElements.define('consistent-evaluation-right-panel', ConsistentEvaluationRightPanel);

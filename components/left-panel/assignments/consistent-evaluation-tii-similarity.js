@@ -3,7 +3,7 @@ import '@brightspace-ui/core/components/dialog/dialog.js';
 import { bodyCompactStyles, heading4Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { tiiErrorStatus, tiiPendingReportStatus, tiiPendingRetrievalStatus, tiiReportCompleteStatus, tiiReportNotSubmitted } from '../../controllers/constants.js';
-import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluation(LitElement) {
 
@@ -68,6 +68,15 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 		`];
 	}
 
+	render() {
+		return html`
+			<div class="d2l-label-text">${this.localize('turnitinSimilarity')}</div>
+
+			${this._renderSimilarityStatus()}
+			${this._renderError()}
+			${this._renderSubmitFile()}
+		`;
+	}
 	_onErrorClick() {
 		const dialog = this.shadowRoot.querySelector('d2l-dialog');
 		if (dialog) {
@@ -93,6 +102,29 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 		await this.requestUpdate();
 	}
 
+	_renderError() {
+		if (this.reportStatus === tiiErrorStatus) {
+
+			let errorMessage = this.errorMessage;
+			if (!errorMessage) {
+				errorMessage = this.localize('turnitinDefaultErrorMessage');
+			}
+
+			return html`
+				<d2l-button-icon
+					text="${errorMessage}"
+					icon="tier1:alert"
+					@click=${this._onErrorClick}
+				></d2l-button-icon>
+
+				<d2l-dialog title-text="${this.localize('warning')}">
+					<div class="d2l-heading-4">${this.localize('turnitinReportNotGenerated')}</div>
+					<div class="d2l-body-compact">${this.localize('turnitinErrorMessagePrefix')} ${errorMessage}</div>
+					<d2l-button slot="footer" primary data-dialog-action="done">${this.localize('ok')}</d2l-button>
+				</d2l-dialog>
+			`;
+		}
+	}
 	_renderSimilarityStatus() {
 		if (this.reportStatus !== tiiReportCompleteStatus) {
 			return html``;
@@ -117,30 +149,6 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 		`;
 	}
 
-	_renderError() {
-		if (this.reportStatus === tiiErrorStatus) {
-
-			let errorMessage = this.errorMessage;
-			if (!errorMessage) {
-				errorMessage = this.localize('turnitinDefaultErrorMessage');
-			}
-
-			return html`
-				<d2l-button-icon
-					text="${errorMessage}"
-					icon="tier1:alert"
-					@click=${this._onErrorClick}
-				></d2l-button-icon>
-
-				<d2l-dialog title-text="${this.localize('warning')}">
-					<div class="d2l-heading-4">${this.localize('turnitinReportNotGenerated')}</div>
-					<div class="d2l-body-compact">${this.localize('turnitinErrorMessagePrefix')} ${errorMessage}</div>
-					<d2l-button slot="footer" primary data-dialog-action="done">${this.localize('ok')}</d2l-button>
-				</d2l-dialog>
-			`;
-		}
-	}
-
 	_renderSubmitFile() {
 		if (this.reportStatus === tiiReportNotSubmitted || this.reportStatus === tiiErrorStatus) {
 			return html`
@@ -159,15 +167,6 @@ export class ConsistentEvaluationTiiSimilarity extends LocalizeConsistentEvaluat
 		}
 	}
 
-	render() {
-		return html`
-			<div class="d2l-label-text">${this.localize('turnitinSimilarity')}</div>
-
-			${this._renderSimilarityStatus()}
-			${this._renderError()}
-			${this._renderSubmitFile()}
-		`;
-	}
 }
 
 customElements.define('d2l-consistent-evaluation-tii-similarity', ConsistentEvaluationTiiSimilarity);

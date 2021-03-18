@@ -3,7 +3,7 @@ import 'd2l-activity-alignments/d2l-activity-alignments.js';
 import { html, LitElement } from 'lit-element';
 import { bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { convertToken } from '../helpers/converterHelpers.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 
 class ConsistentEvaluationOutcomes extends LocalizeConsistentEvaluation(LitElement) {
 	static get properties() {

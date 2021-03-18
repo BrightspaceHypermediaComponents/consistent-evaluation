@@ -18,7 +18,7 @@ import { fileSubmission, textSubmission } from '../../controllers/constants';
 import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
 import { toggleFlagActionName, toggleIsReadActionName } from '../../controllers/constants.js';
 import { getFileIconTypeFromExtension } from '@brightspace-ui/core/components/icons/getFileIconType';
-import { LocalizeConsistentEvaluation } from '../../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import ResizeObserver from 'resize-observer-polyfill/dist/ResizeObserver.es.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
@@ -207,41 +207,57 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		}
 	}
 
-	//Helper methods
-
-	_isLinkAttachment(attachment) {
-		return attachment.properties.extension === 'url';
-	}
-
-	_getFileTitle(filename) {
-		const index = filename.lastIndexOf('.');
-		if (index < 0) {
-			return '';
-		} else {
-			return filename.substring(0, index);
+	render() {
+		if (this.submissionType === fileSubmission) {
+			return html`${this._renderFileSubmission()}`;
+		} else if (this.submissionType === textSubmission) {
+			return html`${this._renderTextSubmission()}`;
 		}
 	}
-
-	_getFileExtension(filename) {
-		const index = filename.lastIndexOf('.');
-		if (index < 0) {
-			return '';
-		} else {
-			return filename.substring(index + 1).toUpperCase();
-		}
+	_addMenuOptions(read, flagged, downloadHref, extension, id) {
+		const oppositeReadState = read ? this.localize('markUnread') : this.localize('markRead');
+		const oppositeFlagState = flagged ? this.localize('unflag') : this.localize('flag');
+		return html`<div slot="actions">
+			<d2l-dropdown-more text="${this.localize('fileOptions')}">
+			<d2l-dropdown-menu id="dropdown" boundary="{&quot;right&quot;:10}">
+				<d2l-menu label="${this.localize('fileOptions')}">
+					${this.submissionType === textSubmission ? html`
+						<d2l-menu-item-link text="${this.localize('viewFullSubmission')}"
+							href="javascript:void(0);"
+							@click="${
+	// eslint-disable-next-line lit/no-template-arrow
+	() => this._dispatchFileSelectedEvent(id)}"></d2l-menu-item-link>` : null}
+					<d2l-menu-item text="${this.localize('download')}" ?hidden="${extension === 'url'}" data-key="${id}" data-href="${downloadHref}" data-extension="${extension}" @d2l-menu-item-select="${this._dispatchDownloadEvent}"></d2l-menu-item>
+					<d2l-menu-item text="${oppositeReadState}" data-action="${toggleIsReadActionName}" data-key="${id}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
+					<d2l-menu-item text="${oppositeFlagState}" data-action="${toggleFlagActionName}" data-key="${id}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
+				</d2l-menu>
+			</d2l-dropdown-menu>
+			</d2l-dropdown-more>
+		</div>`;
 	}
+	_dispatchDownloadEvent(e) {
+		const attachmentId = e.target.getAttribute('data-key');
+		const downloadHref = e.target.getAttribute('data-href');
+		const event = new CustomEvent('d2l-consistent-evaluation-evidence-attachment-download', {
+			detail: {
+				attachmentId: attachmentId
+			},
+			composed: true,
+			bubbles: true
+		});
+		this.dispatchEvent(event);
 
-	_getReadableFileSizeString(fileSizeBytes) {
-		let i = -1;
-		const byteUnits = ['kB', 'MB', 'GB'];
-		do {
-			fileSizeBytes = fileSizeBytes / 1024;
-			i++;
-		} while (fileSizeBytes > 1024);
-		const unit = this.localize(byteUnits[i]);
-		return Math.max(fileSizeBytes, 0.1).toFixed(1) + unit;
+		window.location = downloadHref;
 	}
-
+	_dispatchFileSelectedEvent(fileId) {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-file-selected', {
+			detail: {
+				fileId: fileId
+			},
+			composed: true,
+			bubbles: true
+		}));
+	}
 	_dispatchFileSelectedKeyboardEvent(e) {
 		const fileId = e.target.getAttribute('file-id');
 
@@ -255,17 +271,6 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			}));
 		}
 	}
-
-	_dispatchFileSelectedEvent(fileId) {
-		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-file-selected', {
-			detail: {
-				fileId: fileId
-			},
-			composed: true,
-			bubbles: true
-		}));
-	}
-
 	_dispatchLinkAttachmentClickedEvent(linkId, url) {
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-link-attachment-selected', {
 			detail: {
@@ -276,7 +281,6 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			bubbles: true
 		}));
 	}
-
 	_dispatchLinkAttachmentKeydownEvent(e, linkId, url) {
 		if (e.key === 'Enter' || e.key === ' ') {
 			this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-link-attachment-selected', {
@@ -289,7 +293,6 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			}));
 		}
 	}
-
 	_dispatchToggleEvent(e) {
 		const action = e.target.getAttribute('data-action');
 		const fileId = e.target.getAttribute('data-key');
@@ -307,32 +310,33 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		});
 		this.dispatchEvent(event);
 	}
-
-	_dispatchDownloadEvent(e) {
-		const attachmentId = e.target.getAttribute('data-key');
-		const downloadHref = e.target.getAttribute('data-href');
-		const event = new CustomEvent('d2l-consistent-evaluation-evidence-attachment-download', {
-			detail: {
-				attachmentId: attachmentId
-			},
-			composed: true,
-			bubbles: true
-		});
-		this.dispatchEvent(event);
-
-		window.location = downloadHref;
-	}
-
 	_formatDateTime() {
 		const date = this.dateStr ? new Date(this.dateStr) : undefined;
 
 		const formattedDate = (date) ? formatDate(
 			date,
-			{format: 'full'}) : '';
+			{ format: 'full' }) : '';
 		const formattedTime = (date) ? formatTime(
 			date,
-			{format: 'short'}) : '';
+			{ format: 'short' }) : '';
 		return `${formattedDate} ${formattedTime}`;
+	}
+	_getFileExtension(filename) {
+		const index = filename.lastIndexOf('.');
+		if (index < 0) {
+			return '';
+		} else {
+			return filename.substring(index + 1).toUpperCase();
+		}
+	}
+
+	_getFileTitle(filename) {
+		const index = filename.lastIndexOf('.');
+		if (index < 0) {
+			return '';
+		} else {
+			return filename.substring(0, index);
+		}
 	}
 
 	_getLinkIconTypeFromUrl(url) {
@@ -345,125 +349,28 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			return 'link';
 		}
 	}
-
-	//Helper rendering methods
-
-	_renderFileSubmissionTitle() {
-		return html`
-		<d2l-list-item>
-		<d2l-list-item-content>
-			<h3 class="d2l-heading-3">${this.localize('submission')} ${this.displayNumber}</h3>
-			<div slot="supporting-info">
-			<span>
-				${this._renderLateStatus()}
-				${this._renderEvaluationState()}
-			</span>
-			<span class="d2l-body-small">
-				${this._formatDateTime()}
-			</span>
-			</div>
-		</d2l-list-item-content>
-		</d2l-list-item>`;
+	_getReadableFileSizeString(fileSizeBytes) {
+		let i = -1;
+		const byteUnits = ['kB', 'MB', 'GB'];
+		do {
+			fileSizeBytes = fileSizeBytes / 1024;
+			i++;
+		} while (fileSizeBytes > 1024);
+		const unit = this.localize(byteUnits[i]);
+		return Math.max(fileSizeBytes, 0.1).toFixed(1) + unit;
 	}
-
-	_renderTextSubmissionTitle() {
-		// There is only one attachment for text submissions: an html file
-		const file = this.attachments[0];
-		const flagged = file.properties.flagged;
-		const read = file.properties.read;
-		const href = file.properties.href;
-		const id = file.properties.id;
-		return html`
-		<d2l-list-item>
-		<d2l-list-item-content>
-			<div class="d2l-submission-attachment-icon-container">
-				<h3 class="d2l-heading-3">${this.localize('textSubmission')} ${this.displayNumber}</h3>
-				${this._renderReadStatus(read)}
-			</div>
-			<div slot="supporting-info">
-				${this._renderLateStatus()}
-				${this._renderEvaluationState()}
-				${this._renderFlaggedStatus(flagged)}
-				<span class="d2l-body-small">${this._formatDateTime()}</span>
-			</div>
-		</d2l-list-item-content>
-		${this._addMenuOptions(read, flagged, href, id)}
-		</d2l-list-item>`;
+	_isClamped(element) {
+		return element.clientHeight < element.scrollHeight;
 	}
+	//Helper methods
 
-	_renderReadStatus(read) {
-		if (!read) {
-			return html`
-			<d2l-icon
-				icon="tier1:dot"
-				class="d2l-attachment-read-status"
-				role="img"
-				aria-label="Unread">
-			</d2l-icon>`;
-		}
-	}
-
-	_renderLateStatus() {
-		if (this.late) {
-			return html`
-			<d2l-status-indicator bold
-				state="alert"
-				text="${this.lateness} ${this.localize('late')}">
-			</d2l-status-indicator>`;
-		} else {
-			return html ``;
-		}
-	}
-
-	_renderEvaluationState() {
-		if (this.evaluationState === 'Unevaluated') {
-			return html`<d2l-status-indicator state="default" text="${this.localize('unevaluated')}"></d2l-status-indicator>`;
-		} else {
-			return html``;
-		}
-	}
-
-	_renderFlaggedStatus(flag) {
-		if (flag) {
-			return html`<d2l-status-indicator state="alert" text="${this.localize('flagged')}"></d2l-status-indicator>`;
-		}
-	}
-
-	_renderTii(id, name, file) {
-		if (!file.entities) {
-			return html``;
-		}
-
-		const tii = file.entities[0].properties;
-
-		return html`
-			<div class="d2l-submission-attachment-list-item-tii">
-				<d2l-consistent-evaluation-tii-similarity
-					colour="${tii.originalityReportScoreColour}"
-					error-message="${tii.errorMessage}"
-					file-id="${id}"
-					file-name="${name}"
-					originality-report-href="${tii.originalityReportHref}"
-					report-status="${tii.reportStatus}"
-					score="${tii.originalityReportScore}"
-				></d2l-consistent-evaluation-tii-similarity>
-				<d2l-consistent-evaluation-tii-grade-mark
-					file-id=${id}
-					grade-mark-file-name=${name}
-					grade-mark-href=${tii.gradeMarkHref}
-					grade-mark-out-of=${tii.gradeMarkOutOf}
-					grade-mark-score=${tii.gradeMarkScore}
-					?has-feedback=${tii.hasFeedback}
-					?grade-mark-auto-transfer=${tii.gradeMarkAutoTransfer}
-					?hide-use-grade=${this.hideUseGrade}
-				></d2l-consistent-evaluation-tii-grade-mark>
-			</div>
-		`;
+	_isLinkAttachment(attachment) {
+		return attachment.properties.extension === 'url';
 	}
 
 	_renderAttachments() {
 		return html`${this.attachments.map((attachment) => {
-			const {id, name, size, extension, flagged, read, href} = attachment.properties;
+			const { id, name, size, extension, flagged, read, href } = attachment.properties;
 
 			let displayedName;
 			let onClickHandler;
@@ -507,44 +414,6 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			</d2l-list-item>`;
 		})}`;
 	}
-
-	_isClamped(element) {
-		return element.clientHeight < element.scrollHeight;
-	}
-
-	_updateFilenameTooltips() {
-		const filenames = this.shadowRoot.querySelectorAll('.d2l-truncate');
-		filenames.forEach(element => {
-			if (this._isClamped(element)) {
-				element.title = element.innerText;
-			} else {
-				element.removeAttribute('title');
-			}
-		});
-	}
-
-	_addMenuOptions(read, flagged, downloadHref, extension, id) {
-		const oppositeReadState = read ? this.localize('markUnread') : this.localize('markRead');
-		const oppositeFlagState = flagged ? this.localize('unflag') : this.localize('flag');
-		return html`<div slot="actions">
-			<d2l-dropdown-more text="${this.localize('fileOptions')}">
-			<d2l-dropdown-menu id="dropdown" boundary="{&quot;right&quot;:10}">
-				<d2l-menu label="${this.localize('fileOptions')}">
-					${this.submissionType === textSubmission ? html`
-						<d2l-menu-item-link text="${this.localize('viewFullSubmission')}"
-							href="javascript:void(0);"
-							@click="${
-	// eslint-disable-next-line lit/no-template-arrow
-	() => this._dispatchFileSelectedEvent(id)}"></d2l-menu-item-link>` : null}
-					<d2l-menu-item text="${this.localize('download')}" ?hidden="${extension === 'url'}" data-key="${id}" data-href="${downloadHref}" data-extension="${extension}" @d2l-menu-item-select="${this._dispatchDownloadEvent}"></d2l-menu-item>
-					<d2l-menu-item text="${oppositeReadState}" data-action="${toggleIsReadActionName}" data-key="${id}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
-					<d2l-menu-item text="${oppositeFlagState}" data-action="${toggleFlagActionName}" data-key="${id}" @d2l-menu-item-select="${this._dispatchToggleEvent}"></d2l-menu-item>
-				</d2l-menu>
-			</d2l-dropdown-menu>
-			</d2l-dropdown-more>
-		</div>`;
-	}
-
 	_renderComment() {
 		const peekHeight = this.submissionType === fileSubmission ? '5em' : '8em';
 		if (this.comment) {
@@ -555,13 +424,19 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		}
 		return html``;
 	}
-
 	_renderCommentTitle() {
 		if (this.submissionType === fileSubmission) {
 			return html`
 			<div class="d2l-label-text">
 				${this.localize('comments')}
 			</div>`;
+		} else {
+			return html``;
+		}
+	}
+	_renderEvaluationState() {
+		if (this.evaluationState === 'Unevaluated') {
+			return html`<d2l-status-indicator state="default" text="${this.localize('unevaluated')}"></d2l-status-indicator>`;
 		} else {
 			return html``;
 		}
@@ -576,20 +451,126 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		${this._renderComment()}
 		`;
 	}
+	//Helper rendering methods
 
+	_renderFileSubmissionTitle() {
+		return html`
+		<d2l-list-item>
+		<d2l-list-item-content>
+			<h3 class="d2l-heading-3">${this.localize('submission')} ${this.displayNumber}</h3>
+			<div slot="supporting-info">
+			<span>
+				${this._renderLateStatus()}
+				${this._renderEvaluationState()}
+			</span>
+			<span class="d2l-body-small">
+				${this._formatDateTime()}
+			</span>
+			</div>
+		</d2l-list-item-content>
+		</d2l-list-item>`;
+	}
+
+	_renderFlaggedStatus(flag) {
+		if (flag) {
+			return html`<d2l-status-indicator state="alert" text="${this.localize('flagged')}"></d2l-status-indicator>`;
+		}
+	}
+	_renderLateStatus() {
+		if (this.late) {
+			return html`
+			<d2l-status-indicator bold
+				state="alert"
+				text="${this.lateness} ${this.localize('late')}">
+			</d2l-status-indicator>`;
+		} else {
+			return html ``;
+		}
+	}
+	_renderReadStatus(read) {
+		if (!read) {
+			return html`
+			<d2l-icon
+				icon="tier1:dot"
+				class="d2l-attachment-read-status"
+				role="img"
+				aria-label="Unread">
+			</d2l-icon>`;
+		}
+	}
 	_renderTextSubmission() {
 		return html`
 		${this._renderTextSubmissionTitle()}
 		${this._renderComment()}
 		`;
 	}
-
-	render() {
-		if (this.submissionType === fileSubmission) {
-			return html`${this._renderFileSubmission()}`;
-		} else if (this.submissionType === textSubmission) {
-			return html`${this._renderTextSubmission()}`;
-		}
+	_renderTextSubmissionTitle() {
+		// There is only one attachment for text submissions: an html file
+		const file = this.attachments[0];
+		const flagged = file.properties.flagged;
+		const read = file.properties.read;
+		const href = file.properties.href;
+		const id = file.properties.id;
+		return html`
+		<d2l-list-item>
+		<d2l-list-item-content>
+			<div class="d2l-submission-attachment-icon-container">
+				<h3 class="d2l-heading-3">${this.localize('textSubmission')} ${this.displayNumber}</h3>
+				${this._renderReadStatus(read)}
+			</div>
+			<div slot="supporting-info">
+				${this._renderLateStatus()}
+				${this._renderEvaluationState()}
+				${this._renderFlaggedStatus(flagged)}
+				<span class="d2l-body-small">${this._formatDateTime()}</span>
+			</div>
+		</d2l-list-item-content>
+		${this._addMenuOptions(read, flagged, href, id)}
+		</d2l-list-item>`;
 	}
+
+	_renderTii(id, name, file) {
+		if (!file.entities) {
+			return html``;
+		}
+
+		const tii = file.entities[0].properties;
+
+		return html`
+			<div class="d2l-submission-attachment-list-item-tii">
+				<d2l-consistent-evaluation-tii-similarity
+					colour="${tii.originalityReportScoreColour}"
+					error-message="${tii.errorMessage}"
+					file-id="${id}"
+					file-name="${name}"
+					originality-report-href="${tii.originalityReportHref}"
+					report-status="${tii.reportStatus}"
+					score="${tii.originalityReportScore}"
+				></d2l-consistent-evaluation-tii-similarity>
+				<d2l-consistent-evaluation-tii-grade-mark
+					file-id=${id}
+					grade-mark-file-name=${name}
+					grade-mark-href=${tii.gradeMarkHref}
+					grade-mark-out-of=${tii.gradeMarkOutOf}
+					grade-mark-score=${tii.gradeMarkScore}
+					?has-feedback=${tii.hasFeedback}
+					?grade-mark-auto-transfer=${tii.gradeMarkAutoTransfer}
+					?hide-use-grade=${this.hideUseGrade}
+				></d2l-consistent-evaluation-tii-grade-mark>
+			</div>
+		`;
+	}
+
+	_updateFilenameTooltips() {
+		const filenames = this.shadowRoot.querySelectorAll('.d2l-truncate');
+		filenames.forEach(element => {
+			if (this._isClamped(element)) {
+				element.title = element.innerText;
+			} else {
+				element.removeAttribute('title');
+			}
+		});
+	}
+
 }
 customElements.define('d2l-consistent-evaluation-submission-item', ConsistentEvaluationSubmissionItem);

@@ -2,7 +2,7 @@ import '@brightspace-ui/core/components/button/button.js';
 import '@brightspace-ui/core/components/button/button-icon.js';
 import { css, html, LitElement } from 'lit-element';
 import { publishActionName, retractActionName, saveActionName, updateActionName } from '../controllers/constants.js';
-import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
+import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 
 export class ConsistentEvaluationFooterPresentational extends LocalizeConsistentEvaluation(LitElement) {
 	static get properties() {
@@ -58,6 +58,21 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 		this.allowEvaluationDelete = false;
 	}
 
+	render() {
+		return html`
+			<div id="footer-container">
+				<div class="d2l-button-container">
+					${this._getPublishOrUpdateButton()}
+				</div>
+				<div class="d2l-button-container">
+					${this._getSaveDraftOrRetractButton()}
+				</div>
+				<div class="d2l-button-container">
+					${this._getNextStudentButton()}
+				</div>
+			</div>
+		`;
+	}
 	_dispatchButtonClickEvent(eventName) {
 		this.dispatchEvent(new CustomEvent(eventName, {
 			composed: true,
@@ -67,12 +82,15 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 
 	_dispatchButtonClickNavigationEvent(eventName) {
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-navigate', {
-			detail: { key: eventName},
+			detail: { key: eventName },
 			composed: true,
 			bubbles: true
 		}));
 	}
 
+	_emitNextStudentEvent() {
+		this._dispatchButtonClickNavigationEvent('next');
+	}
 	_emitPublishEvent() {
 		this._lastClicked = publishActionName;
 		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-publish');
@@ -83,20 +101,29 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-retract');
 	}
 
+	_emitSaveDraftEvent() {
+		this._lastClicked = saveActionName;
+		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-save-draft');
+	}
 	_emitUpdateEvent() {
 		this._lastClicked = updateActionName;
 		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-update');
 	}
 
-	_emitSaveDraftEvent() {
-		this._lastClicked = saveActionName;
-		this._dispatchButtonClickEvent('d2l-consistent-evaluation-on-save-draft');
+	_getNextStudentButton() {
+		return this.showNextStudent ? html`
+			<d2l-navigation-button
+				id="consistent-evaluation-footer-next-student"
+				hide-highlight
+				text="${this.localize('nextStudent')}"
+				@click="${this._emitNextStudentEvent}"
+				ariaDescribedbyText="${this.localize('nextStudent')}">
+				<div>
+					<d2l-icon icon="d2l-tier3:chevron-right-circle"></d2l-icon>
+				</div>
+			</d2l-navigation-button>`
+			: null;
 	}
-
-	_emitNextStudentEvent() {
-		this._dispatchButtonClickNavigationEvent('next');
-	}
-
 	_getPublishOrUpdateButton() {
 		let text;
 		if (this.currentlySaving && (this._lastClicked === publishActionName || this._lastClicked === updateActionName)) {
@@ -155,36 +182,6 @@ export class ConsistentEvaluationFooterPresentational extends LocalizeConsistent
 		return this.allowEvaluationWrite ? html`<d2l-button id=${id} @click=${eventEmitter}>${text}</d2l-button>` : html``;
 	}
 
-	_getNextStudentButton() {
-		return this.showNextStudent ? html`
-			<d2l-navigation-button
-				id="consistent-evaluation-footer-next-student"
-				hide-highlight
-				text="${this.localize('nextStudent')}"
-				@click="${this._emitNextStudentEvent}"
-				ariaDescribedbyText="${this.localize('nextStudent')}">
-				<div>
-					<d2l-icon icon="d2l-tier3:chevron-right-circle"></d2l-icon>
-				</div>
-			</d2l-navigation-button>`
-			: null;
-	}
-
-	render() {
-		return html`
-			<div id="footer-container">
-				<div class="d2l-button-container">
-					${this._getPublishOrUpdateButton()}
-				</div>
-				<div class="d2l-button-container">
-					${this._getSaveDraftOrRetractButton()}
-				</div>
-				<div class="d2l-button-container">
-					${this._getNextStudentButton()}
-				</div>
-			</div>
-		`;
-	}
 }
 
 customElements.define('d2l-consistent-evaluation-footer-presentational', ConsistentEvaluationFooterPresentational);
