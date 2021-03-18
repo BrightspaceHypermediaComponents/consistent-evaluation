@@ -1,7 +1,7 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { actorRel, alignmentsRel, anonymousMarkingRel, assessmentRel,
-	assessmentRubricApplicationRel, assessorUserRel, assignmentRel, assignmentSubmissionListRel,
-	checkedClassName, demonstrationRel, editActivityRel, editSpecialAccessApplicationRel, emailRel,
+	assessmentRubricApplicationRel, assessorUserRel, assignmentActivity, assignmentClass, assignmentRel, assignmentSubmissionListRel,
+	checkedClassName, demonstrationRel, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
 	enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, publishedClassName,
 	rubricRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
@@ -130,6 +130,18 @@ export class ConsistentEvaluationHrefController {
 			rubricPopoutLocation,
 			downloadAllSubmissionLink
 		};
+	}
+
+	async getActivityType() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			if (root.entity.hasClass(discussionClass)) {
+				return discussionActivity;
+			} else if (root.entity.hasClass(assignmentClass)) {
+				return assignmentActivity;
+			}
+		}
+		return undefined;
 	}
 
 	async getSubmissionInfo() {

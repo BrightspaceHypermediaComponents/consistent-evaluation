@@ -64,3 +64,7 @@ export const tiiSubmitActionName = 'TurnitinSubmit';
 export const tiiRefreshAction = 'TurnitinRefresh';
 export const pdfExtension = 'pdf';
 export const appId = 'consistent-evaluation';
+export const assignmentClass = 'actor-assignment-activity';
+export const discussionClass = 'actor-discussion-activity';
+export const assignmentActivity = 'assignmentActivity';
+export const discussionActivity = 'discussionActivity';

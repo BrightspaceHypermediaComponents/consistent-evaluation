@@ -1,5 +1,5 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { anonymousMarkingRel, checkedClassName, editActivityRel, editSpecialAccessApplicationRel, emailRel,
+import { anonymousMarkingRel, assignmentActivity, assignmentClass, checkedClassName, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
 	evaluationRel, nextRel, pagerRel, previousRel, publishedClassName, rubricRel,
 	userProgressAssessmentsRel, viewMembersRel } from '../components/controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
@@ -96,6 +96,30 @@ describe('ConsistentEvaluationHrefController', () => {
 			assert.equal(submissionInfo.submissionList, expectedSubmissions);
 			assert.equal(submissionInfo.evaluationState, expectedEvaluationState);
 			assert.equal(submissionInfo.submissionType, expectedSubmissionType);
+		});
+	});
+
+	describe('getActivityType returns correct activity type', () => {
+		it('recognizes discussion acitivty', async() => {
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: { hasClass: (r) => r === discussionClass }
+			});
+
+			const activityType = await controller.getActivityType(true);
+			assert.equal(activityType, discussionActivity);
+		});
+
+		it('recognizes discussion acitivty', async() => {
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: { hasClass: (r) => r === assignmentClass }
+			});
+
+			const activityType = await controller.getActivityType(true);
+			assert.equal(activityType, assignmentActivity);
 		});
 	});
 

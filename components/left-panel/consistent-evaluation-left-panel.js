@@ -1,5 +1,6 @@
 import './assignments/consistent-evaluation-evidence-assignment.js';
 import './discussions/consistent-evaluation-evidence-discussion.js';
+import { assignmentActivity, discussionActivity } from '../controllers/constants.js';
 import { html, LitElement } from 'lit-element';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../lang/localize-consistent-evaluation.js';
@@ -37,6 +38,10 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			dataTelemetryEndpoint: {
 				attribute: 'data-telemetry-endpoint',
 				type: String
+			},
+			activityType: {
+				attribute: 'activity-type',
+				type: String
 			}
 		};
 	}
@@ -64,9 +69,11 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 	}
 
 	render() {
-		return html`
-			${this._renderAssignments()}
-		`;
+		if (this.activityType === discussionActivity) {
+			return html`${this._renderDiscussions()}`;
+		} else if (this.activityType === assignmentActivity) {
+			return html`${this._renderAssignments()}`;
+		}
 	}
 }
 
