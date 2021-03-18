@@ -65,6 +65,43 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 		super.disconnectedCallback();
 	}
 
+	render() {
+		return html`
+			<d2l-consistent-evaluation-evidence-top-bar></d2l-consistent-evaluation-evidence-top-bar>
+			<iframe ?data-resizing=${this._resizing}
+				src="${this.url}"
+				frameborder="0"
+				scrolling="no"
+				allow="fullscreen"
+			></iframe>
+			${this._renderToast()}
+		`;
+	}
+	flush() {
+		if (this._debounceJobs.annotations && this._debounceJobs.annotations.isActive()) {
+			this._debounceJobs.annotations.flush();
+		}
+	}
+	_handleAnnotationsUpdate(e) {
+		this._debounceJobs.annotations = Debouncer.debounce(
+			this._debounceJobs.annotations,
+			timeOut.after(1000),
+			() => this.dispatchEvent(new CustomEvent('d2l-consistent-eval-annotations-update', {
+				composed: true,
+				bubbles: true,
+				detail: e.data.value
+			}))
+		);
+	}
+	_handleAnnotationsWillChange(e) {
+		if (e.data.value === 'TEXT_EDIT_START') {
+			this.dispatchEvent(new CustomEvent('d2l-consistent-eval-annotations-will-change', {
+				composed: true,
+				bubbles: true,
+				detail: e.data.value
+			}));
+		}
+	}
 	_handleMessage(e) {
 		if (e.data.type === 'token-request') {
 			return this._handleTokenRequest(e);
@@ -85,51 +122,14 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 		}
 	}
 
+	_onToastClose() {
+		this._displayToast = false;
+	}
 	_postTokenResponse(e, token) {
 		e.source.postMessage({
 			type: 'token-response',
 			token: token
 		}, 'https://s.brightspace.com');
-	}
-
-	_handleAnnotationsUpdate(e) {
-		this._debounceJobs.annotations = Debouncer.debounce(
-			this._debounceJobs.annotations,
-			timeOut.after(1000),
-			() => this.dispatchEvent(new CustomEvent('d2l-consistent-eval-annotations-update', {
-				composed: true,
-				bubbles: true,
-				detail: e.data.value
-			}))
-		);
-	}
-
-	_handleAnnotationsWillChange(e) {
-		if (e.data.value === 'TEXT_EDIT_START') {
-			this.dispatchEvent(new CustomEvent('d2l-consistent-eval-annotations-will-change', {
-				composed: true,
-				bubbles: true,
-				detail: e.data.value
-			}));
-		}
-	}
-
-	flush() {
-		if (this._debounceJobs.annotations && this._debounceJobs.annotations.isActive()) {
-			this._debounceJobs.annotations.flush();
-		}
-	}
-
-	_resizeStart() {
-		this._resizing = true;
-	}
-
-	_resizeEnd() {
-		this._resizing = false;
-	}
-
-	_onToastClose() {
-		this._displayToast = false;
 	}
 
 	_renderToast() {
@@ -138,23 +138,18 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 			?open=${this._shouldDisplayToast()}
 			@d2l-alert-toast-close=${this._onToastClose}>${toastMessage}</d2l-alert-toast>`;
 	}
+	_resizeEnd() {
+		this._resizing = false;
+	}
+
+	_resizeStart() {
+		this._resizing = true;
+	}
 
 	_shouldDisplayToast() {
 		return this.fileExtension !== pdfExtension && this.displayConversionWarning && this._displayToast;
 	}
 
-	render() {
-		return html`
-			<d2l-consistent-evaluation-evidence-top-bar></d2l-consistent-evaluation-evidence-top-bar>
-			<iframe ?data-resizing=${this._resizing}
-				src="${this.url}"
-				frameborder="0"
-				scrolling="no"
-				allow="fullscreen"
-			></iframe>
-			${this._renderToast()}
-		`;
-	}
 }
 
 customElements.define('d2l-consistent-evaluation-evidence-file', ConsistentEvaluationEvidenceFile);

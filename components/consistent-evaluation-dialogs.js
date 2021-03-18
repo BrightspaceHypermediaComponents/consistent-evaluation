@@ -62,6 +62,13 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 		this.updateClicked = false;
 	}
 
+	render() {
+		if (this._dialogToOpen === UNSAVED_CHANGES_DIALOG) {
+			return this._renderUnsavedChanges();
+		} else if (this._dialogToOpen === PUBLISH_UNSCORED_DIALOG || this._dialogToOpen === UPDATE_UNSCORED_DIALOG) {
+			return this._renderUnscoredCriteria();
+		}
+	}
 	updated(changedProperties) {
 		super.updated(changedProperties);
 		if (changedProperties.has('publishClicked') && this.publishClicked) {
@@ -76,50 +83,37 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 		}
 	}
 
-	async _showUnscoredCriteriaDialog() {
-		const hasUnscoredCriteria = await this._checkUnscoredCriteria();
-		if (hasUnscoredCriteria) {
-			this._unscoredCriteriaDialogOpened = true;
-			return;
-		}
-
-		this._updateOrPublishEvaluation();
-	}
-
-	async _showUnsavedChangesDialog() {
-		const controller = new ConsistentEvaluationController(this.evaluationHref, this.token);
-		const entity = await controller.fetchEvaluationEntity(false);
-		if (entity.hasClass('unsaved')) {
-			this._unsavedChangesDialogOpened = true;
-		} else {
-			this._fireNavigateEvent();
-		}
-	}
-
 	async _checkUnscoredCriteria() {
 		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 		const _rubricsInfo = await controller.getRubricInfos(true);
 		const hasUnscoredCriteria = _rubricsInfo.find(rubric => rubric.hasUnscoredCriteria) !== undefined;
 		return hasUnscoredCriteria;
 	}
-
-	_onUnscoredCriteriaDialogClosed(e) {
-		this._unscoredCriteriaDialogOpened = false;
-		if (e.detail.action === DIALOG_ACTION_PUBLISH_OR_UPDATE) {
-			this._updateOrPublishEvaluation();
-		} else {
-			this._fireDialogClosedEvent();
-		}
+	async _fireDialogClosedEvent() {
+		this.dispatchEvent(new CustomEvent('d2l-dialog-closed', {
+			composed: true,
+			bubbles: true
+		}));
 	}
-
-	_updateOrPublishEvaluation() {
-		if (this._dialogToOpen === PUBLISH_UNSCORED_DIALOG) {
-			this._firePublishEvaluationEvent();
-		} else if (this._dialogToOpen === UPDATE_UNSCORED_DIALOG) {
-			this._fireUpdateEvaluationEvent();
-		}
+	async _fireNavigateEvent() {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-navigate', {
+			composed: true,
+			bubbles: true
+		}));
+		this._fireDialogClosedEvent();
 	}
-
+	async _firePublishEvaluationEvent() {
+		this.dispatchEvent(new CustomEvent('d2l-publish-evaluation', {
+			composed: true,
+			bubbles: true
+		}));
+	}
+	async _fireUpdateEvaluationEvent() {
+		this.dispatchEvent(new CustomEvent('d2l-update-evaluation', {
+			composed: true,
+			bubbles: true
+		}));
+	}
 	_onUnsavedChangesDialogClose(e) {
 		this._unsavedChangesDialogOpened = false;
 		if (e.detail.action === DIALOG_ACTION_LEAVE) {
@@ -128,34 +122,13 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 			this._fireDialogClosedEvent();
 		}
 	}
-
-	async _fireNavigateEvent() {
-		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-navigate', {
-			composed: true,
-			bubbles: true
-		}));
-		this._fireDialogClosedEvent();
-	}
-
-	async _fireUpdateEvaluationEvent() {
-		this.dispatchEvent(new CustomEvent('d2l-update-evaluation', {
-			composed: true,
-			bubbles: true
-		}));
-	}
-
-	async _firePublishEvaluationEvent() {
-		this.dispatchEvent(new CustomEvent('d2l-publish-evaluation', {
-			composed: true,
-			bubbles: true
-		}));
-	}
-
-	async _fireDialogClosedEvent() {
-		this.dispatchEvent(new CustomEvent('d2l-dialog-closed', {
-			composed: true,
-			bubbles: true
-		}));
+	_onUnscoredCriteriaDialogClosed(e) {
+		this._unscoredCriteriaDialogOpened = false;
+		if (e.detail.action === DIALOG_ACTION_PUBLISH_OR_UPDATE) {
+			this._updateOrPublishEvaluation();
+		} else {
+			this._fireDialogClosedEvent();
+		}
 	}
 	_renderUnsavedChanges() {
 		return html`
@@ -168,7 +141,6 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 					<d2l-button slot="footer" data-dialog-action>${this.localize('cancelBtn')}</d2l-button>
 			</d2l-dialog-confirm>`;
 	}
-
 	_renderUnscoredCriteria() {
 		return html`<d2l-dialog
 				title-text=${this.localize('unscoredCriteriaTitle')}
@@ -180,14 +152,34 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 					<d2l-button slot="footer" data-dialog-action=${DIALOG_ACTION_PUBLISH_OR_UPDATE}>${this.localize('publishAnyway')}</d2l-button>
 			</d2l-dialog>`;
 	}
-
-	render() {
-		if (this._dialogToOpen === UNSAVED_CHANGES_DIALOG) {
-			return this._renderUnsavedChanges();
-		} else if (this._dialogToOpen === PUBLISH_UNSCORED_DIALOG || this._dialogToOpen === UPDATE_UNSCORED_DIALOG) {
-			return this._renderUnscoredCriteria();
+	async _showUnsavedChangesDialog() {
+		const controller = new ConsistentEvaluationController(this.evaluationHref, this.token);
+		const entity = await controller.fetchEvaluationEntity(false);
+		if (entity.hasClass('unsaved')) {
+			this._unsavedChangesDialogOpened = true;
+		} else {
+			this._fireNavigateEvent();
 		}
 	}
+
+	async _showUnscoredCriteriaDialog() {
+		const hasUnscoredCriteria = await this._checkUnscoredCriteria();
+		if (hasUnscoredCriteria) {
+			this._unscoredCriteriaDialogOpened = true;
+			return;
+		}
+
+		this._updateOrPublishEvaluation();
+	}
+
+	_updateOrPublishEvaluation() {
+		if (this._dialogToOpen === PUBLISH_UNSCORED_DIALOG) {
+			this._firePublishEvaluationEvent();
+		} else if (this._dialogToOpen === UPDATE_UNSCORED_DIALOG) {
+			this._fireUpdateEvaluationEvent();
+		}
+	}
+
 }
 
 customElements.define('d2l-consistent-evaluation-dialogs', ConsistentEvaluationDialogs);

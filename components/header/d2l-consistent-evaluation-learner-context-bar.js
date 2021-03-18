@@ -123,31 +123,6 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 		`];
 	}
 
-	_getIsExempt() {
-		return this.submissionInfo && this.submissionInfo.isExempt;
-	}
-
-	_getActorHref() {
-		return this.userHref ? this.userHref : this.groupHref;
-	}
-
-	_renderSkeleton() {
-		if (this.submissionInfo && submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
-			return html `
-				<div class="d2l-skeleton-learner-context-bar" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
-					<div class="d2l-skeleton-user-profile-image d2l-skeletize"></div>
-					<div class="d2l-skeleton-user-display-name d2l-skeletize"></div>
-				</div>`;
-		}
-
-		return html`
-			<div class="d2l-skeleton-learner-context-bar" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
-				<div class="d2l-skeleton-user-profile-image d2l-skeletize"></div>
-				<div class="d2l-skeleton-user-display-name d2l-skeletize"></div>
-				<div class="d2l-skeleton-submission-select d2l-skeletize"></div>
-			</div>`;
-	}
-
 	render() {
 		return html`
 			${this._renderSkeleton()}
@@ -171,6 +146,30 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 			</div>
 		`;
 	}
+	_getActorHref() {
+		return this.userHref ? this.userHref : this.groupHref;
+	}
+	_getIsExempt() {
+		return this.submissionInfo && this.submissionInfo.isExempt;
+	}
+
+	_renderSkeleton() {
+		if (this.submissionInfo && submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
+			return html `
+				<div class="d2l-skeleton-learner-context-bar" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
+					<div class="d2l-skeleton-user-profile-image d2l-skeletize"></div>
+					<div class="d2l-skeleton-user-display-name d2l-skeletize"></div>
+				</div>`;
+		}
+
+		return html`
+			<div class="d2l-skeleton-learner-context-bar" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
+				<div class="d2l-skeleton-user-profile-image d2l-skeletize"></div>
+				<div class="d2l-skeleton-user-display-name d2l-skeletize"></div>
+				<div class="d2l-skeleton-submission-select d2l-skeletize"></div>
+			</div>`;
+	}
+
 }
 
 customElements.define('d2l-consistent-evaluation-learner-context-bar', ConsistentEvaluationLearnerContextBar);

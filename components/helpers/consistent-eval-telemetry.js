@@ -53,7 +53,7 @@ export class ConsistentEvalTelemetry {
 			.setDate(new Date())
 			.setSourceId('consistent-eval')
 			.setBody(eventBody);
-		const client = new Events.Client({endpoint: this._dataTelemetryEndpoint});
+		const client = new Events.Client({ endpoint: this._dataTelemetryEndpoint });
 		client.logUserEvent(event);
 	}
 

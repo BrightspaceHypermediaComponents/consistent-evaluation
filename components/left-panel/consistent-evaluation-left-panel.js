@@ -41,6 +41,11 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 		};
 	}
 
+	render() {
+		return html`
+			${this._renderAssignments()}
+		`;
+	}
 	_renderAssignments() {
 		return html`
 			<d2l-consistent-evaluation-evidence-assignment
@@ -63,11 +68,6 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 		`;
 	}
 
-	render() {
-		return html`
-			${this._renderAssignments()}
-		`;
-	}
 }
 
 customElements.define('d2l-consistent-evaluation-left-panel', ConsistentEvaluationLeftPanel);

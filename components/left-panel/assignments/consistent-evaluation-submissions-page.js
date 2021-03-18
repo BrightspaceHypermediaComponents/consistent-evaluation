@@ -187,11 +187,148 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 	}
 
+	render() {
+		return html`
+			<div class="d2l-consistent-evaluation-submission-list-view-skeleton" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
+				${this._renderSkeleton()}
+			</div>
+			<div class="d2l-consistent-evaluation-submission-list-view" aria-hidden="${this.skeleton}">
+				<d2l-list separators="between">
+					${this._renderListItems()}
+				</d2l-list>
+				<d2l-button-subtle
+					id="download-all-button"
+					icon="tier2:download"
+					?hidden="${!this._downloadAllFilesButtonIsVisible}"
+					?disabled="${this._downloading}"
+					text="${this._getDownloadButtonText()}"
+					@click="${this._handleAllSubmissionDownload}">
+				</d2l-button-subtle>
+			</div>
+		`;
+	}
 	updated(changedProperties) {
 		if (changedProperties.has('dataTelemetryEndpoint')) {
 			this._telemetry = new ConsistentEvalTelemetry(this.dataTelemetryEndpoint);
 			this._telemetry.markEventStart(this._perfRenderEventName);
 		}
+	}
+
+	_checkDownloadStatus() {
+		const cookieValue = this._getCookieValue();
+		switch (cookieValue) {
+			case null:
+				setTimeout(this._checkDownloadStatus.bind(this), 1000);
+				break;
+			case 'failed':
+				this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-download-all-failed', {
+					composed: true,
+					bubbles: true
+				}));
+				this._deleteCookie();
+				this._downloading = false;
+				break;
+			case 'succeeded':
+			default:
+				this._deleteCookie();
+				this._downloading = false;
+				this._refreshAllSubmissionEntities();
+				break;
+		}
+	}
+	_deleteCookie() {
+		const d = new Date();
+		d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * -1);
+		document.cookie = `${this._expectedCookieName}= ;path=/;expires=${d.toGMTString()}`;
+	}
+	async _doSirenActionAndRefreshFileStatus(action) {
+		const newSubmissionEntity = await performSirenAction(this.token, action, undefined, true);
+		const submissionSelfLink = newSubmissionEntity.getLinkByRel('self');
+		await this._updateSubmissionEntity(newSubmissionEntity, submissionSelfLink.href) ;
+		await this.requestUpdate();
+		return newSubmissionEntity;
+	}
+	async _downloadAction(e) {
+		const attachmentId = e.detail.attachmentId;
+
+		const attachmentEntity = this._getAttachmentEntity(attachmentId);
+		if (!attachmentEntity) {
+			throw new Error('Invalid entity provided for attachment');
+		}
+
+		const action = attachmentEntity.getActionByName(toggleIsReadActionName);
+		if (action.fields.some(f => f.name === 'isRead' && f.value)) {
+			// If the action value is true it means it can be called to set the IsRead value to true, otherwise it is already read and we dont want to unread it
+			await this._doSirenActionAndRefreshFileStatus(action);
+		}
+	}
+	_finishedLoading() {
+		if (this._telemetry) {
+			this._telemetry.markEventEndAndLog(this._perfRenderEventName, this._submissionList.length);
+		}
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				component: 'submissions'
+			}
+		}));
+	}
+	_getAttachmentEntity(fileId) {
+		for (let i = 0;i < this._submissionEntities.length; i++) {
+			const attachments = this._getAttachments(this._submissionEntities[i].entity);
+			for (let y = 0;y < attachments.length; y++) {
+				if (attachments[y].properties.id === fileId) {
+					return attachments[y];
+				}
+			}
+		}
+		return null;
+	}
+	_getAttachments(submissionEntity) {
+		const attachmentsListEntity = submissionEntity.getSubEntityByClass(Classes.assignments.attachmentList);
+		if (attachmentsListEntity) {
+			return attachmentsListEntity.getSubEntitiesByClass(Classes.assignments.attachment);
+		}
+		return [];
+	}
+	_getComment(submissionEntity) {
+		if (submissionEntity.getSubEntityByClass(Classes.assignments.submissionComment)) {
+			return submissionEntity.getSubEntityByClass(Classes.assignments.submissionComment).properties.html;
+		}
+		return '';
+	}
+	_getCookieValue() {
+		const b = document.cookie.match(`(^|;)\\s*${this._expectedCookieName}\\s*=\\s*([^;]+)`);
+		return b ? b.pop() : null;
+	}
+	_getDownloadButtonText() {
+		if (this._downloading) {
+			return this.localize('downloadAllPleaseWait');
+		} else {
+			return this.localize('downloadAll');
+		}
+	}
+	async _getSubmissionEntity(submissionHref, byPassCache = false) {
+		return await window.D2L.Siren.EntityStore.fetch(submissionHref, this._token, byPassCache);
+	}
+	_handleAllSubmissionDownload() {
+		this._deleteCookie();
+		this._downloading = true;
+		window.location.href = this.downloadAllSubmissionLink;
+		this._checkDownloadStatus();
+	}
+	_hasAtLeastOneFileAttachment() {
+		for (const submissionEntity of this._submissionEntities) {
+			const attachments = this._getAttachments(submissionEntity.entity);
+			for (const attachmentEntity of attachments) {
+				// The first condition is for text submission attachments, which don't possess an 'extension' property.
+				if ((!attachmentEntity.properties.extension) || (attachmentEntity.properties.extension.toLowerCase() !== 'url')) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	async _initializeSubmissionEntities() {
@@ -209,74 +346,141 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 	}
 
-	_hasAtLeastOneFileAttachment() {
-		for (const submissionEntity of this._submissionEntities) {
-			const attachments = this._getAttachments(submissionEntity.entity);
-			for (const attachmentEntity of attachments) {
-				// The first condition is for text submission attachments, which don't possess an 'extension' property.
-				if ((!attachmentEntity.properties.extension) || (attachmentEntity.properties.extension.toLowerCase() !== 'url')) {
-					return true;
+	async _refreshAllSubmissionEntities() {
+		if (this._submissionList !== undefined) {
+			for (let i = 0; i < this._submissionList.length; i++) {
+				if (this._submissionList[i].href) {
+					const submission = await this._getSubmissionEntity(this._submissionList[i].href, true);
+					this._submissionEntities[i] = submission;
+				}
+			}
+			this.requestUpdate();
+		}
+	}
+	async _refreshGradeMarkTiiAction(e) {
+		const fileId = e.detail.fileId;
+
+		const attachmentEntity = this._getAttachmentEntity(fileId);
+		if (!attachmentEntity) {
+			throw new Error('Invalid entity provided for attachment');
+		}
+
+		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
+		if (!tiiEntity) {
+			throw new Error('Turnitin entity not present on attachment');
+		}
+
+		const refreshAction = tiiEntity.getActionByName(tiiRefreshAction);
+		if (!refreshAction) {
+			throw new Error('Refresh action not present on Turnitin entity');
+		}
+
+		await this._doSirenActionAndRefreshFileStatus(refreshAction);
+
+		if (e.detail.gradeMarkAutoTransfer) {
+			this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-refresh-grade-item', {
+				composed: true,
+				bubbles: true
+			}));
+		}
+	}
+	_renderListItems() {
+		const itemTemplate = [];
+		for (let i = 0; i < this._submissionEntities.length; i++) {
+			if (this._submissionEntities[i].entity) {
+				const submissionEntity = this._submissionEntities[i].entity;
+				if (submissionEntity.getSubEntityByClass(Classes.assignments.submissionDate)) {
+					const submissionDate = submissionEntity.getSubEntityByClass(Classes.assignments.submissionDate).properties.date;
+					const evaluationState = submissionEntity.properties.evaluationStatus;
+					const latenessTimespan = submissionEntity.properties.lateTimeSpan;
+					const submissionNumber = submissionEntity.properties.submissionNumber;
+					itemTemplate.push(html`
+						<d2l-consistent-evaluation-submission-item
+							date-str=${submissionDate}
+							display-number=${submissionNumber}
+							evaluation-state=${evaluationState}
+							lateness=${moment.duration(Number(latenessTimespan), 'seconds').humanize()}
+							submission-type=${this.submissionType}
+							comment=${this._getComment(submissionEntity)}
+							.attachments=${this._getAttachments(submissionEntity)}
+							?late=${latenessTimespan !== undefined}
+							?hide-use-grade=${this.hideUseGrade}
+							@d2l-consistent-evaluation-evidence-toggle-action=${this._toggleAction}
+							@d2l-consistent-evaluation-evidence-attachment-download=${this._downloadAction}
+							@d2l-consistent-evaluation-evidence-refresh-grade-mark=${this._refreshGradeMarkTiiAction}
+							@d2l-consistent-evaluation-evidence-tii-submit-file-action=${this._submitFileTiiAction}
+							@d2l-consistent-evaluation-link-attachment-selected=${this._selectLinkAttachment}
+						></d2l-consistent-evaluation-submission-item>`);
+				} else {
+					console.warn('Consistent Evaluation submission date property not found');
 				}
 			}
 		}
-		return false;
+		return html`${itemTemplate}`;
 	}
-
-	async _getSubmissionEntity(submissionHref, byPassCache = false) {
-		return await window.D2L.Siren.EntityStore.fetch(submissionHref, this._token, byPassCache);
+	_renderSkeleton() {
+		return html`
+			<div class="d2l-consistent-evaluation-submission-list-item-skeleton" >
+				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-header-title-skeleton"></div>
+				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-header-body-skeleton"></div>
+			</div>
+			<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-separator-skeleton"></div>
+			<div class="d2l-consistent-evaluation-submission-list-item-skeleton d2l-consistent-evaluation-list-item-submission-skeleton" >
+				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-image-skeleton"></div>
+				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-name-skeleton"></div>
+				<br />
+				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-information-skeleton"></div>
+			</div>
+			<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-separator-skeleton"></div>
+			<div class="d2l-consistent-evaluation-submission-list-item-skeleton d2l-consistent-evaluation-list-item-submission-skeleton">
+				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-image-skeleton"></div>
+				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-name-skeleton"></div>
+				<br />
+				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-information-skeleton"></div>
+			</div>
+			<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-separator-skeleton"></div>
+			<div class="d2l-consistent-evaluation-submission-list-item-skeleton">
+				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-footer-title-skeleton"></div>
+				<p class="d2l-body-compact d2l-skeletize-paragraph-2"></div>
+			</div>
+		`;
 	}
-
-	_getComment(submissionEntity) {
-		if (submissionEntity.getSubEntityByClass(Classes.assignments.submissionComment)) {
-			return submissionEntity.getSubEntityByClass(Classes.assignments.submissionComment).properties.html;
+	async _selectLinkAttachment(e) {
+		const linkId = e.detail.linkId;
+		const url = e.detail.url;
+		const linkAttachmentEntity = this._getAttachmentEntity(linkId);
+		if (!linkAttachmentEntity) {
+			throw new Error('Invalid entity provided for link attachment');
 		}
-		return '';
-	}
 
-	_getAttachments(submissionEntity) {
-		const attachmentsListEntity = submissionEntity.getSubEntityByClass(Classes.assignments.attachmentList);
-		if (attachmentsListEntity) {
-			return attachmentsListEntity.getSubEntitiesByClass(Classes.assignments.attachment);
+		const action = linkAttachmentEntity.getActionByName(toggleIsReadActionName);
+		if (action.fields.some(f => f.name === 'isRead' && f.value)) {
+			// If the action value is true it means it can be called to set the IsRead value to true, otherwise it is already read and we dont want to unread it
+			await this._doSirenActionAndRefreshFileStatus(action);
 		}
-		return [];
-	}
 
-	_getAttachmentEntity(fileId) {
-		for (let i = 0;i < this._submissionEntities.length; i++) {
-			const attachments = this._getAttachments(this._submissionEntities[i].entity);
-			for (let y = 0;y < attachments.length; y++) {
-				if (attachments[y].properties.id === fileId) {
-					return attachments[y];
-				}
-			}
+		window.open(url, '_blank');
+	}
+	async _submitFileTiiAction(e) {
+		const fileId = e.detail.fileId;
+
+		const attachmentEntity = this._getAttachmentEntity(fileId);
+		if (!attachmentEntity) {
+			throw new Error('Invalid entity provided for attachment');
 		}
-		return null;
-	}
 
-	_finishedLoading() {
-		if (this._telemetry) {
-			this._telemetry.markEventEndAndLog(this._perfRenderEventName, this._submissionList.length);
+		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
+		if (!tiiEntity) {
+			throw new Error('Turnitin entity not present on attachment');
 		}
-		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				component: 'submissions'
-			}
-		}));
-	}
 
-	async _updateSubmissionEntity(submissionEntity, submissionSelfLinkHref) {
-		for (let i = 0;i < this._submissionEntities.length; i++) {
-			const oldSubmissionEntity = await this._submissionEntities[i].entity.getLinkByRel('self');
-
-			if (oldSubmissionEntity.href === submissionSelfLinkHref) {
-				this._submissionEntities[i].entity = submissionEntity;
-				return;
-			}
+		const submitAction = tiiEntity.getActionByName(tiiSubmitActionName);
+		if (!submitAction) {
+			throw new Error('Submit action not present on Turnitin entity');
 		}
-	}
 
+		await this._doSirenActionAndRefreshFileStatus(submitAction);
+	}
 	async _toggleAction(e) {
 		const fileId = e.detail.fileId;
 		const actionName = e.detail.action;
@@ -313,239 +517,17 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 		}
 	}
 
-	async _downloadAction(e) {
-		const attachmentId = e.detail.attachmentId;
+	async _updateSubmissionEntity(submissionEntity, submissionSelfLinkHref) {
+		for (let i = 0;i < this._submissionEntities.length; i++) {
+			const oldSubmissionEntity = await this._submissionEntities[i].entity.getLinkByRel('self');
 
-		const attachmentEntity = this._getAttachmentEntity(attachmentId);
-		if (!attachmentEntity) {
-			throw new Error('Invalid entity provided for attachment');
-		}
-
-		const action = attachmentEntity.getActionByName(toggleIsReadActionName);
-		if (action.fields.some(f => f.name === 'isRead' && f.value)) {
-			// If the action value is true it means it can be called to set the IsRead value to true, otherwise it is already read and we dont want to unread it
-			await this._doSirenActionAndRefreshFileStatus(action);
-		}
-	}
-
-	async _refreshGradeMarkTiiAction(e) {
-		const fileId = e.detail.fileId;
-
-		const attachmentEntity = this._getAttachmentEntity(fileId);
-		if (!attachmentEntity) {
-			throw new Error('Invalid entity provided for attachment');
-		}
-
-		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
-		if (!tiiEntity) {
-			throw new Error('Turnitin entity not present on attachment');
-		}
-
-		const refreshAction = tiiEntity.getActionByName(tiiRefreshAction);
-		if (!refreshAction) {
-			throw new Error('Refresh action not present on Turnitin entity');
-		}
-
-		await this._doSirenActionAndRefreshFileStatus(refreshAction);
-
-		if (e.detail.gradeMarkAutoTransfer) {
-			this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-refresh-grade-item', {
-				composed: true,
-				bubbles: true
-			}));
-		}
-	}
-
-	async _selectLinkAttachment(e) {
-		const linkId = e.detail.linkId;
-		const url = e.detail.url;
-		const linkAttachmentEntity = this._getAttachmentEntity(linkId);
-		if (!linkAttachmentEntity) {
-			throw new Error('Invalid entity provided for link attachment');
-		}
-
-		const action = linkAttachmentEntity.getActionByName(toggleIsReadActionName);
-		if (action.fields.some(f => f.name === 'isRead' && f.value)) {
-			// If the action value is true it means it can be called to set the IsRead value to true, otherwise it is already read and we dont want to unread it
-			await this._doSirenActionAndRefreshFileStatus(action);
-		}
-
-		window.open(url, '_blank');
-	}
-
-	async _submitFileTiiAction(e) {
-		const fileId = e.detail.fileId;
-
-		const attachmentEntity = this._getAttachmentEntity(fileId);
-		if (!attachmentEntity) {
-			throw new Error('Invalid entity provided for attachment');
-		}
-
-		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
-		if (!tiiEntity) {
-			throw new Error('Turnitin entity not present on attachment');
-		}
-
-		const submitAction = tiiEntity.getActionByName(tiiSubmitActionName);
-		if (!submitAction) {
-			throw new Error('Submit action not present on Turnitin entity');
-		}
-
-		await this._doSirenActionAndRefreshFileStatus(submitAction);
-	}
-
-	async _doSirenActionAndRefreshFileStatus(action) {
-		const newSubmissionEntity = await performSirenAction(this.token, action, undefined, true);
-		const submissionSelfLink = newSubmissionEntity.getLinkByRel('self');
-		await this._updateSubmissionEntity(newSubmissionEntity, submissionSelfLink.href) ;
-		await this.requestUpdate();
-		return newSubmissionEntity;
-	}
-
-	_handleAllSubmissionDownload() {
-		this._deleteCookie();
-		this._downloading = true;
-		window.location.href = this.downloadAllSubmissionLink;
-		this._checkDownloadStatus();
-	}
-
-	_checkDownloadStatus() {
-		const cookieValue = this._getCookieValue();
-		switch (cookieValue) {
-			case null:
-				setTimeout(this._checkDownloadStatus.bind(this), 1000);
-				break;
-			case 'failed':
-				this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-download-all-failed', {
-					composed: true,
-					bubbles: true
-				}));
-				this._deleteCookie();
-				this._downloading = false;
-				break;
-			case 'succeeded':
-			default:
-				this._deleteCookie();
-				this._downloading = false;
-				this._refreshAllSubmissionEntities();
-				break;
-		}
-	}
-
-	async _refreshAllSubmissionEntities() {
-		if (this._submissionList !== undefined) {
-			for (let i = 0; i < this._submissionList.length; i++) {
-				if (this._submissionList[i].href) {
-					const submission = await this._getSubmissionEntity(this._submissionList[i].href, true);
-					this._submissionEntities[i] = submission;
-				}
-			}
-			this.requestUpdate();
-		}
-	}
-
-	_deleteCookie() {
-		const d = new Date();
-		d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * -1);
-		document.cookie = `${this._expectedCookieName}= ;path=/;expires=${d.toGMTString()}`;
-	}
-
-	_getCookieValue() {
-		const b = document.cookie.match(`(^|;)\\s*${this._expectedCookieName}\\s*=\\s*([^;]+)`);
-		return b ? b.pop() : null;
-	}
-
-	_getDownloadButtonText() {
-		if (this._downloading) {
-			return this.localize('downloadAllPleaseWait');
-		} else {
-			return this.localize('downloadAll');
-		}
-	}
-
-	_renderListItems() {
-		const itemTemplate = [];
-		for (let i = 0; i < this._submissionEntities.length; i++) {
-			if (this._submissionEntities[i].entity) {
-				const submissionEntity = this._submissionEntities[i].entity;
-				if (submissionEntity.getSubEntityByClass(Classes.assignments.submissionDate)) {
-					const submissionDate = submissionEntity.getSubEntityByClass(Classes.assignments.submissionDate).properties.date;
-					const evaluationState = submissionEntity.properties.evaluationStatus;
-					const latenessTimespan = submissionEntity.properties.lateTimeSpan;
-					const submissionNumber = submissionEntity.properties.submissionNumber;
-					itemTemplate.push(html`
-						<d2l-consistent-evaluation-submission-item
-							date-str=${submissionDate}
-							display-number=${submissionNumber}
-							evaluation-state=${evaluationState}
-							lateness=${moment.duration(Number(latenessTimespan), 'seconds').humanize()}
-							submission-type=${this.submissionType}
-							comment=${this._getComment(submissionEntity)}
-							.attachments=${this._getAttachments(submissionEntity)}
-							?late=${latenessTimespan !== undefined}
-							?hide-use-grade=${this.hideUseGrade}
-							@d2l-consistent-evaluation-evidence-toggle-action=${this._toggleAction}
-							@d2l-consistent-evaluation-evidence-attachment-download=${this._downloadAction}
-							@d2l-consistent-evaluation-evidence-refresh-grade-mark=${this._refreshGradeMarkTiiAction}
-							@d2l-consistent-evaluation-evidence-tii-submit-file-action=${this._submitFileTiiAction}
-							@d2l-consistent-evaluation-link-attachment-selected=${this._selectLinkAttachment}
-						></d2l-consistent-evaluation-submission-item>`);
-				} else {
-					console.warn('Consistent Evaluation submission date property not found');
-				}
+			if (oldSubmissionEntity.href === submissionSelfLinkHref) {
+				this._submissionEntities[i].entity = submissionEntity;
+				return;
 			}
 		}
-		return html`${itemTemplate}`;
 	}
 
-	_renderSkeleton() {
-		return html`
-			<div class="d2l-consistent-evaluation-submission-list-item-skeleton" >
-				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-header-title-skeleton"></div>
-				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-header-body-skeleton"></div>
-			</div>
-			<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-separator-skeleton"></div>
-			<div class="d2l-consistent-evaluation-submission-list-item-skeleton d2l-consistent-evaluation-list-item-submission-skeleton" >
-				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-image-skeleton"></div>
-				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-name-skeleton"></div>
-				<br />
-				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-information-skeleton"></div>
-			</div>
-			<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-separator-skeleton"></div>
-			<div class="d2l-consistent-evaluation-submission-list-item-skeleton d2l-consistent-evaluation-list-item-submission-skeleton">
-				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-image-skeleton"></div>
-				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-name-skeleton"></div>
-				<br />
-				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-file-information-skeleton"></div>
-			</div>
-			<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-separator-skeleton"></div>
-			<div class="d2l-consistent-evaluation-submission-list-item-skeleton">
-				<div class="d2l-skeletize d2l-consistent-evaluation-submission-list-footer-title-skeleton"></div>
-				<p class="d2l-body-compact d2l-skeletize-paragraph-2"></div>
-			</div>
-		`;
-	}
-
-	render() {
-		return html`
-			<div class="d2l-consistent-evaluation-submission-list-view-skeleton" aria-hidden="${!this.skeleton}" aria-busy="${this.skeleton}">
-				${this._renderSkeleton()}
-			</div>
-			<div class="d2l-consistent-evaluation-submission-list-view" aria-hidden="${this.skeleton}">
-				<d2l-list separators="between">
-					${this._renderListItems()}
-				</d2l-list>
-				<d2l-button-subtle
-					id="download-all-button"
-					icon="tier2:download"
-					?hidden="${!this._downloadAllFilesButtonIsVisible}"
-					?disabled="${this._downloading}"
-					text="${this._getDownloadButtonText()}"
-					@click="${this._handleAllSubmissionDownload}">
-				</d2l-button-subtle>
-			</div>
-		`;
-	}
 }
 
 customElements.define('d2l-consistent-evaluation-submissions-page', ConsistentEvaluationSubmissionsPage);

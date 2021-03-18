@@ -68,15 +68,23 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 		`];
 	}
 
+	render() {
+		return html`
+			<div class="d2l-label-text">${this.localize('turnitinGradeMark')}</div>
+			${this._renderFeedbackIcon()}
+			<div class="d2l-body-compact d2l-consistent-evaluation-tii-grade-mark-overall-score-container">
+				${this._overallScore}
+			</div>
+			${this._renderEditButton()}
+			${this._renderRefreshButton()}
+			${this._renderUseGradeButton()}
+		`;
+	}
 	updated(changedProperties) {
 		super.updated(changedProperties);
 		if (changedProperties.has('score')) {
 			this._setOverallScore();
 		}
-	}
-
-	_onEditButtonClick() {
-		window.open(this.gradeMarkHref);
 	}
 
 	_dispatchRefreshButtonClick() {
@@ -94,7 +102,6 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 			bubbles: true
 		}));
 	}
-
 	_dispatchUseGradeEvent() {
 		const grade = new Grade(GradeType.Number, this.score, this.outOf, null, null, null);
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-use-tii-grade', {
@@ -105,26 +112,8 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 			bubbles: true
 		}));
 	}
-
-	_renderFeedbackIcon() {
-		return (this.hasFeedback) ? html`
-			<d2l-icon
-				icon="tier1:feedback"
-				title=${this.localize('turnitinFeedbackSummary')}
-			></d2l-icon>` :
-			html ``;
-	}
-
-	_renderUseGradeButton() {
-		return (this.score && !this.hideUseGrade) ?
-			html`
-				<d2l-button-subtle
-					icon="tier1:grade"
-					text="${this.localize('turnitinUseGrade')}"
-					@click=${this._dispatchUseGradeEvent}
-				></d2l-button-subtle>
-			` :
-			html ``;
+	_onEditButtonClick() {
+		window.open(this.gradeMarkHref);
 	}
 
 	_renderEditButton() {
@@ -137,6 +126,14 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 			></d2l-button-icon>` :
 			html``;
 	}
+	_renderFeedbackIcon() {
+		return (this.hasFeedback) ? html`
+			<d2l-icon
+				icon="tier1:feedback"
+				title=${this.localize('turnitinFeedbackSummary')}
+			></d2l-icon>` :
+			html ``;
+	}
 
 	_renderRefreshButton() {
 		return this.gradeMarkHref ? html`
@@ -147,6 +144,17 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 			></d2l-button-icon>` :
 			html``;
 	}
+	_renderUseGradeButton() {
+		return (this.score && !this.hideUseGrade) ?
+			html`
+				<d2l-button-subtle
+					icon="tier1:grade"
+					text="${this.localize('turnitinUseGrade')}"
+					@click=${this._dispatchUseGradeEvent}
+				></d2l-button-subtle>
+			` :
+			html ``;
+	}
 
 	_setOverallScore() {
 		this._overallScore = this.score ?
@@ -155,18 +163,6 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 
 	}
 
-	render() {
-		return html`
-			<div class="d2l-label-text">${this.localize('turnitinGradeMark')}</div>
-			${this._renderFeedbackIcon()}
-			<div class="d2l-body-compact d2l-consistent-evaluation-tii-grade-mark-overall-score-container">
-				${this._overallScore}
-			</div>
-			${this._renderEditButton()}
-			${this._renderRefreshButton()}
-			${this._renderUseGradeButton()}
-		`;
-	}
 }
 
 customElements.define('d2l-consistent-evaluation-tii-grade-mark', ConsistentEvaluationTiiGradeMark);

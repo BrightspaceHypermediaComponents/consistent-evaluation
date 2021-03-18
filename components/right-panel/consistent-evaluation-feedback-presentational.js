@@ -71,113 +71,16 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		this.flush = this.flush.bind(this);
 	}
 
-	htmlEditorEnabled(e) {
-		if (e.detail.key === 'd2l-provider-html-editor-enabled') {
-			e.detail.provider = true;
-		}
-	}
-
 	connectedCallback() {
 		super.connectedCallback();
 		this.addEventListener('d2l-request-provider', this.htmlEditorEnabled);
 		window.addEventListener('d2l-flush', this.flush);
 	}
-
 	disconnectedCallback() {
 		this.removeEventListener('d2l-request-provider', this.htmlEditorEnabled);
 		window.removeEventListener('d2l-flush', this.flush);
 		super.disconnectedCallback();
 	}
-
-	flush() {
-		if (this._debounceJobs.feedback && this._debounceJobs.feedback.isActive()) {
-			this._debounceJobs.feedback.flush();
-		}
-	}
-
-	_saveOnFeedbackChange(e) {
-		const feedback = e.detail.content;
-		this._emitFeedbackTextEditorChangeEvent();
-		this._debounceJobs.feedback = Debouncer.debounce(
-			this._debounceJobs.feedback,
-			timeOut.after(800),
-			() => this._emitFeedbackEditEvent(feedback)
-		);
-	}
-
-	_saveOnFeedbackChangeNewEditor() {
-		const feedback = this.shadowRoot.querySelector('d2l-htmleditor').html;
-		if (this.feedbackText === feedback) {
-			return;
-		}
-		this._emitFeedbackTextEditorChangeEvent();
-		this._debounceJobs.feedback = Debouncer.debounce(
-			this._debounceJobs.feedback,
-			timeOut.after(800),
-			() => this._emitFeedbackEditEvent(feedback)
-		);
-	}
-
-	_emitFeedbackEditEvent(feedback) {
-		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-edit', {
-			composed: true,
-			bubbles: true,
-			detail: feedback
-		}));
-	}
-
-	_emitFeedbackTextEditorChangeEvent() {
-		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-text-editor-change', {
-			composed: true,
-			bubbles: true
-		}));
-	}
-
-	updated(changedProperties) {
-		super.updated(changedProperties);
-
-		if (changedProperties.has('feedbackText')) {
-			this._key = this.href;
-		}
-	}
-
-	_setFeedbackSummaryInfo() {
-		let summary = '';
-		if (this.feedbackText === null || this.feedbackText === '') {
-			summary = this.localize('noFeedbackSummary');
-		} else {
-			const tmpDiv = document.createElement('div');
-			tmpDiv.innerHTML = this.feedbackText;
-			summary = tmpDiv.textContent || tmpDiv.innerText || '';
-		}
-		this._feedbackSummaryInfo = summary;
-	}
-
-	_getHtmlEditor() {
-		if (this.useNewHtmlEditor) {
-			import('@brightspace-ui/htmleditor/htmleditor.js');
-			return html `
-				<d2l-htmleditor
-					html="${this.feedbackText}"
-					label="${this.localize('overallFeedback')}"
-					label-hidden
-					height="15rem"
-					@d2l-htmleditor-blur="${this._saveOnFeedbackChangeNewEditor}">
-				</d2l-htmleditor>
-			`;
-		} else {
-			return html `
-				<d2l-activity-text-editor
-					.key="${this._key}"
-					.value="${this.feedbackText}"
-					.richtextEditorConfig="${this.richTextEditorConfig}"
-					@d2l-activity-text-editor-change="${this._saveOnFeedbackChange}"
-					ariaLabel="${this.localize('overallFeedback')}">
-				</d2l-activity-text-editor>
-			`;
-		}
-	}
-
 	render() {
 		if (this.href && this.token && this.richTextEditorConfig) {
 			const attachmentsComponent = this.canEditFeedback || this.attachments.length !== 0
@@ -206,6 +109,96 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			return html``;
 		}
 	}
+	updated(changedProperties) {
+		super.updated(changedProperties);
+
+		if (changedProperties.has('feedbackText')) {
+			this._key = this.href;
+		}
+	}
+	flush() {
+		if (this._debounceJobs.feedback && this._debounceJobs.feedback.isActive()) {
+			this._debounceJobs.feedback.flush();
+		}
+	}
+	htmlEditorEnabled(e) {
+		if (e.detail.key === 'd2l-provider-html-editor-enabled') {
+			e.detail.provider = true;
+		}
+	}
+
+	_emitFeedbackEditEvent(feedback) {
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-edit', {
+			composed: true,
+			bubbles: true,
+			detail: feedback
+		}));
+	}
+	_emitFeedbackTextEditorChangeEvent() {
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-text-editor-change', {
+			composed: true,
+			bubbles: true
+		}));
+	}
+	_getHtmlEditor() {
+		if (this.useNewHtmlEditor) {
+			import('@brightspace-ui/htmleditor/htmleditor.js');
+			return html `
+				<d2l-htmleditor
+					html="${this.feedbackText}"
+					label="${this.localize('overallFeedback')}"
+					label-hidden
+					height="15rem"
+					@d2l-htmleditor-blur="${this._saveOnFeedbackChangeNewEditor}">
+				</d2l-htmleditor>
+			`;
+		} else {
+			return html `
+				<d2l-activity-text-editor
+					.key="${this._key}"
+					.value="${this.feedbackText}"
+					.richtextEditorConfig="${this.richTextEditorConfig}"
+					@d2l-activity-text-editor-change="${this._saveOnFeedbackChange}"
+					ariaLabel="${this.localize('overallFeedback')}">
+				</d2l-activity-text-editor>
+			`;
+		}
+	}
+	_saveOnFeedbackChange(e) {
+		const feedback = e.detail.content;
+		this._emitFeedbackTextEditorChangeEvent();
+		this._debounceJobs.feedback = Debouncer.debounce(
+			this._debounceJobs.feedback,
+			timeOut.after(800),
+			() => this._emitFeedbackEditEvent(feedback)
+		);
+	}
+
+	_saveOnFeedbackChangeNewEditor() {
+		const feedback = this.shadowRoot.querySelector('d2l-htmleditor').html;
+		if (this.feedbackText === feedback) {
+			return;
+		}
+		this._emitFeedbackTextEditorChangeEvent();
+		this._debounceJobs.feedback = Debouncer.debounce(
+			this._debounceJobs.feedback,
+			timeOut.after(800),
+			() => this._emitFeedbackEditEvent(feedback)
+		);
+	}
+
+	_setFeedbackSummaryInfo() {
+		let summary = '';
+		if (this.feedbackText === null || this.feedbackText === '') {
+			summary = this.localize('noFeedbackSummary');
+		} else {
+			const tmpDiv = document.createElement('div');
+			tmpDiv.innerHTML = this.feedbackText;
+			summary = tmpDiv.textContent || tmpDiv.innerText || '';
+		}
+		this._feedbackSummaryInfo = summary;
+	}
+
 }
 
 customElements.define('d2l-consistent-evaluation-feedback-presentational', ConsistentEvaluationFeedbackPresentational);

@@ -121,6 +121,37 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 		`];
 	}
 
+	render() {
+		if (this.userProgressOutcomeHref) {
+			return this._renderOverallAchievement();
+		}
+
+		if (this.submissionInfo) {
+			if (submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
+				return this._renderNoEvidenceSubmissionType();
+			}
+
+			if (this.submissionInfo.submissionList === undefined) {
+				return this._renderNoSubmissions();
+			}
+		}
+
+		if (this.fileEvidenceUrl) {
+			return this._renderFileEvidence();
+		}
+
+		if (this.textEvidence) {
+			return this._renderTextEvidence();
+		}
+
+		if (this.fileNonViewable) {
+			return this._renderNonViewableFile();
+		}
+
+		if (this.submissionInfo) {
+			return this._renderSubmissionList();
+		}
+	}
 	async updated(changedProperties) {
 		super.updated();
 
@@ -203,6 +234,13 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 		</div>`;
 	}
 
+	_renderNonViewableFile() {
+		return html`
+		<d2l-consistent-evaluation-evidence-non-viewable
+			title=${this.fileNonViewable.title}
+			download-url=${this.fileNonViewable.downloadUrl}
+		></d2l-consistent-evaluation-evidence-non-viewable>`;
+	}
 	_renderNoSubmissions() {
 		return html`
 		<div class="d2l-consistent-evaluation-no-submissions-container">
@@ -242,45 +280,6 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 		></d2l-consistent-evaluation-evidence-text>`;
 	}
 
-	_renderNonViewableFile() {
-		return html`
-		<d2l-consistent-evaluation-evidence-non-viewable
-			title=${this.fileNonViewable.title}
-			download-url=${this.fileNonViewable.downloadUrl}
-		></d2l-consistent-evaluation-evidence-non-viewable>`;
-	}
-
-	render() {
-		if (this.userProgressOutcomeHref) {
-			return this._renderOverallAchievement();
-		}
-
-		if (this.submissionInfo) {
-			if (submissionTypesWithNoEvidence.includes(this.submissionInfo.submissionType)) {
-				return this._renderNoEvidenceSubmissionType();
-			}
-
-			if (this.submissionInfo.submissionList === undefined) {
-				return this._renderNoSubmissions();
-			}
-		}
-
-		if (this.fileEvidenceUrl) {
-			return this._renderFileEvidence();
-		}
-
-		if (this.textEvidence) {
-			return this._renderTextEvidence();
-		}
-
-		if (this.fileNonViewable) {
-			return this._renderNonViewableFile();
-		}
-
-		if (this.submissionInfo) {
-			return this._renderSubmissionList();
-		}
-	}
 }
 
 customElements.define('d2l-consistent-evaluation-evidence-assignment', ConsistentEvaluationEvidenceAssignment);

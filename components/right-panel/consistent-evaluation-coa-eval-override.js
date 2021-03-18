@@ -14,13 +14,6 @@ class ConsistentEvaluationCoaEvalOverride extends LitElement {
 		};
 	}
 
-	_emitCoaEvalOverrideChange() {
-		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-coa-eval-override-changed', {
-			composed: true,
-			bubbles: true
-		}));
-	}
-
 	render() {
 		return html`
 			<d2l-consistent-evaluation-right-panel-block no-title>
@@ -32,6 +25,13 @@ class ConsistentEvaluationCoaEvalOverride extends LitElement {
 			</d2l-consistent-evaluation-right-panel-block>
 		`;
 	}
+	_emitCoaEvalOverrideChange() {
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-coa-eval-override-changed', {
+			composed: true,
+			bubbles: true
+		}));
+	}
+
 }
 
 customElements.define('d2l-consistent-evaluation-coa-eval-override', ConsistentEvaluationCoaEvalOverride);

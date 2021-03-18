@@ -70,6 +70,22 @@ class FeedbackActions extends LocalizeConsistentEvaluation(LitElement) {
 		};
 	}
 
+	render() {
+		return html`
+			<div class="button-container-left">
+				${this._renderIconButton('upload', 'addFile', 'add-file', this.canAddFile)}
+				${this._renderIconButton('quicklink', 'addQuicklink', 'add-quick-link', this.canAddLink)}
+				${this._renderIconButton('link', 'addLink', 'add-link', this.canAddLink)}
+				${this._renderIconButton('google-drive', 'addGoogleDriveLink', 'add-google-drive-link', this.canAddGoogleDriveLink)}
+				${this._renderIconButton('one-drive', 'addOneDriveLink', 'add-one-drive-link', this.canAddOneDriveLink)}
+			</div>
+
+			<div class="button-container-right">
+				${this._renderSubtleButton('mic', 'recordAudio', 'record-audio', this.canRecordAudio)}
+				${this._renderSubtleButton('file-video', 'recordVideo', 'record-video', this.canRecordVideo)}
+			</div>
+		`;
+	}
 	_dispatchButtonClick(name) {
 		this.dispatchEvent(new CustomEvent(`d2l-consistent-evaluation-feedback-action-${name}`, {
 			bubbles: true,
@@ -114,21 +130,5 @@ class FeedbackActions extends LocalizeConsistentEvaluation(LitElement) {
 		}
 	}
 
-	render() {
-		return html`
-			<div class="button-container-left">
-				${this._renderIconButton('upload', 'addFile', 'add-file', this.canAddFile)}
-				${this._renderIconButton('quicklink', 'addQuicklink', 'add-quick-link', this.canAddLink)}
-				${this._renderIconButton('link', 'addLink', 'add-link', this.canAddLink)}
-				${this._renderIconButton('google-drive', 'addGoogleDriveLink', 'add-google-drive-link', this.canAddGoogleDriveLink)}
-				${this._renderIconButton('one-drive', 'addOneDriveLink', 'add-one-drive-link', this.canAddOneDriveLink)}
-			</div>
-
-			<div class="button-container-right">
-				${this._renderSubtleButton('mic', 'recordAudio', 'record-audio', this.canRecordAudio)}
-				${this._renderSubtleButton('file-video', 'recordVideo', 'record-video', this.canRecordVideo)}
-			</div>
-		`;
-	}
 }
 customElements.define('d2l-consistent-evaluation-feedback-actions', FeedbackActions);

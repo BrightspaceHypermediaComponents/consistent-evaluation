@@ -31,10 +31,6 @@ export class ConsistentEvaluationEvidenceNonViewable extends LocalizeConsistentE
 		`];
 	}
 
-	_donwloadFile() {
-		window.location = this.downloadUrl;
-	}
-
 	render() {
 		return html`
 			<d2l-consistent-evaluation-evidence-top-bar>
@@ -52,6 +48,10 @@ export class ConsistentEvaluationEvidenceNonViewable extends LocalizeConsistentE
 			</div>
 		`;
 	}
+	_donwloadFile() {
+		window.location = this.downloadUrl;
+	}
+
 }
 
 customElements.define('d2l-consistent-evaluation-evidence-non-viewable', ConsistentEvaluationEvidenceNonViewable);

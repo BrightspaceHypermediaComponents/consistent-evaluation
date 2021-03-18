@@ -294,571 +294,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		}
 	}
 
-	get _feedbackText() {
-		if (this._feedbackEntity && this._feedbackEntity.properties) {
-			return this._feedbackEntity.properties.html || '';
-		}
-		return undefined;
-	}
-
-	get _grade() {
-		if (this._gradeEntity) {
-			return this._controller.parseGrade(this._gradeEntity);
-		}
-		return new Grade(GradeType.Number, 0, 0, null, null, this._gradeEntity);
-	}
-
-	get _feedbackEntity() {
-		if (this.evaluationEntity) {
-			return this.evaluationEntity.getSubEntityByRel('feedback');
-		}
-		return undefined;
-	}
-
-	get _gradeEntity() {
-		if (this.evaluationEntity) {
-			return this.evaluationEntity.getSubEntityByRel('grade');
-		}
-		return undefined;
-	}
-
-	get _navBarTitleText() {
-		if (this.assignmentName) return this.assignmentName;
-
-		return this.userName;
-	}
-
-	get _navBarSubtitleText() {
-		if (this.userProgressOutcomeHref) {
-			return this.localize('overallAchievement');
-		}
-		return this.organizationName;
-	}
-
-	get _activeScoringRubric() {
-		if (this.evaluationEntity) {
-			const activeScoringRubricEntity = this.evaluationEntity.getSubEntityByRel('active-scoring-rubric');
-			if (activeScoringRubricEntity) {
-				if (activeScoringRubricEntity.properties) {
-					return activeScoringRubricEntity.properties.activeScoringRubric;
-				}
-			}
-		}
-		return undefined;
-	}
-
-	async _initializeController() {
-		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
-		const bypassCache = true;
-		this.evaluationEntity = await this._controller.fetchEvaluationEntity(bypassCache);
-		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
-	}
-
-	async _refreshEvaluationEntity() {
-		this.evaluationEntity = await this._controller.fetchEvaluationEntity(true);
-	}
-
-	_noFeedbackComponent() {
-		return this.evaluationEntity && this.evaluationEntity.getSubEntityByRel('feedback') === undefined;
-	}
-
-	_noGradeComponent() {
-		return this.evaluationEntity && this.evaluationEntity.getSubEntityByRel('grade') === undefined;
-	}
-
-	_isEvaluationPublished() {
-		if (!this.evaluationEntity) {
-			return false;
-		}
-		return this.evaluationEntity.properties.state === publishedState;
-	}
-
-	async _onNextStudentClick() {
-		const rubricComponent = this.shadowRoot.querySelector('consistent-evaluation-right-panel')
-			.shadowRoot.querySelector('d2l-consistent-evaluation-rubric');
-
-		if (rubricComponent) {
-			rubricComponent._closeRubric();
-		}
-
-		this._resetFocusToUser();
-		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-next-student-click', {
-			composed: true,
-			bubbles: true
-		}));
-	}
-
-	async _onPreviousStudentClick() {
-		const rubricComponent = this.shadowRoot.querySelector('consistent-evaluation-right-panel')
-			.shadowRoot.querySelector('d2l-consistent-evaluation-rubric');
-
-		if (rubricComponent) {
-			rubricComponent._closeRubric();
-		}
-
-		this._resetFocusToUser();
-		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-previous-student-click', {
-			composed: true,
-			bubbles: true
-		}));
-	}
-
-	async _transientSaveFeedback(e) {
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newFeedbackVal = e.detail;
-
-				this.evaluationEntity = await this._controller.transientSaveFeedback(entity, newFeedbackVal);
-			}
-		);
-	}
-
-	async _transientAddAttachment(e) {
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-
-				const files = e.detail.files;
-				this.evaluationEntity = await this._controller.transientAddFeedbackAttachment(entity, files);
-			}
-		);
-
-		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
-	}
-
-	async _transientRemoveAttachment(e) {
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-
-				const fileIdentifier = e.detail.file;
-				this.evaluationEntity = await this._controller.transientRemoveFeedbackAttachment(entity, fileIdentifier);
-			}
-		);
-
-		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
-	}
-
-	async _transientSaveGrade(e) {
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				let newGradeVal;
-				const type = e.detail.grade.scoreType;
-				if (type === GradeType.Letter) {
-					newGradeVal = e.detail.grade.letterGrade;
-				}
-				else if (type === GradeType.Number) {
-					newGradeVal = e.detail.grade.score;
-				}
-				this.evaluationEntity = await this._controller.transientSaveGrade(entity, newGradeVal);
-			}
-		);
-	}
-
-	async _transientSaveAnnotations(e) {
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const annotationsData = e.detail;
-				const fileId = this.currentFileId;
-
-				this.evaluationEntity = await this._controller.transientSaveAnnotations(entity, annotationsData, fileId);
-			}
-		);
-	}
-
-	async _transientSaveActiveScoringRubric(e) {
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const rubricId = e.detail.rubricId;
-
-				this.evaluationEntity = await this._controller.transientSaveActiveScoringRubric(entity, rubricId);
-			}
-		);
-	}
-
-	async _transientSaveCoaEvalOverride(e) {
-		// Call transientSaveFeedback to 'unsave' the evaluation
-		if (e.detail && e.detail.sirenActionPromise) {
-			this._transientSaveAwaiter.addTransientSave(e.detail.sirenActionPromise);
-		}
-
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.evaluationEntity = await this._controller.transientSaveFeedback(entity, this._feedbackText);
-			}
-		);
-	}
-
-	async _saveEvaluation() {
-		await this._flushAndWait();
-
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newEvaluationEntity = await this._controller.save(entity);
-				this._currentlySaving = false;
-
-				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
-			}
-		);
-	}
-
-	async _updateIsUpdateClicked() {
-		this._isUpdateClicked = true;
-		this._currentlySaving = true;
-	}
-
-	async _updateEvaluation() {
-		await this._flushAndWait();
-		this._isUpdateClicked = false;
-
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newEvaluationEntity = await this._controller.update(entity);
-				this._currentlySaving = false;
-
-				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
-			}
-		);
-	}
-
-	async _updateIsPublishClicked() {
-		this._isPublishClicked = true;
-		this._currentlySaving = true;
-	}
-
-	async _publishEvaluation() {
-		await this._flushAndWait();
-		this._isPublishClicked = false;
-
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newEvaluationEntity = await this._controller.publish(entity);
-				this._currentlySaving = false;
-
-				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
-				this.submissionInfo.evaluationState = publishedState;
-			}
-		);
-	}
-
-	async _retractEvaluation() {
-		await this._flushAndWait();
-
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newEvaluationEntity = await this._controller.retract(entity);
-				this._currentlySaving = false;
-
-				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
-				this.submissionInfo.evaluationState = draftState;
-			}
-		);
-	}
-
-	async _flushAndWait() {
-		window.dispatchEvent(new CustomEvent('d2l-flush', {
-			composed: true,
-			bubbles: true
-		}));
-		this._currentlySaving = true;
-		await this._waitForAnnotations();
-		await this._transientSaveAwaiter.awaitAllTransientSaves();
-	}
-
-	_checkEvaluationEntityAndDisplayToast(newEvaluationEntity, errorTerm, successTerm) {
-		if (!newEvaluationEntity) {
-			this._showToast(this.localize(errorTerm), true);
-		} else {
-			this.evaluationEntity = newEvaluationEntity;
-			this._fireSaveEvaluationEvent();
-			this._showToast(this.localize(successTerm), false);
-		}
-	}
-
-	_closeDialogs() {
-		this._isUpdateClicked = false;
-		this._isPublishClicked = false;
-		this._navigationTarget = null;
-		this._currentlySaving = false;
-	}
-
-	_showToast(message, isError) {
-		this._toastMessage = message;
-
-		if (isError) {
-			this._toastType = 'critical';
-			this._toastNoAutoClose = true;
-		} else {
-			this._toastType = 'default';
-			this._toastNoAutoClose = false;
-		}
-
-		this._displayToast = true;
-	}
-
-	_onToastClose() {
-		this._displayToast = false;
-	}
-
-	async _showUnsavedChangesDialog(e) {
-		window.dispatchEvent(new CustomEvent('d2l-flush', {
-			composed: true,
-			bubbles: true
-		}));
-
-		await this._waitForAnnotations();
-		await this._mutex.dispatch(async() => { this._navigationTarget = e.detail.key; });
-	}
-
-	_resetFocusToUser() {
-		try {
-			this.shadowRoot.querySelector('d2l-consistent-evaluation-learner-context-bar')
-				.shadowRoot.querySelector('d2l-consistent-evaluation-lcb-user-context')
-				.shadowRoot.querySelector('h2').focus();
-		} catch (e) {
-			console.warn('Unable to reset focus');
-		}
-	}
-
-	async _navigate() {
-		switch (this._navigationTarget) {
-			case 'back':
-				if (this.evaluationEntity.hasClass('unsaved')) {
-					window.removeEventListener('beforeunload', this.unsavedChangesHandler);
-				}
-				window.location.assign(this.returnHref);
-				break;
-			case 'next':
-				await this._onNextStudentClick();
-				break;
-			case 'previous':
-				await this._onPreviousStudentClick();
-				break;
-		}
-	}
-
-	_confirmUnsavedChangesBeforeUnload(e) {
-		if (this.evaluationEntity.hasClass('unsaved')) {
-			//Triggers the native browser confirmation dialog
-			e.preventDefault();
-			e.returnValue = 'Unsaved changes';
-		}
-	}
-
-	_renderToast() {
-		return html`<d2l-alert-toast
-			?open=${this._displayToast}
-			button-text=""
-			?no-auto-close=${this._toastNoAutoClose}
-			type=${this._toastType}
-			@d2l-alert-toast-close=${this._onToastClose}>${this._toastMessage}</d2l-alert-toast>`;
-	}
-
-	_renderLearnerContextBar() {
-		if (!this.hideLearnerContextBar) {
-			return html`
-				<d2l-consistent-evaluation-learner-context-bar
-					user-href=${ifDefined(this.userHref)}
-					group-href=${ifDefined(this.groupHref)}
-					special-access-href=${ifDefined(this.specialAccessHref)}
-					.anonymousInfo=${this.anonymousInfo}
-					.token=${this.token}
-					.currentFileId=${this.currentFileId}
-					.submissionInfo=${this.submissionInfo}
-					.enrolledUser=${this.enrolledUser}
-					.groupInfo=${this.groupInfo}
-					?skeleton=${this.skeleton}
-				></d2l-consistent-evaluation-learner-context-bar>
-			`;
-		}
-	}
-
-	async _selectFile(e) {
-		window.dispatchEvent(new CustomEvent('d2l-flush', {
-			composed: true,
-			bubbles: true
-		}));
-		const newFileId = e.detail.fileId;
-		const shouldSelectFile = await this._checkUnsavedAnnotations(newFileId);
-		if (!shouldSelectFile) {
-			return;
-		}
-		this._changeFile(newFileId);
-	}
-
-	_changeFile(newFileId) {
-		this.currentFileId = newFileId;
-	}
-
-	async _setSubmissionsView() {
-		window.dispatchEvent(new CustomEvent('d2l-flush', {
-			composed: true,
-			bubbles: true
-		}));
-
-		const shouldShowSubmissions = await this._checkUnsavedAnnotations();
-		if (!shouldShowSubmissions) {
-			return;
-		}
-		this.displaySubmissions();
-	}
-
-	displaySubmissions() {
-		this.currentFileId = undefined;
-	}
-
-	async _checkUnsavedAnnotations(newFileId) {
-		return await this._mutex.dispatch(
-			async() => {
-				if (this.currentFileId !== undefined) {
-					const entity = await this._controller.fetchEvaluationEntity(false);
-					const annotationsEntity = entity.getSubEntityByRel('annotations');
-					if (!annotationsEntity) {
-						return true;
-					}
-
-					const unsavedAnnotations = annotationsEntity.hasClass('unsaved');
-					if (unsavedAnnotations) {
-						this.nextFileId = newFileId;
-						this._unsavedAnnotationsDialogOpened = true;
-						return false;
-					}
-				}
-				return true;
-			}
-		);
-	}
-
-	async _onUnsavedAnnotationsDialogClosed(e) {
-		this._unsavedAnnotationsDialogOpened = false;
-		if (e.detail.action === DIALOG_ACTION_DISCARD) {
-			await this._discardAnnotationsChanges();
-			if (this.nextFileId) {
-				this._changeFile(this.nextFileId);
-			} else {
-				this.displaySubmissions();
-			}
-		} else {
-			// need to reset the file selector
-			await this.shadowRoot.querySelector('d2l-consistent-evaluation-learner-context-bar')
-				.shadowRoot.querySelector('d2l-consistent-evaluation-lcb-file-context')
-				.refreshSelect();
-		}
-	}
-
-	async _discardAnnotationsChanges() {
-		await this._mutex.dispatch(
-			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				this.evaluationEntity = await this._controller.transientDiscardAnnotations(entity);
-			}
-		);
-	}
-
 	connectedCallback() {
 		super.connectedCallback();
 		window.addEventListener('beforeunload', this.unsavedChangesHandler);
 	}
-
 	disconnectedCallback() {
 		window.removeEventListener('beforeunload', this.unsavedChangesHandler);
 		super.disconnectedCallback();
 	}
-
-	async _fireSaveEvaluationEvent() {
-		const entity = await this._controller.fetchEvaluationEntity(false);
-		window.dispatchEvent(new CustomEvent('d2l-save-evaluation', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				evaluationEntity: entity
-			}
-		}));
-	}
-
-	_getAttachmentsLink() {
-		if (!this.evaluationEntity || !this.evaluationEntity.hasLinkByRel(attachmentsRel)) {
-			return undefined;
-		}
-
-		return this.evaluationEntity.getLinkByRel(attachmentsRel).href;
-	}
-
-	_allowEvaluationWrite() {
-		if (!this.evaluationEntity) {
-			return undefined;
-		}
-
-		const hasWritePermission = (this.evaluationEntity.hasActionByName(saveActionName) && this.evaluationEntity.hasActionByName(publishActionName)) ||
-			this.evaluationEntity.hasActionByName(updateActionName);
-
-		return hasWritePermission;
-	}
-
-	_allowEvaluationDelete() {
-		if (!this.evaluationEntity) {
-			return undefined;
-		}
-
-		return this.evaluationEntity.hasActionByName(retractActionName);
-	}
-
-	_getRichTextEditorConfig() {
-		if (this.evaluationEntity &&
-			this.evaluationEntity.getSubEntityByRel('feedback') &&
-			this.evaluationEntity.getSubEntityByRel('feedback').getSubEntityByRel(Rels.richTextEditorConfig)
-		) {
-			return this.evaluationEntity.getSubEntityByRel('feedback').getSubEntityByRel(Rels.richTextEditorConfig).properties;
-		}
-
-		return undefined;
-	}
-
-	_updateAnnotationsViewerEditingStart() {
-		this._shouldWaitForAnnotations = true;
-	}
-
-	async _waitForAnnotations() {
-		if (this._shouldWaitForAnnotations) {
-			await new Promise(resolve => {
-				this._shouldWaitForAnnotations = false;
-				setTimeout(resolve, 2000);
-			});
-		}
-	}
-
-	_handleDownloadAllFailure() {
-		this._showToast(this.localize('downloadAllFailure'), true);
-	}
-
-	_handleSubmissionItemToggle(e) {
-		let langTermText;
-		if (e.detail.action === toggleIsReadActionName) {
-			if (e.detail.state === 'true') {
-				langTermText = 'fileMarkedAsUnread';
-			} else {
-				langTermText = 'fileMarkedAsRead';
-			}
-		} else {
-			if (e.detail.state === 'true') {
-				langTermText = 'unflaggedFile';
-			} else {
-				langTermText = 'flaggedFile';
-			}
-		}
-
-		this._showToast(this.localize(langTermText, 'fileName', e.detail.name), false);
-	}
-
 	render() {
 		const canAddFeedbackFile = this._attachmentsInfo.canAddFeedbackFile;
 		const canRecordFeedbackVideo = this._attachmentsInfo.canRecordFeedbackVideo;
@@ -984,6 +427,523 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				@d2l-consistent-evaluation-navigate=${this._navigate}
 			></d2l-consistent-evaluation-dialogs>
 		`;
+	}
+	displaySubmissions() {
+		this.currentFileId = undefined;
+	}
+
+	get _activeScoringRubric() {
+		if (this.evaluationEntity) {
+			const activeScoringRubricEntity = this.evaluationEntity.getSubEntityByRel('active-scoring-rubric');
+			if (activeScoringRubricEntity) {
+				if (activeScoringRubricEntity.properties) {
+					return activeScoringRubricEntity.properties.activeScoringRubric;
+				}
+			}
+		}
+		return undefined;
+	}
+	_allowEvaluationDelete() {
+		if (!this.evaluationEntity) {
+			return undefined;
+		}
+
+		return this.evaluationEntity.hasActionByName(retractActionName);
+	}
+	_allowEvaluationWrite() {
+		if (!this.evaluationEntity) {
+			return undefined;
+		}
+
+		const hasWritePermission = (this.evaluationEntity.hasActionByName(saveActionName) && this.evaluationEntity.hasActionByName(publishActionName)) ||
+			this.evaluationEntity.hasActionByName(updateActionName);
+
+		return hasWritePermission;
+	}
+	_changeFile(newFileId) {
+		this.currentFileId = newFileId;
+	}
+	_checkEvaluationEntityAndDisplayToast(newEvaluationEntity, errorTerm, successTerm) {
+		if (!newEvaluationEntity) {
+			this._showToast(this.localize(errorTerm), true);
+		} else {
+			this.evaluationEntity = newEvaluationEntity;
+			this._fireSaveEvaluationEvent();
+			this._showToast(this.localize(successTerm), false);
+		}
+	}
+	async _checkUnsavedAnnotations(newFileId) {
+		return await this._mutex.dispatch(
+			async() => {
+				if (this.currentFileId !== undefined) {
+					const entity = await this._controller.fetchEvaluationEntity(false);
+					const annotationsEntity = entity.getSubEntityByRel('annotations');
+					if (!annotationsEntity) {
+						return true;
+					}
+
+					const unsavedAnnotations = annotationsEntity.hasClass('unsaved');
+					if (unsavedAnnotations) {
+						this.nextFileId = newFileId;
+						this._unsavedAnnotationsDialogOpened = true;
+						return false;
+					}
+				}
+				return true;
+			}
+		);
+	}
+	_closeDialogs() {
+		this._isUpdateClicked = false;
+		this._isPublishClicked = false;
+		this._navigationTarget = null;
+		this._currentlySaving = false;
+	}
+	_confirmUnsavedChangesBeforeUnload(e) {
+		if (this.evaluationEntity.hasClass('unsaved')) {
+			//Triggers the native browser confirmation dialog
+			e.preventDefault();
+			e.returnValue = 'Unsaved changes';
+		}
+	}
+	async _discardAnnotationsChanges() {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				this.evaluationEntity = await this._controller.transientDiscardAnnotations(entity);
+			}
+		);
+	}
+	get _feedbackEntity() {
+		if (this.evaluationEntity) {
+			return this.evaluationEntity.getSubEntityByRel('feedback');
+		}
+		return undefined;
+	}
+
+	get _feedbackText() {
+		if (this._feedbackEntity && this._feedbackEntity.properties) {
+			return this._feedbackEntity.properties.html || '';
+		}
+		return undefined;
+	}
+
+	async _fireSaveEvaluationEvent() {
+		const entity = await this._controller.fetchEvaluationEntity(false);
+		window.dispatchEvent(new CustomEvent('d2l-save-evaluation', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				evaluationEntity: entity
+			}
+		}));
+	}
+	async _flushAndWait() {
+		window.dispatchEvent(new CustomEvent('d2l-flush', {
+			composed: true,
+			bubbles: true
+		}));
+		this._currentlySaving = true;
+		await this._waitForAnnotations();
+		await this._transientSaveAwaiter.awaitAllTransientSaves();
+	}
+
+	_getAttachmentsLink() {
+		if (!this.evaluationEntity || !this.evaluationEntity.hasLinkByRel(attachmentsRel)) {
+			return undefined;
+		}
+
+		return this.evaluationEntity.getLinkByRel(attachmentsRel).href;
+	}
+	_getRichTextEditorConfig() {
+		if (this.evaluationEntity &&
+			this.evaluationEntity.getSubEntityByRel('feedback') &&
+			this.evaluationEntity.getSubEntityByRel('feedback').getSubEntityByRel(Rels.richTextEditorConfig)
+		) {
+			return this.evaluationEntity.getSubEntityByRel('feedback').getSubEntityByRel(Rels.richTextEditorConfig).properties;
+		}
+
+		return undefined;
+	}
+	get _grade() {
+		if (this._gradeEntity) {
+			return this._controller.parseGrade(this._gradeEntity);
+		}
+		return new Grade(GradeType.Number, 0, 0, null, null, this._gradeEntity);
+	}
+
+	get _gradeEntity() {
+		if (this.evaluationEntity) {
+			return this.evaluationEntity.getSubEntityByRel('grade');
+		}
+		return undefined;
+	}
+
+	_handleDownloadAllFailure() {
+		this._showToast(this.localize('downloadAllFailure'), true);
+	}
+	_handleSubmissionItemToggle(e) {
+		let langTermText;
+		if (e.detail.action === toggleIsReadActionName) {
+			if (e.detail.state === 'true') {
+				langTermText = 'fileMarkedAsUnread';
+			} else {
+				langTermText = 'fileMarkedAsRead';
+			}
+		} else {
+			if (e.detail.state === 'true') {
+				langTermText = 'unflaggedFile';
+			} else {
+				langTermText = 'flaggedFile';
+			}
+		}
+
+		this._showToast(this.localize(langTermText, 'fileName', e.detail.name), false);
+	}
+	async _initializeController() {
+		this._controller = new ConsistentEvaluationController(this._evaluationHref, this._token);
+		const bypassCache = true;
+		this.evaluationEntity = await this._controller.fetchEvaluationEntity(bypassCache);
+		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
+	}
+
+	_isEvaluationPublished() {
+		if (!this.evaluationEntity) {
+			return false;
+		}
+		return this.evaluationEntity.properties.state === publishedState;
+	}
+	get _navBarSubtitleText() {
+		if (this.userProgressOutcomeHref) {
+			return this.localize('overallAchievement');
+		}
+		return this.organizationName;
+	}
+	get _navBarTitleText() {
+		if (this.assignmentName) return this.assignmentName;
+
+		return this.userName;
+	}
+
+	async _navigate() {
+		switch (this._navigationTarget) {
+			case 'back':
+				if (this.evaluationEntity.hasClass('unsaved')) {
+					window.removeEventListener('beforeunload', this.unsavedChangesHandler);
+				}
+				window.location.assign(this.returnHref);
+				break;
+			case 'next':
+				await this._onNextStudentClick();
+				break;
+			case 'previous':
+				await this._onPreviousStudentClick();
+				break;
+		}
+	}
+	_noFeedbackComponent() {
+		return this.evaluationEntity && this.evaluationEntity.getSubEntityByRel('feedback') === undefined;
+	}
+	_noGradeComponent() {
+		return this.evaluationEntity && this.evaluationEntity.getSubEntityByRel('grade') === undefined;
+	}
+	async _onNextStudentClick() {
+		const rubricComponent = this.shadowRoot.querySelector('consistent-evaluation-right-panel')
+			.shadowRoot.querySelector('d2l-consistent-evaluation-rubric');
+
+		if (rubricComponent) {
+			rubricComponent._closeRubric();
+		}
+
+		this._resetFocusToUser();
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-next-student-click', {
+			composed: true,
+			bubbles: true
+		}));
+	}
+	async _onPreviousStudentClick() {
+		const rubricComponent = this.shadowRoot.querySelector('consistent-evaluation-right-panel')
+			.shadowRoot.querySelector('d2l-consistent-evaluation-rubric');
+
+		if (rubricComponent) {
+			rubricComponent._closeRubric();
+		}
+
+		this._resetFocusToUser();
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-previous-student-click', {
+			composed: true,
+			bubbles: true
+		}));
+	}
+	_onToastClose() {
+		this._displayToast = false;
+	}
+	async _onUnsavedAnnotationsDialogClosed(e) {
+		this._unsavedAnnotationsDialogOpened = false;
+		if (e.detail.action === DIALOG_ACTION_DISCARD) {
+			await this._discardAnnotationsChanges();
+			if (this.nextFileId) {
+				this._changeFile(this.nextFileId);
+			} else {
+				this.displaySubmissions();
+			}
+		} else {
+			// need to reset the file selector
+			await this.shadowRoot.querySelector('d2l-consistent-evaluation-learner-context-bar')
+				.shadowRoot.querySelector('d2l-consistent-evaluation-lcb-file-context')
+				.refreshSelect();
+		}
+	}
+	async _publishEvaluation() {
+		await this._flushAndWait();
+		this._isPublishClicked = false;
+
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				const newEvaluationEntity = await this._controller.publish(entity);
+				this._currentlySaving = false;
+
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
+				this.submissionInfo.evaluationState = publishedState;
+			}
+		);
+	}
+	async _refreshEvaluationEntity() {
+		this.evaluationEntity = await this._controller.fetchEvaluationEntity(true);
+	}
+
+	_renderLearnerContextBar() {
+		if (!this.hideLearnerContextBar) {
+			return html`
+				<d2l-consistent-evaluation-learner-context-bar
+					user-href=${ifDefined(this.userHref)}
+					group-href=${ifDefined(this.groupHref)}
+					special-access-href=${ifDefined(this.specialAccessHref)}
+					.anonymousInfo=${this.anonymousInfo}
+					.token=${this.token}
+					.currentFileId=${this.currentFileId}
+					.submissionInfo=${this.submissionInfo}
+					.enrolledUser=${this.enrolledUser}
+					.groupInfo=${this.groupInfo}
+					?skeleton=${this.skeleton}
+				></d2l-consistent-evaluation-learner-context-bar>
+			`;
+		}
+	}
+	_renderToast() {
+		return html`<d2l-alert-toast
+			?open=${this._displayToast}
+			button-text=""
+			?no-auto-close=${this._toastNoAutoClose}
+			type=${this._toastType}
+			@d2l-alert-toast-close=${this._onToastClose}>${this._toastMessage}</d2l-alert-toast>`;
+	}
+	_resetFocusToUser() {
+		try {
+			this.shadowRoot.querySelector('d2l-consistent-evaluation-learner-context-bar')
+				.shadowRoot.querySelector('d2l-consistent-evaluation-lcb-user-context')
+				.shadowRoot.querySelector('h2').focus();
+		} catch (e) {
+			console.warn('Unable to reset focus');
+		}
+	}
+	async _retractEvaluation() {
+		await this._flushAndWait();
+
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				const newEvaluationEntity = await this._controller.retract(entity);
+				this._currentlySaving = false;
+
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
+				this.submissionInfo.evaluationState = draftState;
+			}
+		);
+	}
+
+	async _saveEvaluation() {
+		await this._flushAndWait();
+
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				const newEvaluationEntity = await this._controller.save(entity);
+				this._currentlySaving = false;
+
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
+			}
+		);
+	}
+
+	async _selectFile(e) {
+		window.dispatchEvent(new CustomEvent('d2l-flush', {
+			composed: true,
+			bubbles: true
+		}));
+		const newFileId = e.detail.fileId;
+		const shouldSelectFile = await this._checkUnsavedAnnotations(newFileId);
+		if (!shouldSelectFile) {
+			return;
+		}
+		this._changeFile(newFileId);
+	}
+	async _setSubmissionsView() {
+		window.dispatchEvent(new CustomEvent('d2l-flush', {
+			composed: true,
+			bubbles: true
+		}));
+
+		const shouldShowSubmissions = await this._checkUnsavedAnnotations();
+		if (!shouldShowSubmissions) {
+			return;
+		}
+		this.displaySubmissions();
+	}
+	_showToast(message, isError) {
+		this._toastMessage = message;
+
+		if (isError) {
+			this._toastType = 'critical';
+			this._toastNoAutoClose = true;
+		} else {
+			this._toastType = 'default';
+			this._toastNoAutoClose = false;
+		}
+
+		this._displayToast = true;
+	}
+	async _showUnsavedChangesDialog(e) {
+		window.dispatchEvent(new CustomEvent('d2l-flush', {
+			composed: true,
+			bubbles: true
+		}));
+
+		await this._waitForAnnotations();
+		await this._mutex.dispatch(async() => { this._navigationTarget = e.detail.key; });
+	}
+	async _transientAddAttachment(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+
+				const files = e.detail.files;
+				this.evaluationEntity = await this._controller.transientAddFeedbackAttachment(entity, files);
+			}
+		);
+
+		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
+	}
+
+	async _transientRemoveAttachment(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+
+				const fileIdentifier = e.detail.file;
+				this.evaluationEntity = await this._controller.transientRemoveFeedbackAttachment(entity, fileIdentifier);
+			}
+		);
+
+		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
+	}
+	async _transientSaveActiveScoringRubric(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				const rubricId = e.detail.rubricId;
+
+				this.evaluationEntity = await this._controller.transientSaveActiveScoringRubric(entity, rubricId);
+			}
+		);
+	}
+	async _transientSaveAnnotations(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				const annotationsData = e.detail;
+				const fileId = this.currentFileId;
+
+				this.evaluationEntity = await this._controller.transientSaveAnnotations(entity, annotationsData, fileId);
+			}
+		);
+	}
+	async _transientSaveCoaEvalOverride(e) {
+		// Call transientSaveFeedback to 'unsave' the evaluation
+		if (e.detail && e.detail.sirenActionPromise) {
+			this._transientSaveAwaiter.addTransientSave(e.detail.sirenActionPromise);
+		}
+
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				this.evaluationEntity = await this._controller.transientSaveFeedback(entity, this._feedbackText);
+			}
+		);
+	}
+	async _transientSaveFeedback(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				const newFeedbackVal = e.detail;
+
+				this.evaluationEntity = await this._controller.transientSaveFeedback(entity, newFeedbackVal);
+			}
+		);
+	}
+
+	async _transientSaveGrade(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				let newGradeVal;
+				const type = e.detail.grade.scoreType;
+				if (type === GradeType.Letter) {
+					newGradeVal = e.detail.grade.letterGrade;
+				}
+				else if (type === GradeType.Number) {
+					newGradeVal = e.detail.grade.score;
+				}
+				this.evaluationEntity = await this._controller.transientSaveGrade(entity, newGradeVal);
+			}
+		);
+	}
+
+	_updateAnnotationsViewerEditingStart() {
+		this._shouldWaitForAnnotations = true;
+	}
+	async _updateEvaluation() {
+		await this._flushAndWait();
+		this._isUpdateClicked = false;
+
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
+				const newEvaluationEntity = await this._controller.update(entity);
+				this._currentlySaving = false;
+
+				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
+			}
+		);
+	}
+
+	async _updateIsPublishClicked() {
+		this._isPublishClicked = true;
+		this._currentlySaving = true;
+	}
+	async _updateIsUpdateClicked() {
+		this._isUpdateClicked = true;
+		this._currentlySaving = true;
+	}
+
+	async _waitForAnnotations() {
+		if (this._shouldWaitForAnnotations) {
+			await new Promise(resolve => {
+				this._shouldWaitForAnnotations = false;
+				setTimeout(resolve, 2000);
+			});
+		}
 	}
 
 }

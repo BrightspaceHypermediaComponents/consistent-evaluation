@@ -39,26 +39,6 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 		`;
 	}
 
-	_dispatchAddAttachmentEvent(e) {
-		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-attachments-add', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				files: e.detail.files
-			}
-		}));
-	}
-
-	_dispatchRemoveAttachmentEvent(e) {
-		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-attachments-remove', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				file: e.detail
-			}
-		}));
-	}
-
 	render() {
 		const attachmentComponents = this.attachments.map(attachment => {
 			return html`<li slot="attachment" class="panel">
@@ -88,5 +68,25 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 			</div>
 `;
 	}
+	_dispatchAddAttachmentEvent(e) {
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-attachments-add', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				files: e.detail.files
+			}
+		}));
+	}
+
+	_dispatchRemoveAttachmentEvent(e) {
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-attachments-remove', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				file: e.detail
+			}
+		}));
+	}
+
 }
 customElements.define('d2l-consistent-evaluation-attachments-editor', ConsistentEvaluationAttachmentsEditor);

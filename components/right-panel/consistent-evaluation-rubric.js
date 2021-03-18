@@ -3,6 +3,8 @@ import 'd2l-rubric/d2l-rubric.js';
 import '@brightspace-ui/core/components/button/button.js';
 import '@brightspace-ui/core/components/icons/icon.js';
 import { css, html, LitElement } from 'lit-element';
+import { appId } from '../controllers/constants.js';
+import { createClient } from '@brightspace-ui/logging';
 import { labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
@@ -98,6 +100,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 		this.isPopout = false;
 		this.rubricWindowPopout = undefined;
 		this.closeRubricWindow = this._closePopout.bind(this);
+		this.logger = createClient(appId);
 	}
 
 	connectedCallback() {
@@ -110,6 +113,19 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 		super.disconnectedCallback();
 	}
 
+	render() {
+		return html`
+			<d2l-consistent-evaluation-right-panel-block
+				class="d2l-consistent-evaluation-rubric-block"
+				title=${this.isPopout ? '' : this.header}
+				supportingInfo=${this._getSummaryText()}>
+					${this._renderPopoutIcon()}
+					${this._getRubrics()}
+					${this._getActiveScoringRubricSelectDropdown()}
+					${this._renderCloseButton()}
+			</d2l-consistent-evaluation-right-panel-block>
+		`;
+	}
 	updated(changedProperties) {
 		super.updated(changedProperties);
 		if (changedProperties.has('activeScoringRubric')) {
@@ -132,54 +148,54 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 		}
 	}
 
-	_syncActiveScoringRubricGradeHandler(e) {
-
-		const score = e.detail.score;
-		if (score === null) {
+	_closeRubric() {
+		if (!this.rubricInfos || this.rubricInfos.length === 0) {
 			return;
 		}
+		try {
+			const rubrics = this.shadowRoot.querySelectorAll('d2l-consistent-evaluation-right-panel-block d2l-rubric');
 
-		const targetRubricId = e.target.getAttribute('data-rubric-id');
+			[...rubrics].map(rubric => {
+				const accordionCollapse = rubric
+					.shadowRoot.querySelector('d2l-rubric-adapter')
+					.shadowRoot.querySelector('div d2l-labs-accordion d2l-labs-accordion-collapse');
+				const rubricCollapse = accordionCollapse
+					.shadowRoot.querySelector('div.content iron-collapse');
+				accordionCollapse.removeAttribute('opened');
+				rubricCollapse.opened = false;
+			});
 
-		if (this.isPopout) {
-			window.postMessage({message:'total-score-changed', rubricData: {score: score, targetRubricId: targetRubricId}});
+		} catch (err) {
+			this.logger.log('Consistent-Eval: Unable to close rubrics');
 		}
-		else {
-			this._syncActiveRubricGrade(score, targetRubricId, false);
+	}
+	_closeRubricPopout() {
+		window.close();
+	}
+	_getActiveScoringRubricSelectDropdown() {
+		if (!this.showActiveScoringRubricOptions) {
+			return html``;
 		}
-
-	}
-
-	_syncActiveRubricGrade(score, targetRubricId, bypassRubricState) {
-		if (this.showActiveScoringRubricOptions && this.activeScoringRubric !== targetRubricId) {
-			return;
+		const scoringRubrics = this.rubricInfos.filter(rubric => rubric.rubricScoringMethod !== 0);
+		if (scoringRubrics.length <= 0) {
+			return html``;
 		}
-
-		const currentRubricInfo = this.rubricInfos.find(rubric => rubric.rubricId === targetRubricId);
-
-		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-total-score-changed', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				score: score,
-				rubricInfo: currentRubricInfo,
-				bypassRubricState: bypassRubricState
-			}
-		}));
+		return html`
+			<h2 class="d2l-label-text">${this.localize('gradingRubric')}</h2>
+			<select class="d2l-input-select d2l-consistent-evaluation-active-scoring-rubric" aria-label=${this.localize('activeGradingRubric')} @change=${this._onActiveScoringRubricChange}>
+				<option label=${this.localize('noActiveGradingRubric')} ?selected=${!this.activeScoringRubric} value='-1'></option>
+				${scoringRubrics.map(rubric => html`
+					<option value="${rubric.rubricId}" label=${this._truncateRubricTitle(rubric.rubricTitle)} class="select-option"></option>
+				`)}
+			</select>
+		`;
 	}
-
-	_onActiveScoringRubricChange(e) {
-		const rubricId = (e.target.value === 'null') ? null : e.target.value;
-
-		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-active-scoring-rubric-change', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				rubricId: rubricId
-			}
-		}));
+	_getGradedByText(assessorName) {
+		if (assessorName) {
+			return this.localize('gradedBy', { assessorName: assessorName });
+		}
+		return `(${this.localize('notGradedSummary')})`;
 	}
-
 	_getRubrics() {
 		const rubrics =	this.rubricInfos.map(rubric => {
 			if (!rubric) {
@@ -207,52 +223,6 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 		return html`${rubrics}`;
 	}
 
-	_closeRubric() {
-		if (!this.rubricInfos || this.rubricInfos.length === 0) {
-			return;
-		}
-		try {
-			const rubrics = this.shadowRoot.querySelectorAll('d2l-consistent-evaluation-right-panel-block d2l-rubric');
-
-			[...rubrics].map(rubric => {
-				const accordionCollapse = rubric
-					.shadowRoot.querySelector('d2l-rubric-adapter')
-					.shadowRoot.querySelector('div d2l-labs-accordion d2l-labs-accordion-collapse');
-				const rubricCollapse = accordionCollapse
-					.shadowRoot.querySelector('div.content iron-collapse');
-				accordionCollapse.removeAttribute('opened');
-				rubricCollapse.opened = false;
-			});
-
-		} catch (err) {
-			console.log('Unable to close rubrics');
-		}
-	}
-
-	_getActiveScoringRubricSelectDropdown() {
-		if (!this.showActiveScoringRubricOptions) {
-			return html``;
-		}
-		const scoringRubrics = this.rubricInfos.filter(rubric => rubric.rubricScoringMethod !== 0);
-		if (scoringRubrics.length <= 0) {
-			return html``;
-		}
-		return html`
-			<h2 class="d2l-label-text">${this.localize('gradingRubric')}</h2>
-			<select class="d2l-input-select d2l-consistent-evaluation-active-scoring-rubric" aria-label=${this.localize('activeGradingRubric')} @change=${this._onActiveScoringRubricChange}>
-				<option label=${this.localize('noActiveGradingRubric')} ?selected=${!this.activeScoringRubric} value='-1'></option>
-				${scoringRubrics.map(rubric => html`
-					<option value="${rubric.rubricId}" label=${this._truncateRubricTitle(rubric.rubricTitle)} class="select-option"></option>
-				`)}
-			</select>
-		`;
-	}
-
-	_truncateRubricTitle(rubricTitle) {
-		const maxTitleLength = 60;
-		return (rubricTitle.length <= maxTitleLength) ? rubricTitle : `${rubricTitle.substring(0, maxTitleLength)}…`;
-	}
-
 	_getSummaryText() {
 		const numAttached = this.rubricInfos.length;
 		if (numAttached > 1) {
@@ -260,14 +230,17 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 		}
 		return this.localize('rubricSummary');
 	}
+	_onActiveScoringRubricChange(e) {
+		const rubricId = (e.target.value === 'null') ? null : e.target.value;
 
-	_getGradedByText(assessorName) {
-		if (assessorName) {
-			return this.localize('gradedBy', { assessorName: assessorName });
-		}
-		return `(${this.localize('notGradedSummary')})`;
+		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-active-scoring-rubric-change', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				rubricId: rubricId
+			}
+		}));
 	}
-
 	_openRubricPopout() {
 		this._closeRubric();
 
@@ -298,17 +271,21 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 			}));
 		};
 	}
-
-	_closeRubricPopout() {
-		window.close();
-	}
-
 	_openRubricPopoutKeyboardEvent(e) {
 		if (e.key === 'Enter' || e.key === ' ') {
 			this._openRubricPopout();
 		}
 	}
-
+	_renderCloseButton() {
+		return !this.isPopout ?
+			html`` :
+			html` <d2l-button primary class='d2l-consistent-evaluation-close-rubrics'  @click=${this._closeRubricPopout}>${this.localize('closeBtn')}</d2l-button>`;
+	}
+	_renderGradedBy(assessorName) {
+		return !this.isPopout ?
+			html `` :
+			html `<label>${this._getGradedByText(assessorName)}</label>`;
+	}
 	_renderPopoutIcon() {
 		return this.isPopout ?
 			html`` :
@@ -322,38 +299,52 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 					tabindex=0>
 				</d2l-icon>`;
 	}
-
 	_renderRubricTitle(rubricTitle) {
 		return !this.isPopout ?
 			html`` :
 			html`<h2 aria-label=${this.localize('rubricTitle')} class='d2l-consistent-evaluation-rubric-title'>${rubricTitle}</h2>`;
 	}
+	_syncActiveRubricGrade(score, targetRubricId, bypassRubricState) {
+		if (this.showActiveScoringRubricOptions && this.activeScoringRubric !== targetRubricId) {
+			return;
+		}
 
-	_renderGradedBy(assessorName) {
-		return !this.isPopout ?
-			html `` :
-			html `<label>${this._getGradedByText(assessorName)}</label>`;
+		const currentRubricInfo = this.rubricInfos.find(rubric => rubric.rubricId === targetRubricId);
+
+		this.dispatchEvent(new CustomEvent('d2l-consistent-eval-rubric-total-score-changed', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				score: score,
+				rubricInfo: currentRubricInfo,
+				bypassRubricState: bypassRubricState
+			}
+		}));
 	}
 
-	_renderCloseButton() {
-		return !this.isPopout ?
-			html`` :
-			html` <d2l-button primary class='d2l-consistent-evaluation-close-rubrics'  @click=${this._closeRubricPopout}>${this.localize('closeBtn')}</d2l-button>`;
+	_syncActiveScoringRubricGradeHandler(e) {
+
+		const score = e.detail.score;
+		if (score === null) {
+			return;
+		}
+
+		const targetRubricId = e.target.getAttribute('data-rubric-id');
+
+		if (this.isPopout) {
+			window.postMessage({ message:'total-score-changed', rubricData: { score: score, targetRubricId: targetRubricId } });
+		}
+		else {
+			this._syncActiveRubricGrade(score, targetRubricId, false);
+		}
+
 	}
 
-	render() {
-		return html`
-			<d2l-consistent-evaluation-right-panel-block
-				class="d2l-consistent-evaluation-rubric-block"
-				title=${this.isPopout ? '' : this.header}
-				supportingInfo=${this._getSummaryText()}>
-					${this._renderPopoutIcon()}
-					${this._getRubrics()}
-					${this._getActiveScoringRubricSelectDropdown()}
-					${this._renderCloseButton()}
-			</d2l-consistent-evaluation-right-panel-block>
-		`;
+	_truncateRubricTitle(rubricTitle) {
+		const maxTitleLength = 60;
+		return (rubricTitle.length <= maxTitleLength) ? rubricTitle : `${rubricTitle.substring(0, maxTitleLength)}…`;
 	}
+
 }
 
 customElements.define('d2l-consistent-evaluation-rubric', ConsistentEvaluationRubric);

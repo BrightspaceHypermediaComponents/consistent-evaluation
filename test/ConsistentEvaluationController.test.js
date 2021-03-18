@@ -163,7 +163,7 @@ describe('ConsistentEvaluationController', () => {
 			const controller = new ConsistentEvaluationController('href', 'token');
 			sinon.stub(controller, '_performSirenAction').returns(true);
 
-			const result = await controller.save({properties: { state: 'Unevaluated' },
+			const result = await controller.save({ properties: { state: 'Unevaluated' },
 				hasActionByName: (action) => action === saveActionName,
 				getActionByName: () => ({ some: 'action' })
 			});
@@ -198,7 +198,7 @@ describe('ConsistentEvaluationController', () => {
 			const controller = new ConsistentEvaluationController('href', 'token');
 			sinon.stub(controller, '_performSirenAction').returns(true);
 
-			const result = await controller.update({properties: { state: 'Unevaluated' },
+			const result = await controller.update({ properties: { state: 'Unevaluated' },
 				hasActionByName: (action) => action === updateActionName,
 				getActionByName: () => ({ some: 'action' })
 			});

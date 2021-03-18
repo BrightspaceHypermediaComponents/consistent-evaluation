@@ -1,4 +1,4 @@
-import { getRubricAssessmentScore, mapRubricScoreToGrade} from '../../components/helpers/rubricGradeSyncHelpers.js';
+import { getRubricAssessmentScore, mapRubricScoreToGrade } from '../../components/helpers/rubricGradeSyncHelpers.js';
 import { assert } from '@open-wc/testing';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import sinon from 'sinon';

@@ -3,6 +3,14 @@ export class Awaiter {
 		this.mutex = Promise.resolve();
 	}
 
+	async dispatch(fn) {
+		const unlock = await this.lock();
+		try {
+			return await fn();
+		} finally {
+			unlock();
+		}
+	}
 	lock() {
 		let begin = () => {};
 
@@ -15,12 +23,4 @@ export class Awaiter {
 		});
 	}
 
-	async dispatch(fn) {
-		const unlock = await this.lock();
-		try {
-			return await fn();
-		} finally {
-			unlock();
-		}
-	}
 }

@@ -5,13 +5,13 @@ export class File {
 		this.m_fileSystemType = fileSystemType;
 	}
 
+	GetFileSystemType() {
+		return this.m_fileSystemType;
+	}
 	GetId() {
 		return this.m_id;
 	}
 
-	GetFileSystemType() {
-		return this.m_fileSystemType;
-	}
 }
 
 // Substitutes for D2L.LP.Web.UI.Links.Link
@@ -27,12 +27,11 @@ export class Link {
 		return this.m_id;
 	}
 
-	GetName() {
-		return this.m_name;
-	}
-
 	GetLocation() {
 		return this.m_location;
+	}
+	GetName() {
+		return this.m_name;
 	}
 
 	GetUrn() {

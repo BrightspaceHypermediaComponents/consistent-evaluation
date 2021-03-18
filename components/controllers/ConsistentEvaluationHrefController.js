@@ -25,29 +25,195 @@ export class ConsistentEvaluationHrefController {
 		this.token = token;
 	}
 
-	_getHref(root, rel) {
-		if (root.hasLinkByRel(rel)) {
-			return root.getLinkByRel(rel).href;
+	async getAnonymousInfo() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			const assignmentHref = this._getHref(root.entity, assignmentRel);
+			if (assignmentHref) {
+				const assignmentEntity = await this._getEntityFromHref(assignmentHref);
+				if (assignmentEntity.entity.hasSubEntityByRel(anonymousMarkingRel)) {
+					const anonymousAssignmentEntity = assignmentEntity.entity.getSubEntityByRel(anonymousMarkingRel);
+					const isAnonymous = anonymousAssignmentEntity.hasClass(checkedClassName);
+					const assignmentHasPublishedSubmission = anonymousAssignmentEntity.hasClass(publishedClassName);
+					return {
+						isAnonymous,
+						assignmentHasPublishedSubmission
+					};
+				} else {
+					return {
+						isAnonymous: false
+					};
+				}
+			}
 		}
 		return undefined;
 	}
+	async getAssignmentOrganizationName(domainName) {
+		let domainRel;
 
-	_getHrefs(root, rel) {
-		if (root.hasLinkByRel(rel)) {
-			return root.getLinksByRel(rel).map(x => x.href);
+		switch (domainName) {
+			case 'assignment':
+				domainRel = Rels.assignment;
+				break;
+			case 'organization':
+				domainRel = Rels.organization;
+				break;
+			default:
+				return undefined;
+		}
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			if (root.entity.hasLinkByRel(domainRel)) {
+				const domainLink = root.entity.getLinkByRel(domainRel).href;
+				const domainResponse = await this._getEntityFromHref(domainLink, false);
+
+				if (domainResponse && domainResponse.entity) {
+					return domainResponse.entity.properties.name;
+				}
+			}
 		}
 		return undefined;
 	}
+	async getEditActivityPath() {
+		const root = await this._getRootEntity(false);
+		let editActivityPath = undefined;
+		if (root && root.entity) {
+			if (root.entity.hasLinkByRel(Rels.Activities.activityUsage)) {
+				const activityUsageLink = root.entity.getLinkByRel(Rels.Activities.activityUsage).href;
+				const activityUsageResponse = await this._getEntityFromHref(activityUsageLink, false);
+				if (activityUsageResponse && activityUsageResponse.entity) {
+					const editAcitivityEntity = activityUsageResponse.entity.getSubEntityByRel(editActivityRel);
+					editActivityPath = editAcitivityEntity ? editAcitivityEntity.properties.path : undefined;
+				}
+			}
+		}
+		return editActivityPath;
+	}
+	async getEnrolledUser() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			const enrolledUserHref = this._getHref(root.entity, enrolledUserRel);
+			const groupHref = this._getHref(root.entity, groupRel);
+			if (enrolledUserHref) {
+				const enrolledUserEntity = await this._getEntityFromHref(enrolledUserHref, false);
+				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(pagerRel);
+				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(emailRel, false);
+				const userProfileEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProfile);
+				const displayNameEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.displayName);
+				const userProgressEntity = root.entity.getSubEntityByRel(userProgressAssessmentsRel, false);
 
-	// these are in their own methods so that they can easily be stubbed in testing
-	async _getRootEntity(bypassCache) {
-		return await window.D2L.Siren.EntityStore.fetch(this.baseHref, this.token, bypassCache);
+				let displayName = undefined;
+				let pagerPath = undefined;
+				let userProgressPath = undefined;
+				let emailPath = undefined;
+				let userProfilePath = undefined;
+
+				if (displayNameEntity) {
+					displayName = displayNameEntity.properties.name;
+				}
+				if (pagerEntity) {
+					pagerPath = pagerEntity.properties.path;
+				}
+				if (userProgressEntity) {
+					userProgressPath = userProgressEntity.properties.path;
+				}
+				if (emailEntity) {
+					emailPath = emailEntity.properties.path;
+				}
+				if (userProfileEntity) {
+					userProfilePath = userProfileEntity.properties.path;
+				}
+				return {
+					displayName,
+					enrolledUserHref,
+					emailPath,
+					pagerPath,
+					userProgressPath,
+					userProfilePath
+				};
+			} else if (groupHref) {
+				const groupEntity = await this._getEntityFromHref(groupHref, false);
+				const pagerEntity = groupEntity.entity.getSubEntityByRel(pagerRel);
+				let pagerPath = undefined;
+				if (pagerEntity) {
+					pagerPath = pagerEntity.properties.path;
+				}
+				return {
+					groupHref,
+					pagerPath
+				};
+			}
+
+			return undefined;
+		}
+	}
+	async getGradeItemInfo() {
+		const root = await this._getRootEntity(false);
+		let evaluationUrl, statsUrl, gradeItemName;
+		if (root && root.entity) {
+			if (root.entity.hasLinkByRel(Rels.Activities.activityUsage)) {
+				const activityUsageLink = root.entity.getLinkByRel(Rels.Activities.activityUsage).href;
+				const activityUsageResponse = await this._getEntityFromHref(activityUsageLink, false);
+
+				if (activityUsageResponse && activityUsageResponse.entity && activityUsageResponse.entity.getLinkByRel(Rels.Grades.grade)) {
+					const gradeLink = activityUsageResponse.entity.getLinkByRel(Rels.Grades.grade).href;
+					const gradeResponse = await this._getEntityFromHref(gradeLink, false);
+
+					if (gradeResponse && gradeResponse.entity && gradeResponse.entity.properties) {
+						evaluationUrl = gradeResponse.entity.properties.evaluationUrl;
+						statsUrl = gradeResponse.entity.properties.statsUrl;
+						gradeItemName = gradeResponse.entity.properties.name;
+					}
+				}
+			}
+		}
+
+		return {
+			evaluationUrl,
+			statsUrl,
+			gradeItemName
+		};
 	}
 
-	async _getEntityFromHref(targetHref, bypassCache) {
-		return await window.D2L.Siren.EntityStore.fetch(targetHref, this.token, bypassCache);
-	}
+	async getGroupInfo() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			const groupHref = this._getHref(root.entity, Rels.group);
+			if (groupHref) {
+				const groupEntity = await this._getEntityFromHref(groupHref, false);
+				const viewMembersEntity = groupEntity.entity.getSubEntityByRel(viewMembersRel);
+				const viewMembersPath = viewMembersEntity ? viewMembersEntity.properties.path : undefined;
 
+				const pagerEntity = groupEntity.entity.getSubEntityByRel(pagerRel);
+				const pagerPath = pagerEntity ? pagerEntity.properties.path : undefined;
+
+				const emailEntity = groupEntity.entity.getSubEntityByRel(emailRel);
+				const emailPath = emailEntity ? emailEntity.properties.path : undefined;
+
+				return {
+					viewMembersPath,
+					pagerPath,
+					emailPath
+				};
+			}
+			return undefined;
+		}
+	}
+	async getGroupName() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			if (root.entity.hasLinkByRel(Rels.group)) {
+				const domainLink = root.entity.getLinkByRel(Rels.group).href;
+				const domainResponse = await this._getEntityFromHref(domainLink, false);
+
+				if (domainResponse && domainResponse.entity) {
+					const displayEntity = domainResponse.entity.getSubEntityByRel(Rels.displayName);
+					return displayEntity && displayEntity.properties && displayEntity.properties.name;
+				}
+			}
+		}
+		return undefined;
+	}
 	async getHrefs(bypassCache = false) {
 		let root = await this._getRootEntity(bypassCache);
 
@@ -131,213 +297,6 @@ export class ConsistentEvaluationHrefController {
 			downloadAllSubmissionLink
 		};
 	}
-
-	async getSubmissionInfo() {
-		let root = await this._getRootEntity(false);
-		let submissionList, evaluationState, submissionType;
-		let isExempt = false;
-		if (root && root.entity) {
-			root = root.entity;
-			if (root.getSubEntityByClass(Classes.assignments.submissionList)) {
-				submissionList = root.getSubEntityByClass(Classes.assignments.submissionList).links;
-			}
-			if (root.getSubEntityByRel(Rels.evaluation)) {
-				evaluationState = root.getSubEntityByRel(Rels.evaluation).properties.state;
-			}
-			const assignmentHref = this._getHref(root, Rels.assignment);
-			if (assignmentHref) {
-				const assignmentEntity = await this._getEntityFromHref(assignmentHref, false);
-				if (assignmentEntity && assignmentEntity.entity) {
-					submissionType = assignmentEntity.entity.properties.submissionType.value.toString();
-				}
-			}
-			const evaluationHref = this._getHref(root, evaluationRel);
-			if (evaluationHref) {
-				const evaluationEntity = await this._getEntityFromHref(evaluationHref, false);
-				if (evaluationEntity && evaluationEntity.entity) {
-					isExempt = evaluationEntity.entity.properties.isExempt;
-				}
-			}
-		}
-		return {
-			submissionList,
-			evaluationState,
-			submissionType,
-			isExempt
-		};
-	}
-
-	async getGradeItemInfo() {
-		const root = await this._getRootEntity(false);
-		let evaluationUrl, statsUrl, gradeItemName;
-		if (root && root.entity) {
-			if (root.entity.hasLinkByRel(Rels.Activities.activityUsage)) {
-				const activityUsageLink = root.entity.getLinkByRel(Rels.Activities.activityUsage).href;
-				const activityUsageResponse = await this._getEntityFromHref(activityUsageLink, false);
-
-				if (activityUsageResponse && activityUsageResponse.entity && activityUsageResponse.entity.getLinkByRel(Rels.Grades.grade)) {
-					const gradeLink = activityUsageResponse.entity.getLinkByRel(Rels.Grades.grade).href;
-					const gradeResponse = await this._getEntityFromHref(gradeLink, false);
-
-					if (gradeResponse && gradeResponse.entity && gradeResponse.entity.properties) {
-						evaluationUrl = gradeResponse.entity.properties.evaluationUrl;
-						statsUrl = gradeResponse.entity.properties.statsUrl;
-						gradeItemName = gradeResponse.entity.properties.name;
-					}
-				}
-			}
-		}
-
-		return {
-			evaluationUrl,
-			statsUrl,
-			gradeItemName
-		};
-	}
-
-	async getAssignmentOrganizationName(domainName) {
-		let domainRel;
-
-		switch (domainName) {
-			case 'assignment':
-				domainRel = Rels.assignment;
-				break;
-			case 'organization':
-				domainRel = Rels.organization;
-				break;
-			default:
-				return undefined;
-		}
-		const root = await this._getRootEntity(false);
-		if (root && root.entity) {
-			if (root.entity.hasLinkByRel(domainRel)) {
-				const domainLink = root.entity.getLinkByRel(domainRel).href;
-				const domainResponse = await this._getEntityFromHref(domainLink, false);
-
-				if (domainResponse && domainResponse.entity) {
-					return domainResponse.entity.properties.name;
-				}
-			}
-		}
-		return undefined;
-	}
-
-	async getUserName() {
-		const root = await this._getRootEntity(false);
-		if (root && root.entity) {
-			if (root.entity.hasLinkByRel(Rels.user)) {
-				const domainLink = root.entity.getLinkByRel(Rels.user).href;
-				const domainResponse = await this._getEntityFromHref(domainLink, false);
-
-				if (domainResponse && domainResponse.entity) {
-					const displayEntity = domainResponse.entity.getSubEntityByRel(Rels.displayName);
-					return displayEntity && displayEntity.properties && displayEntity.properties.name;
-				}
-			}
-		}
-		return undefined;
-	}
-
-	async getGroupName() {
-		const root = await this._getRootEntity(false);
-		if (root && root.entity) {
-			if (root.entity.hasLinkByRel(Rels.group)) {
-				const domainLink = root.entity.getLinkByRel(Rels.group).href;
-				const domainResponse = await this._getEntityFromHref(domainLink, false);
-
-				if (domainResponse && domainResponse.entity) {
-					const displayEntity = domainResponse.entity.getSubEntityByRel(Rels.displayName);
-					return displayEntity && displayEntity.properties && displayEntity.properties.name;
-				}
-			}
-		}
-		return undefined;
-	}
-
-	async getGroupInfo() {
-		const root = await this._getRootEntity(false);
-		if (root && root.entity) {
-			const groupHref = this._getHref(root.entity, Rels.group);
-			if (groupHref) {
-				const groupEntity = await this._getEntityFromHref(groupHref, false);
-				const viewMembersEntity = groupEntity.entity.getSubEntityByRel(viewMembersRel);
-				const viewMembersPath = viewMembersEntity ? viewMembersEntity.properties.path : undefined;
-
-				const pagerEntity = groupEntity.entity.getSubEntityByRel(pagerRel);
-				const pagerPath = pagerEntity ? pagerEntity.properties.path : undefined;
-
-				const emailEntity = groupEntity.entity.getSubEntityByRel(emailRel);
-				const emailPath = emailEntity ? emailEntity.properties.path : undefined;
-
-				return {
-					viewMembersPath,
-					pagerPath,
-					emailPath
-				};
-			}
-			return undefined;
-		}
-	}
-
-	async getEnrolledUser() {
-		const root = await this._getRootEntity(false);
-		if (root && root.entity) {
-			const enrolledUserHref = this._getHref(root.entity, enrolledUserRel);
-			const groupHref = this._getHref(root.entity, groupRel);
-			if (enrolledUserHref) {
-				const enrolledUserEntity = await this._getEntityFromHref(enrolledUserHref, false);
-				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(pagerRel);
-				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(emailRel, false);
-				const userProfileEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProfile);
-				const displayNameEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.displayName);
-				const userProgressEntity = root.entity.getSubEntityByRel(userProgressAssessmentsRel, false);
-
-				let displayName = undefined;
-				let pagerPath = undefined;
-				let userProgressPath = undefined;
-				let emailPath = undefined;
-				let userProfilePath = undefined;
-
-				if (displayNameEntity) {
-					displayName = displayNameEntity.properties.name;
-				}
-				if (pagerEntity) {
-					pagerPath = pagerEntity.properties.path;
-				}
-				if (userProgressEntity) {
-					userProgressPath = userProgressEntity.properties.path;
-				}
-				if (emailEntity) {
-					emailPath = emailEntity.properties.path;
-				}
-				if (userProfileEntity) {
-					userProfilePath = userProfileEntity.properties.path;
-				}
-				return {
-					displayName,
-					enrolledUserHref,
-					emailPath,
-					pagerPath,
-					userProgressPath,
-					userProfilePath
-				};
-			} else if (groupHref) {
-				const groupEntity = await this._getEntityFromHref(groupHref, false);
-				const pagerEntity = groupEntity.entity.getSubEntityByRel(pagerRel);
-				let pagerPath = undefined;
-				if (pagerEntity) {
-					pagerPath = pagerEntity.properties.path;
-				}
-				return {
-					groupHref,
-					pagerPath
-				};
-			}
-
-			return undefined;
-		}
-	}
-
 	async getIteratorInfo(iteratorProperty) {
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
@@ -352,31 +311,6 @@ export class ConsistentEvaluationHrefController {
 		}
 		return undefined;
 	}
-
-	async getAnonymousInfo() {
-		const root = await this._getRootEntity(false);
-		if (root && root.entity) {
-			const assignmentHref = this._getHref(root.entity, assignmentRel);
-			if (assignmentHref) {
-				const assignmentEntity = await this._getEntityFromHref(assignmentHref);
-				if (assignmentEntity.entity.hasSubEntityByRel(anonymousMarkingRel)) {
-					const anonymousAssignmentEntity = assignmentEntity.entity.getSubEntityByRel(anonymousMarkingRel);
-					const isAnonymous = anonymousAssignmentEntity.hasClass(checkedClassName);
-					const assignmentHasPublishedSubmission = anonymousAssignmentEntity.hasClass(publishedClassName);
-					return {
-						isAnonymous,
-						assignmentHasPublishedSubmission
-					};
-				} else {
-					return {
-						isAnonymous: false
-					};
-				}
-			}
-		}
-		return undefined;
-	}
-
 	async getRubricInfos(refreshRubric) {
 		let rubricInfos = [];
 		const root = await this._getRootEntity(false);
@@ -422,21 +356,76 @@ export class ConsistentEvaluationHrefController {
 
 		return rubricInfos.filter(rubricInfo => rubricInfo !== undefined);
 	}
-
-	async getEditActivityPath() {
-		const root = await this._getRootEntity(false);
-		let editActivityPath = undefined;
+	async getSubmissionInfo() {
+		let root = await this._getRootEntity(false);
+		let submissionList, evaluationState, submissionType;
+		let isExempt = false;
 		if (root && root.entity) {
-			if (root.entity.hasLinkByRel(Rels.Activities.activityUsage)) {
-				const activityUsageLink = root.entity.getLinkByRel(Rels.Activities.activityUsage).href;
-				const activityUsageResponse = await this._getEntityFromHref(activityUsageLink, false);
-				if (activityUsageResponse && activityUsageResponse.entity) {
-					const editAcitivityEntity = activityUsageResponse.entity.getSubEntityByRel(editActivityRel);
-					editActivityPath = editAcitivityEntity ? editAcitivityEntity.properties.path : undefined;
+			root = root.entity;
+			if (root.getSubEntityByClass(Classes.assignments.submissionList)) {
+				submissionList = root.getSubEntityByClass(Classes.assignments.submissionList).links;
+			}
+			if (root.getSubEntityByRel(Rels.evaluation)) {
+				evaluationState = root.getSubEntityByRel(Rels.evaluation).properties.state;
+			}
+			const assignmentHref = this._getHref(root, Rels.assignment);
+			if (assignmentHref) {
+				const assignmentEntity = await this._getEntityFromHref(assignmentHref, false);
+				if (assignmentEntity && assignmentEntity.entity) {
+					submissionType = assignmentEntity.entity.properties.submissionType.value.toString();
+				}
+			}
+			const evaluationHref = this._getHref(root, evaluationRel);
+			if (evaluationHref) {
+				const evaluationEntity = await this._getEntityFromHref(evaluationHref, false);
+				if (evaluationEntity && evaluationEntity.entity) {
+					isExempt = evaluationEntity.entity.properties.isExempt;
 				}
 			}
 		}
-		return editActivityPath;
+		return {
+			submissionList,
+			evaluationState,
+			submissionType,
+			isExempt
+		};
+	}
+	async getUserName() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			if (root.entity.hasLinkByRel(Rels.user)) {
+				const domainLink = root.entity.getLinkByRel(Rels.user).href;
+				const domainResponse = await this._getEntityFromHref(domainLink, false);
+
+				if (domainResponse && domainResponse.entity) {
+					const displayEntity = domainResponse.entity.getSubEntityByRel(Rels.displayName);
+					return displayEntity && displayEntity.properties && displayEntity.properties.name;
+				}
+			}
+		}
+		return undefined;
+	}
+	async _getEntityFromHref(targetHref, bypassCache) {
+		return await window.D2L.Siren.EntityStore.fetch(targetHref, this.token, bypassCache);
+	}
+
+	_getHref(root, rel) {
+		if (root.hasLinkByRel(rel)) {
+			return root.getLinkByRel(rel).href;
+		}
+		return undefined;
+	}
+
+	_getHrefs(root, rel) {
+		if (root.hasLinkByRel(rel)) {
+			return root.getLinksByRel(rel).map(x => x.href);
+		}
+		return undefined;
+	}
+
+	// these are in their own methods so that they can easily be stubbed in testing
+	async _getRootEntity(bypassCache) {
+		return await window.D2L.Siren.EntityStore.fetch(this.baseHref, this.token, bypassCache);
 	}
 
 	async _refreshRubricAssessment(assessmentEntity) {

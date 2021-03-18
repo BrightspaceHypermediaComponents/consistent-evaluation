@@ -25,6 +25,19 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 		this.token = undefined;
 	}
 
+	render() {
+		if (!this._rubricInfos) {
+			return html ``;
+		}
+		return html`
+		    <d2l-consistent-evaluation-rubric
+				header=${this.localize('rubrics')}
+				.rubricInfos=${this._rubricInfos}
+				.token=${this.token}
+				is-popout
+			></d2l-consistent-evaluation-rubric>
+		`;
+	}
 	async updated(changedProperties) {
 		super.updated();
 
@@ -49,19 +62,6 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 		}
 	}
 
-	render() {
-		if (!this._rubricInfos) {
-			return html ``;
-		}
-		return html`
-		    <d2l-consistent-evaluation-rubric
-				header=${this.localize('rubrics')}
-				.rubricInfos=${this._rubricInfos}
-				.token=${this.token}
-				is-popout
-			></d2l-consistent-evaluation-rubric>
-		`;
-	}
 }
 
 customElements.define('d2l-consistent-evaluation-popup-rubric', ConsistentEvaluationPopupRubric);

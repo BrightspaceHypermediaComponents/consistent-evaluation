@@ -81,34 +81,6 @@ class ConsistentEvaluationRightPanelBlock extends LitElement {
 		}
 	}
 
-	_handleResize(e) {
-		this._isMobile = e.matches;
-		if (!e.matches && this._dialogOpened)
-		{
-			this._toggleOpenDialog();
-		}
-	}
-
-	_getTitle() {
-		return this.noTitle ? html`` : html`<h2 class="d2l-label-text">${this.title}</h2>`;
-	}
-
-	_toggleOpenDialog() {
-		this._dialogOpened = !this._dialogOpened;
-	}
-
-	_renderListItems() {
-		return html`
-			<d2l-list-item class="d2l-list-item"
-				@click=${this._toggleOpenDialog}>
-				<d2l-list-item-content class="d2l-list-item-content">
-					${this._getTitle()}
-					<div class="d2l-truncate" slot="supporting-info">${this.supportingInfo}</div>
-				</d2l-list-item-content>
-			</d2l-list-item>
-		`;
-	}
-
 	render() {
 		if (this._isMobile) {
 			return html`
@@ -128,6 +100,32 @@ class ConsistentEvaluationRightPanelBlock extends LitElement {
 			</div>
 		`;
 	}
+	_getTitle() {
+		return this.noTitle ? html`` : html`<h2 class="d2l-label-text">${this.title}</h2>`;
+	}
+	_handleResize(e) {
+		this._isMobile = e.matches;
+		if (!e.matches && this._dialogOpened)
+		{
+			this._toggleOpenDialog();
+		}
+	}
+
+	_renderListItems() {
+		return html`
+			<d2l-list-item class="d2l-list-item"
+				@click=${this._toggleOpenDialog}>
+				<d2l-list-item-content class="d2l-list-item-content">
+					${this._getTitle()}
+					<div class="d2l-truncate" slot="supporting-info">${this.supportingInfo}</div>
+				</d2l-list-item-content>
+			</d2l-list-item>
+		`;
+	}
+	_toggleOpenDialog() {
+		this._dialogOpened = !this._dialogOpened;
+	}
+
 }
 
 customElements.define('d2l-consistent-evaluation-right-panel-block', ConsistentEvaluationRightPanelBlock);
