@@ -1,12 +1,22 @@
 import '@brightspace-ui/core/components/button/button.js';
 import '@brightspace-ui-labs/facet-filter-sort/components/sort-by-dropdown/sort-by-dropdown.js';
 import '@brightspace-ui-labs/facet-filter-sort/components/sort-by-dropdown/sort-by-dropdown-option.js';
-import './consistent-evaluation-discussion-evidence-body';
+import './consistent-evaluation-discussion-post-page';
 import { css, html, LitElement } from 'lit-element';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 
 export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeConsistentEvaluation(LitElement)) {
+
+	static get properties() {
+		return {
+			discussionPostList: {
+				attribute: false,
+				type: Array
+			},
+			token: { type: Object }
+		};
+	}
 
 	static get styles() {
 		return css`
@@ -61,19 +71,12 @@ export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeCon
 		`;
 	}
 	_renderDiscussionPost() {
-		const repliedToPostName = 'Hannah Beiley\'s post';
-		const postTitle = 'The Mid-Atlantic Ridge may play a more active role in plate tectonics than thought';
-		const postBody = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non tincidunt nibh. Integer eu rhoncus enim. Morbi vitae rhoncus est, vel ornare nulla. Quisque scelerisque, sapien vel pellentesque porttitor, tortor odio pulvinar nisi, a consectetur augue nulla a tellus. In purus eros, convallis a lacinia vitae, interdum molestie nunc. Donec in magna accumsan, rhoncus massa a, blandit dui. Phasellus accumsan scelerisque ipsum, quis pulvinar ante rhoncus pharetra. Fusce nec magna nisi. In ut lacus pharetra nibh mattis aliquam. Aenean viverra consequat nibh et malesuada.';
-		const postDate = 'Jan 28, 2020 1:24PM';
-		const ratingInformation = { upVotes: 12, downVotes: 0 };
-		return html`<d2l-consistent-evaluation-discussion-evidence-body
-				is-reply
-				replied-to-post-name=${repliedToPostName}
-				post-title=${postTitle}
-				post-body=${postBody}
-				post-date=${postDate}
-				.ratingInformation=${ratingInformation}
-			></d2l-consistent-evaluation-discussion-evidence-body>`;
+		return html`
+			<d2l-consistent-evaluation-discussion-post-page
+				.discussionPostList=${this.discussionPostList}
+				.token=${this.token}
+			></d2l-consistent-evaluation-discussion-post-page>
+			`;
 	}
 	_renderLoadMoreButton() {
 		return html`

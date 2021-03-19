@@ -123,6 +123,26 @@ describe('ConsistentEvaluationHrefController', () => {
 		});
 	});
 
+	describe('getDiscussionPostInfo returns correct information', () => {
+		it('gets correct discussionPost info', async() => {
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+			const discussionPostList = {
+				links: ['discussionPosts']
+			};
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: {
+					getSubEntityByRel: () => discussionPostList
+
+				}
+			});
+
+			const returnedDisscusionPostInfo = await controller.getDiscussionPostInfo();
+			assert.equal(returnedDisscusionPostInfo.length, discussionPostList.links.length);
+			assert.equal(returnedDisscusionPostInfo[0], discussionPostList.links[0]);
+		});
+	});
+
 	describe('getGradeItemInfo gets correct grade item info', () => {
 		it('sets the gradeItem info', async() => {
 			const activityUsageHref = 'expected_activity_usage_href';
@@ -167,38 +187,40 @@ describe('ConsistentEvaluationHrefController', () => {
 	});
 
 	describe('getGroupInfo gets correct group info', async() => {
-		const groupInfoHref = 'groupInfoHref';
-		const viewMembersPath = 'viewMembersPath';
-		const emailPath = 'emailPath';
-		const pagerPath = 'pagerPath';
+		it('gets correct group info', async() => {
+			const groupInfoHref = 'groupInfoHref';
+			const viewMembersPath = 'viewMembersPath';
+			const emailPath = 'emailPath';
+			const pagerPath = 'pagerPath';
 
-		const controller = new ConsistentEvaluationHrefController('href', 'token');
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
 
-		sinon.stub(controller, '_getRootEntity').returns ({
-			entity: { }
-		});
+			sinon.stub(controller, '_getRootEntity').returns ({
+				entity: { }
+			});
 
-		sinon.stub(controller, '_getHref').returns(groupInfoHref);
+			sinon.stub(controller, '_getHref').returns(groupInfoHref);
 
-		sinon.stub(controller, '_getEntityFromHref').returns({
-			entity: {
-				getSubEntityByRel: (r) => {
-					if (r === viewMembersRel) {
-						return { properties: { path: viewMembersPath } };
-					} else if (r === emailRel) {
-						return { properties: { path: emailPath } };
-					} else if (r === pagerRel) {
-						return { properties: { path: pagerPath } };
+			sinon.stub(controller, '_getEntityFromHref').returns({
+				entity: {
+					getSubEntityByRel: (r) => {
+						if (r === viewMembersRel) {
+							return { properties: { path: viewMembersPath } };
+						} else if (r === emailRel) {
+							return { properties: { path: emailPath } };
+						} else if (r === pagerRel) {
+							return { properties: { path: pagerPath } };
+						}
 					}
 				}
-			}
+			});
+
+			const groupInfo = await controller.getGroupInfo();
+
+			assert.equal(groupInfo.viewMembersPath, viewMembersPath);
+			assert.equal(groupInfo.emailPath, emailPath);
+			assert.equal(groupInfo.pagerPath, pagerPath);
 		});
-
-		const groupInfo = await controller.getGroupInfo();
-
-		assert.equal(groupInfo.viewMembersPath, viewMembersPath);
-		assert.equal(groupInfo.emailPath, emailPath);
-		assert.equal(groupInfo.pagerPath, pagerPath);
 	});
 
 	describe('getEnrolledUser gets correct enrolled user info', () => {

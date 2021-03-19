@@ -42,6 +42,10 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 			activityType: {
 				attribute: 'activity-type',
 				type: String
+			},
+			discussionPostList: {
+				attribute: false,
+				type: Array
 			}
 		};
 	}
@@ -71,7 +75,10 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 
 	_renderDiscussions() {
 		return html`
-			<d2l-consistent-evaluation-evidence-discussion></d2l-consistent-evaluation-evidence-discussion>
+			<d2l-consistent-evaluation-evidence-discussion
+				.discussionPostList=${this.discussionPostList}
+				.token=${this.token}
+			></d2l-consistent-evaluation-evidence-discussion>
 		`;
 	}
 
