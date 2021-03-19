@@ -79,7 +79,9 @@ export class ConsistentEvaluationDiscussionPostPage extends RtlMixin(LocalizeCon
 			isReply = true;
 			const threadHref = discussionPostEntity.getLinkByRel(threadRel).href;
 			const threadEntity = await this._getDiscussionPostEntity(threadHref);
-			threadTitle = threadEntity.entity.properties.subject;
+			if (threadEntity && threadEntity.entity) {
+				threadTitle = threadEntity.entity.properties.subject;
+			}
 		}
 
 		return {
@@ -97,10 +99,10 @@ export class ConsistentEvaluationDiscussionPostPage extends RtlMixin(LocalizeCon
 			for (const discussionPostLink of this._discussionPostList) {
 				if (discussionPostLink.href) {
 					const discussionPost = await this._getDiscussionPostEntity(discussionPostLink.href);
-					const discussionPostEntity = discussionPost.entity;
-
-					const discussionPostObject = await this._formatDiscussionPostObject(discussionPostEntity);
-					this._discussionPostObjects.push(discussionPostObject);
+					if (discussionPost && discussionPost.entity) {
+						const discussionPostObject = await this._formatDiscussionPostObject(discussionPost.entity);
+						this._discussionPostObjects.push(discussionPostObject);
+					}
 				}
 			}
 		}
