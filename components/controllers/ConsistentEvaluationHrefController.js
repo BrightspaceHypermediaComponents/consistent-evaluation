@@ -86,6 +86,32 @@ export class ConsistentEvaluationHrefController {
 		}
 		return undefined;
 	}
+	async getDiscussionNavInfo() {
+		const root = await this._getRootEntity(false);
+		let topicName = undefined;
+		let forumName = undefined;
+
+		if (root && root.entity) {
+			if (root.entity.hasLinkByRel('https://discussions.api.brightspace.com/rels/topic')) {
+				const topicLink = root.entity.getLinkByRel('https://discussions.api.brightspace.com/rels/topic').href;
+				const topicResponse = await this._getEntityFromHref(topicLink, false);
+				if (topicResponse && topicResponse.entity) {
+					topicName = topicResponse.entity.properties.name;
+					const forumLink = topicResponse.entity.getLinkByRel('https://discussions.api.brightspace.com/rels/forum');
+					const forumResponse = await this._getEntityFromHref(forumLink, false);
+					if (forumResponse && forumResponse.entity)
+					{
+						forumName = forumResponse.entity.properties.name;
+					}
+				}
+				return {
+					topicName,
+					forumName
+				};
+			}
+		}
+		return undefined;
+	}
 	async getEditActivityPath() {
 		const root = await this._getRootEntity(false);
 		let editActivityPath = undefined;
