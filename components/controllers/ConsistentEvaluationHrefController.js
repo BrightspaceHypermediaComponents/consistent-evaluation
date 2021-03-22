@@ -100,8 +100,7 @@ export class ConsistentEvaluationHrefController {
 					if (topicResponse.entity.hasLinkByRel(Rels.Discussions.forum)) {
 						const forumLink = topicResponse.entity.getLinkByRel(Rels.Discussions.forum);
 						const forumResponse = await this._getEntityFromHref(forumLink, false);
-						if (forumResponse && forumResponse.entity)
-						{
+						if (forumResponse && forumResponse.entity) {
 							forumName = forumResponse.entity.properties.name;
 						}
 					}
