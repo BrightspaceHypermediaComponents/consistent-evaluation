@@ -105,13 +105,12 @@ export class ConsistentEvaluationHrefController {
 						}
 					}
 				}
-				return {
-					topicName,
-					forumName
-				};
 			}
 		}
-		return undefined;
+		return {
+			topicName,
+			forumName
+		};
 	}
 	async getEditActivityPath() {
 		const root = await this._getRootEntity(false);
