@@ -158,15 +158,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 					this._anonymousInfo = await controller.getAnonymousInfo();
 					this._iteratorTotal = await controller.getIteratorInfo('total');
 					this._iteratorIndex = await controller.getIteratorInfo('index');
-					this._editActivityPath = await controller.getEditActivityPath();
-					const stripped = this._stripFileIdFromUrl();
-					const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
-					if (!stripped && !hasOneFileAndSubmission) {
-						this.currentFileId = undefined;
-						this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
-					} else {
-						this._loadingComponents.submissions = false;
-					}
 					if (this._activityType === assignmentActivity) {
 						this._submissionInfo = await controller.getSubmissionInfo();
 						this._gradeItemInfo = await controller.getGradeItemInfo();
