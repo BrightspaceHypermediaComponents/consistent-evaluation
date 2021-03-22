@@ -67,7 +67,7 @@ export class ConsistentEvaluationDiscussionPostPage extends RtlMixin(LocalizeCon
 		const ratingInformation = { upVotes: 0, downVotes: 0 };
 
 		let createdDate = undefined;
-		if (discussionPostEntity.getSubEntityByClass(Classes.assignments.date)) {
+		if (discussionPostEntity.hasSubEntityByClass(Classes.assignments.date)) {
 			createdDate = discussionPostEntity.getSubEntityByClass(Classes.assignments.date).properties.date;
 		} else {
 			console.warn('Consistent Evaluation discussion post date not found');

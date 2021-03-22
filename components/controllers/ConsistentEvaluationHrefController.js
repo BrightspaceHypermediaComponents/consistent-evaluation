@@ -90,7 +90,7 @@ export class ConsistentEvaluationHrefController {
 		let root = await this._getRootEntity(false);
 		if (root && root.entity) {
 			root = root.entity;
-			if (root.getSubEntityByRel(topicPostListRel)) {
+			if (root.hasSubEntityByRel(topicPostListRel)) {
 				const discussionPostList = root.getSubEntityByRel(topicPostListRel).links;
 				return discussionPostList;
 			}
