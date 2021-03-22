@@ -132,8 +132,8 @@ describe('ConsistentEvaluationHrefController', () => {
 
 			sinon.stub(controller, '_getRootEntity').returns({
 				entity: {
-					getSubEntityByRel: () => discussionPostList
-
+					getSubEntityByRel: () => discussionPostList,
+					hasSubEntityByRel: () => true
 				}
 			});
 
