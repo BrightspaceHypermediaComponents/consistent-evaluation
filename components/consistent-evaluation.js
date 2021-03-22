@@ -204,9 +204,9 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._loading = false;
 		this._setTitle();
 		if (this._activityType === assignmentActivity && this._telemetry && this._submissionInfo.submissionList) {
-			this._telemetry.logLoadEvent('consistentEvalAssignmentMain', assignmentActivity, this._submissionInfo.submissionList.length);
+			this._telemetry.logLoadEvent('consistentEvalMain', assignmentActivity, this._submissionInfo.submissionList.length);
 		} else if (this._activityType === discussionActivity && this._telemetry) {
-			this._telemetry.logLoadEvent('consistentEvalDiscussionMain', discussionActivity, undefined);
+			this._telemetry.logLoadEvent('consistentEvalMain', discussionActivity, undefined);
 		}
 	}
 	async _hasOneFileAndOneSubmission() {
