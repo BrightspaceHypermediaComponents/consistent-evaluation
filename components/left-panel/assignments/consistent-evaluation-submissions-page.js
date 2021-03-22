@@ -3,8 +3,8 @@ import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import './consistent-evaluation-submission-item.js';
+import { assignmentActivity, tiiRefreshAction, tiiRel, tiiSubmitActionName, toggleFlagActionName, toggleIsReadActionName } from '../../controllers/constants.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
-import { tiiRefreshAction, tiiRel, tiiSubmitActionName, toggleFlagActionName, toggleIsReadActionName } from '../../controllers/constants.js';
 import { Classes } from 'd2l-hypermedia-constants';
 import { ConsistentEvalTelemetry } from '../../helpers/consistent-eval-telemetry.js';
 import { convertToken } from '../../helpers/converterHelpers.js';
@@ -264,7 +264,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 	_finishedLoading() {
 		if (this._telemetry) {
-			this._telemetry.markEventEndAndLog(this._perfRenderEventName, this._submissionList.length);
+			this._telemetry.markEventEndAndLog(this._perfRenderEventName, assignmentActivity, this._submissionList.length);
 		}
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
 			composed: true,

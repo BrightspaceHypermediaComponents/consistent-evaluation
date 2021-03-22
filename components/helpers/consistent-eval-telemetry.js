@@ -7,22 +7,22 @@ export class ConsistentEvalTelemetry {
 	}
 
 	//Mark that a page has been loaded
-	logLoadEvent(type, submissionCount) {
+	logLoadEvent(type, activityType, submissionCount) {
 		if (!type) { return; }
 
 		const measureName = `d2l-consistent-eval-${type}.page.rendered`;
 		performance.measure(measureName);
-		this._logUserEvent(window.location.hostname, 'LoadView', type, measureName, submissionCount);
+		this._logUserEvent(window.location.hostname, 'LoadView', type, measureName, activityType, submissionCount);
 	}
 
 	//Submit an event measure
-	markEventEndAndLog(type, submissionCount) {
+	markEventEndAndLog(type, activityType, submissionCount) {
 		if (!type) { return; }
 
 		const measureName = `d2l-consistent-eval-event-${type}`;
 		const eventStartMarkName = this._getEventStartMarkName(type);
 		performance.measure(measureName, eventStartMarkName);
-		this._logUserEvent(window.location.hostname, 'MeasureTiming', type, measureName, submissionCount);
+		this._logUserEvent(window.location.hostname, 'MeasureTiming', type, measureName, activityType, submissionCount);
 	}
 
 	//Begin measuring an event
@@ -37,7 +37,7 @@ export class ConsistentEvalTelemetry {
 		return `d2l-consistent-eval-event-${type}`;
 	}
 
-	async _logUserEvent(href, action, type, performanceMeasureName, submissionCount) {
+	async _logUserEvent(href, action, type, performanceMeasureName, activityType, submissionCount) {
 		if (!href || !action || !type || !performanceMeasureName) { return; }
 		const eventBody = new Events.PerformanceEventBody()
 			.setAction(action)
@@ -45,6 +45,9 @@ export class ConsistentEvalTelemetry {
 			.addUserTiming(performance.getEntriesByName(performanceMeasureName))
 			.addCustom('Referer', document.referrer)
 			.addCustom('UserAgent', navigator.userAgent);
+		if (activityType) {
+			eventBody.addCustom('ActivityType', `${activityType}`);
+		}
 		if (submissionCount) {
 			eventBody.addCustom('SubmissionCount', `${submissionCount}`);
 		}
