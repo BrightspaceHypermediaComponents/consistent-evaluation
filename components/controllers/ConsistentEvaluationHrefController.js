@@ -95,6 +95,7 @@ export class ConsistentEvaluationHrefController {
 				return discussionPostList;
 			}
 		}
+		return [];
 	}
 	async getEditActivityPath() {
 		const root = await this._getRootEntity(false);
