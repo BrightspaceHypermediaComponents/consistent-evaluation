@@ -86,17 +86,6 @@ export class ConsistentEvaluationHrefController {
 		}
 		return undefined;
 	}
-	async getDiscussionPostInfo() {
-		let root = await this._getRootEntity(false);
-		if (root && root.entity) {
-			root = root.entity;
-			if (root.hasSubEntityByRel(topicPostListRel)) {
-				const discussionPostList = root.getSubEntityByRel(topicPostListRel).links;
-				return discussionPostList;
-			}
-		}
-		return [];
-	}
 	async getDiscussionNavInfo() {
 		const root = await this._getRootEntity(false);
 		let topicName = undefined;
@@ -122,6 +111,17 @@ export class ConsistentEvaluationHrefController {
 			topicName,
 			forumName
 		};
+	}
+	async getDiscussionPostInfo() {
+		let root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			root = root.entity;
+			if (root.hasSubEntityByRel(topicPostListRel)) {
+				const discussionPostList = root.getSubEntityByRel(topicPostListRel).links;
+				return discussionPostList;
+			}
+		}
+		return [];
 	}
 	async getEditActivityPath() {
 		const root = await this._getRootEntity(false);
