@@ -130,6 +130,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				.enrolledUser=${this._enrolledUser}
 				.groupInfo=${this._groupInfo}
 				.anonymousInfo=${this._anonymousInfo}
+				.discussionPostList=${this._discussionPostList}
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				?use-new-html-editor=${this.useNewHtmlEditor}
@@ -181,6 +182,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						}
 					} else if (this._activityType === discussionActivity) {
 						this._loadingComponents.submissions = false;
+						this._discussionPostList = await controller.getDiscussionPostInfo();
 						const discussionNavInfo = await controller.getDiscussionNavInfo();
 						this._navTitleInfo = { 'titleName' : discussionNavInfo.topicName, 'subtitleName': discussionNavInfo.forumName };
 					}

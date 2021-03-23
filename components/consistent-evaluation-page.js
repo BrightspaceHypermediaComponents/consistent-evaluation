@@ -107,6 +107,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: false,
 				type: Object
 			},
+			discussionPostList: {
+				attribute: false,
+				type: Array
+			},
 			navTitleInfo: {
 				attribute: false,
 				type: Object
@@ -336,6 +340,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						download-all-submissions-location=${ifDefined(this.downloadAllSubmissionLink)}
 						activity-type=${this.activityType}
 						.currentFileId=${this.currentFileId}
+						.discussionPostList=${this.discussionPostList}
 						?hide-use-grade=${this._noGradeComponent()}
 						?display-conversion-warning=${this.displayConversionWarning}
 						@d2l-consistent-eval-annotations-update=${this._transientSaveAnnotations}

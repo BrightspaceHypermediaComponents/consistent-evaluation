@@ -3,7 +3,7 @@ import { actorRel, alignmentsRel, anonymousMarkingRel, assessmentRel,
 	assessmentRubricApplicationRel, assessorUserRel, assignmentActivity, assignmentClass, assignmentRel, assignmentSubmissionListRel,
 	checkedClassName, demonstrationRel, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
 	enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, publishedClassName,
-	rubricRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
+	rubricRel, topicPostListRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -111,6 +111,17 @@ export class ConsistentEvaluationHrefController {
 			topicName,
 			forumName
 		};
+	}
+	async getDiscussionPostInfo() {
+		let root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			root = root.entity;
+			if (root.hasSubEntityByRel(topicPostListRel)) {
+				const discussionPostList = root.getSubEntityByRel(topicPostListRel).links;
+				return discussionPostList;
+			}
+		}
+		return [];
 	}
 	async getEditActivityPath() {
 		const root = await this._getRootEntity(false);
