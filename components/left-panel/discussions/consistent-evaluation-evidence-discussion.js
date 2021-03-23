@@ -64,8 +64,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeCon
 
 	render() {
 		if (this.discussionPostList && this.discussionPostList.length === 0) {
-			return html`${this._renderSortDropDownList()}
-				${this._renderNoAssessablePosts()}`;
+			return html`${this._renderNoAssessablePosts()}`;
 		}
 		return html`
 			${this._renderSortDropDownList()}
