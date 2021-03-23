@@ -1,5 +1,5 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { anonymousMarkingRel, checkedClassName, editActivityRel, editSpecialAccessApplicationRel, emailRel,
+import { anonymousMarkingRel, assignmentActivity, assignmentClass, checkedClassName, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
 	evaluationRel, nextRel, pagerRel, previousRel, publishedClassName, rubricRel,
 	userProgressAssessmentsRel, viewMembersRel } from '../components/controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
@@ -99,6 +99,50 @@ describe('ConsistentEvaluationHrefController', () => {
 		});
 	});
 
+	describe('getActivityType returns correct activity type', () => {
+		it('recognizes discussion acitivty', async() => {
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: { hasClass: (r) => r === discussionClass }
+			});
+
+			const activityType = await controller.getActivityType(true);
+			assert.equal(activityType, discussionActivity);
+		});
+
+		it('recognizes discussion acitivty', async() => {
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: { hasClass: (r) => r === assignmentClass }
+			});
+
+			const activityType = await controller.getActivityType(true);
+			assert.equal(activityType, assignmentActivity);
+		});
+	});
+
+	describe('getDiscussionPostInfo returns correct information', () => {
+		it('gets correct discussionPost info', async() => {
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+			const discussionPostList = {
+				links: ['discussionPosts']
+			};
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: {
+					getSubEntityByRel: () => discussionPostList,
+					hasSubEntityByRel: () => true
+				}
+			});
+
+			const returnedDisscusionPostInfo = await controller.getDiscussionPostInfo();
+			assert.equal(returnedDisscusionPostInfo.length, discussionPostList.links.length);
+			assert.equal(returnedDisscusionPostInfo[0], discussionPostList.links[0]);
+		});
+	});
+
 	describe('getGradeItemInfo gets correct grade item info', () => {
 		it('sets the gradeItem info', async() => {
 			const activityUsageHref = 'expected_activity_usage_href';
@@ -143,38 +187,40 @@ describe('ConsistentEvaluationHrefController', () => {
 	});
 
 	describe('getGroupInfo gets correct group info', async() => {
-		const groupInfoHref = 'groupInfoHref';
-		const viewMembersPath = 'viewMembersPath';
-		const emailPath = 'emailPath';
-		const pagerPath = 'pagerPath';
+		it('gets correct group info', async() => {
+			const groupInfoHref = 'groupInfoHref';
+			const viewMembersPath = 'viewMembersPath';
+			const emailPath = 'emailPath';
+			const pagerPath = 'pagerPath';
 
-		const controller = new ConsistentEvaluationHrefController('href', 'token');
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
 
-		sinon.stub(controller, '_getRootEntity').returns ({
-			entity: { }
-		});
+			sinon.stub(controller, '_getRootEntity').returns ({
+				entity: { }
+			});
 
-		sinon.stub(controller, '_getHref').returns(groupInfoHref);
+			sinon.stub(controller, '_getHref').returns(groupInfoHref);
 
-		sinon.stub(controller, '_getEntityFromHref').returns({
-			entity: {
-				getSubEntityByRel: (r) => {
-					if (r === viewMembersRel) {
-						return { properties: { path: viewMembersPath } };
-					} else if (r === emailRel) {
-						return { properties: { path: emailPath } };
-					} else if (r === pagerRel) {
-						return { properties: { path: pagerPath } };
+			sinon.stub(controller, '_getEntityFromHref').returns({
+				entity: {
+					getSubEntityByRel: (r) => {
+						if (r === viewMembersRel) {
+							return { properties: { path: viewMembersPath } };
+						} else if (r === emailRel) {
+							return { properties: { path: emailPath } };
+						} else if (r === pagerRel) {
+							return { properties: { path: pagerPath } };
+						}
 					}
 				}
-			}
+			});
+
+			const groupInfo = await controller.getGroupInfo();
+
+			assert.equal(groupInfo.viewMembersPath, viewMembersPath);
+			assert.equal(groupInfo.emailPath, emailPath);
+			assert.equal(groupInfo.pagerPath, pagerPath);
 		});
-
-		const groupInfo = await controller.getGroupInfo();
-
-		assert.equal(groupInfo.viewMembersPath, viewMembersPath);
-		assert.equal(groupInfo.emailPath, emailPath);
-		assert.equal(groupInfo.pagerPath, pagerPath);
 	});
 
 	describe('getEnrolledUser gets correct enrolled user info', () => {
@@ -305,6 +351,38 @@ describe('ConsistentEvaluationHrefController', () => {
 
 			const actualOrganizationName = await controller.getAssignmentOrganizationName('organization');
 			assert.equal(actualOrganizationName, expectedOrganizationName);
+		});
+	});
+
+	describe('getDiscussionNavInfo gets correct info', () => {
+		it('sets the topic name', async() => {
+			const topicHref = 'expected_topic_href';
+			const expectedTopicName = 'expectedTopicName';
+			const forumHref = 'expected_forum_href';
+
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: {
+					hasLinkByRel: (r) => r === Rels.Discussions.topic,
+					getLinkByRel: (r) => (r === Rels.Discussions.topic ? { href: topicHref } : undefined)
+				}
+			});
+
+			const getHrefStub = sinon.stub(controller, '_getEntityFromHref');
+
+			getHrefStub.withArgs(topicHref, false).returns({
+				entity: {
+					hasLinkByRel: (r) => r === Rels.Discussions.forum,
+					getLinkByRel: (r) => (r === Rels.Discussions.forum ? { href: forumHref } : undefined),
+					properties: {
+						name: expectedTopicName
+					}
+				}
+			});
+
+			const actualTopicName = await controller.getDiscussionNavInfo();
+			assert.equal(actualTopicName.topicName, expectedTopicName);
 		});
 	});
 

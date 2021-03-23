@@ -1,9 +1,11 @@
 import '@brightspace-ui/core/components/icons/icon.js';
 import { bodyCompactStyles, bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
+import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
 import { linkStyles } from '@brightspace-ui/core/components/link/link.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 
 export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(LocalizeConsistentEvaluation(LitElement)) {
 	static get properties() {
@@ -12,8 +14,8 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				attribute: 'is-reply',
 				type: Boolean
 			},
-			repliedToPostName : {
-				attribute: 'replied-to-post-name',
+			threadTitle : {
+				attribute: 'thread-title',
 				type: String
 			},
 			postTitle : {
@@ -57,7 +59,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			}
 
 			.d2l-consistent-evaluation-evidence-body-reply-to-text {
-				flex-shrink: 0;
 				margin-left: 4px;
 				margin-right: 4px;
 			}
@@ -82,7 +83,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 
 			.d2l-consistent-evaluation-discussion-evidence-body-text {
 				padding-bottom: 10px;
-				padding-top: 20px;
 			}
 
 			.d2l-truncate {
@@ -102,27 +102,30 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 	render() {
 		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-container">
 			${this._renderRating()}
-			${this._renderHeader()}
+			${this._renderRepliedInThread()}
+			${this._renderTitle()}
 			${this._renderDate()}
 			${this._renderBody()}
 		</div>`;
 	}
+	_formatDateTime() {
+		const date = this.postDate ? new Date(this.postDate) : undefined;
+
+		const formattedDate = (date) ? formatDate(
+			date,
+			{ format: 'medium' }) : '';
+		const formattedTime = (date) ? formatTime(
+			date,
+			{ format: 'short' }) : '';
+		return `${formattedDate} ${formattedTime}`;
+	}
 	_renderBody() {
-		return html `<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-text">${this.postBody}</div>`;
+		return html `<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-text">
+				${unsafeHTML(this.postBody)}
+			</div>`;
 	}
 	_renderDate() {
-		return html `<div class="d2l-body-small">${this.postDate}</div>`;
-	}
-	_renderHeader() {
-		if (this.isReply) {
-			return html `
-				${this._renderRepliedTo()}
-				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-title">${this.postTitle}</div>
-			`;
-		} else {
-			return html `
-				<a class="d2l-body-compact d2l-link d2l-consistent-evaluation-discussion-evidence-body-title">${this.postTitle}</a>`;
-		}
+		return html `<div class="d2l-body-small">${this._formatDateTime()}</div>`;
 	}
 	_renderRating() {
 		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-rating-container">
@@ -130,12 +133,20 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('downVotes', 'numDownVotes', this.ratingInformation.downVotes)}</div>
 			</div>`;
 	}
-	_renderRepliedTo() {
-		return html `<div class="d2l-consistent-evaluation-reply-to-container">
+	_renderRepliedInThread() {
+		if (this.isReply) {
+			return html `<div class="d2l-consistent-evaluation-reply-to-container">
 				<d2l-icon class="d2l-consistent-evaluation-evidence-body-reply-icon" icon="d2l-tier1:reply"></d2l-icon>
-				<span class="d2l-body-compact d2l-consistent-evaluation-evidence-body-reply-to-text">${this.localize('repliedTo')}</span>
-				<span class="d2l-body-compact d2l-link d2l-truncate">${this.repliedToPostName}</span>
+				<span class="d2l-body-compact d2l-consistent-evaluation-evidence-body-reply-to-text d2l-truncate">
+					${this.localize('repliedInThread', 'threadTitle', this.threadTitle)}
+				</span>
 			</div>`;
+		} else {
+			return html``;
+		}
+	}
+	_renderTitle() {
+		return html `<a class="d2l-body-compact d2l-link d2l-consistent-evaluation-discussion-evidence-body-title">${this.postTitle}</a>`;
 	}
 
 }

@@ -1,5 +1,5 @@
 import './consistent-evaluation-page.js';
-import { attachmentClassName, attachmentListRel, tiiRel } from './controllers/constants';
+import { assignmentActivity, attachmentClassName, attachmentListRel, discussionActivity, tiiRel } from './controllers/constants';
 import { css, html, LitElement } from 'lit-element';
 import { Awaiter } from './awaiter.js';
 import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
@@ -45,12 +45,12 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			_gradeItemInfo: { type: Object },
 			_enrolledUser: { type: Object },
 			_groupInfo: { type: Object },
-			_assignmentName: { type: String },
-			_organizationName: { type: String },
 			_userName: { type: String },
+			_navTitleInfo: { type: Object },
 			_iteratorTotal: { type: Number },
 			_iteratorIndex: { type: Number },
 			_editActivityPath: { type: String },
+			_activityType: { type: String },
 			fileId: {
 				attribute: 'file-id',
 				type: String
@@ -87,6 +87,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._groupInfo = undefined;
 		this._anonymousInfo = undefined;
 		this._editActivityPath = undefined;
+		this._navTitleInfo = {};
 		this.returnHref = undefined;
 		this.returnHrefText = undefined;
 		this._mutex = new Awaiter();
@@ -115,12 +116,12 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				rubric-popout-location=${ifDefined(this._childHrefs && this._childHrefs.rubricPopoutLocation)}
 				download-all-submissions-location=${ifDefined(this._childHrefs && this._childHrefs.downloadAllSubmissionLink)}
 				edit-activity-path=${ifDefined(this._editActivityPath)}
+				activity-type=${this._activityType}
 				.currentFileId=${this.currentFileId}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
-				.assignmentName=${this._assignmentName}
-				.organizationName=${this._organizationName}
+				.navTitleInfo=${this._navTitleInfo}
 				.userName=${this._userName}
 				.iteratorTotal=${this._iteratorTotal}
 				.iteratorIndex=${this._iteratorIndex}
@@ -129,6 +130,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				.enrolledUser=${this._enrolledUser}
 				.groupInfo=${this._groupInfo}
 				.anonymousInfo=${this._anonymousInfo}
+				.discussionPostList=${this._discussionPostList}
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				?use-new-html-editor=${this.useNewHtmlEditor}
@@ -151,28 +153,38 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 					const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 					this._childHrefs = await controller.getHrefs();
 					this._rubricInfos = await controller.getRubricInfos(false);
-					this._submissionInfo = await controller.getSubmissionInfo();
-					this._gradeItemInfo = await controller.getGradeItemInfo();
-					this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
-					this._organizationName = await controller.getAssignmentOrganizationName('organization');
-					this._userName = await controller.getUserName();
+					this._activityType = await controller.getActivityType();
 					this._enrolledUser = await controller.getEnrolledUser();
 					this._groupInfo = await controller.getGroupInfo();
 					this._anonymousInfo = await controller.getAnonymousInfo();
 					this._iteratorTotal = await controller.getIteratorInfo('total');
 					this._iteratorIndex = await controller.getIteratorInfo('index');
-					this._editActivityPath = await controller.getEditActivityPath();
-					const stripped = this._stripFileIdFromUrl();
-					const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
-					if (!stripped && !hasOneFileAndSubmission) {
-						this.currentFileId = undefined;
-						this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
-					} else {
-						this._loadingComponents.submissions = false;
-					}
+					if (this._activityType === assignmentActivity) {
+						this._submissionInfo = await controller.getSubmissionInfo();
+						this._gradeItemInfo = await controller.getGradeItemInfo();
+						this._userName = await controller.getUserName();
+						this._navTitleInfo = {
+							'titleName' : await controller.getAssignmentOrganizationName('assignment'),
+							'subtitleName': await controller.getAssignmentOrganizationName('organization') };
+						this._editActivityPath = await controller.getEditActivityPath();
 
-					if (!this._submissionInfo || !this._submissionInfo.submissionList) {
+						const stripped = this._stripFileIdFromUrl();
+						const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
+						if (!stripped && !hasOneFileAndSubmission) {
+							this.currentFileId = undefined;
+							this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
+						} else {
+							this._loadingComponents.submissions = false;
+						}
+
+						if (!this._submissionInfo || !this._submissionInfo.submissionList) {
+							this._loadingComponents.submissions = false;
+						}
+					} else if (this._activityType === discussionActivity) {
 						this._loadingComponents.submissions = false;
+						this._discussionPostList = await controller.getDiscussionPostInfo();
+						const discussionNavInfo = await controller.getDiscussionNavInfo();
+						this._navTitleInfo = { 'titleName' : discussionNavInfo.topicName, 'subtitleName': discussionNavInfo.forumName };
 					}
 
 					this._loadingComponents.main = false;
@@ -194,8 +206,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		}
 		this._loading = false;
 		this._setTitle();
-		if (this._telemetry && this._submissionInfo.submissionList) {
-			this._telemetry.logLoadEvent('consistentEvalMain', this._submissionInfo.submissionList.length);
+		if (this._activityType === assignmentActivity && this._telemetry && this._submissionInfo.submissionList) {
+			this._telemetry.logLoadEvent('consistentEvalMain', assignmentActivity, this._submissionInfo.submissionList.length);
+		} else if (this._activityType === discussionActivity && this._telemetry) {
+			this._telemetry.logLoadEvent('consistentEvalMain', discussionActivity, undefined);
 		}
 	}
 	async _hasOneFileAndOneSubmission() {
@@ -251,9 +265,9 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._loading = true;
 	}
 	_setTitle() {
-		if (this._userName && this._assignmentName) {
+		if (this._userName && this._navTitleInfo.titleName) {
 			const title = document.createElement('title');
-			title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._assignmentName });
+			title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._navTitleInfo.titleName });
 			document.head.insertBefore(title, document.head.firstChild);
 		}
 	}
@@ -293,7 +307,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			}
 		}
 	}
-
 }
 
 customElements.define('d2l-consistent-evaluation', ConsistentEvaluation);

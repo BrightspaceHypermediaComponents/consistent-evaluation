@@ -1,9 +1,9 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { actorRel, alignmentsRel, anonymousMarkingRel, assessmentRel,
-	assessmentRubricApplicationRel, assessorUserRel, assignmentRel, assignmentSubmissionListRel,
-	checkedClassName, demonstrationRel, editActivityRel, editSpecialAccessApplicationRel, emailRel,
+	assessmentRubricApplicationRel, assessorUserRel, assignmentActivity, assignmentClass, assignmentRel, assignmentSubmissionListRel,
+	checkedClassName, demonstrationRel, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
 	enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, publishedClassName,
-	rubricRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
+	rubricRel, topicPostListRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -23,6 +23,18 @@ export class ConsistentEvaluationHrefController {
 
 		this.baseHref = baseHref;
 		this.token = token;
+	}
+
+	async getActivityType() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			if (root.entity.hasClass(discussionClass)) {
+				return discussionActivity;
+			} else if (root.entity.hasClass(assignmentClass)) {
+				return assignmentActivity;
+			}
+		}
+		return undefined;
 	}
 
 	async getAnonymousInfo() {
@@ -73,6 +85,43 @@ export class ConsistentEvaluationHrefController {
 			}
 		}
 		return undefined;
+	}
+	async getDiscussionNavInfo() {
+		const root = await this._getRootEntity(false);
+		let topicName = undefined;
+		let forumName = undefined;
+
+		if (root && root.entity) {
+			if (root.entity.hasLinkByRel(Rels.Discussions.topic)) {
+				const topicLink = root.entity.getLinkByRel(Rels.Discussions.topic).href;
+				const topicResponse = await this._getEntityFromHref(topicLink, false);
+				if (topicResponse && topicResponse.entity) {
+					topicName = topicResponse.entity.properties.name;
+					if (topicResponse.entity.hasLinkByRel(Rels.Discussions.forum)) {
+						const forumLink = topicResponse.entity.getLinkByRel(Rels.Discussions.forum);
+						const forumResponse = await this._getEntityFromHref(forumLink, false);
+						if (forumResponse && forumResponse.entity) {
+							forumName = forumResponse.entity.properties.name;
+						}
+					}
+				}
+			}
+		}
+		return {
+			topicName,
+			forumName
+		};
+	}
+	async getDiscussionPostInfo() {
+		let root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			root = root.entity;
+			if (root.hasSubEntityByRel(topicPostListRel)) {
+				const discussionPostList = root.getSubEntityByRel(topicPostListRel).links;
+				return discussionPostList;
+			}
+		}
+		return [];
 	}
 	async getEditActivityPath() {
 		const root = await this._getRootEntity(false);

@@ -78,7 +78,7 @@ export default {
 	"publishing": "Publishing",
 	"recordAudio": "Record Audio",
 	"recordVideo": "Record Video",
-	"repliedTo": "Replied to:",
+	"repliedInThread": "Replied in thread \"{threadTitle}\"",
 	"retract": "Retract",
 	"retractError": "Unable to retract evaluation. Please try again.",
 	"retracting": "Retracting",
