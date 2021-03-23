@@ -14,7 +14,7 @@ import './consistent-evaluation-tii-grade-mark.js';
 import './consistent-evaluation-tii-similarity.js';
 import { bodySmallStyles, heading3Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
-import { fileSubmission, textSubmission } from '../../controllers/constants';
+import { fileSubmission, textSubmission, tiiReportCompleteStatus } from '../../controllers/constants';
 import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
 import { toggleFlagActionName, toggleIsReadActionName } from '../../controllers/constants.js';
 import { getFileIconTypeFromExtension } from '@brightspace-ui/core/components/icons/getFileIconType';
@@ -538,15 +538,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 
 		return html`
 			<div class="d2l-submission-attachment-list-item-tii">
-				<d2l-consistent-evaluation-tii-similarity
-					colour="${tii.originalityReportScoreColour}"
-					error-message="${tii.errorMessage}"
-					file-id="${id}"
-					file-name="${name}"
-					originality-report-href="${tii.originalityReportHref}"
-					report-status="${tii.reportStatus}"
-					score="${tii.originalityReportScore}"
-				></d2l-consistent-evaluation-tii-similarity>
+				${this._renderTiiSimilarity(tii, id, name)}
 				<d2l-consistent-evaluation-tii-grade-mark
 					file-id=${id}
 					grade-mark-file-name=${name}
@@ -559,6 +551,22 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 				></d2l-consistent-evaluation-tii-grade-mark>
 			</div>
 		`;
+	}
+
+	_renderTiiSimilarity(tii, id, name) {
+		if (tii.originalityReportHref || tii.reportStatus !== tiiReportCompleteStatus) {
+			return html`<d2l-consistent-evaluation-tii-similarity
+						colour="${tii.originalityReportScoreColour}"
+						error-message="${tii.errorMessage}"
+						file-id="${id}"
+						file-name="${name}"
+						originality-report-href="${tii.originalityReportHref}"
+						report-status="${tii.reportStatus}"
+						score="${tii.originalityReportScore}"
+					></d2l-consistent-evaluation-tii-similarity>`;
+		} else {
+			return html``;
+		}
 	}
 
 	_updateFilenameTooltips() {
