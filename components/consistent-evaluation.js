@@ -1,5 +1,5 @@
 import './consistent-evaluation-page.js';
-import { assignmentActivity, attachmentClassName, attachmentListRel, discussionActivity } from './controllers/constants';
+import { assignmentActivity, attachmentClassName, attachmentListRel, discussionActivity, tiiRel } from './controllers/constants';
 import { css, html, LitElement } from 'lit-element';
 import { Awaiter } from './awaiter.js';
 import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
@@ -215,10 +215,14 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			const submissions = await getSubmissions(this._submissionInfo, this.token);
 			const attachmentList = submissions[0].entity.getSubEntityByRel(attachmentListRel);
 			const numberOfSubmittedFiles = attachmentList.entities.length;
+
 			if (numberOfSubmittedFiles === 1) {
-				const fileId = attachmentList.getSubEntityByClass(attachmentClassName).properties.id;
-				this.currentFileId = fileId;
-				return true;
+				const isTiiEnabled = attachmentList.entities[0].hasSubEntityByRel(tiiRel);
+				if (!isTiiEnabled) {
+					const fileId = attachmentList.getSubEntityByClass(attachmentClassName).properties.id;
+					this.currentFileId = fileId;
+					return true;
+				}
 			}
 		}
 		return false;
