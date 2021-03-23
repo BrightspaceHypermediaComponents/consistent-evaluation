@@ -539,18 +539,26 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		return html`
 			<div class="d2l-submission-attachment-list-item-tii">
 				${this._renderTiiSimilarity(tii, id, name)}
-				<d2l-consistent-evaluation-tii-grade-mark
-					file-id=${id}
-					grade-mark-file-name=${name}
-					grade-mark-href=${tii.gradeMarkHref}
-					grade-mark-out-of=${tii.gradeMarkOutOf}
-					grade-mark-score=${tii.gradeMarkScore}
-					?has-feedback=${tii.hasFeedback}
-					?grade-mark-auto-transfer=${tii.gradeMarkAutoTransfer}
-					?hide-use-grade=${this.hideUseGrade}
-				></d2l-consistent-evaluation-tii-grade-mark>
+				${this._renderTiiGradeMark(tii, id, name)}
 			</div>
 		`;
+	}
+
+	_renderTiiGradeMark(tii, id, name) {
+		if (tii.gradeMarkHref || tii.reportStatus !== tiiReportCompleteStatus) {
+			return html`<d2l-consistent-evaluation-tii-grade-mark
+						file-id=${id}
+						grade-mark-file-name=${name}
+						grade-mark-href=${tii.gradeMarkHref}
+						grade-mark-out-of=${tii.gradeMarkOutOf}
+						grade-mark-score=${tii.gradeMarkScore}
+						?has-feedback=${tii.hasFeedback}
+						?grade-mark-auto-transfer=${tii.gradeMarkAutoTransfer}
+						?hide-use-grade=${this.hideUseGrade}
+					></d2l-consistent-evaluation-tii-grade-mark>`;
+		} else {
+			return html``;
+		}
 	}
 
 	_renderTiiSimilarity(tii, id, name) {
