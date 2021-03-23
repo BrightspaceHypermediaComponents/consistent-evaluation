@@ -354,6 +354,38 @@ describe('ConsistentEvaluationHrefController', () => {
 		});
 	});
 
+	describe('getDiscussionNavInfo gets correct info', () => {
+		it('sets the topic name', async() => {
+			const topicHref = 'expected_topic_href';
+			const expectedTopicName = 'expectedTopicName';
+			const forumHref = 'expected_forum_href';
+
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: {
+					hasLinkByRel: (r) => r === Rels.Discussions.topic,
+					getLinkByRel: (r) => (r === Rels.Discussions.topic ? { href: topicHref } : undefined)
+				}
+			});
+
+			const getHrefStub = sinon.stub(controller, '_getEntityFromHref');
+
+			getHrefStub.withArgs(topicHref, false).returns({
+				entity: {
+					hasLinkByRel: (r) => r === Rels.Discussions.forum,
+					getLinkByRel: (r) => (r === Rels.Discussions.forum ? { href: forumHref } : undefined),
+					properties: {
+						name: expectedTopicName
+					}
+				}
+			});
+
+			const actualTopicName = await controller.getDiscussionNavInfo();
+			assert.equal(actualTopicName.topicName, expectedTopicName);
+		});
+	});
+
 	describe('getAnonymousInfo gets correct group info', async() => {
 		const assignmentHref = 'assignmentHref';
 

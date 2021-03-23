@@ -111,13 +111,9 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: false,
 				type: Array
 			},
-			assignmentName: {
+			navTitleInfo: {
 				attribute: false,
-				type: String
-			},
-			organizationName: {
-				attribute: false,
-				type: String
+				type: Object
 			},
 			userName: {
 				attribute: false,
@@ -629,10 +625,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		if (this.userProgressOutcomeHref) {
 			return this.localize('overallAchievement');
 		}
-		return this.organizationName;
+		return this.navTitleInfo.subtitleName;
 	}
 	get _navBarTitleText() {
-		if (this.assignmentName) return this.assignmentName;
+		if (this.navTitleInfo.titleName) return this.navTitleInfo.titleName;
 
 		return this.userName;
 	}

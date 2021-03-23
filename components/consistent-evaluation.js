@@ -45,9 +45,8 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			_gradeItemInfo: { type: Object },
 			_enrolledUser: { type: Object },
 			_groupInfo: { type: Object },
-			_assignmentName: { type: String },
-			_organizationName: { type: String },
 			_userName: { type: String },
+			_navTitleInfo: { type: Object },
 			_iteratorTotal: { type: Number },
 			_iteratorIndex: { type: Number },
 			_editActivityPath: { type: String },
@@ -88,6 +87,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._groupInfo = undefined;
 		this._anonymousInfo = undefined;
 		this._editActivityPath = undefined;
+		this._navTitleInfo = {};
 		this.returnHref = undefined;
 		this.returnHrefText = undefined;
 		this._mutex = new Awaiter();
@@ -121,8 +121,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
-				.assignmentName=${this._assignmentName}
-				.organizationName=${this._organizationName}
+				.navTitleInfo=${this._navTitleInfo}
 				.userName=${this._userName}
 				.iteratorTotal=${this._iteratorTotal}
 				.iteratorIndex=${this._iteratorIndex}
@@ -160,13 +159,13 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 					this._anonymousInfo = await controller.getAnonymousInfo();
 					this._iteratorTotal = await controller.getIteratorInfo('total');
 					this._iteratorIndex = await controller.getIteratorInfo('index');
-
 					if (this._activityType === assignmentActivity) {
 						this._submissionInfo = await controller.getSubmissionInfo();
 						this._gradeItemInfo = await controller.getGradeItemInfo();
 						this._userName = await controller.getUserName();
-						this._assignmentName = await controller.getAssignmentOrganizationName('assignment');
-						this._organizationName = await controller.getAssignmentOrganizationName('organization');
+						this._navTitleInfo = {
+							'titleName' : await controller.getAssignmentOrganizationName('assignment'),
+							'subtitleName': await controller.getAssignmentOrganizationName('organization') };
 						this._editActivityPath = await controller.getEditActivityPath();
 
 						const stripped = this._stripFileIdFromUrl();
@@ -184,6 +183,8 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 					} else if (this._activityType === discussionActivity) {
 						this._loadingComponents.submissions = false;
 						this._discussionPostList = await controller.getDiscussionPostInfo();
+						const discussionNavInfo = await controller.getDiscussionNavInfo();
+						this._navTitleInfo = { 'titleName' : discussionNavInfo.topicName, 'subtitleName': discussionNavInfo.forumName };
 					}
 
 					this._loadingComponents.main = false;
@@ -264,9 +265,9 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._loading = true;
 	}
 	_setTitle() {
-		if (this._userName && this._assignmentName) {
+		if (this._userName && this._navTitleInfo.titleName) {
 			const title = document.createElement('title');
-			title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._assignmentName });
+			title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._navTitleInfo.titleName });
 			document.head.insertBefore(title, document.head.firstChild);
 		}
 	}
@@ -306,7 +307,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			}
 		}
 	}
-
 }
 
 customElements.define('d2l-consistent-evaluation', ConsistentEvaluation);

@@ -97,6 +97,32 @@ export class ConsistentEvaluationHrefController {
 		}
 		return [];
 	}
+	async getDiscussionNavInfo() {
+		const root = await this._getRootEntity(false);
+		let topicName = undefined;
+		let forumName = undefined;
+
+		if (root && root.entity) {
+			if (root.entity.hasLinkByRel(Rels.Discussions.topic)) {
+				const topicLink = root.entity.getLinkByRel(Rels.Discussions.topic).href;
+				const topicResponse = await this._getEntityFromHref(topicLink, false);
+				if (topicResponse && topicResponse.entity) {
+					topicName = topicResponse.entity.properties.name;
+					if (topicResponse.entity.hasLinkByRel(Rels.Discussions.forum)) {
+						const forumLink = topicResponse.entity.getLinkByRel(Rels.Discussions.forum);
+						const forumResponse = await this._getEntityFromHref(forumLink, false);
+						if (forumResponse && forumResponse.entity) {
+							forumName = forumResponse.entity.properties.name;
+						}
+					}
+				}
+			}
+		}
+		return {
+			topicName,
+			forumName
+		};
+	}
 	async getEditActivityPath() {
 		const root = await this._getRootEntity(false);
 		let editActivityPath = undefined;
