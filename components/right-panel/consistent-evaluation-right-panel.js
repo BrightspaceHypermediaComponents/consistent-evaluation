@@ -336,6 +336,9 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		return html``;
 	}
 	_renderOverflowButtonIcon() {
+		if (!this.editActivityPath && !this.specialAccessHref) {
+			return html``;
+		}
 		return html`
 			<div class="d2l-consistent-evaluation-right-panel-clearfix"
 				aria-hidden="${this.skeleton}">
