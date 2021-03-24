@@ -14,7 +14,12 @@
 				const panels = document.getElementsByTagName('consistent-evaluation-right-panel');
 				for (let i = 0; i < panels.length; i++) {
 					panels[i].grade = grade;
-					panels[i].rubricHrefs = [{ rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json' }];
+					if (panels[i].id !== 'noRubric') {
+						panels[i].rubricInfos = [{ rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json', rubricTitle: 'firstRubric' }];
+					} else {
+						// rubrics is rendered based on if rubricInfos is populated
+						panels[i].rubricInfos = [];
+					}
 					panels[i].richTextEditorConfig = 'data/feedback/richText.json';
 					panels[i].feedbackAttachments = [];
 				}});
@@ -37,6 +42,7 @@
 					evaluation-href="href"
 					outcomes-href="data/outcomes/actor-activity-usage.json"
 					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
+					edit-activity-path="path"
 					token="token"
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
@@ -76,6 +82,7 @@
 			<h2>Hiding the Rubric</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
+					id="noRubric"
 					allow-evaluation-write
 					allow-add-file
 					allow-record-video
@@ -85,7 +92,6 @@
 					outcomes-href="data/outcomes/actor-activity-usage.json"
 					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
 					token="token"
-					hide-rubric
 				></consistent-evaluation-right-panel>
 			</d2l-demo-snippet>
 
@@ -156,6 +162,7 @@
 			<h2>Hiding Everything</h2>
 			<d2l-demo-snippet>
 				<consistent-evaluation-right-panel
+					id="noRubric"
 					allow-evaluation-write
 					allow-add-file
 					allow-record-video
@@ -165,7 +172,6 @@
 					outcomes-href="data/outcomes/actor-activity-usage.json"
 					coa-eval-override-href="data/outcomes-overall-achievement/demonstrations/dem1006.json"
 					token="token"
-					hide-rubric
 					hide-grade
 					hide-feedback
 					hide-outcomes
