@@ -510,6 +510,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		const flagged = file.properties.flagged;
 		const read = file.properties.read;
 		const href = file.properties.href;
+		const extension = file.properties.extension;
 		const id = file.properties.id;
 		return html`
 		<d2l-list-item>
@@ -525,7 +526,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 				<span class="d2l-body-small">${this._formatDateTime()}</span>
 			</div>
 		</d2l-list-item-content>
-		${this._addMenuOptions(read, flagged, href, id)}
+		${this._addMenuOptions(read, flagged, href, extension, id)}
 		</d2l-list-item>`;
 	}
 
