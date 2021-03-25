@@ -28,4 +28,9 @@ describe('d2l-consistent-evaluation-grade-result', () => {
 		const rect = await visualDiff.getRect(page, '#grade-letter');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
+
+	it('renders grade-number result with subtitle', async function() {
+		const rect = await visualDiff.getRect(page, '#grade-number-with-subtitle');
+		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
+	});
 });

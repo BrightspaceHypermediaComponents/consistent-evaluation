@@ -10,6 +10,13 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
+const averageMessageScore = 'AverageMessageScore';
+const maximumMessageScore = 'MaximumMessageScore';
+const minimumMessageScore = 'MinimumMessageScore';
+const modeHighestMessageScore = 'ModeHighestMessageScore';
+const modeLowestMessageScore = 'ModeLowestMessageScore';
+const sumOfMessageScores = 'SumOfMessageScores';
+
 export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluation(LitElement) {
 
 	static get properties() {
@@ -37,6 +44,10 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 			hideTitle: {
 				attribute: 'hide-title',
 				type: Boolean
+			},
+			discussionCalulationType: {
+				attribute: 'discussion-calculation-type',
+				type: String
 			},
 			_manuallyOverriddenGrade: { type: Object },
 			_hasUnsavedChanged: { type: Boolean },
@@ -115,6 +126,8 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 						?readOnly=${this.readOnly}
 						?hideTitle=${this.hideTitle}
 
+						subtitleText=${ifDefined(this._getGradeCalculationMethod())}
+
 						@d2l-grade-result-reports-button-click=${this._openGradeStatisticsDialog}
 						@d2l-grade-result-grade-button-click=${this._openGradeEvaluationDialog}
 						@d2l-grade-result-grade-change=${this.onGradeChanged}
@@ -149,6 +162,25 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 				grade: this.grade
 			}
 		}));
+	}
+
+	_getGradeCalculationMethod() {
+		switch (this.discussionCalulationType) {
+			case averageMessageScore:
+				return this.localize('averageMessageScore');
+			case maximumMessageScore:
+				return this.localize('maximumMessageScore');
+			case minimumMessageScore:
+				return this.localize('minimumMessageScore');
+			case modeHighestMessageScore:
+				return this.localize('modeHighestMessageScore');
+			case modeLowestMessageScore:
+				return this.localize('modeLowestMessageScore');
+			case sumOfMessageScores:
+				return this.localize('sumOfMessageScores');
+			default:
+				return undefined;
+		}
 	}
 
 	_openGradeEvaluationDialog() {

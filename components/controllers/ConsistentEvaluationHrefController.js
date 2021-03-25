@@ -86,10 +86,22 @@ export class ConsistentEvaluationHrefController {
 		}
 		return undefined;
 	}
-	async getDiscussionNavInfo() {
+	async getDiscussionPostInfo() {
+		let root = await this._getRootEntity(false);
+		if (root && root.entity) {
+			root = root.entity;
+			if (root.hasSubEntityByRel(topicPostListRel)) {
+				const discussionPostList = root.getSubEntityByRel(topicPostListRel).links;
+				return discussionPostList;
+			}
+		}
+		return [];
+	}
+	async getDiscussionTopicInfo() {
 		const root = await this._getRootEntity(false);
 		let topicName = undefined;
 		let forumName = undefined;
+		let calculationType = undefined;
 
 		if (root && root.entity) {
 			if (root.entity.hasLinkByRel(Rels.Discussions.topic)) {
@@ -97,6 +109,7 @@ export class ConsistentEvaluationHrefController {
 				const topicResponse = await this._getEntityFromHref(topicLink, false);
 				if (topicResponse && topicResponse.entity) {
 					topicName = topicResponse.entity.properties.name;
+					calculationType = topicResponse.entity.properties.scoreCalculationType;
 					if (topicResponse.entity.hasLinkByRel(Rels.Discussions.forum)) {
 						const forumLink = topicResponse.entity.getLinkByRel(Rels.Discussions.forum);
 						const forumResponse = await this._getEntityFromHref(forumLink, false);
@@ -109,19 +122,9 @@ export class ConsistentEvaluationHrefController {
 		}
 		return {
 			topicName,
-			forumName
+			forumName,
+			calculationType
 		};
-	}
-	async getDiscussionPostInfo() {
-		let root = await this._getRootEntity(false);
-		if (root && root.entity) {
-			root = root.entity;
-			if (root.hasSubEntityByRel(topicPostListRel)) {
-				const discussionPostList = root.getSubEntityByRel(topicPostListRel).links;
-				return discussionPostList;
-			}
-		}
-		return [];
 	}
 	async getEditActivityPath() {
 		const root = await this._getRootEntity(false);

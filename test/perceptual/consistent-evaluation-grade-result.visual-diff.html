@@ -15,7 +15,8 @@
 				const parsedEntity = SirenParse(entity);
 				const grades = [
 					{ grade: new Grade(GradeType.Number, 69, 100, null, null, parsedEntity) },
-					{ grade: new Grade(GradeType.Letter, null, null, 'A', ['A', 'B', 'C'], parsedEntity) }
+					{ grade: new Grade(GradeType.Letter, null, null, 'A', ['A', 'B', 'C'], parsedEntity) },
+					{ grade: new Grade(GradeType.Number, 69, 100, null, null, parsedEntity) }
 				];
 				const panels = document.getElementsByTagName('d2l-consistent-evaluation-grade-result');
 				for (let i = 0; i < panels.length; i++) {
@@ -40,6 +41,10 @@
 
 		<div id="grade-letter">
 			<d2l-consistent-evaluation-grade-result/>
+		</div>
+
+		<div id="grade-number-with-subtitle">
+			<d2l-consistent-evaluation-grade-result discussion-calculation-type="MaximumMessageScore" />
 		</div>
 	</body>
 </html>
