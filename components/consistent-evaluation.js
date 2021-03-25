@@ -222,9 +222,15 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			if (numberOfSubmittedFiles === 1) {
 				const isTiiEnabled = attachmentList.entities[0].hasSubEntityByRel(tiiRel);
 				if (!isTiiEnabled) {
-					const fileId = attachmentList.getSubEntityByClass(attachmentClassName).properties.id;
-					this.currentFileId = fileId;
-					return true;
+					const attachmentEntity = attachmentList.getSubEntityByClass(attachmentClassName);
+					// If the attachment is a link attachment, it should not be opened in the file viewer.
+					if (attachmentEntity.properties.extension && attachmentEntity.properties.extension.toLowerCase() === 'url') {
+						return false;
+					} else {
+						const fileId = attachmentEntity.properties.id;
+						this.currentFileId = fileId;
+						return true;
+					}
 				}
 			}
 		}
