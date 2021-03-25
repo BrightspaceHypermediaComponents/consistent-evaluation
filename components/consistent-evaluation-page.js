@@ -111,6 +111,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: false,
 				type: Array
 			},
+			discussionCalculationType: {
+				attribute: 'discussion-calculation-type',
+				type: String
+			},
 			navTitleInfo: {
 				attribute: false,
 				type: Object
@@ -366,6 +370,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						rubric-popout-location=${ifDefined(this.rubricPopoutLocation)}
 						.richTextEditorConfig=${this._getRichTextEditorConfig()}
 						special-access-href=${ifDefined(this.specialAccessHref)}
+						discussion-calculation-type=${ifDefined(this.discussionCalculationType)}
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}
 						.token=${this.token}

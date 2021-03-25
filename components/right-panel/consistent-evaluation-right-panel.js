@@ -101,6 +101,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				attribute: 'use-new-html-editor',
 				type: Boolean
 			},
+			discussionCalulationType: {
+				attribute: 'discussion-calculation-type',
+				type: String
+			},
 			specialAccessHref: {
 				attribute: 'special-access-href',
 				type: String
@@ -311,9 +315,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 			return html`
 				<d2l-consistent-evaluation-grade-result
 					aria-hidden="${this.skeleton}"
+					discussion-calculation-type=${this.discussionCalulationType}
 					.grade=${this.grade}
 					.gradeItemInfo=${this.gradeItemInfo}
-					?read-only=${!this.allowEvaluationWrite}
+					?read-only=${!this.allowEvaluationWrite || this.discussionCalulationType}
 				></d2l-consistent-evaluation-grade-result>
 			`;
 		}

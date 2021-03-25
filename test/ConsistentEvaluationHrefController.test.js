@@ -354,11 +354,12 @@ describe('ConsistentEvaluationHrefController', () => {
 		});
 	});
 
-	describe('getDiscussionNavInfo gets correct info', () => {
-		it('sets the topic name', async() => {
+	describe('getDiscussionTopicInfo gets correct info', () => {
+		it('sets the topic name and calulation type', async() => {
 			const topicHref = 'expected_topic_href';
 			const expectedTopicName = 'expectedTopicName';
 			const forumHref = 'expected_forum_href';
+			const expectedCalculationType = 'expected_calculation_type';
 
 			const controller = new ConsistentEvaluationHrefController('href', 'token');
 
@@ -376,13 +377,15 @@ describe('ConsistentEvaluationHrefController', () => {
 					hasLinkByRel: (r) => r === Rels.Discussions.forum,
 					getLinkByRel: (r) => (r === Rels.Discussions.forum ? { href: forumHref } : undefined),
 					properties: {
-						name: expectedTopicName
+						name: expectedTopicName,
+						scoreCalculationType: expectedCalculationType
 					}
 				}
 			});
 
-			const actualTopicName = await controller.getDiscussionNavInfo();
-			assert.equal(actualTopicName.topicName, expectedTopicName);
+			const disucssionTopicInfo = await controller.getDiscussionTopicInfo();
+			assert.equal(disucssionTopicInfo.topicName, expectedTopicName);
+			assert.equal(disucssionTopicInfo.calculationType, expectedCalculationType);
 		});
 	});
 

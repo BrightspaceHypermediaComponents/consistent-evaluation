@@ -117,6 +117,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				download-all-submissions-location=${ifDefined(this._childHrefs && this._childHrefs.downloadAllSubmissionLink)}
 				edit-activity-path=${ifDefined(this._editActivityPath)}
 				activity-type=${this._activityType}
+				discussion-calculation-type=${ifDefined(this._discussionTopicInfo && this._discussionTopicInfo.calculationType)}
 				.currentFileId=${this.currentFileId}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}
@@ -183,8 +184,8 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 					} else if (this._activityType === discussionActivity) {
 						this._loadingComponents.submissions = false;
 						this._discussionPostList = await controller.getDiscussionPostInfo();
-						const discussionNavInfo = await controller.getDiscussionNavInfo();
-						this._navTitleInfo = { 'titleName' : discussionNavInfo.topicName, 'subtitleName': discussionNavInfo.forumName };
+						this._discussionTopicInfo = await controller.getDiscussionTopicInfo();
+						this._navTitleInfo = { 'titleName' : this._discussionTopicInfo.topicName, 'subtitleName': this._discussionTopicInfo.forumName };
 					}
 
 					this._loadingComponents.main = false;
