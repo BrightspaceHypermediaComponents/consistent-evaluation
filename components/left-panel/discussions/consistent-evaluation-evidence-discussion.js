@@ -5,8 +5,9 @@ import './consistent-evaluation-discussion-post-page';
 import { css, html, LitElement } from 'lit-element';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
+import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 
-export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeConsistentEvaluation(LitElement)) {
+export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 
 	static get properties() {
 		return {
@@ -75,6 +76,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeCon
 	_renderDiscussionPost() {
 		return html`
 			<d2l-consistent-evaluation-discussion-post-page
+				?skeleton=${this.skeleton}
 				.discussionPostList=${this.discussionPostList}
 				.token=${this.token}
 			></d2l-consistent-evaluation-discussion-post-page>
