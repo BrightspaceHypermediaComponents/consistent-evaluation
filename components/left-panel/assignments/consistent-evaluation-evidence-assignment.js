@@ -97,6 +97,11 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 				text-align: center;
 			}
 
+			.d2l-consistent-evaluation-no-submissions-padding {
+				display: inline-block;
+				width: 100%;
+			}
+
 			.d2l-consistent-evaluation-no-submissions-container {
 				background: white;
 				border: 1px solid var(--d2l-color-gypsum);
@@ -243,8 +248,10 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 	}
 	_renderNoSubmissions() {
 		return html`
-		<div class="d2l-consistent-evaluation-no-submissions-container">
-			<div class="d2l-consistent-evaluation-no-submissions d2l-body-standard">${this.localize('noSubmissions')}</div>
+		<div class="d2l-consistent-evaluation-no-submissions-padding">
+			<div class="d2l-consistent-evaluation-no-submissions-container">
+				<div class="d2l-consistent-evaluation-no-submissions d2l-body-standard">${this.localize('noSubmissions')}</div>
+			</div>
 		</div>`;
 	}
 

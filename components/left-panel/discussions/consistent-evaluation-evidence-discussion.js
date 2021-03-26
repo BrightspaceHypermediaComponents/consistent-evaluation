@@ -41,6 +41,10 @@ export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeCon
 				float: left;
 			}
 
+			.d2l-consistent-evaluation-no-assessable-posts-padding {
+				display: inline-block;
+				width: 100%;
+			}
 
 			.d2l-consistent-evaluation-no-assessable-posts-container {
 				background: white;
@@ -89,8 +93,10 @@ export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeCon
 	}
 	_renderNoAssessablePosts() {
 		return html`
-			<div class="d2l-consistent-evaluation-no-assessable-posts-container">
-				<div class="d2l-consistent-evaluation-no-assessable-posts d2l-body-standard">${this.localize('noAssessablePosts')}</div>
+			<div class="d2l-consistent-evaluation-no-assessable-posts-padding">
+				<div class="d2l-consistent-evaluation-no-assessable-posts-container">
+					<div class="d2l-consistent-evaluation-no-assessable-posts d2l-body-standard">${this.localize('noAssessablePosts')}</div>
+				</div>
 			</div>`;
 	}
 
