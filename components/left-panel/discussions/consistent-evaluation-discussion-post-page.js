@@ -113,6 +113,18 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			${this._renderDiscussionPostEntities()}
 		`;
 	}
+	_finishedLoading() {
+		if (this._telemetry) {
+			this._telemetry.markEventEndAndLog(this._perfRenderEventName, assignmentActivity, this._submissionList.length);
+		}
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				component: 'discussions'
+			}
+		}));
+	}
 	async _formatDiscussionPostObject(discussionPostEntity) {
 		const postTitle = discussionPostEntity.properties.subject;
 		const postBody = discussionPostEntity.properties.message;
@@ -157,6 +169,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 					}
 				}
 			}
+			this._finishedLoading();
 		}
 	}
 	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {

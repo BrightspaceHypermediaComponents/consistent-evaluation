@@ -93,6 +93,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._mutex = new Awaiter();
 		this._loading = true;
 		this._loadingComponents = {
+			discussions: true,
 			main : true,
 			submissions: true
 		};
@@ -161,6 +162,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 					this._iteratorTotal = await controller.getIteratorInfo('total');
 					this._iteratorIndex = await controller.getIteratorInfo('index');
 					if (this._activityType === assignmentActivity) {
+						this._loadingComponents.discussions = false;
 						this._submissionInfo = await controller.getSubmissionInfo();
 						this._gradeItemInfo = await controller.getGradeItemInfo();
 						this._userName = await controller.getUserName();
