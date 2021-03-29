@@ -96,9 +96,9 @@ export class ConsistentEvaluationDiscussionPostPage extends RtlMixin(LocalizeCon
 	async _getDiscussionPostEntities() {
 		this._discussionPostObjects = [];
 		if (this._discussionPostList !== undefined) {
-			for (const discussionPostLink of this._discussionPostList) {
-				if (discussionPostLink.href) {
-					const discussionPost = await this._getDiscussionPostEntity(discussionPostLink.href);
+			for (const discussionPostEntity of this._discussionPostList) {
+				if (discussionPostEntity.links && discussionPostEntity.links[0].href) {
+					const discussionPost = await this._getDiscussionPostEntity(discussionPostEntity.links[0].href);
 					if (discussionPost && discussionPost.entity) {
 						const discussionPostObject = await this._formatDiscussionPostObject(discussionPost.entity);
 						this._discussionPostObjects.push(discussionPostObject);

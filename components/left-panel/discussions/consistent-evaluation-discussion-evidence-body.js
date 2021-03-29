@@ -137,7 +137,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		if (this.isReply) {
 			return html `<div class="d2l-consistent-evaluation-reply-to-container">
 				<d2l-icon class="d2l-consistent-evaluation-evidence-body-reply-icon" icon="d2l-tier1:reply"></d2l-icon>
-				<span class="d2l-body-compact d2l-consistent-evaluation-evidence-body-reply-to-text d2l-truncate">
+				<span class="d2l-body-small d2l-consistent-evaluation-evidence-body-reply-to-text d2l-truncate">
 					${this.localize('repliedInThread', 'threadTitle', this.threadTitle)}
 				</span>
 			</div>`;

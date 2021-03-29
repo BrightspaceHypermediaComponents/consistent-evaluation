@@ -2,8 +2,8 @@ import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { actorRel, alignmentsRel, anonymousMarkingRel, assessmentRel,
 	assessmentRubricApplicationRel, assessorUserRel, assignmentActivity, assignmentClass, assignmentRel, assignmentSubmissionListRel,
 	checkedClassName, demonstrationRel, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
-	enrolledUserRel, evaluationRel, groupRel, nextRel, pagerRel, previousRel, publishedClassName,
-	rubricRel, topicPostListRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
+	enrolledUserRel, evaluationRel, evidenceRel, groupRel, nextRel, pagerRel, postClass, previousRel, publishedClassName,
+	rubricRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -86,13 +86,18 @@ export class ConsistentEvaluationHrefController {
 		}
 		return undefined;
 	}
-	async getDiscussionPostInfo() {
-		let root = await this._getRootEntity(false);
+	async getDiscussionPostsInfo() {
+		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
-			root = root.entity;
-			if (root.hasSubEntityByRel(topicPostListRel)) {
-				const discussionPostList = root.getSubEntityByRel(topicPostListRel).links;
-				return discussionPostList;
+			const evaluationHref = this._getHref(root.entity, evaluationRel);
+			if (evaluationHref) {
+				const evaluationEntity = await this._getEntityFromHref(evaluationHref, false);
+				if (evaluationEntity && evaluationEntity.entity && evaluationEntity.entity.hasSubEntityByRel(evidenceRel)) {
+					const discussionPostsEntity = evaluationEntity.entity.getSubEntityByRel(evidenceRel);
+					if (discussionPostsEntity) {
+						return discussionPostsEntity.getSubEntitiesByClass(postClass);
+					}
+				}
 			}
 		}
 		return [];
