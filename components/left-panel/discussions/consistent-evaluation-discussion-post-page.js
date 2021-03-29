@@ -23,6 +23,9 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 	static get styles() {
 		return [super.styles, css`
+			:host([skeleton]) .d2l-consistent-evaluation-discussion-evidence-body {
+				display: none;
+			}
 			:host([skeleton]) .d2l-consistent-evaluation-submission-list-item-skeleton {
 				padding: 18px;
 			}
@@ -191,6 +194,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				const discussionPost = this._discussionPostObjects[i];
 				itemTemplate.push(html`
 					<d2l-consistent-evaluation-discussion-evidence-body
+						aria-hidden="${this.skeleton}"
 						post-title=${discussionPost.postTitle}
 						post-body=${discussionPost.postBody}
 						post-date=${discussionPost.createdDate}

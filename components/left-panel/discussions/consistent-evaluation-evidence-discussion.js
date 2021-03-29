@@ -60,6 +60,10 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				padding: 2rem;
 				width: 100%;
 			}
+
+			:host([skeleton]) .d2l-consistent-evaluation-evidence-discussion-load-more {
+				display: none;
+			}
 		`;
 	}
 
@@ -85,6 +89,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	_renderLoadMoreButton() {
 		return html`
 			<d2l-button
+				aria-hidden="${this.skeleton}"
 				class="d2l-consistent-evaluation-evidence-discussion-load-more"
 				secondary
 			>${this.localize('loadMore')}</d2l-button>`;
