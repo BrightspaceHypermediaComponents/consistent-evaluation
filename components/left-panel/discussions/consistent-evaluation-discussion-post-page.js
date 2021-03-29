@@ -114,9 +114,6 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		`;
 	}
 	_finishedLoading() {
-		if (this._telemetry) {
-			this._telemetry.markEventEndAndLog(this._perfRenderEventName, assignmentActivity, this._submissionList.length);
-		}
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
 			composed: true,
 			bubbles: true,
