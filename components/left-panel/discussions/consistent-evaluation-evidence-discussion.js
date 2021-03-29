@@ -69,6 +69,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 
 	render() {
 		if (this.discussionPostList && this.discussionPostList.length === 0) {
+			this._finishedLoading();
 			return html`${this._renderNoAssessablePosts()}`;
 		}
 		return html`
@@ -76,6 +77,15 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			${this._renderDiscussionPost()}
 			${this._renderLoadMoreButton()}
 		`;
+	}
+	_finishedLoading() {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				component: 'discussions'
+			}
+		}));
 	}
 	_renderDiscussionPost() {
 		return html`
