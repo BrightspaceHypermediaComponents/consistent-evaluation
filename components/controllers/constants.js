@@ -8,6 +8,7 @@ export const saveFeedbackAttachmentFileActionName = 'add-file';
 export const saveFeedbackAttachmentLinkActionName = 'add-link';
 export const removeFeedbackAttachmentActionName = 'delete';
 export const saveGradeActionName = 'SaveGrade';
+export const saveScoreActionName = 'SaveScore';
 export const saveFeedbackFieldName = 'value';
 export const saveFeedbackAttachmentAFieldName = 'value';
 export const saveGradeFieldName = 'value';

@@ -1,4 +1,5 @@
 import '@brightspace-ui/core/components/icons/icon.js';
+import './consistent-evaluation-discussion-post-score.js';
 import { bodyCompactStyles, bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
@@ -31,6 +32,10 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				type: String
 			},
 			ratingInformation: {
+				attribute: false,
+				type: Object
+			},
+			discussionPostEntity: {
 				attribute: false,
 				type: Object
 			}
@@ -106,6 +111,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			${this._renderTitle()}
 			${this._renderDate()}
 			${this._renderBody()}
+			${this._renderPostScore()}
 		</div>`;
 	}
 	_formatDateTime() {
@@ -126,6 +132,11 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 	}
 	_renderDate() {
 		return html `<div class="d2l-body-small">${this._formatDateTime()}</div>`;
+	}
+	_renderPostScore() {
+		if (this.discussionPostEntity && this.discussionPostEntity.properties && this.discussionPostEntity.properties.outOf) {
+			return html`<d2l-consistent-evaluation-discussion-post-score .discussionPostEntity=${this.discussionPostEntity}></d2l-consistent-evaluation-discussion-post-score>`;
+		}
 	}
 	_renderRating() {
 		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-rating-container">

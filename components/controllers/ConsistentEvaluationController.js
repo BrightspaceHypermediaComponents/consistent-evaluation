@@ -1,5 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { appId, publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentAFieldName, saveFeedbackAttachmentFileActionName, saveFeedbackAttachmentLinkActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, updateActionName } from './constants.js';
+import { appId, publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentAFieldName, saveFeedbackAttachmentFileActionName, saveFeedbackAttachmentLinkActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, saveScoreActionName, updateActionName } from './constants.js';
 import { createClient } from '@brightspace-ui/logging';
 import { Grade } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
@@ -8,6 +8,7 @@ export const ConsistentEvaluationControllerErrors = {
 	INVALID_EVALUATION_HREF: 'evaluationHref was not defined when initializing ConsistentEvaluationController',
 	INVALID_TYPE_EVALUATION_HREF: 'evaluationHref must be a string when initializing ConsistentEvaluationController',
 	INVALID_EVALUATION_ENTITY: 'Invalid entity provided for evaluation',
+	INVALID_EVALUATION_POST_ENTITY: 'Invalid entity provided for post evaluation',
 	INVALID_FEEDBACK_TEXT: 'Feedback text must be a string (empty string permitted) to update feedback text.',
 	ERROR_FETCHING_ENTITY: 'Error while fetching evaluation entity.',
 	ERROR_FETCHING_ATTACHMENTS_ENTITY: 'Error while fetching evaluation attachments entity.',
@@ -209,6 +210,13 @@ export class ConsistentEvaluationController {
 		}];
 
 		return await performSirenAction(this.token, saveAnnotationsAction, fields, true);
+	}
+	async transientSaveDiscussionPostScore(evaluationPostEntity, gradeValue) {
+		if (!evaluationPostEntity) {
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_POST_ENTITY);
+		}
+
+		return await this._performAction(evaluationPostEntity, saveScoreActionName, saveGradeFieldName, gradeValue);
 	}
 	async transientSaveFeedback(evaluationEntity, feedbackValue) {
 		if (!evaluationEntity) {

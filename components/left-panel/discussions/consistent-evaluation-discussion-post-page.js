@@ -125,7 +125,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			}
 		}));
 	}
-	async _formatDiscussionPostObject(discussionPostEntity) {
+	async _formatDiscussionPostObject(discussionPostEntity, discussionPostEvaluationEntity) {
 		const postTitle = discussionPostEntity.properties.subject;
 		const postBody = discussionPostEntity.properties.message;
 		const ratingInformation = { upVotes: 0, downVotes: 0 };
@@ -154,17 +154,18 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			postBody,
 			ratingInformation,
 			isReply,
-			threadTitle
+			threadTitle,
+			discussionPostEvaluationEntity
 		};
 	}
 	async _getDiscussionPostEntities() {
 		this._discussionPostObjects = [];
 		if (this._discussionPostList !== undefined) {
-			for (const discussionPostEntity of this._discussionPostList) {
-				if (discussionPostEntity.links && discussionPostEntity.links[0].href) {
-					const discussionPost = await this._getDiscussionPostEntity(discussionPostEntity.links[0].href);
+			for (const discussionPostEvaluationEntity of this._discussionPostList) {
+				if (discussionPostEvaluationEntity.links && discussionPostEvaluationEntity.links[0].href) {
+					const discussionPost = await this._getDiscussionPostEntity(discussionPostEvaluationEntity.links[0].href);
 					if (discussionPost && discussionPost.entity) {
-						const discussionPostObject = await this._formatDiscussionPostObject(discussionPost.entity);
+						const discussionPostObject = await this._formatDiscussionPostObject(discussionPost.entity, discussionPostEvaluationEntity);
 						this._discussionPostObjects.push(discussionPostObject);
 					}
 				}
@@ -201,6 +202,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 						?is-reply=${discussionPost.isReply}
 						thread-title=${discussionPost.threadTitle}
 						.ratingInformation=${discussionPost.ratingInformation}
+						.discussionPostEntity=${discussionPost.discussionPostEvaluationEntity}
 					></d2l-consistent-evaluation-discussion-evidence-body>`);
 			}
 		}
