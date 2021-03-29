@@ -152,8 +152,8 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				async() => {
 					const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 					this._childHrefs = await controller.getHrefs();
-					this._rubricInfos = await controller.getRubricInfos(false);
 					this._activityType = await controller.getActivityType();
+					this._rubricInfos = await controller.getRubricInfos(false);
 					this._enrolledUser = await controller.getEnrolledUser();
 					this._groupInfo = await controller.getGroupInfo();
 					this._anonymousInfo = await controller.getAnonymousInfo();
