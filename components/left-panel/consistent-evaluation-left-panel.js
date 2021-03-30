@@ -76,6 +76,7 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 	_renderDiscussions() {
 		return html`
 			<d2l-consistent-evaluation-evidence-discussion
+				?skeleton=${this.skeleton}
 				.discussionPostList=${this.discussionPostList}
 				.token=${this.token}
 			></d2l-consistent-evaluation-evidence-discussion>

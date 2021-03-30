@@ -5,8 +5,9 @@ import './consistent-evaluation-discussion-post-page';
 import { css, html, LitElement } from 'lit-element';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
+import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 
-export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeConsistentEvaluation(LitElement)) {
+export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 
 	static get properties() {
 		return {
@@ -63,11 +64,16 @@ export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeCon
 				padding: 2rem;
 				width: 100%;
 			}
+
+			:host([skeleton]) .d2l-consistent-evaluation-evidence-discussion-load-more {
+				display: none;
+			}
 		`;
 	}
 
 	render() {
 		if (this.discussionPostList && this.discussionPostList.length === 0) {
+			this._finishedLoading();
 			return html`${this._renderNoAssessablePosts()}`;
 		}
 		return html`
@@ -76,9 +82,19 @@ export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeCon
 			${this._renderLoadMoreButton()}
 		`;
 	}
+	_finishedLoading() {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				component: 'discussions'
+			}
+		}));
+	}
 	_renderDiscussionPost() {
 		return html`
 			<d2l-consistent-evaluation-discussion-post-page
+				?skeleton=${this.skeleton}
 				.discussionPostList=${this.discussionPostList}
 				.token=${this.token}
 			></d2l-consistent-evaluation-discussion-post-page>
@@ -87,6 +103,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends RtlMixin(LocalizeCon
 	_renderLoadMoreButton() {
 		return html`
 			<d2l-button
+				aria-hidden="${this.skeleton}"
 				class="d2l-consistent-evaluation-evidence-discussion-load-more"
 				secondary
 			>${this.localize('loadMore')}</d2l-button>`;

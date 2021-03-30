@@ -1,11 +1,12 @@
 import './consistent-evaluation-discussion-evidence-body';
-import { html, LitElement } from 'lit-element';
+import { css, html, LitElement } from 'lit-element';
 import { Classes } from 'd2l-hypermedia-constants';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
+import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { threadRel } from '../../controllers/constants.js';
 
-export class ConsistentEvaluationDiscussionPostPage extends RtlMixin(LocalizeConsistentEvaluation(LitElement)) {
+export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 	static get properties() {
 		return {
 			discussionPostList: {
@@ -18,6 +19,58 @@ export class ConsistentEvaluationDiscussionPostPage extends RtlMixin(LocalizeCon
 				type: Array
 			}
 		};
+	}
+
+	static get styles() {
+		return [super.styles, css`
+			:host([skeleton]) .d2l-consistent-evaluation-discussion-evidence-body {
+				display: none;
+			}
+			:host([skeleton]) .d2l-consistent-evaluation-submission-list-item-skeleton {
+				padding: 18px;
+			}
+			:host([skeleton]) .d2l-consistent-evaluation-discussion-post-title-skeleton {
+				height: 11px;
+				margin-top: 6px;
+				width: 240px;
+			}
+			:host([skeleton]) .d2l-consistent-evaluation-discussion-post-date-skeleton {
+				height: 10px;
+				margin-bottom: 24px;
+				margin-top: 16px;
+				width: 132px;
+			}
+			:host([skeleton]) .d2l-consistent-evaluation-discussion-post-text-skeleton {
+				height: 11px;
+				margin-top: 12px;
+				width: 100%;
+			}
+			:host([skeleton]) .d2l-consistent-evaluation-discussion-post-last-text-skeleton {
+				height: 11px;
+				margin-top: 12px;
+				width: 80%;
+			}
+			:host([skeleton]) .d2l-consistent-evaluation-discussion-evidence-body-rating-skeleton {
+				height: 10px;
+				text-align: right;
+				width: 66px;
+			}
+
+			:host([skeleton][dir="rtl"]) .d2l-consistent-evaluation-discussion-evidence-body-rating-skeleton {
+				text-align: left;
+			}
+
+			:host([skeleton]) .d2l-consistent-evaluation-discussion-evidence-body-rating-container-skeleton {
+				float: right;
+				margin-left: 12px;
+				margin-top: 6px;
+			}
+
+			:host([skeleton][dir="rtl"]) .d2l-consistent-evaluation-discussion-evidence-body-rating-container-skeleton {
+				float: left;
+				margin-right: 12px;
+			}
+		`];
 	}
 
 	constructor() {
@@ -58,8 +111,19 @@ export class ConsistentEvaluationDiscussionPostPage extends RtlMixin(LocalizeCon
 
 	render() {
 		return html`
+			${this._renderDiscussionItemSkeleton()}
+			${this._renderDiscussionItemSkeleton()}
 			${this._renderDiscussionPostEntities()}
 		`;
+	}
+	_finishedLoading() {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				component: 'discussions'
+			}
+		}));
 	}
 	async _formatDiscussionPostObject(discussionPostEntity) {
 		const postTitle = discussionPostEntity.properties.subject;
@@ -105,12 +169,24 @@ export class ConsistentEvaluationDiscussionPostPage extends RtlMixin(LocalizeCon
 					}
 				}
 			}
+			this._finishedLoading();
 		}
 	}
 	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {
 		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
 	}
-
+	_renderDiscussionItemSkeleton() {
+		return html`
+			<div class="d2l-consistent-evaluation-submission-list-item-skeleton" >
+				${this._renderDiscussionRatingSkeleton()}
+				<div class="d2l-skeletize d2l-consistent-evaluation-discussion-post-title-skeleton"></div>
+				<div class="d2l-skeletize d2l-consistent-evaluation-discussion-post-date-skeleton"></div>
+				<div class="d2l-skeletize d2l-skeletize d2l-consistent-evaluation-discussion-post-text-skeleton"></div>
+				<div class="d2l-skeletize d2l-skeletize d2l-consistent-evaluation-discussion-post-text-skeleton"></div>
+				<div class="d2l-skeletize d2l-skeletize d2l-consistent-evaluation-discussion-post-last-text-skeleton"></div>
+			</div>
+		`;
+	}
 	_renderDiscussionPostEntities() {
 		const itemTemplate = [];
 		for (let i = 0; i < this._discussionPostObjects.length; i++) {
@@ -118,6 +194,7 @@ export class ConsistentEvaluationDiscussionPostPage extends RtlMixin(LocalizeCon
 				const discussionPost = this._discussionPostObjects[i];
 				itemTemplate.push(html`
 					<d2l-consistent-evaluation-discussion-evidence-body
+						aria-hidden="${this.skeleton}"
 						post-title=${discussionPost.postTitle}
 						post-body=${discussionPost.postBody}
 						post-date=${discussionPost.createdDate}
@@ -128,6 +205,11 @@ export class ConsistentEvaluationDiscussionPostPage extends RtlMixin(LocalizeCon
 			}
 		}
 		return html`${itemTemplate}`;
+	}
+	_renderDiscussionRatingSkeleton() {
+		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-rating-container-skeleton">
+				<div class="d2l-skeletize d2l-consistent-evaluation-discussion-evidence-body-rating-skeleton"></div>
+			</div>`;
 	}
 
 }
