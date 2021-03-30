@@ -1,6 +1,6 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { anonymousMarkingRel, assignmentActivity, assignmentClass, checkedClassName, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
-	evaluationRel, nextRel, pagerRel, previousRel, publishedClassName, rubricRel,
+	evaluationRel, evidenceRel, nextRel, pagerRel, previousRel, publishedClassName, rubricRel,
 	userProgressAssessmentsRel, viewMembersRel } from '../components/controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
@@ -126,20 +126,26 @@ describe('ConsistentEvaluationHrefController', () => {
 	describe('getDiscussionPostInfo returns correct information', () => {
 		it('gets correct discussionPost info', async() => {
 			const controller = new ConsistentEvaluationHrefController('href', 'token');
-			const discussionPostList = {
-				links: ['discussionPosts']
-			};
+			const discussionPostList = ['discussionPosts'];
 
-			sinon.stub(controller, '_getRootEntity').returns({
+			const evaluationHref = 'evaluationHref';
+
+			sinon.stub(controller, '_getHref').returns(evaluationHref);
+
+			sinon.stub(controller, '_getRootEntity').returns({ entity: {} });
+
+			const getHrefStub = sinon.stub(controller, '_getEntityFromHref');
+
+			getHrefStub.withArgs(evaluationHref, false).returns({
 				entity: {
-					getSubEntityByRel: () => discussionPostList,
-					hasSubEntityByRel: () => true
+					hasSubEntityByRel: (r) => r === evidenceRel,
+					getSubEntityByRel: (r) => (r === evidenceRel ? { getSubEntitiesByClass: () => discussionPostList } : undefined)
 				}
 			});
 
-			const returnedDisscusionPostInfo = await controller.getDiscussionPostInfo();
-			assert.equal(returnedDisscusionPostInfo.length, discussionPostList.links.length);
-			assert.equal(returnedDisscusionPostInfo[0], discussionPostList.links[0]);
+			const returnedDisscusionPostInfo = await controller.getDiscussionPostsInfo();
+			assert.equal(returnedDisscusionPostInfo.length, discussionPostList.length);
+			assert.equal(returnedDisscusionPostInfo[0], discussionPostList[0]);
 		});
 	});
 

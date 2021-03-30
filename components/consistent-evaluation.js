@@ -185,7 +185,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						}
 					} else if (this._activityType === discussionActivity) {
 						this._loadingComponents.submissions = false;
-						this._discussionPostList = await controller.getDiscussionPostInfo();
+						this._discussionPostList = await controller.getDiscussionPostsInfo();
 						this._discussionTopicInfo = await controller.getDiscussionTopicInfo();
 						this._navTitleInfo = { 'titleName' : this._discussionTopicInfo.topicName, 'subtitleName': this._discussionTopicInfo.forumName };
 					}
