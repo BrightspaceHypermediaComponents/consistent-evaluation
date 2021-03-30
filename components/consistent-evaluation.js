@@ -152,7 +152,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				async() => {
 					const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 					this._childHrefs = await controller.getHrefs();
-					this._activityType = await controller.getActivityType();
+					this._activityType = await controller.getActivityType(); // should be one of the first api calls to confirm activity-type for CE-page
 					this._rubricInfos = await controller.getRubricInfos(false);
 					this._enrolledUser = await controller.getEnrolledUser();
 					this._groupInfo = await controller.getGroupInfo();
