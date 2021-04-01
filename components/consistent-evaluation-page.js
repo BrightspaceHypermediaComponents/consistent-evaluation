@@ -10,7 +10,7 @@ import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/templates/primary-secondary/primary-secondary.js';
 import '@brightspace-ui/core/components/dialog/dialog-confirm.js';
 import '@brightspace-ui/core/components/button/button.js';
-import { assignmentActivity, attachmentsRel, draftState, publishActionName, publishedState, retractActionName, saveActionName, toggleIsReadActionName, updateActionName } from './controllers/constants.js';
+import { assignmentActivity, attachmentsRel, draftState, evidenceRel, postClass, publishActionName, publishedState, retractActionName, saveActionName, toggleIsReadActionName, updateActionName } from './controllers/constants.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { Awaiter } from './awaiter.js';
@@ -350,6 +350,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						@d2l-consistent-eval-annotations-update=${this._transientSaveAnnotations}
 						@d2l-consistent-eval-annotations-will-change=${this._updateAnnotationsViewerEditingStart}
 						@d2l-consistent-evaluation-use-tii-grade=${this._transientSaveGrade}
+						@on-d2l-consistent-eval-discussion-score-changed=${this._transientSaveDiscussionPostScore}
 						@d2l-consistent-evaluation-refresh-grade-item=${this._refreshEvaluationEntity}
 						@d2l-consistent-evaluation-download-all-failed=${this._handleDownloadAllFailure}
 						@d2l-consistent-evaluation-evidence-toggle-action=${this._handleSubmissionItemToggle}
@@ -718,7 +719,9 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				this._currentlySaving = false;
 
 				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
-				this.submissionInfo.evaluationState = publishedState;
+				if (this.submissionInfo) {
+					this.submissionInfo.evaluationState = publishedState;
+				}
 			}
 		);
 	}
@@ -771,7 +774,9 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				this._currentlySaving = false;
 
 				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
-				this.submissionInfo.evaluationState = draftState;
+				if (this.submissionInfo) {
+					this.submissionInfo.evaluationState = draftState;
+				}
 			}
 		);
 	}
@@ -895,6 +900,24 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			}
 		);
 	}
+
+	async _transientSaveDiscussionPostScore(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const newGradeVal = e.detail.score;
+				const entity = e.detail.entity;
+				this.evaluationEntity = await this._controller.transientSaveDiscussionPostScore(entity, newGradeVal);
+
+				if (this.evaluationEntity  && this.evaluationEntity.hasSubEntityByRel(evidenceRel)) {
+					const discussionPostsEntity = this.evaluationEntity.getSubEntityByRel(evidenceRel);
+					if (discussionPostsEntity) {
+						this.discussionPostList = discussionPostsEntity.getSubEntitiesByClass(postClass);
+					}
+				}
+			}
+		);
+	}
+
 	async _transientSaveFeedback(e) {
 		await this._mutex.dispatch(
 			async() => {

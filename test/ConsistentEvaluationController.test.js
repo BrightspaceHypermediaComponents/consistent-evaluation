@@ -78,7 +78,7 @@ describe('ConsistentEvaluationController', () => {
 		});
 	});
 
-	describe('transientSaveFeedback and transientSaveGrade', () => {
+	describe('transientSaveFeedback transientSaveGrade and transientSaveDiscussionPostScore', () => {
 		const controller = new ConsistentEvaluationController('href', 'token');
 		const fakeFeedbackEntity = {
 			properties: {
@@ -140,6 +140,13 @@ describe('ConsistentEvaluationController', () => {
 			const updatedGrade = await controller.transientSaveGrade(fakeEvaluationEntity.entity, 9090090);
 			controller._performAction.restore();
 			assert.deepEqual(updatedGrade, entity);
+		});
+		it('can transient save post score', async() => {
+			const entity = await controller.fetchEvaluationEntity();
+			sinon.stub(controller, '_performAction').returns(fakeEvaluationEntity.entity);
+			const updatedDiscussionPostScore = await controller.transientSaveDiscussionPostScore(fakeEvaluationEntity.entity, 9090090);
+			controller._performAction.restore();
+			assert.deepEqual(updatedDiscussionPostScore, entity);
 		});
 		it('will throw error when subentity is not present', async() => {
 			const fakeEval = {
