@@ -10,6 +10,12 @@ describe('rubricGradeSyncHelpers', () => {
 			'B': 40,
 			'C': 0,
 		};
+		const defaultLetterGradeOptions = {
+			0: {'LetterGrade': 'None', 'PercentStart': null },
+			1: {'LetterGrade': 'A', 'PercentStart': '70' },
+			2: {'LetterGrade': 'A', 'PercentStart': '40' },
+			3: {'LetterGrade': 'A', 'PercentStart': '0' }
+		}
 
 		const testCases = [
 			{
@@ -22,7 +28,7 @@ describe('rubricGradeSyncHelpers', () => {
 					letterGrade: null,
 					scoreType: GradeType.Letter,
 					outOf: null,
-					letterGradeOptions : ['A'],
+					letterGradeOptions : defaultLetterGradeOptions,
 					entity: {
 						properties: {
 							letterGradeSchemeRanges : defaultSchemeRange
@@ -43,7 +49,7 @@ describe('rubricGradeSyncHelpers', () => {
 					letterGrade: null,
 					scoreType: GradeType.Letter,
 					outOf: null,
-					letterGradeOptions : ['C'],
+					letterGradeOptions : defaultLetterGradeOptions,
 					entity: {
 						properties: {
 							letterGradeSchemeRanges : defaultSchemeRange
