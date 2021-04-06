@@ -1,7 +1,7 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { actorRel, alignmentsRel, anonymousMarkingRel, assessmentRel,
 	assessmentRubricApplicationRel, assessorUserRel, assignmentActivity, assignmentClass, assignmentRel, assignmentSubmissionListRel,
-	checkedClassName, demonstrationRel, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
+	checkedClassName, coaActivity, coaClass, demonstrationRel, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
 	enrolledUserRel, evaluationRel, evidenceRel, groupRel, nextRel, pagerRel, postClass, previousRel, publishedClassName,
 	rubricRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
@@ -32,6 +32,8 @@ export class ConsistentEvaluationHrefController {
 				return discussionActivity;
 			} else if (root.entity.hasClass(assignmentClass)) {
 				return assignmentActivity;
+			} else if (root.entity.hasClass(coaClass)) {
+				return coaActivity;
 			}
 		}
 		return undefined;
