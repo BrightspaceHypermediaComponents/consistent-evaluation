@@ -5,10 +5,11 @@ import sinon from 'sinon';
 
 describe('rubricGradeSyncHelpers', () => {
 	describe('mapRubricScoreToGrade', () => {
-		const defaultSchemeRange = {
-			'A': 70,
-			'B': 40,
-			'C': 0,
+		const defaultLetterGradeOptions = {
+			0: { 'LetterGrade': 'None', 'PercentStart': null },
+			1: { 'LetterGrade': 'C', 'PercentStart': '0' },
+			2: { 'LetterGrade': 'A', 'PercentStart': '70' },
+			3: { 'LetterGrade': 'B', 'PercentStart': '40' }
 		};
 
 		const testCases = [
@@ -22,12 +23,7 @@ describe('rubricGradeSyncHelpers', () => {
 					letterGrade: null,
 					scoreType: GradeType.Letter,
 					outOf: null,
-					letterGradeOptions : ['A'],
-					entity: {
-						properties: {
-							letterGradeSchemeRanges : defaultSchemeRange
-						}
-					}
+					letterGradeOptions : defaultLetterGradeOptions
 				},
 				newScore: 8,
 				expectedScore: null,
@@ -43,12 +39,7 @@ describe('rubricGradeSyncHelpers', () => {
 					letterGrade: null,
 					scoreType: GradeType.Letter,
 					outOf: null,
-					letterGradeOptions : ['C'],
-					entity: {
-						properties: {
-							letterGradeSchemeRanges : defaultSchemeRange
-						}
-					}
+					letterGradeOptions : defaultLetterGradeOptions
 				},
 				newScore: 1,
 				expectedScore: null,
@@ -63,12 +54,7 @@ describe('rubricGradeSyncHelpers', () => {
 					score: null,
 					letterGrade: null,
 					scoreType: GradeType.Number,
-					outOf: 10,
-					entity: {
-						properties: {
-							letterGradeSchemeRanges : null
-						}
-					}
+					outOf: 10
 				},
 				newScore: 0,
 				expectedScore: 0,
@@ -83,12 +69,7 @@ describe('rubricGradeSyncHelpers', () => {
 					score: null,
 					letterGrade: null,
 					scoreType: GradeType.Number,
-					outOf: 30,
-					entity: {
-						properties: {
-							letterGradeSchemeRanges : null
-						}
-					}
+					outOf: 30
 				},
 				newScore: 25,
 				expectedScore: 15,
@@ -103,12 +84,7 @@ describe('rubricGradeSyncHelpers', () => {
 					score: null,
 					letterGrade: null,
 					scoreType: GradeType.Number,
-					outOf: 100,
-					entity: {
-						properties: {
-							letterGradeSchemeRanges : null
-						}
-					}
+					outOf: 100
 				},
 				newScore: 9,
 				expectedScore: 90,
@@ -123,12 +99,7 @@ describe('rubricGradeSyncHelpers', () => {
 					score: null,
 					letterGrade: null,
 					scoreType: GradeType.Number,
-					outOf: 10,
-					entity: {
-						properties: {
-							letterGradeSchemeRanges : null
-						}
-					}
+					outOf: 10
 				},
 				newScore: 70,
 				expectedScore: 7,
