@@ -1,6 +1,7 @@
 {
   "properties": {
-    "evaluationStatus": "Evaluated"
+    "evaluationStatus": "Evaluated",
+    "submissionNumber": 1
   },
   "class": [
     "assignment-submission"
