@@ -1,5 +1,5 @@
 import './consistent-evaluation-page.js';
-import { assignmentActivity, attachmentClassName, attachmentListRel, discussionActivity, tiiRel } from './controllers/constants';
+import { assignmentActivity, attachmentClassName, attachmentListRel, coaActivity, discussionActivity, tiiRel } from './controllers/constants';
 import { css, html, LitElement } from 'lit-element';
 import { Awaiter } from './awaiter.js';
 import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
@@ -161,7 +161,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 					this._anonymousInfo = await controller.getAnonymousInfo();
 					this._iteratorTotal = await controller.getIteratorInfo('total');
 					this._iteratorIndex = await controller.getIteratorInfo('index');
-					if (this._activityType === assignmentActivity) {
+					if (this._activityType === assignmentActivity || this._activityType === coaActivity) {
 						this._loadingComponents.discussions = false;
 						this._submissionInfo = await controller.getSubmissionInfo();
 						this._gradeItemInfo = await controller.getGradeItemInfo();

@@ -1,5 +1,5 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { anonymousMarkingRel, assignmentActivity, assignmentClass, checkedClassName, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
+import { anonymousMarkingRel, assignmentActivity, assignmentClass, checkedClassName, coaActivity, coaClass, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
 	evaluationRel, evidenceRel, nextRel, pagerRel, previousRel, publishedClassName, rubricRel,
 	userProgressAssessmentsRel, viewMembersRel } from '../components/controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
@@ -120,6 +120,17 @@ describe('ConsistentEvaluationHrefController', () => {
 
 			const activityType = await controller.getActivityType(true);
 			assert.equal(activityType, assignmentActivity);
+		});
+
+		it('recognizes coa acitivty', async() => {
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns({
+				entity: { hasClass: (r) => r === coaClass }
+			});
+
+			const activityType = await controller.getActivityType(true);
+			assert.equal(activityType, coaActivity);
 		});
 	});
 
