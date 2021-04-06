@@ -936,7 +936,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				let newGradeVal;
 				const type = e.detail.grade.scoreType;
 				if (type === GradeType.Letter) {
-					newGradeVal = e.detail.grade.letterGrade;
+					// the id 0 is reserved for the "None" value
+					if (e.detail.grade.letterGradeId === '0') {
+						newGradeVal = '';
+					} else {
+						newGradeVal = e.detail.grade.letterGrade;
+					}
 				}
 				else if (type === GradeType.Number) {
 					newGradeVal = e.detail.grade.score;

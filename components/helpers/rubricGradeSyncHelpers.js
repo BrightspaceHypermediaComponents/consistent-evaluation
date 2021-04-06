@@ -10,13 +10,17 @@ export function mapRubricScoreToGrade(rubricInfo, currentGrade, newScore) {
 		outOf = rubricInfo.rubricOutOf;
 	}
 
-	if (currentGrade.scoreType === GradeType.Letter && currentGrade.entity.properties.letterGradeSchemeRanges) {
+	if (currentGrade.scoreType === GradeType.Letter && currentGrade.letterGradeOptions) {
 		const percentage = (newScore / outOf) * 100;
-		const map = currentGrade.entity.properties.letterGradeSchemeRanges;
-		for (const [key, value] of Object.entries(map)) {
-			if (percentage >= value) {
-				letterGrade = key;
-				break;
+		const map = currentGrade.letterGradeOptions;
+		let currentPercentStart = 0;
+		for (const letterGradeOption of Object.values(map)) {
+			if (percentage >= letterGradeOption.PercentStart &&
+				currentPercentStart <= letterGradeOption.PercentStart &&
+				letterGradeOption.PercentStart !== null
+			) {
+				currentPercentStart = letterGradeOption.PercentStart;
+				letterGrade = letterGradeOption.LetterGrade;
 			}
 		}
 	} else {
