@@ -1,6 +1,7 @@
 import '@brightspace-ui/core/components/colors/colors.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-more.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-menu.js';
+import '@brightspace-ui/core/components/html-block/html-block.js';
 import '@brightspace-ui/core/components/icons/icon.js';
 import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/list/list-item.js';
@@ -419,7 +420,11 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		if (this.comment) {
 			return html`
 					${this._renderCommentTitle()}
-					<d2l-more-less height=${peekHeight}>${unsafeHTML(this.comment)}</d2l-more-less>
+					<d2l-more-less height=${peekHeight}>
+						<d2l-html-block>
+							<template>${unsafeHTML(this.comment)}</template>
+						</d2l-html-block>
+					</d2l-more-less>
 				`;
 		}
 		return html``;
