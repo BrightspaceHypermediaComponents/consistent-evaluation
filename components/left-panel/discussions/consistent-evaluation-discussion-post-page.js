@@ -23,7 +23,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 	static get styles() {
 		return [super.styles, css`
-			:host([skeleton]) .d2l-consistent-evaluation-discussion-evidence-body {
+			:host([skeleton]) d2l-consistent-evaluation-discussion-evidence-body {
 				display: none;
 			}
 			:host([skeleton]) .d2l-consistent-evaluation-submission-list-item-skeleton {
