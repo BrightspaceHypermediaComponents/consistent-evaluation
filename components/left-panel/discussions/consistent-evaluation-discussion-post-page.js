@@ -1,10 +1,10 @@
 import './consistent-evaluation-discussion-evidence-body';
+import { attachmentClassName, attachmentListClassName, threadRel } from '../../controllers/constants.js';
 import { css, html, LitElement } from 'lit-element';
 import { Classes } from 'd2l-hypermedia-constants';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
-import { threadRel } from '../../controllers/constants.js';
 
 export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 	static get properties() {
@@ -148,6 +148,12 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			}
 		}
 
+		let attachmentList = undefined;
+		if (discussionPostEntity.hasSubEntityByClass(attachmentListClassName)) {
+			const attachmentListEntity = discussionPostEntity.getSubEntityByClass(attachmentListClassName);
+			attachmentList = attachmentListEntity.getSubEntitiesByClass(attachmentClassName);
+		}
+
 		return {
 			createdDate,
 			postTitle,
@@ -155,6 +161,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			ratingInformation,
 			isReply,
 			threadTitle,
+			attachmentList,
 			discussionPostEvaluationEntity
 		};
 	}
@@ -201,6 +208,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 						post-date=${discussionPost.createdDate}
 						?is-reply=${discussionPost.isReply}
 						thread-title=${discussionPost.threadTitle}
+						.attachmentsList=${discussionPost.attachmentList}
 						.ratingInformation=${discussionPost.ratingInformation}
 						.discussionPostEntity=${discussionPost.discussionPostEvaluationEntity}
 					></d2l-consistent-evaluation-discussion-evidence-body>`);

@@ -27,4 +27,9 @@ describe('d2l-consistent-evaluation-discussion-evidence-body', () => {
 		const rect = await visualDiff.getRect(page, '#reply');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
+
+	it('renders a discussion evidence body with attachments', async function() {
+		const rect = await visualDiff.getRect(page, '#discussion-post-with-attachments');
+		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
+	});
 });
