@@ -15,6 +15,7 @@ export const saveGradeFieldName = 'value';
 export const checkedClassName = 'checked';
 export const publishedClassName = 'published';
 export const attachmentClassName = 'attachment';
+export const attachmentListClassName = 'attachment-list';
 export const anonymousMarkingRel = 'https://assignments.api.brightspace.com/rels/anonymous-marking';
 export const assignmentRel = 'https://api.brightspace.com/rels/assignment';
 export const attachmentsRel = 'https://activities.api.brightspace.com/rels/attachments';

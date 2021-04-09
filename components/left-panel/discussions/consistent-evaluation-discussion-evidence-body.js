@@ -1,4 +1,6 @@
 import '@brightspace-ui/core/components/icons/icon.js';
+import '@brightspace-ui/core/components/list/list.js';
+import '@brightspace-ui/core/components/list/list-item.js';
 import './consistent-evaluation-discussion-post-score.js';
 import { bodyCompactStyles, bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
@@ -35,6 +37,10 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				attribute: false,
 				type: Object
 			},
+			attachmentsList: {
+				attribute: false,
+				type: Array
+			},
 			discussionPostEntity: {
 				attribute: false,
 				type: Object
@@ -56,6 +62,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 
 			.d2l-consistent-evaluation-discussion-evidence-body-container {
 				margin: 20px 18px;
+				padding-bottom: 10px;
 			}
 
 			.d2l-consistent-evaluation-evidence-body-reply-icon {
@@ -86,9 +93,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				text-align: left;
 			}
 
-			.d2l-consistent-evaluation-discussion-evidence-body-text {
-				padding-bottom: 10px;
-			}
 
 			.d2l-truncate {
 				overflow: hidden;
@@ -111,6 +115,9 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			${this._renderTitle()}
 			${this._renderDate()}
 			${this._renderBody()}
+			<d2l-list aria-role="list" separators="between">
+				${this._renderAttachments()}
+			</d2l-list>
 			${this._renderPostScore()}
 		</div>`;
 	}
@@ -124,6 +131,32 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			date,
 			{ format: 'short' }) : '';
 		return `${formattedDate} ${formattedTime}`;
+	}
+	_getReadableFileSizeString(fileSizeBytes) {
+		let i = -1;
+		const byteUnits = ['kB', 'MB', 'GB'];
+		do {
+			fileSizeBytes = fileSizeBytes / 1024;
+			i++;
+		} while (fileSizeBytes > 1024);
+		const unit = this.localize(byteUnits[i]);
+		return Math.max(fileSizeBytes, 0.1).toFixed(1) + unit;
+	}
+	_renderAttachments() {
+		if (this.attachmentsList) {
+			return html`${this.attachmentsList.map((attachment) => {
+				const { name, size } = attachment.properties;
+
+				return html`<d2l-list-item
+						class="d2l-consistent-evaluation-discussion-attachment-list-item-content">
+							<div>
+								<d2l-icon icon="d2l-tier1:file-document"></d2l-icon>
+								<span class="d2l-link d2l-body-compact" tabindex="0">${name}</span>
+								<span class="d2l-body-compact">(${this._getReadableFileSizeString(size)})</span>
+							</div>
+						</d2l-list-item>`;
+			})}`;
+		}
 	}
 	_renderBody() {
 		return html `<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-text">

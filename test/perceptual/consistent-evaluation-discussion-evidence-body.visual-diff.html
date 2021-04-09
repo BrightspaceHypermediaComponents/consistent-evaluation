@@ -22,6 +22,24 @@
 				tests[i].postDate = postDate;
 				tests[i].ratingInformation = ratingInformation;
 			}
+			const postWithAttachments = document.getElementById('discussion-post-with-attachments-body');
+			postWithAttachments.attachmentsList = [
+				{
+					properties: {
+						'name': 'MyWordAttachment.docx',
+						'size': 3041520,
+						'extension': 'docx',
+						'href': 'attachmentHref'
+					}
+				}, {
+					properties: {
+						'name': 'MyPdfAttachment.pdf',
+						'size': 156299,
+						'extension': 'pdf',
+						'href': 'attachmentHref2'
+					}
+				}
+			];
 		</script>
 		<style>
 			html {
@@ -44,6 +62,11 @@
 		<div id="reply">
 			<d2l-consistent-evaluation-discussion-evidence-body
 				is-reply>
+			</d2l-consistent-evaluation-discussion-evidence-body>
+		</div>
+
+		<div id="discussion-post-with-attachments">
+			<d2l-consistent-evaluation-discussion-evidence-body id="discussion-post-with-attachments-body">
 			</d2l-consistent-evaluation-discussion-evidence-body>
 		</div>
 
