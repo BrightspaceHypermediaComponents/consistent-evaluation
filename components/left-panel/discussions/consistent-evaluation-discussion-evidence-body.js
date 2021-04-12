@@ -121,6 +121,10 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			${this._renderPostScore()}
 		</div>`;
 	}
+	_downloadAttachment(href) {
+		window.location.href = href;
+
+	}
 	_formatDateTime() {
 		const date = this.postDate ? new Date(this.postDate) : undefined;
 
@@ -132,6 +136,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			{ format: 'short' }) : '';
 		return `${formattedDate} ${formattedTime}`;
 	}
+
 	_getReadableFileSizeString(fileSizeBytes) {
 		let i = -1;
 		const byteUnits = ['kB', 'MB', 'GB'];
@@ -145,13 +150,24 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 	_renderAttachments() {
 		if (this.attachmentsList) {
 			return html`${this.attachmentsList.map((attachment) => {
-				const { name, size } = attachment.properties;
+				const { name, size, href } = attachment.properties;
+				const onClickHandler = () => this._downloadAttachment(href);
+				const onKeydownHandler = (e) => {
+					if (e.key === 'Enter' || e.key === ' ') {
+						this._downloadAttachment(href);
+					}
+				};
 
-				return html`<d2l-list-item
-						class="d2l-consistent-evaluation-discussion-attachment-list-item-content">
+				return html`<d2l-list-item class="d2l-consistent-evaluation-discussion-attachment-list-item-content">
 							<div>
 								<d2l-icon icon="d2l-tier1:file-document"></d2l-icon>
-								<span class="d2l-link d2l-body-compact" tabindex="0">${name}</span>
+								<a
+									class="d2l-link d2l-body-compact"
+									tabindex="0"
+									aria-label="${this.localize('clickToDownloadFile', 'fileName', name)}"
+									@keydown=${onKeydownHandler}
+									@click=${onClickHandler}
+								>${name}</a>
 								<span class="d2l-body-compact">(${this._getReadableFileSizeString(size)})</span>
 							</div>
 						</d2l-list-item>`;
