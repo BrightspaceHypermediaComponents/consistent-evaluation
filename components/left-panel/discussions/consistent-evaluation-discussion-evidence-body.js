@@ -158,13 +158,16 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 					}
 				};
 
-				return html`<d2l-list-item
-						class="d2l-consistent-evaluation-discussion-attachment-list-item-content"
-						@keydown=${onKeydownHandler}
-						@click=${onClickHandler}>
+				return html`<d2l-list-item class="d2l-consistent-evaluation-discussion-attachment-list-item-content">
 							<div>
 								<d2l-icon icon="d2l-tier1:file-document"></d2l-icon>
-								<span class="d2l-link d2l-body-compact" tabindex="0">${name}</span>
+								<a
+									class="d2l-link d2l-body-compact"
+									tabindex="0"
+									aria-label="${this.localize('clickToDownloadFile', 'fileName', name)}"
+									@keydown=${onKeydownHandler}
+									@click=${onClickHandler}
+								>${name}</a>
 								<span class="d2l-body-compact">(${this._getReadableFileSizeString(size)})</span>
 							</div>
 						</d2l-list-item>`;

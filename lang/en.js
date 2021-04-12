@@ -15,6 +15,7 @@ export default {
 	"averageMessageScore": "Average post score",
 	"backToUserSubmissions": "Back to User Submissions",
 	"cancelBtn": "Cancel",
+	"clickToDownloadFile": "click to download {fileName}",
 	"closeBtn": "Close",
 	"comments": "Comments",
 	"continueGrading": "Continue Grading",
