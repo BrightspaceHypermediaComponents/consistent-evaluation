@@ -127,6 +127,10 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 	}
 
 	render() {
+		if (this.skeleton) {
+			return this._renderSubmissionList();
+		}
+
 		if (this.userProgressOutcomeHref) {
 			return this._renderOverallAchievement();
 		}
