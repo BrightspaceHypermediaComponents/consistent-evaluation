@@ -190,6 +190,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 					}
 				}
 			}
+			if (this.sortingMethod !== sortByOldestFirst) {
+				this._currentSortingMethod = this.sortingMethod;
+				sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
+			}
 			this._finishedLoading();
 		}
 	}

@@ -133,9 +133,9 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				class="d2l-consistent-evaluation-evidence-discussion-sort-by-dropdown"
 				@d2l-labs-sort-by-dropdown-change=${this._setSort}
 			>
-				<d2l-labs-sort-by-dropdown-option value=${sortByOldestFirst} text=${this.localize('oldestFirst')}></d2l-labs-sort-by-dropdown-option>
-				<d2l-labs-sort-by-dropdown-option value=${sortByNewestFirst} text=${this.localize('newestFirst')}></d2l-labs-sort-by-dropdown-option>
-				<d2l-labs-sort-by-dropdown-option value=${sortBySubject} text=${this.localize('postSubject')}></d2l-labs-sort-by-dropdown-option>
+				<d2l-labs-sort-by-dropdown-option value=${sortByOldestFirst} text=${this.localize('oldestFirst')} ?selected=${this._sortingMethod === sortByOldestFirst}></d2l-labs-sort-by-dropdown-option>
+				<d2l-labs-sort-by-dropdown-option value=${sortByNewestFirst} text=${this.localize('newestFirst')} ?selected=${this._sortingMethod === sortByNewestFirst}></d2l-labs-sort-by-dropdown-option>
+				<d2l-labs-sort-by-dropdown-option value=${sortBySubject} text=${this.localize('postSubject')} ?selected=${this._sortingMethod === sortBySubject}></d2l-labs-sort-by-dropdown-option>
 			</d2l-labs-sort-by-dropdown>
 			<div style="clear: both;"></div>
 		`;
