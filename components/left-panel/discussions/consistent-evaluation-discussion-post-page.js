@@ -1,10 +1,11 @@
 import './consistent-evaluation-discussion-evidence-body';
-import { attachmentClassName, attachmentListClassName, sortByNewestFirst, sortByOldestFirst, sortBySubject, threadRel } from '../../controllers/constants.js';
+import { attachmentClassName, attachmentListClassName, sortByOldestFirst, threadRel } from '../../controllers/constants.js';
 import { css, html, LitElement } from 'lit-element';
 import { Classes } from 'd2l-hypermedia-constants';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
+import { sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
 
 export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 	static get properties() {
@@ -117,7 +118,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	render() {
 		if (this._currentSortingMethod !== this.sortingMethod && this._discussionPostObjects.length > 0) {
 			this._currentSortingMethod = this.sortingMethod;
-			this._sortDiscussionPosts();
+			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
 		}
 		return html`
 			${this._renderDiscussionItemSkeleton()}
@@ -232,28 +233,6 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-rating-container-skeleton">
 				<div class="d2l-skeletize d2l-consistent-evaluation-discussion-evidence-body-rating-skeleton"></div>
 			</div>`;
-	}
-	_sortDiscussionPosts() {
-		if (this._currentSortingMethod === sortByNewestFirst) {
-			this._discussionPostObjects.sort((a, b) => {
-				return b.createdDate.getTime() - a.createdDate.getTime();
-			});
-
-		} else if (this._currentSortingMethod === sortByOldestFirst) {
-			this._discussionPostObjects.sort((a, b) => {
-				return a.createdDate.getTime() - b.createdDate.getTime();
-			});
-
-		} else if (this._currentSortingMethod === sortBySubject) {
-			this._discussionPostObjects.sort((a, b) => {
-				if (a.postTitle < b.postTitle) {
-					return -1;
-				} else if (a.postTitle > b.postTitle) {
-					return 1;
-				}
-				return 0;
-			});
-		}
 	}
 
 }
