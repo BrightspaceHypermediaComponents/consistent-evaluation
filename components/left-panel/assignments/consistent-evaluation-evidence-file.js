@@ -10,6 +10,7 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 	static get properties() {
 		return {
 			url: { type: String },
+			originalFileUrl: { type: String },
 			token: { type: Object },
 			fileExtension: { type: String },
 			displayConversionWarning: {
@@ -120,10 +121,17 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 				this._postTokenResponse(e, token);
 			});
 		}
+		this._postOriginalFileUrl(e, this.originalFileUrl);
 	}
 
 	_onToastClose() {
 		this._displayToast = false;
+	}
+	_postOriginalFileUrl(e, url) {
+		e.source.postMessage({
+			type: 'original-file',
+			fileUrl: url
+		}, 'https://s.brightspace.com');
 	}
 	_postTokenResponse(e, token) {
 		e.source.postMessage({
