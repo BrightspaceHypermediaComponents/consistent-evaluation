@@ -1,10 +1,11 @@
 import './consistent-evaluation-discussion-evidence-body';
-import { attachmentClassName, attachmentListClassName, threadRel } from '../../controllers/constants.js';
+import { attachmentClassName, attachmentListClassName, sortByOldestFirst, threadRel } from '../../controllers/constants.js';
 import { css, html, LitElement } from 'lit-element';
 import { Classes } from 'd2l-hypermedia-constants';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
+import { sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
 
 export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 	static get properties() {
@@ -12,6 +13,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			discussionPostList: {
 				attribute: false,
 				type: Array
+			},
+			sortingMethod: {
+				attribute: 'sorting-method',
+				type: String
 			},
 			token: { type: Object },
 			_discussionPostEntities: {
@@ -78,6 +83,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		this._discussionPostList = [];
 		this._token = undefined;
 		this._discussionPostObjects = [];
+		this._currentSortingMethod = sortByOldestFirst;
 	}
 
 	get discussionPostList() {
@@ -110,6 +116,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 
 	render() {
+		if (this._currentSortingMethod !== this.sortingMethod && this._discussionPostObjects.length > 0) {
+			this._currentSortingMethod = this.sortingMethod;
+			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
+		}
 		return html`
 			${this._renderDiscussionItemSkeleton()}
 			${this._renderDiscussionItemSkeleton()}
@@ -131,8 +141,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		const ratingInformation = { upVotes: 0, downVotes: 0 };
 
 		let createdDate = undefined;
+		let createdDateString = undefined;
 		if (discussionPostEntity.hasSubEntityByClass(Classes.assignments.date)) {
-			createdDate = discussionPostEntity.getSubEntityByClass(Classes.assignments.date).properties.date;
+			createdDateString = discussionPostEntity.getSubEntityByClass(Classes.assignments.date).properties.date;
+			createdDate = new Date(createdDateString);
 		} else {
 			console.warn('Consistent Evaluation discussion post date not found');
 		}
@@ -156,6 +168,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 		return {
 			createdDate,
+			createdDateString,
 			postTitle,
 			postBody,
 			ratingInformation,
@@ -176,6 +189,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 						this._discussionPostObjects.push(discussionPostObject);
 					}
 				}
+			}
+			if (this.sortingMethod !== sortByOldestFirst) {
+				this._currentSortingMethod = this.sortingMethod;
+				sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
 			}
 			this._finishedLoading();
 		}
@@ -205,7 +222,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 						aria-hidden="${this.skeleton}"
 						post-title=${discussionPost.postTitle}
 						post-body=${discussionPost.postBody}
-						post-date=${discussionPost.createdDate}
+						post-date=${discussionPost.createdDateString}
 						?is-reply=${discussionPost.isReply}
 						thread-title=${discussionPost.threadTitle}
 						.attachmentsList=${discussionPost.attachmentList}

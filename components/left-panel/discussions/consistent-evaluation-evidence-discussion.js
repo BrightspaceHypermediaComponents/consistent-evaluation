@@ -3,6 +3,7 @@ import '@brightspace-ui-labs/facet-filter-sort/components/sort-by-dropdown/sort-
 import '@brightspace-ui-labs/facet-filter-sort/components/sort-by-dropdown/sort-by-dropdown-option.js';
 import './consistent-evaluation-discussion-post-page';
 import { css, html, LitElement } from 'lit-element';
+import { sortByNewestFirst, sortByOldestFirst, sortBySubject } from '../../controllers/constants';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
@@ -15,7 +16,11 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				attribute: false,
 				type: Array
 			},
-			token: { type: Object }
+			token: { type: Object },
+			_sortingMethod: {
+				attribute: false,
+				type: String
+			}
 		};
 	}
 
@@ -70,6 +75,10 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			}
 		`;
 	}
+	constructor() {
+		super();
+		this._sortingMethod = sortByOldestFirst;
+	}
 
 	render() {
 		if (this.discussionPostList && this.discussionPostList.length === 0) {
@@ -94,6 +103,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	_renderDiscussionPost() {
 		return html`
 			<d2l-consistent-evaluation-discussion-post-page
+				sorting-method=${this._sortingMethod}
 				?skeleton=${this.skeleton}
 				.discussionPostList=${this.discussionPostList}
 				.token=${this.token}
@@ -121,11 +131,18 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		return html`
 			<d2l-labs-sort-by-dropdown
 				class="d2l-consistent-evaluation-evidence-discussion-sort-by-dropdown"
+				@d2l-labs-sort-by-dropdown-change=${this._setSort}
 			>
-				<d2l-labs-sort-by-dropdown-option value="date" text="Date"></d2l-labs-sort-by-dropdown-option>
+				<d2l-labs-sort-by-dropdown-option value=${sortByOldestFirst} text=${this.localize('oldestFirst')} ?selected=${this._sortingMethod === sortByOldestFirst}></d2l-labs-sort-by-dropdown-option>
+				<d2l-labs-sort-by-dropdown-option value=${sortByNewestFirst} text=${this.localize('newestFirst')} ?selected=${this._sortingMethod === sortByNewestFirst}></d2l-labs-sort-by-dropdown-option>
+				<d2l-labs-sort-by-dropdown-option value=${sortBySubject} text=${this.localize('postSubject')} ?selected=${this._sortingMethod === sortBySubject}></d2l-labs-sort-by-dropdown-option>
 			</d2l-labs-sort-by-dropdown>
 			<div style="clear: both;"></div>
 		`;
+	}
+
+	_setSort(e) {
+		this._sortingMethod = e.detail.value;
 	}
 
 }

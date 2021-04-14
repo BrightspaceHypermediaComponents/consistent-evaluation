@@ -75,3 +75,6 @@ export const postClass = 'post';
 export const assignmentActivity = 'assignmentActivity';
 export const discussionActivity = 'discussionActivity';
 export const coaActivity = 'coaActivity';
+export const sortByNewestFirst = 'newestFirst';
+export const sortByOldestFirst = 'oldestFirst';
+export const sortBySubject = 'subject';
