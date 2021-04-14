@@ -52,6 +52,17 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				width: 100%;
 			}
 
+			.d2l-consistent-evaluation-unscored-status-indicator {
+				float: left;
+				margin-left: 1rem;
+				margin-right: 1rem;
+				text-transform: none;
+			}
+
+			:host([dir="rtl"]) .d2l-consistent-evaluation-unscored-status-indicator {
+				float: right;
+			}
+
 			.d2l-consistent-evaluation-no-assessable-posts-container {
 				background: white;
 				border: 1px solid var(--d2l-color-gypsum);
@@ -87,6 +98,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		}
 		return html`
 			${this._renderSortDropDownList()}
+			${this._renderUnscoredStatus()}
 			${this._renderDiscussionPost()}
 			${this._renderLoadMoreButton()}
 		`;
@@ -100,6 +112,22 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			}
 		}));
 	}
+	_getUnscoredPostsCount() {
+		let unscoredPosts = 0;
+		if (this.discussionPostList) {
+			this.discussionPostList.forEach(postEntity => {
+				if (postEntity.properties && postEntity.properties.score === null) {
+					unscoredPosts++;
+				} else if (!('properties' in postEntity)) {
+					// case when posts are not individually graded
+					unscoredPosts = 'NaN';
+					return;
+				}
+			});
+		}
+		return unscoredPosts;
+	}
+
 	_renderDiscussionPost() {
 		return html`
 			<d2l-consistent-evaluation-discussion-post-page
@@ -108,7 +136,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				.discussionPostList=${this.discussionPostList}
 				.token=${this.token}
 			></d2l-consistent-evaluation-discussion-post-page>
-			`;
+		`;
 	}
 	_renderLoadMoreButton() {
 		return html`
@@ -139,6 +167,20 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			</d2l-labs-sort-by-dropdown>
 			<div style="clear: both;"></div>
 		`;
+	}
+	_renderUnscoredStatus() {
+		const unscoredPosts = this._getUnscoredPostsCount();
+		if (!isNaN(unscoredPosts)) {
+			return html`
+				<d2l-status-indicator
+					class="d2l-consistent-evaluation-unscored-status-indicator"
+					?hidden=${this.skeleton}
+					state=${(unscoredPosts === 0 ? 'success' : 'default')}
+					text=${(unscoredPosts === 0 ? this.localize('allPostsScored') : this.localize('unscoredPosts', { num: this._getUnscoredPostsCount() }))}>
+				</d2l-status-indicator>
+			`;
+		}
+
 	}
 
 	_setSort(e) {
