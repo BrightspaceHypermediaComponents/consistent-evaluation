@@ -475,11 +475,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	_changeFile(newFileId) {
 		this.currentFileId = newFileId;
 	}
-	_checkEvaluationEntityAndDisplayToast(newEvaluationEntity, errorTerm, successTerm) {
+	async _checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, errorTerm, successTerm) {
 		if (!newEvaluationEntity) {
 			this._showToast(this.localize(errorTerm), true);
 		} else {
 			this.evaluationEntity = newEvaluationEntity;
+			if (this.activityType === assignmentActivity) {
+				this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
+			}
 			this._fireSaveEvaluationEvent();
 			this._showToast(this.localize(successTerm), false);
 		}
@@ -718,7 +721,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				const newEvaluationEntity = await this._controller.publish(entity);
 				this._currentlySaving = false;
 
-				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
+				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
 				if (this.submissionInfo) {
 					this.submissionInfo.evaluationState = publishedState;
 				}
@@ -773,7 +776,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				const newEvaluationEntity = await this._controller.retract(entity);
 				this._currentlySaving = false;
 
-				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
+				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
 				if (this.submissionInfo) {
 					this.submissionInfo.evaluationState = draftState;
 				}
@@ -790,7 +793,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				const newEvaluationEntity = await this._controller.save(entity);
 				this._currentlySaving = false;
 
-				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
+				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
 			}
 		);
 	}
@@ -964,7 +967,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				const newEvaluationEntity = await this._controller.update(entity);
 				this._currentlySaving = false;
 
-				this._checkEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
+				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
 			}
 		);
 	}
