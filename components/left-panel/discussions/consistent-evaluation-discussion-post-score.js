@@ -4,7 +4,7 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
-export class ConsistentEvaluationDiscussionEvidenceBody extends LitElement {
+export class ConsistentEvaluationDiscussionPostScore extends LitElement {
 	static get properties() {
 		return {
 			discussionPostEntity: {
@@ -35,12 +35,12 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends LitElement {
 		const scoreOutOf =  this.discussionPostEntity.properties.outOf;
 		return html`
 			<d2l-labs-d2l-grade-result-presentational
-					.gradeType=${GradeType.Number}
-					scoreNumerator=${score}
-					scoreDenominator=${scoreOutOf}
+				.gradeType=${GradeType.Number}
+				scoreNumerator=${score}
+				scoreDenominator=${scoreOutOf}
 
-					@d2l-grade-result-grade-change=${this.onGradeChanged}
-				></d2l-labs-d2l-grade-result-presentational>
+				@d2l-grade-result-grade-change=${this.onGradeChanged}
+			></d2l-labs-d2l-grade-result-presentational>
 		`;
 	}
 	flush() {
@@ -75,4 +75,4 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends LitElement {
 	}
 }
 
-customElements.define('d2l-consistent-evaluation-discussion-post-score', ConsistentEvaluationDiscussionEvidenceBody);
+customElements.define('d2l-consistent-evaluation-discussion-post-score', ConsistentEvaluationDiscussionPostScore);
