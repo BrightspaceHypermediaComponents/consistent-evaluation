@@ -51,6 +51,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				float: left;
 				margin-left: 1rem;
 				margin-right: 1rem;
+				text-transform: none;
 			}
 
 			:host([dir="rtl"]) .d2l-consistent-evaluation-unscored-status-indicator {
