@@ -83,6 +83,16 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 			this._debounceJobs.annotations.flush();
 		}
 	}
+	_handleAnnotationsSetup(e) {
+		if (typeof this.token === 'string') {
+			this._postTokenResponse(e, this.token);
+		} else {
+			this.token().then(token => {
+				this._postTokenResponse(e, token);
+			});
+		}
+		this._postOriginalFileUrl(e, this.originalFileUrl);
+	}
 	_handleAnnotationsUpdate(e) {
 		this._debounceJobs.annotations = Debouncer.debounce(
 			this._debounceJobs.annotations,
@@ -105,23 +115,12 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 	}
 	_handleMessage(e) {
 		if (e.data.type === 'token-request') {
-			return this._handleTokenRequest(e);
+			return this._handleAnnotationsSetup(e);
 		} else if (e.data.type === 'annotations-update') {
 			return this._handleAnnotationsUpdate(e);
 		} else if (e.data.type === 'annotations-will-change') {
 			return this._handleAnnotationsWillChange(e);
 		}
-	}
-
-	_handleTokenRequest(e) {
-		if (typeof this.token === 'string') {
-			this._postTokenResponse(e, this.token);
-		} else {
-			this.token().then(token => {
-				this._postTokenResponse(e, token);
-			});
-		}
-		this._postOriginalFileUrl(e, this.originalFileUrl);
 	}
 
 	_onToastClose() {
