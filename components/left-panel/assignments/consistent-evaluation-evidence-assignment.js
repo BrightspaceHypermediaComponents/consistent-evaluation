@@ -42,6 +42,10 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 				attribute: 'file-evidence-url',
 				type: String
 			},
+			originalFileUrl: {
+				attribute: false,
+				type: String
+			},
 			textEvidence: {
 				attribute: false,
 				type: Object
@@ -174,6 +178,7 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 		} else if (changedProperties.has('currentFileId') && !this.currentFileId) {
 			this.textEvidence = undefined;
 			this.fileEvidenceUrl = undefined;
+			this.originalFileUrl = undefined;
 			this.fileNonViewable = undefined;
 		}
 
@@ -199,11 +204,13 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 			if (currentFile.properties.fileViewer) {
 				// file is viewable
 				this.fileEvidenceUrl = currentFile.properties.fileViewer;
+				this.originalFileUrl = currentFile.properties.href;
 				this.fileNonViewable = undefined;
 				this.fileExtension = currentFile.properties.extension;
 			} else {
 				// file is unviewable
 				this.fileEvidenceUrl = undefined;
+				this.originalFileUrl = undefined;
 				this.fileNonViewable = {
 					title: currentFile.properties.name,
 					downloadUrl: currentFile.properties.href
@@ -211,6 +218,7 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 			}
 		} else if (this.submissionInfo.submissionType === textSubmission) {
 			this.fileEvidenceUrl = undefined;
+			this.originalFileUrl = undefined;
 			this.textEvidence = {
 				title: `${this.localize('textSubmission')} ${currentFile.properties.displayNumber}`,
 				date: currentFile.properties.date,
@@ -221,6 +229,7 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 		} else {
 			this.textEvidence = undefined;
 			this.fileEvidenceUrl = undefined;
+			this.originalFileUrl = undefined;
 			this.fileNonViewable = undefined;
 		}
 	}
@@ -229,6 +238,7 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 		return html`
 		<d2l-consistent-evaluation-evidence-file
 			url=${this.fileEvidenceUrl}
+			originalFileUrl=${this.originalFileUrl}
 			fileExtension=${this.fileExtension}
 			?display-conversion-warning=${this.displayConversionWarning}
 			.token=${this.token}
