@@ -148,6 +148,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 					html="${this.feedbackText}"
 					label="${this.localize('overallFeedback')}"
 					label-hidden
+					paste-local-images
 					height="15rem"
 					@d2l-htmleditor-blur="${this._saveOnFeedbackChangeNewEditor}">
 				</d2l-htmleditor>
