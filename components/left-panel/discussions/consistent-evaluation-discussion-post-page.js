@@ -1,5 +1,5 @@
 import './consistent-evaluation-discussion-evidence-body';
-import { attachmentClassName, attachmentListClassName, sortByOldestFirst, threadRel } from '../../controllers/constants.js';
+import { attachmentClassName, attachmentListClassName, lmsSourceRel, sortByOldestFirst, threadRel } from '../../controllers/constants.js';
 import { css, html, LitElement } from 'lit-element';
 import { Classes } from 'd2l-hypermedia-constants';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
@@ -136,6 +136,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		}));
 	}
 	async _formatDiscussionPostObject(discussionPostEntity, discussionPostEvaluationEntity) {
+		const postHref = discussionPostEntity.getLinkByRel(lmsSourceRel).href;
 		const postTitle = discussionPostEntity.properties.subject;
 		const postBody = discussionPostEntity.properties.message;
 		const ratingInformation = { upVotes: 0, downVotes: 0 };
@@ -169,6 +170,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		return {
 			createdDate,
 			createdDateString,
+			postHref,
 			postTitle,
 			postBody,
 			ratingInformation,
@@ -220,6 +222,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				itemTemplate.push(html`
 					<d2l-consistent-evaluation-discussion-evidence-body
 						aria-hidden="${this.skeleton}"
+						post-href=${discussionPost.postHref}
 						post-title=${discussionPost.postTitle}
 						post-body=${discussionPost.postBody}
 						post-date=${discussionPost.createdDateString}

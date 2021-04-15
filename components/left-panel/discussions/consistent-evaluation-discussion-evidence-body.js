@@ -21,6 +21,10 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				attribute: 'thread-title',
 				type: String
 			},
+			postHref: {
+				attribute: 'post-href',
+				type: String
+			},
 			postTitle : {
 				attribute: 'post-title',
 				type: String
@@ -147,6 +151,11 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		const unit = this.localize(byteUnits[i]);
 		return Math.max(fileSizeBytes, 0.1).toFixed(1) + unit;
 	}
+
+	_onPostTitleClicked() {
+		window.open(this.postHref);
+	}
+
 	_renderAttachments() {
 		if (this.attachmentsList) {
 			return html`${this.attachmentsList.map((attachment) => {
@@ -206,7 +215,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		}
 	}
 	_renderTitle() {
-		return html `<a class="d2l-body-compact d2l-link d2l-consistent-evaluation-discussion-evidence-body-title">${this.postTitle}</a>`;
+		return html `<a class="d2l-body-compact d2l-link d2l-consistent-evaluation-discussion-evidence-body-title" @click=${this._onPostTitleClicked}>${this.postTitle}</a>`;
 	}
 
 }
