@@ -354,6 +354,9 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		`;
 	}
 	_renderOverflowButtonMobile() {
+		if (!this.editActivityPath && !this.specialAccessHref) {
+			return html``;
+		}
 		return html`
 			<d2l-dropdown-button-subtle class="d2l-consistent-evaluation-right-panel-overflow-menu-mobile" text=${this.localize('evaluationOptions')}>
 				${this._renderOverflowMenu()}
