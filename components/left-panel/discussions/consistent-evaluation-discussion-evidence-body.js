@@ -156,6 +156,12 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		window.open(this.postHref);
 	}
 
+	_onPostTitleKeydown(e) {
+		if (e.key === 'Enter' || e.key === ' ') {
+			this._onPostTitleClicked();
+		}
+	}
+
 	_renderAttachments() {
 		if (this.attachmentsList) {
 			return html`${this.attachmentsList.map((attachment) => {
@@ -215,7 +221,12 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		}
 	}
 	_renderTitle() {
-		return html `<a class="d2l-body-compact d2l-link d2l-consistent-evaluation-discussion-evidence-body-title" @click=${this._onPostTitleClicked}>${this.postTitle}</a>`;
+		return html `<a
+			class="d2l-body-compact d2l-link d2l-consistent-evaluation-discussion-evidence-body-title"
+			tabindex="0"
+			@click=${this._onPostTitleClicked}
+			@keydown=${this._onPostTitleKeydown}
+		>${this.postTitle}</a>`;
 	}
 
 }
