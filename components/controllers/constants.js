@@ -44,6 +44,7 @@ export const userProgressAssessmentsRel = 'https://assessments.api.brightspace.c
 export const demonstrationRel = 'https://achievements.api.brightspace.com/rels/demonstration';
 export const tiiRel = 'https://assignments.api.brightspace.com/rels/turnitin';
 export const threadRel = 'https://discussions.api.brightspace.com/rels/thread';
+export const lmsSourceRel = 'https://api.brightspace.com/rels/lms-source';
 export const evidenceRel = 'evidence';
 export const nextRel = 'next';
 export const previousRel = 'previous';
