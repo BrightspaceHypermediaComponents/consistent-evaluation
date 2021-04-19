@@ -41,7 +41,7 @@ describe('d2l-consistent-evaluation-right-panel', () => {
 			after(async() => await browser.close());
 
 			tests.forEach((testName) => {
-				it(`${testName}`, async function() {
+				it.skip(`${testName}`, async function() {
 					const rect = await visualDiff.getRect(page, `#${testName}`);
 					await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 				});
