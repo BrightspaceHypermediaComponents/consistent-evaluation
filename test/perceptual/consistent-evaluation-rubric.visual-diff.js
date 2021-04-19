@@ -19,17 +19,17 @@ describe('d2l-consistent-evaluation-rubric', () => {
 
 	after(async() => await browser.close());
 
-	it('renders rubric', async function() {
+	it.skip('renders rubric', async function() {
 		const rect = await visualDiff.getRect(page, '#default');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('renders multiple rubrics', async function() {
+	it.skip('renders multiple rubrics', async function() {
 		const rect = await visualDiff.getRect(page, '#multiple-rubrics');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it('renders multiple rubrics with grading options', async function() {
+	it.skip('renders multiple rubrics with grading options', async function() {
 		const rect = await visualDiff.getRect(page, '#multiple-rubrics-with-grading-options');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
