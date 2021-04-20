@@ -151,7 +151,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 		let threadTitle = undefined;
 		let isReply = false;
-		if (discussionPostEntity.hasLinkByRel(Rels.Discussion.thread)) {
+		if (discussionPostEntity.hasLinkByRel(Rels.Discussions.thread)) {
 			isReply = true;
 			const threadHref = discussionPostEntity.getLinkByRel(Rels.Discussions.thread).href;
 			const threadEntity = await this._getDiscussionPostEntity(threadHref);
