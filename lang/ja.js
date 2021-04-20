@@ -45,7 +45,6 @@ export default {
 	"kB": "KB",
 	"late": "遅延",
 	"leaveBtn": "終了",
-	"loadMore": "さらに読み込む",
 	"markRead": "既読としてマーク",
 	"markUnread": "未読としてマーク",
 	"moreOptions": "詳細オプション",

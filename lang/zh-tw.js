@@ -45,7 +45,6 @@ export default {
 	"kB": "KB",
 	"late": "遲交",
 	"leaveBtn": "離開",
-	"loadMore": "載入更多",
 	"markRead": "標示為已讀取",
 	"markUnread": "標示為未讀取",
 	"moreOptions": "更多選項",

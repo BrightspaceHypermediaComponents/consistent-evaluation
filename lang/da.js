@@ -45,7 +45,6 @@ export default {
 	"kB": "KB",
 	"late": "forsinket",
 	"leaveBtn": "Afslut",
-	"loadMore": "Indlæs flere",
 	"markRead": "Markér som læst",
 	"markUnread": "Markér som ulæst",
 	"moreOptions": "Flere indstillinger",

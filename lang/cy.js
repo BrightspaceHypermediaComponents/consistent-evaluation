@@ -45,7 +45,6 @@ export default {
 	"kB": "KB",
 	"late": "hwyr",
 	"leaveBtn": "Gadael",
-	"loadMore": "Load More",
 	"markRead": "Nodi fel wedi’i ddarllen",
 	"markUnread": "Nodi fel heb ei ddarllen",
 	"moreOptions": "Rhagor o ddewisiadau",

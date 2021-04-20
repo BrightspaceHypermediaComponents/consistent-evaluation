@@ -45,7 +45,6 @@ export default {
 	"kB": "Ko",
 	"late": "En retard",
 	"leaveBtn": "Quitter",
-	"loadMore": "En voir plus",
 	"markRead": "Marquer comme lu",
 	"markUnread": "Marquer comme non lu",
 	"moreOptions": "Plus d’options",

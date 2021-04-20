@@ -1,11 +1,11 @@
 import './consistent-evaluation-discussion-evidence-body';
-import { attachmentClassName, attachmentListClassName, sortByOldestFirst } from '../../controllers/constants.js';
+import { attachmentClassName, attachmentListClassName, lmsSourceRel } from '../../controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element';
+import { filterDiscussionPosts, sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
-import { sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
 
 export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 	static get properties() {
@@ -18,8 +18,20 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				attribute: 'sorting-method',
 				type: String
 			},
+			selectedPostFilters: {
+				attribute: false,
+				type: Array
+			},
+			selectedScoreFilters: {
+				attribute: false,
+				type: Array
+			},
 			token: { type: Object },
 			_discussionPostEntities: {
+				attribute: false,
+				type: Array
+			},
+			_displayedDiscussionPostObjects: {
 				attribute: false,
 				type: Array
 			}
@@ -83,7 +95,9 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		this._discussionPostList = [];
 		this._token = undefined;
 		this._discussionPostObjects = [];
-		this._currentSortingMethod = sortByOldestFirst;
+		this._currentSortingMethod = undefined;
+		this.selectedPostFilters = [];
+		this.selectedScoreFilters = [];
 	}
 
 	get discussionPostList() {
@@ -120,6 +134,9 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			this._currentSortingMethod = this.sortingMethod;
 			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
 		}
+
+		this._displayedDiscussionPostObjects = filterDiscussionPosts(this._discussionPostObjects, this.selectedPostFilters, this.selectedScoreFilters);
+
 		return html`
 			${this._renderDiscussionItemSkeleton()}
 			${this._renderDiscussionItemSkeleton()}
@@ -136,6 +153,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		}));
 	}
 	async _formatDiscussionPostObject(discussionPostEntity, discussionPostEvaluationEntity) {
+		const postHref = discussionPostEntity.getLinkByRel(lmsSourceRel).href;
 		const postTitle = discussionPostEntity.properties.subject;
 		const postBody = discussionPostEntity.properties.message;
 		const ratingInformation = { upVotes: 0, downVotes: 0 };
@@ -169,6 +187,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		return {
 			createdDate,
 			createdDateString,
+			postHref,
 			postTitle,
 			postBody,
 			ratingInformation,
@@ -190,10 +209,9 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 					}
 				}
 			}
-			if (this.sortingMethod !== sortByOldestFirst) {
-				this._currentSortingMethod = this.sortingMethod;
-				sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
-			}
+
+			this._currentSortingMethod = this.sortingMethod;
+			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
 			this._finishedLoading();
 		}
 	}
@@ -214,12 +232,13 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	_renderDiscussionPostEntities() {
 		const itemTemplate = [];
-		for (let i = 0; i < this._discussionPostObjects.length; i++) {
-			if (this._discussionPostObjects[i]) {
-				const discussionPost = this._discussionPostObjects[i];
+		for (let i = 0; i < this._displayedDiscussionPostObjects.length; i++) {
+			if (this._displayedDiscussionPostObjects[i]) {
+				const discussionPost = this._displayedDiscussionPostObjects[i];
 				itemTemplate.push(html`
 					<d2l-consistent-evaluation-discussion-evidence-body
 						aria-hidden="${this.skeleton}"
+						post-href=${discussionPost.postHref}
 						post-title=${discussionPost.postTitle}
 						post-body=${discussionPost.postBody}
 						post-date=${discussionPost.createdDateString}
