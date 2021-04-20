@@ -45,7 +45,6 @@ export default {
 	"kB": "KB",
 	"late": "gecikmiş",
 	"leaveBtn": "Çık",
-	"loadMore": "Daha Fazla Yükle",
 	"markRead": "Okundu Olarak İşaretle",
 	"markUnread": "Okunmadı Olarak İşaretle",
 	"moreOptions": "Daha Fazla Seçenek",

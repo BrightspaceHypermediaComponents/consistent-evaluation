@@ -1,9 +1,12 @@
 import '@brightspace-ui/core/components/button/button.js';
 import '@brightspace-ui-labs/facet-filter-sort/components/sort-by-dropdown/sort-by-dropdown.js';
 import '@brightspace-ui-labs/facet-filter-sort/components/sort-by-dropdown/sort-by-dropdown-option.js';
+import '@brightspace-ui-labs/facet-filter-sort/components/filter-dropdown/filter-dropdown.js';
+import '@brightspace-ui-labs/facet-filter-sort/components/filter-dropdown/filter-dropdown-category.js';
+import '@brightspace-ui-labs/facet-filter-sort/components/filter-dropdown/filter-dropdown-option.js';
 import './consistent-evaluation-discussion-post-page';
 import { css, html, LitElement } from 'lit-element';
-import { sortByNewestFirst, sortByOldestFirst, sortBySubject } from '../../controllers/constants';
+import { filterByReplies, filterByScored, filterByThreads, filterByUnscored, sortByNewestFirst, sortByOldestFirst, sortBySubject } from '../../controllers/constants';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
@@ -20,6 +23,14 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			_sortingMethod: {
 				attribute: false,
 				type: String
+			},
+			_selectedPostFilters: {
+				attribute: false,
+				type: Array
+			},
+			_selectedScoreFilters: {
+				attribute: false,
+				type: Array
 			}
 		};
 	}
@@ -36,14 +47,11 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				float: left;
 			}
 
-			.d2l-consistent-evaluation-evidence-discussion-load-more {
+			.d2l-consistent-evaluation-evidence-discussion-filter-by-dropdown {
 				float: right;
-				margin-left: 1rem;
-				margin-right: 1rem;
-				padding-bottom: 3rem;
+				margin-top: 1rem;
 			}
-
-			:host([dir="rtl"]) .d2l-consistent-evaluation-evidence-discussion-load-more {
+			:host([dir="rtl"]) .d2l-consistent-evaluation-evidence-discussion-filter-by-dropdown {
 				float: left;
 			}
 
@@ -80,15 +88,13 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				padding: 2rem;
 				width: 100%;
 			}
-
-			:host([skeleton]) .d2l-consistent-evaluation-evidence-discussion-load-more {
-				display: none;
-			}
 		`;
 	}
 	constructor() {
 		super();
 		this._sortingMethod = sortByOldestFirst;
+		this._selectedPostFilters = [];
+		this._selectedScoreFilters = [];
 	}
 
 	render() {
@@ -98,10 +104,14 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		}
 		return html`
 			${this._renderSortDropDownList()}
+			${this._renderFilterDropDownList()}
 			${this._renderUnscoredStatus()}
 			${this._renderDiscussionPost()}
-			${this._renderLoadMoreButton()}
 		`;
+	}
+	_clearFilters() {
+		this._selectedPostFilters = [];
+		this._selectedScoreFilters = [];
 	}
 	_finishedLoading() {
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
@@ -132,19 +142,27 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		return html`
 			<d2l-consistent-evaluation-discussion-post-page
 				sorting-method=${this._sortingMethod}
+				.selectedPostFilters=${this._selectedPostFilters}
+				.selectedScoreFilters=${this._selectedScoreFilters}
 				?skeleton=${this.skeleton}
 				.discussionPostList=${this.discussionPostList}
 				.token=${this.token}
 			></d2l-consistent-evaluation-discussion-post-page>
 		`;
 	}
-	_renderLoadMoreButton() {
+	_renderFilterDropDownList() {
 		return html`
-			<d2l-button
-				aria-hidden="${this.skeleton}"
-				class="d2l-consistent-evaluation-evidence-discussion-load-more"
-				secondary
-			>${this.localize('loadMore')}</d2l-button>`;
+			<d2l-labs-filter-dropdown
+				class="d2l-consistent-evaluation-evidence-discussion-filter-by-dropdown"
+				total-selected-option-count=${this._selectedPostFilters.length + this._selectedScoreFilters.length}
+				min-width="200"
+				@d2l-labs-filter-dropdown-cleared=${this._clearFilters}
+			>
+				${this._renderPostFilters()}
+				${this._renderScoreFilters()}
+			</d2l-labs-filter-dropdown>
+			<div style="clear: both;"></div>
+		`;
 	}
 	_renderNoAssessablePosts() {
 		return html`
@@ -153,6 +171,49 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 					<div class="d2l-consistent-evaluation-no-assessable-posts d2l-body-standard">${this.localize('noAssessablePosts')}</div>
 				</div>
 			</div>`;
+	}
+	_renderPostFilters() {
+		return html `<d2l-labs-filter-dropdown-category
+				category-text=${this.localize('posts')}
+				selected-option-count=${this._selectedPostFilters.length}
+				disable-search
+				@d2l-labs-filter-dropdown-option-change=${this._setPostsFilter}
+			>
+				<d2l-labs-filter-dropdown-option
+					value=${filterByThreads}
+					text=${this.localize('threads')}
+					?selected=${this._selectedPostFilters.includes(filterByThreads)}
+				></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option
+					value=${filterByReplies}
+					text=${this.localize('replies')}
+					?selected=${this._selectedPostFilters.includes(filterByReplies)}
+				></d2l-labs-filter-dropdown-option>
+			</d2l-labs-filter-dropdown-category>`;
+	}
+
+	_renderScoreFilters() {
+		if (this.discussionPostList && this.discussionPostList.some(postEntity => postEntity.properties && postEntity.properties.outOf)) {
+			return html`<d2l-labs-filter-dropdown-category
+					category-text=${this.localize('score')}
+					selected-option-count=${this._selectedScoreFilters.length}
+					disable-search
+					@d2l-labs-filter-dropdown-option-change=${this._setScoredFilter}
+				>
+					<d2l-labs-filter-dropdown-option
+						value=${filterByUnscored}
+						text=${this.localize('unscored')}
+						?selected=${this._selectedScoreFilters.includes(filterByUnscored)}
+					></d2l-labs-filter-dropdown-option>
+					<d2l-labs-filter-dropdown-option
+						value=${filterByScored}
+						text=${this.localize('scored')}
+						?selected=${this._selectedScoreFilters.includes(filterByScored)}
+					></d2l-labs-filter-dropdown-option>
+				</d2l-labs-filter-dropdown-category>`;
+		} else {
+			return html ``;
+		}
 	}
 
 	_renderSortDropDownList() {
@@ -165,7 +226,6 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				<d2l-labs-sort-by-dropdown-option value=${sortByNewestFirst} text=${this.localize('newestFirst')} ?selected=${this._sortingMethod === sortByNewestFirst}></d2l-labs-sort-by-dropdown-option>
 				<d2l-labs-sort-by-dropdown-option value=${sortBySubject} text=${this.localize('postSubject')} ?selected=${this._sortingMethod === sortBySubject}></d2l-labs-sort-by-dropdown-option>
 			</d2l-labs-sort-by-dropdown>
-			<div style="clear: both;"></div>
 		`;
 	}
 	_renderUnscoredStatus() {
@@ -181,6 +241,29 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			`;
 		}
 
+	}
+
+	_setPostsFilter(e) {
+		const newFilters = [...this._selectedPostFilters];
+		const newFilter = e.detail.menuItemKey;
+		const indexOfFilter = newFilters.indexOf(newFilter);
+		if (indexOfFilter >= 0) {
+			newFilters.splice(indexOfFilter, 1);
+		} else {
+			newFilters.push(newFilter);
+		}
+		this._selectedPostFilters = newFilters;
+	}
+	_setScoredFilter(e) {
+		const newFilters = [...this._selectedScoreFilters];
+		const newFilter = e.detail.menuItemKey;
+		const indexOfFilter = newFilters.indexOf(newFilter);
+		if (indexOfFilter >= 0) {
+			newFilters.splice(indexOfFilter, 1);
+		} else {
+			newFilters.push(newFilter);
+		}
+		this._selectedScoreFilters = newFilters;
 	}
 
 	_setSort(e) {

@@ -79,3 +79,7 @@ export const coaActivity = 'coaActivity';
 export const sortByNewestFirst = 'newestFirst';
 export const sortByOldestFirst = 'oldestFirst';
 export const sortBySubject = 'subject';
+export const filterByThreads = 'threads';
+export const filterByReplies = 'replies';
+export const filterByScored = 'scored';
+export const filterByUnscored = 'unscored';
