@@ -1,6 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { attachmentListRel } from '../controllers/constants';
-import { Classes } from 'd2l-hypermedia-constants';
+import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export function findFile(fileId, submissions) {
 	for (let i = 0; i < submissions.length; i++) {
@@ -17,7 +16,7 @@ export function findFile(fileId, submissions) {
 }
 
 export function getSubmissionFiles(submission) {
-	const attachments = submission.entity.getSubEntityByRel(attachmentListRel);
+	const attachments = submission.entity.getSubEntityByRel(Rels.Assignments.attachmentList);
 	return attachments.entities.map(sf => {
 		if (submission.entity.getSubEntityByClass(Classes.assignments.submissionComment)) {
 			sf.properties.comment = submission.entity.getSubEntityByClass(Classes.assignments.submissionComment).properties.html;

@@ -3,9 +3,9 @@ import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import './consistent-evaluation-submission-item.js';
-import { assignmentActivity, tiiRefreshAction, tiiRel, tiiSubmitActionName, toggleFlagActionName, toggleIsReadActionName } from '../../controllers/constants.js';
+import { assignmentActivity, tiiRefreshAction, tiiSubmitActionName, toggleFlagActionName, toggleIsReadActionName } from '../../controllers/constants.js';
+import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
-import { Classes } from 'd2l-hypermedia-constants';
 import { ConsistentEvalTelemetry } from '../../helpers/consistent-eval-telemetry.js';
 import { convertToken } from '../../helpers/converterHelpers.js';
 import { findFile } from '../../helpers/submissionsAndFilesHelpers.js';
@@ -365,7 +365,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			throw new Error('Invalid entity provided for attachment');
 		}
 
-		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
+		const tiiEntity = attachmentEntity.getSubEntityByRel(Rels.Assignments.turnItIn);
 		if (!tiiEntity) {
 			throw new Error('Turnitin entity not present on attachment');
 		}
@@ -469,7 +469,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 			throw new Error('Invalid entity provided for attachment');
 		}
 
-		const tiiEntity = attachmentEntity.getSubEntityByRel(tiiRel);
+		const tiiEntity = attachmentEntity.getSubEntityByRel(Rels.Assignments.turnItIn);
 		if (!tiiEntity) {
 			throw new Error('Turnitin entity not present on attachment');
 		}

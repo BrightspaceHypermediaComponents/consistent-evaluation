@@ -1,7 +1,7 @@
 import './consistent-evaluation-discussion-evidence-body';
-import { attachmentClassName, attachmentListClassName, sortByOldestFirst, threadRel } from '../../controllers/constants.js';
+import { attachmentClassName, attachmentListClassName, sortByOldestFirst } from '../../controllers/constants.js';
+import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element';
-import { Classes } from 'd2l-hypermedia-constants';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
@@ -151,9 +151,9 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 		let threadTitle = undefined;
 		let isReply = false;
-		if (discussionPostEntity.hasLinkByRel(threadRel)) {
+		if (discussionPostEntity.hasLinkByRel(Rels.Discussion.thread)) {
 			isReply = true;
-			const threadHref = discussionPostEntity.getLinkByRel(threadRel).href;
+			const threadHref = discussionPostEntity.getLinkByRel(Rels.Discussions.thread).href;
 			const threadEntity = await this._getDiscussionPostEntity(threadHref);
 			if (threadEntity && threadEntity.entity) {
 				threadTitle = threadEntity.entity.properties.subject;
