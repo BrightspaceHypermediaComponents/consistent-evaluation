@@ -115,6 +115,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'discussion-calculation-type',
 				type: String
 			},
+			discussionTopicLink: {
+				attribute: 'discussion-topic-link',
+				type: String
+			},
 			navTitleInfo: {
 				attribute: false,
 				type: Object
@@ -343,6 +347,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						user-progress-outcome-href=${ifDefined(this.userProgressOutcomeHref)}
 						download-all-submissions-location=${ifDefined(this.downloadAllSubmissionLink)}
 						activity-type=${this.activityType}
+						discussion-topic-link=${this.discussionTopicLink}
 						.currentFileId=${this.currentFileId}
 						.discussionPostList=${this.discussionPostList}
 						?hide-use-grade=${this._noGradeComponent()}

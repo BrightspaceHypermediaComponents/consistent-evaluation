@@ -19,6 +19,10 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				attribute: false,
 				type: Array
 			},
+			discussionTopicLink: {
+				attribute: 'discussion-topic-link',
+				type: String
+			},
 			token: { type: Object },
 			_sortingMethod: {
 				attribute: false,
@@ -108,6 +112,12 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			${this._renderUnscoredStatus()}
 			${this._renderDiscussionPost()}
 		`;
+	}
+	async updated(changedProperties) {
+		super.updated(changedProperties);
+		if (changedProperties.has('discussionTopicLink')) {
+			this._clearFilters();
+		}
 	}
 	_clearFilters() {
 		this._selectedPostFilters = [];

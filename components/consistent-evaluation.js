@@ -119,6 +119,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				edit-activity-path=${ifDefined(this._editActivityPath)}
 				activity-type=${this._activityType}
 				discussion-calculation-type=${ifDefined(this._discussionTopicInfo && this._discussionTopicInfo.calculationType)}
+				discussion-topic-link=${ifDefined(this._discussionTopicInfo && this._discussionTopicInfo.topicLink)}
 				.currentFileId=${this.currentFileId}
 				.rubricInfos=${this._rubricInfos}
 				.submissionInfo=${this._submissionInfo}

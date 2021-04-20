@@ -23,6 +23,10 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 				attribute: 'display-conversion-warning',
 				type: Boolean
 			},
+			discussionTopicLink: {
+				attribute: 'discussion-topic-link',
+				type: String
+			},
 			downloadAllSubmissionLink: {
 				attribute: 'download-all-submissions-location',
 				type: String
@@ -77,6 +81,7 @@ export class ConsistentEvaluationLeftPanel extends SkeletonMixin(LocalizeConsist
 		return html`
 			<d2l-consistent-evaluation-evidence-discussion
 				?skeleton=${this.skeleton}
+				discussion-topic-link=${this.discussionTopicLink}
 				.discussionPostList=${this.discussionPostList}
 				.token=${this.token}
 			></d2l-consistent-evaluation-evidence-discussion>
