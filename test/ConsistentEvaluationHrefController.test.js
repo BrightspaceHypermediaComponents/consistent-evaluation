@@ -1,6 +1,6 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { assignmentActivity, assignmentClass, checkedClassName, coaActivity, coaClass, discussionActivity, discussionClass, editActivityRel, emailRel,
-	evaluationRel, evidenceRel, nextRel, previousRel, publishedClassName, rubricRel,
+import { assignmentActivity, assignmentClass, checkedClassName, coaActivity, coaClass, discussionActivity, discussionClass,
+	evidenceRel, nextRel, previousRel, publishedClassName,
 	userProgressAssessmentsRel } from '../components/controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
@@ -36,7 +36,7 @@ describe('ConsistentEvaluationHrefController', () => {
 
 	describe('getHrefs works properly and will set the correct hrefs', () => {
 		const relations = [
-			{ key: 'evaluationHref', rel: evaluationRel },
+			{ key: 'evaluationHref', rel: Rels.Activities.evaluation },
 			{ key: 'nextHref', rel: nextRel },
 			{ key: 'previousHref', rel: previousRel },
 		];
@@ -223,7 +223,7 @@ describe('ConsistentEvaluationHrefController', () => {
 					getSubEntityByRel: (r) => {
 						if (r === Rels.viewMembers) {
 							return { properties: { path: viewMembersPath } };
-						} else if (r === emailRel) {
+						} else if (r === Rels.email) {
 							return { properties: { path: emailPath } };
 						} else if (r === Rels.pager) {
 							return { properties: { path: pagerPath } };
@@ -267,7 +267,7 @@ describe('ConsistentEvaluationHrefController', () => {
 					getSubEntityByRel: (r) => {
 						if (r === Rels.pager) {
 							return { properties: { path: pagerPath } };
-						} else if (r === emailRel) {
+						} else if (r === Rels.email) {
 							return { properties: { path: emailPath } };
 						} else if (r === Rels.displayName) {
 							return { properties: { name: displayName } };
@@ -306,7 +306,7 @@ describe('ConsistentEvaluationHrefController', () => {
 
 			getHrefStub.withArgs(activityUsageHref, false).returns({
 				entity: {
-					getSubEntityByRel: (r) => (r === editActivityRel ? { properties: { path: editActivityPath } } : undefined)
+					getSubEntityByRel: (r) => (r === Rels.Assessments.activityUsageEditApplication ? { properties: { path: editActivityPath } } : undefined)
 				}
 			});
 
@@ -499,11 +499,11 @@ describe('ConsistentEvaluationHrefController', () => {
 				});
 
 			sinon.stub(controller, '_getHref')
-				.withArgs(assessmentEntityOne, rubricRel)
+				.withArgs(assessmentEntityOne, Rels.rubric)
 				.returns(
 					expectedRubricHrefOne
 				)
-				.withArgs(assessmentEntityTwo, rubricRel)
+				.withArgs(assessmentEntityTwo, Rels.rubric)
 				.returns(
 					expectedRubricHrefTwo
 				);
