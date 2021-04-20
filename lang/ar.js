@@ -45,7 +45,6 @@ export default {
 	"kB": "كيلوبايت",
 	"late": "متأخر",
 	"leaveBtn": "مغادرة",
-	"loadMore": "تحميل المزيد",
 	"markRead": "وضع علامة كمقروء",
 	"markUnread": "وضع علامة كغير مقروء",
 	"moreOptions": "المزيد من الخيارات",

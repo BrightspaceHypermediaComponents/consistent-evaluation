@@ -45,7 +45,6 @@ export default {
 	"kB": "KB",
 	"late": "fuera de tiempo",
 	"leaveBtn": "Salir",
-	"loadMore": "Cargar más",
 	"markRead": "Marcar como leído",
 	"markUnread": "Marcar como no leído",
 	"moreOptions": "Más opciones",
