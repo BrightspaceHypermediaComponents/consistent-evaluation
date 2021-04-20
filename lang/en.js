@@ -64,6 +64,7 @@ export default {
 	"noEvidence": "There is no evidence uploaded for this submission type",
 	"noFeedbackSummary": "No feedback entered",
 	"noGradeSummary" : "No grade entered",
+	"noPostsInFilteredRange": "No posts in the filtered range.",
 	"noSubmissions": "No submissions made for this assignment",
 	"notGradedSummary" : "not graded yet",
 	"observedInPerson": "Observed In Person",

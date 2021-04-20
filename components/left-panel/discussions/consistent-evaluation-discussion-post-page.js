@@ -87,6 +87,33 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				float: left;
 				margin-right: 12px;
 			}
+
+			:host([skeleton]) .d2l-consistent-evaluation-no-posts-in-range-padding {
+				display: none;
+			}
+
+			.d2l-consistent-evaluation-no-posts-in-range-padding {
+				display: inline-block;
+				width: 100%;
+			}
+
+			.d2l-consistent-evaluation-no-posts-in-range-container {
+				background: white;
+				border: 1px solid var(--d2l-color-gypsum);
+				border-radius: 0.3rem;
+				box-sizing: border-box;
+				margin: 1rem;
+				padding: 1rem;
+			}
+
+			.d2l-consistent-evaluation-no-posts-in-range {
+				background: var(--d2l-color-regolith);
+				border: 1px solid var(--d2l-color-gypsum);
+				border-radius: 0.3rem;
+				box-sizing: border-box;
+				padding: 2rem;
+				width: 100%;
+			}
 		`];
 	}
 
@@ -231,6 +258,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		`;
 	}
 	_renderDiscussionPostEntities() {
+		if (this._displayedDiscussionPostObjects.length === 0) {
+			return html`${this._renderNoPostsInFilteredRange()}`;
+		}
+
 		const itemTemplate = [];
 		for (let i = 0; i < this._displayedDiscussionPostObjects.length; i++) {
 			if (this._displayedDiscussionPostObjects[i]) {
@@ -255,6 +286,14 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	_renderDiscussionRatingSkeleton() {
 		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-rating-container-skeleton">
 				<div class="d2l-skeletize d2l-consistent-evaluation-discussion-evidence-body-rating-skeleton"></div>
+			</div>`;
+	}
+	_renderNoPostsInFilteredRange() {
+		return html`
+			<div class="d2l-consistent-evaluation-no-posts-in-range-padding">
+				<div class="d2l-consistent-evaluation-no-posts-in-range-container">
+					<div class="d2l-consistent-evaluation-no-posts-in-range d2l-body-standard">${this.localize('noPostsInFilteredRange')}</div>
+				</div>
 			</div>`;
 	}
 
