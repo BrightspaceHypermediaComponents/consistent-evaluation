@@ -403,6 +403,7 @@ describe('ConsistentEvaluationHrefController', () => {
 			const disucssionTopicInfo = await controller.getDiscussionTopicInfo();
 			assert.equal(disucssionTopicInfo.topicName, expectedTopicName);
 			assert.equal(disucssionTopicInfo.calculationType, expectedCalculationType);
+			assert.equal(disucssionTopicInfo.topicLink, topicHref);
 		});
 	});
 

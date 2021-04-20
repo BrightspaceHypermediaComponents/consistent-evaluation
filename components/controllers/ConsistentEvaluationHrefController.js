@@ -109,10 +109,11 @@ export class ConsistentEvaluationHrefController {
 		let topicName = undefined;
 		let forumName = undefined;
 		let calculationType = undefined;
+		let topicLink = undefined;
 
 		if (root && root.entity) {
 			if (root.entity.hasLinkByRel(Rels.Discussions.topic)) {
-				const topicLink = root.entity.getLinkByRel(Rels.Discussions.topic).href;
+				topicLink = root.entity.getLinkByRel(Rels.Discussions.topic).href;
 				const topicResponse = await this._getEntityFromHref(topicLink, false);
 				if (topicResponse && topicResponse.entity) {
 					topicName = topicResponse.entity.properties.name;
@@ -130,7 +131,8 @@ export class ConsistentEvaluationHrefController {
 		return {
 			topicName,
 			forumName,
-			calculationType
+			calculationType,
+			topicLink
 		};
 	}
 	async getEditActivityPath() {
