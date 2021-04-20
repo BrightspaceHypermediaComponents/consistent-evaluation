@@ -114,6 +114,16 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				padding: 2rem;
 				width: 100%;
 			}
+			.d2l-consistent-evaluation-unscored-status-indicator {
+				float: left;
+				margin-left: 1rem;
+				margin-right: 1rem;
+				text-transform: none;
+			}
+
+			:host([dir="rtl"]) .d2l-consistent-evaluation-unscored-status-indicator {
+				float: right;
+			}
 		`];
 	}
 
@@ -167,6 +177,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		return html`
 			${this._renderDiscussionItemSkeleton()}
 			${this._renderDiscussionItemSkeleton()}
+			${this._renderUnscoredStatus()}
 			${this._renderDiscussionPostEntities()}
 		`;
 	}
@@ -184,6 +195,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		const postTitle = discussionPostEntity.properties.subject;
 		const postBody = discussionPostEntity.properties.message;
 		const ratingInformation = { upVotes: 0, downVotes: 0 };
+		const isUnscored = discussionPostEvaluationEntity.properties ? discussionPostEvaluationEntity.properties.score === null : false;
 
 		let createdDate = undefined;
 		let createdDateString = undefined;
@@ -219,6 +231,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			postBody,
 			ratingInformation,
 			isReply,
+			isUnscored,
 			threadTitle,
 			attachmentList,
 			discussionPostEvaluationEntity
@@ -244,6 +257,22 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {
 		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
+	}
+	_getUnscoredPostsCount() {
+		// if the posts aren't individually scored return 'NaN'
+		if (this._discussionPostList !== undefined && !('properties' in this._discussionPostList[0])) {
+			return 'NaN';
+		}
+
+		let unscoredPosts = 0;
+		if (this._displayedDiscussionPostObjects) {
+			this._displayedDiscussionPostObjects.forEach(postEntity => {
+				if (postEntity.isUnscored) {
+					unscoredPosts++;
+				}
+			});
+		}
+		return unscoredPosts;
 	}
 	_renderDiscussionItemSkeleton() {
 		return html`
@@ -295,6 +324,21 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 					<div class="d2l-consistent-evaluation-no-posts-in-range d2l-body-standard">${this.localize('noPostsInFilteredRange')}</div>
 				</div>
 			</div>`;
+	}
+
+	_renderUnscoredStatus() {
+		const unscoredPosts = this._getUnscoredPostsCount();
+		if (!isNaN(unscoredPosts)) {
+			return html`
+				<d2l-status-indicator
+					class="d2l-consistent-evaluation-unscored-status-indicator"
+					?hidden=${this.skeleton}
+					state=${(unscoredPosts === 0 ? 'success' : 'default')}
+					text=${(unscoredPosts === 0 ? this.localize('allPostsScored') : this.localize('unscoredPosts', { num: this._getUnscoredPostsCount() }))}>
+				</d2l-status-indicator>
+			`;
+		}
+
 	}
 
 }
