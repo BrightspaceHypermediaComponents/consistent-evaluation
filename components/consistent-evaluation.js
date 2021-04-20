@@ -1,5 +1,5 @@
 import './consistent-evaluation-page.js';
-import { assignmentActivity, attachmentClassName, attachmentListRel, coaActivity, discussionActivity, tiiRel } from './controllers/constants';
+import { assignmentActivity, attachmentClassName, coaActivity, discussionActivity } from './controllers/constants';
 import { css, html, LitElement } from 'lit-element';
 import { Awaiter } from './awaiter.js';
 import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
@@ -7,6 +7,7 @@ import { ConsistentEvaluationHrefController } from './controllers/ConsistentEval
 import { getSubmissions } from './helpers/submissionsAndFilesHelpers.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../localize-consistent-evaluation.js';
+import { Rels } from 'd2l-hypermedia-constants';
 
 export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElement) {
 
@@ -219,11 +220,11 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 	async _hasOneFileAndOneSubmission() {
 		if (this._submissionInfo && this._submissionInfo.submissionList && this._submissionInfo.submissionList.length === 1) {
 			const submissions = await getSubmissions(this._submissionInfo, this.token);
-			const attachmentList = submissions[0].entity.getSubEntityByRel(attachmentListRel);
+			const attachmentList = submissions[0].entity.getSubEntityByRel(Rels.Assignments.attachmentList);
 			const numberOfSubmittedFiles = attachmentList.entities.length;
 
 			if (numberOfSubmittedFiles === 1) {
-				const isTiiEnabled = attachmentList.entities[0].hasSubEntityByRel(tiiRel);
+				const isTiiEnabled = attachmentList.entities[0].hasSubEntityByRel(Rels.Assignments.turnItIn);
 				if (!isTiiEnabled) {
 					const attachmentEntity = attachmentList.getSubEntityByClass(attachmentClassName);
 					// If the attachment is a link attachment, it should not be opened in the file viewer.

@@ -1,7 +1,7 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { anonymousMarkingRel, assignmentActivity, assignmentClass, checkedClassName, coaActivity, coaClass, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
-	evaluationRel, evidenceRel, nextRel, pagerRel, previousRel, publishedClassName, rubricRel,
-	userProgressAssessmentsRel, viewMembersRel } from '../components/controllers/constants.js';
+import { assignmentActivity, assignmentClass, checkedClassName, coaActivity, coaClass, discussionActivity, discussionClass,
+	evidenceRel, nextRel, previousRel, publishedClassName,
+	userProgressAssessmentsRel } from '../components/controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
 import { assert } from '@open-wc/testing';
@@ -36,7 +36,7 @@ describe('ConsistentEvaluationHrefController', () => {
 
 	describe('getHrefs works properly and will set the correct hrefs', () => {
 		const relations = [
-			{ key: 'evaluationHref', rel: evaluationRel },
+			{ key: 'evaluationHref', rel: Rels.Activities.evaluation },
 			{ key: 'nextHref', rel: nextRel },
 			{ key: 'previousHref', rel: previousRel },
 		];
@@ -53,8 +53,8 @@ describe('ConsistentEvaluationHrefController', () => {
 					entity: {
 						hasLinkByRel: (r) => r === rel,
 						getLinkByRel: (r) => (r === rel ? { href } : undefined),
-						hasSubEntityByRel: (r) => r === editSpecialAccessApplicationRel,
-						getSubEntityByRel: (r) => (r === editSpecialAccessApplicationRel ? { properties: { path: expectedSpecialAcessPath } } : undefined)
+						hasSubEntityByRel: (r) => r === Rels.Assignments.editSpecialAccess,
+						getSubEntityByRel: (r) => (r === Rels.Assignments.editSpecialAccess ? { properties: { path: expectedSpecialAcessPath } } : undefined)
 					}
 				});
 
@@ -221,11 +221,11 @@ describe('ConsistentEvaluationHrefController', () => {
 			sinon.stub(controller, '_getEntityFromHref').returns({
 				entity: {
 					getSubEntityByRel: (r) => {
-						if (r === viewMembersRel) {
+						if (r === Rels.viewMembers) {
 							return { properties: { path: viewMembersPath } };
-						} else if (r === emailRel) {
+						} else if (r === Rels.email) {
 							return { properties: { path: emailPath } };
-						} else if (r === pagerRel) {
+						} else if (r === Rels.pager) {
 							return { properties: { path: pagerPath } };
 						}
 					}
@@ -265,9 +265,9 @@ describe('ConsistentEvaluationHrefController', () => {
 			sinon.stub(controller, '_getEntityFromHref').returns({
 				entity: {
 					getSubEntityByRel: (r) => {
-						if (r === pagerRel) {
+						if (r === Rels.pager) {
 							return { properties: { path: pagerPath } };
-						} else if (r === emailRel) {
+						} else if (r === Rels.email) {
 							return { properties: { path: emailPath } };
 						} else if (r === Rels.displayName) {
 							return { properties: { name: displayName } };
@@ -306,7 +306,7 @@ describe('ConsistentEvaluationHrefController', () => {
 
 			getHrefStub.withArgs(activityUsageHref, false).returns({
 				entity: {
-					getSubEntityByRel: (r) => (r === editActivityRel ? { properties: { path: editActivityPath } } : undefined)
+					getSubEntityByRel: (r) => (r === Rels.Assessments.activityUsageEditApplication ? { properties: { path: editActivityPath } } : undefined)
 				}
 			});
 
@@ -422,7 +422,7 @@ describe('ConsistentEvaluationHrefController', () => {
 			entity: {
 				hasSubEntityByRel: () => true,
 				getSubEntityByRel: (r) => {
-					if (r === anonymousMarkingRel) {
+					if (r === Rels.Assignments.anonymousMarking) {
 						return { hasClass: (e) => {
 							if (e === checkedClassName || e === publishedClassName) {
 								return true;
@@ -500,11 +500,11 @@ describe('ConsistentEvaluationHrefController', () => {
 				});
 
 			sinon.stub(controller, '_getHref')
-				.withArgs(assessmentEntityOne, rubricRel)
+				.withArgs(assessmentEntityOne, Rels.rubric)
 				.returns(
 					expectedRubricHrefOne
 				)
-				.withArgs(assessmentEntityTwo, rubricRel)
+				.withArgs(assessmentEntityTwo, Rels.rubric)
 				.returns(
 					expectedRubricHrefTwo
 				);

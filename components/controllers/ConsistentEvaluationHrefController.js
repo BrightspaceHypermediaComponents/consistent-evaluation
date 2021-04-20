@@ -1,9 +1,8 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { actorRel, alignmentsRel, anonymousMarkingRel, assessmentRel,
-	assessmentRubricApplicationRel, assessorUserRel, assignmentActivity, assignmentClass, assignmentRel, assignmentSubmissionListRel,
-	checkedClassName, coaActivity, coaClass, demonstrationRel, discussionActivity, discussionClass, editActivityRel, editSpecialAccessApplicationRel, emailRel,
-	enrolledUserRel, evaluationRel, evidenceRel, groupRel, nextRel, pagerRel, postClass, previousRel, publishedClassName,
-	rubricRel, userProgressAssessmentsRel, userProgressOutcomeRel, userRel,  viewMembersRel } from './constants.js';
+import { assessorUserRel, assignmentActivity, assignmentClass,
+	checkedClassName, coaActivity, coaClass, demonstrationRel, discussionActivity, discussionClass,
+	evidenceRel, nextRel, postClass, previousRel, publishedClassName,
+	userProgressAssessmentsRel, userProgressOutcomeRel } from './constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 
 export const ConsistentEvaluationHrefControllerErrors = {
@@ -42,11 +41,11 @@ export class ConsistentEvaluationHrefController {
 	async getAnonymousInfo() {
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
-			const assignmentHref = this._getHref(root.entity, assignmentRel);
+			const assignmentHref = this._getHref(root.entity, Rels.assignment);
 			if (assignmentHref) {
 				const assignmentEntity = await this._getEntityFromHref(assignmentHref);
-				if (assignmentEntity.entity.hasSubEntityByRel(anonymousMarkingRel)) {
-					const anonymousAssignmentEntity = assignmentEntity.entity.getSubEntityByRel(anonymousMarkingRel);
+				if (assignmentEntity.entity.hasSubEntityByRel(Rels.Assignments.anonymousMarking)) {
+					const anonymousAssignmentEntity = assignmentEntity.entity.getSubEntityByRel(Rels.Assignments.anonymousMarking);
 					const isAnonymous = anonymousAssignmentEntity.hasClass(checkedClassName);
 					const assignmentHasPublishedSubmission = anonymousAssignmentEntity.hasClass(publishedClassName);
 					return {
@@ -91,7 +90,7 @@ export class ConsistentEvaluationHrefController {
 	async getDiscussionPostsInfo() {
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
-			const evaluationHref = this._getHref(root.entity, evaluationRel);
+			const evaluationHref = this._getHref(root.entity, Rels.Activities.evaluation);
 			if (evaluationHref) {
 				const evaluationEntity = await this._getEntityFromHref(evaluationHref, false);
 				if (evaluationEntity && evaluationEntity.entity && evaluationEntity.entity.hasSubEntityByRel(evidenceRel)) {
@@ -143,7 +142,7 @@ export class ConsistentEvaluationHrefController {
 				const activityUsageLink = root.entity.getLinkByRel(Rels.Activities.activityUsage).href;
 				const activityUsageResponse = await this._getEntityFromHref(activityUsageLink, false);
 				if (activityUsageResponse && activityUsageResponse.entity) {
-					const editAcitivityEntity = activityUsageResponse.entity.getSubEntityByRel(editActivityRel);
+					const editAcitivityEntity = activityUsageResponse.entity.getSubEntityByRel(Rels.Assessments.activityUsageEditApplication);
 					editActivityPath = editAcitivityEntity ? editAcitivityEntity.properties.path : undefined;
 				}
 			}
@@ -153,12 +152,12 @@ export class ConsistentEvaluationHrefController {
 	async getEnrolledUser() {
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
-			const enrolledUserHref = this._getHref(root.entity, enrolledUserRel);
-			const groupHref = this._getHref(root.entity, groupRel);
+			const enrolledUserHref = this._getHref(root.entity, Rels.enrolledUser);
+			const groupHref = this._getHref(root.entity, Rels.group);
 			if (enrolledUserHref) {
 				const enrolledUserEntity = await this._getEntityFromHref(enrolledUserHref, false);
-				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(pagerRel);
-				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(emailRel, false);
+				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.pager);
+				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.email, false);
 				const userProfileEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProfile);
 				const displayNameEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.displayName);
 				const userProgressEntity = root.entity.getSubEntityByRel(userProgressAssessmentsRel, false);
@@ -194,7 +193,7 @@ export class ConsistentEvaluationHrefController {
 				};
 			} else if (groupHref) {
 				const groupEntity = await this._getEntityFromHref(groupHref, false);
-				const pagerEntity = groupEntity.entity.getSubEntityByRel(pagerRel);
+				const pagerEntity = groupEntity.entity.getSubEntityByRel(Rels.pager);
 				let pagerPath = undefined;
 				if (pagerEntity) {
 					pagerPath = pagerEntity.properties.path;
@@ -242,13 +241,13 @@ export class ConsistentEvaluationHrefController {
 			const groupHref = this._getHref(root.entity, Rels.group);
 			if (groupHref) {
 				const groupEntity = await this._getEntityFromHref(groupHref, false);
-				const viewMembersEntity = groupEntity.entity.getSubEntityByRel(viewMembersRel);
+				const viewMembersEntity = groupEntity.entity.getSubEntityByRel(Rels.viewMembers);
 				const viewMembersPath = viewMembersEntity ? viewMembersEntity.properties.path : undefined;
 
-				const pagerEntity = groupEntity.entity.getSubEntityByRel(pagerRel);
+				const pagerEntity = groupEntity.entity.getSubEntityByRel(Rels.pager);
 				const pagerPath = pagerEntity ? pagerEntity.properties.path : undefined;
 
-				const emailEntity = groupEntity.entity.getSubEntityByRel(emailRel);
+				const emailEntity = groupEntity.entity.getSubEntityByRel(Rels.email);
 				const emailPath = emailEntity ? emailEntity.properties.path : undefined;
 
 				return {
@@ -294,13 +293,13 @@ export class ConsistentEvaluationHrefController {
 		if (root && root.entity) {
 			root = root.entity;
 
-			evaluationHref = this._getHref(root, evaluationRel);
+			evaluationHref = this._getHref(root, Rels.Activities.evaluation);
 			nextHref = this._getHref(root, nextRel);
 			previousHref = this._getHref(root, previousRel);
-			actorHref = this._getHref(root, actorRel);
-			userHref = this._getHref(root, userRel);
-			alignmentsHref = this._getHref(root, alignmentsRel);
-			groupHref = this._getHref(root, groupRel);
+			actorHref = this._getHref(root, Rels.Activities.actorActivityUsage);
+			userHref = this._getHref(root, Rels.user);
+			alignmentsHref = this._getHref(root, Rels.assessment);
+			groupHref = this._getHref(root, Rels.group);
 			userProgressOutcomeHref = this._getHref(root, userProgressOutcomeRel);
 
 			if (alignmentsHref) {
@@ -328,17 +327,17 @@ export class ConsistentEvaluationHrefController {
 				}
 			}
 
-			if (root.hasSubEntityByRel(editSpecialAccessApplicationRel)) {
-				specialAccessHref = root.getSubEntityByRel(editSpecialAccessApplicationRel).properties.path;
+			if (root.hasSubEntityByRel(Rels.Assignments.editSpecialAccess)) {
+				specialAccessHref = root.getSubEntityByRel(Rels.Assignments.editSpecialAccess).properties.path;
 			}
 
-			if (root.hasSubEntityByRel(assessmentRubricApplicationRel)) {
-				rubricPopoutLocation = root.getSubEntityByRel(assessmentRubricApplicationRel).properties.path;
+			if (root.hasSubEntityByRel(Rels.Assessments.assessRubricApplication)) {
+				rubricPopoutLocation = root.getSubEntityByRel(Rels.Assessments.assessRubricApplication).properties.path;
 			}
 
-			if (root.hasSubEntityByRel(assignmentSubmissionListRel)) {
-				if (root.getSubEntityByRel(assignmentSubmissionListRel).properties) {
-					downloadAllSubmissionLink = root.getSubEntityByRel(assignmentSubmissionListRel).properties.downloadAll;
+			if (root.hasSubEntityByRel(Rels.Assignments.submissionList)) {
+				if (root.getSubEntityByRel(Rels.Assignments.submissionList).properties) {
+					downloadAllSubmissionLink = root.getSubEntityByRel(Rels.Assignments.submissionList).properties.downloadAll;
 				}
 			}
 		}
@@ -376,7 +375,7 @@ export class ConsistentEvaluationHrefController {
 		let rubricInfos = [];
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
-			const rubricHrefs = this._getHrefs(root.entity, assessmentRel);
+			const rubricHrefs = this._getHrefs(root.entity, Rels.assessment);
 			if (rubricHrefs) {
 				rubricInfos = await Promise.all(rubricHrefs.map(async rubricAssessmentHref => {
 					const assessmentEntity = await this._getEntityFromHref(rubricAssessmentHref, refreshRubric);
@@ -384,7 +383,7 @@ export class ConsistentEvaluationHrefController {
 						await this._refreshRubricAssessment(assessmentEntity);
 					}
 					if (assessmentEntity && assessmentEntity.entity) {
-						const rubricHref = this._getHref(assessmentEntity.entity, rubricRel);
+						const rubricHref = this._getHref(assessmentEntity.entity, Rels.rubric);
 						const rubricEntity = await this._getEntityFromHref(rubricHref, false);
 						const rubricTitle = rubricEntity.entity.properties.name;
 						const rubricId = rubricEntity.entity.properties.rubricId.toString();
@@ -436,7 +435,7 @@ export class ConsistentEvaluationHrefController {
 					submissionType = assignmentEntity.entity.properties.submissionType.value.toString();
 				}
 			}
-			const evaluationHref = this._getHref(root, evaluationRel);
+			const evaluationHref = this._getHref(root, Rels.Activities.evaluation);
 			if (evaluationHref) {
 				const evaluationEntity = await this._getEntityFromHref(evaluationHref, false);
 				if (evaluationEntity && evaluationEntity.entity) {
