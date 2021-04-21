@@ -163,6 +163,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 					this._anonymousInfo = await controller.getAnonymousInfo();
 					this._iteratorTotal = await controller.getIteratorInfo('total');
 					this._iteratorIndex = await controller.getIteratorInfo('index');
+					this._editActivityPath = await controller.getEditActivityPath();
 					if (this._activityType === assignmentActivity || this._activityType === coaActivity) {
 						this._loadingComponents.discussions = false;
 						this._submissionInfo = await controller.getSubmissionInfo();
@@ -171,7 +172,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						this._navTitleInfo = {
 							'titleName' : await controller.getAssignmentOrganizationName('assignment'),
 							'subtitleName': await controller.getAssignmentOrganizationName('organization') };
-						this._editActivityPath = await controller.getEditActivityPath();
 
 						const stripped = this._stripFileIdFromUrl();
 						const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
