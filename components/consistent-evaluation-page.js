@@ -10,7 +10,7 @@ import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/templates/primary-secondary/primary-secondary.js';
 import '@brightspace-ui/core/components/dialog/dialog-confirm.js';
 import '@brightspace-ui/core/components/button/button.js';
-import { assignmentActivity, draftState, evidenceRel, postClass, publishActionName, publishedState, retractActionName, saveActionName, toggleIsReadActionName, updateActionName } from './controllers/constants.js';
+import { assignmentActivity, draftState, evidenceRel, postClass, publishActionName, publishedState, retractActionName, saveActionName, saveGradeActionName, toggleIsReadActionName, updateActionName } from './controllers/constants.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { Awaiter } from './awaiter.js';
@@ -380,6 +380,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}
 						.token=${this.token}
+						?can-save-overall-grade=${this._gradeEntity && this._gradeEntity.hasActionByName(saveGradeActionName)}
 						?rubric-read-only=${this.rubricReadOnly}
 						?hide-grade=${this._noGradeComponent()}
 						?hide-outcomes=${this.outcomesHref === undefined}

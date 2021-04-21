@@ -3,6 +3,7 @@ import { html, LitElement } from 'lit-element';
 import { ConsistentEvaluationHrefController } from '../controllers/ConsistentEvaluationHrefController.js';
 import { convertToken } from '../helpers/converterHelpers.js';
 import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
+import { saveGradeActionName } from '../controllers/constants.js';
 
 export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluation(LitElement) {
 
@@ -16,6 +17,7 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 			},
 			_pageTitle: { type: String },
 			_rubricInfos: { type: Array },
+			_canSaveOverallGrade: { type: Boolean }
 		};
 	}
 
@@ -34,6 +36,7 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 				header=${this.localize('rubrics')}
 				.rubricInfos=${this._rubricInfos}
 				.token=${this.token}
+				?can-save-overall-grade=${this._canSaveOverallGrade}
 				is-popout
 			></d2l-consistent-evaluation-rubric>
 		`;
@@ -50,6 +53,10 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 				this._pageTitle = await controller.getGroupName();
 			}
 			this.setTitle();
+
+			const evaluationEntity = controller.getEvaluationEntity();
+			const gradeEntity = evaluationEntity.getSubEntityByRel('grade');
+			this._canSaveOverallGrade = gradeEntity.hasActionByName(saveGradeActionName);
 		}
 
 	}

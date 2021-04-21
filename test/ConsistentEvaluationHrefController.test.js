@@ -240,6 +240,23 @@ describe('ConsistentEvaluationHrefController', () => {
 		});
 	});
 
+	describe('getEvaluationEntity gets evaluationEntity info', async() => {
+		it('gets correct evaluationEntity info', async() => {
+			const evaluationEntity = 'evaluationEntity';
+			const evaluationEntityHref = 'href';
+
+			const controller = new ConsistentEvaluationHrefController('href', 'token');
+
+			sinon.stub(controller, '_getRootEntity').returns ({ entity: { } });
+			sinon.stub(controller, '_getHref').returns(evaluationEntityHref);
+			sinon.stub(controller, '_getEntityFromHref').returns(evaluationEntity);
+
+			const returnedEvaluationEntity = await controller.getEvaluationEntity();
+
+			assert.equal(returnedEvaluationEntity, evaluationEntity);
+		});
+	});
+
 	describe('getEnrolledUser gets correct enrolled user info', () => {
 		it('sets the enrolled user info', async() => {
 			const enrolledUserHref = 'enrolledUserHref';
