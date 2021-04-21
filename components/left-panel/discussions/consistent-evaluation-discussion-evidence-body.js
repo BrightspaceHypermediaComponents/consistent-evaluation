@@ -5,6 +5,7 @@ import './consistent-evaluation-discussion-post-score.js';
 import { bodyCompactStyles, bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
+import { getFileIconTypeFromExtension } from '@brightspace-ui/core/components/icons/getFileIconType';
 import { linkStyles } from '@brightspace-ui/core/components/link/link.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
@@ -141,6 +142,17 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		return `${formattedDate} ${formattedTime}`;
 	}
 
+	_getLinkIconTypeFromUrl(url) {
+		const lowerCaseUrl = url.toLowerCase();
+		if (lowerCaseUrl.includes('type=audio')) {
+			return 'file-audio';
+		} else if (lowerCaseUrl.includes('type=video')) {
+			return 'file-video';
+		} else {
+			return 'link';
+		}
+	}
+
 	_getReadableFileSizeString(fileSizeBytes) {
 		let i = -1;
 		const byteUnits = ['kB', 'MB', 'GB'];
@@ -165,7 +177,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 	_renderAttachments() {
 		if (this.attachmentsList) {
 			return html`${this.attachmentsList.map((attachment) => {
-				const { name, size, href } = attachment.properties;
+				const { name, size, extension, href } = attachment.properties;
 				const onClickHandler = () => this._downloadAttachment(href);
 				const onKeydownHandler = (e) => {
 					if (e.key === 'Enter' || e.key === ' ') {
@@ -173,9 +185,18 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 					}
 				};
 
+				let iconType;
+				if (extension === 'url') {
+					iconType = this._getLinkIconTypeFromUrl(href);
+				} else if (extension === 'html') {
+					iconType = 'browser';
+				} else {
+					iconType = getFileIconTypeFromExtension(extension);
+				}
+
 				return html`<d2l-list-item class="d2l-consistent-evaluation-discussion-attachment-list-item-content">
 							<div>
-								<d2l-icon icon="d2l-tier1:file-document"></d2l-icon>
+								<d2l-icon icon="tier1:${iconType}"></d2l-icon>
 								<a
 									class="d2l-link d2l-body-compact"
 									tabindex="0"
