@@ -215,6 +215,7 @@ export class ConsistentEvaluationHrefController {
 			const evaluationEntity = await this._getEntityFromHref(evaluationHref, false);
 			return evaluationEntity;
 		}
+		return undefined;
 	}
 	async getGradeItemInfo() {
 		const root = await this._getRootEntity(false);
