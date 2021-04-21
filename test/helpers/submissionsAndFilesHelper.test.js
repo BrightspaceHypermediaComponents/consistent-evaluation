@@ -1,3 +1,4 @@
+import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
 import { formatDateTime, getLinkIconTypeFromUrl } from '../../components/helpers/submissionsAndFilesHelpers.js';
 import { assert } from '@open-wc/testing';
 
@@ -5,9 +6,17 @@ describe('submissionsAndFilesHelpers tests', () => {
 
 	describe('formatDateTime tests', () => {
 		const dateStr = '2021-03-25T02:41:52.707Z';
-		it('correctly short formats date', async() => {
-			const actualResult = formatDateTime(dateStr);
-			assert.equal(actualResult, 'Mar 24, 2021 10:41 PM');
+		it('correctly formats date', async() => {
+			const mediumDate = formatDateTime(dateStr, 'medium');
+			const fullDate = formatDateTime(dateStr, 'full');
+
+			const date = new Date(dateStr);
+			const formattedMediumDate = formatDate(date, { format: 'medium' });
+			const formattedFullDate = formatDate(date, { format: 'full' });
+			const formattedTime = formatTime(date, { format: 'short' });
+
+			assert.equal(mediumDate, `${formattedMediumDate} ${formattedTime}`);
+			assert.equal(fullDate, `${formattedFullDate} ${formattedTime}`);
 		});
 
 	});

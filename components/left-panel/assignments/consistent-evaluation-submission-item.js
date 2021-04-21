@@ -447,7 +447,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 				${this._renderEvaluationState()}
 			</span>
 			<span class="d2l-body-small">
-				${formatDateTime(this.dateStr)}
+				${formatDateTime(this.dateStr, 'full')}
 			</span>
 			</div>
 		</d2l-list-item-content>
@@ -506,7 +506,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 				${this._renderLateStatus()}
 				${this._renderEvaluationState()}
 				${this._renderFlaggedStatus(flagged)}
-				<span class="d2l-body-small">${formatDateTime(this.dateStr)}</span>
+				<span class="d2l-body-small">${formatDateTime(this.dateStr, 'full')}</span>
 			</div>
 		</d2l-list-item-content>
 		${this._addMenuOptions(read, flagged, href, extension, id)}

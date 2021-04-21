@@ -45,12 +45,12 @@ export async function getSubmissions(submissionInfo, token) {
 	}
 }
 
-export function formatDateTime(postDate) {
-	const date = postDate ? new Date(postDate) : undefined;
+export function formatDateTime(dateStr, dateFormatType) {
+	const date = dateStr ? new Date(dateStr) : undefined;
 
 	const formattedDate = (date) ? formatDate(
 		date,
-		{ format: 'medium' }) : '';
+		{ format: dateFormatType }) : '';
 	const formattedTime = (date) ? formatTime(
 		date,
 		{ format: 'short' }) : '';

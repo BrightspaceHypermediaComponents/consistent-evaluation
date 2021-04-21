@@ -194,7 +194,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			</div>`;
 	}
 	_renderDate() {
-		return html `<div class="d2l-body-small">${formatDateTime(this.postDate)}</div>`;
+		return html `<div class="d2l-body-small">${formatDateTime(this.postDate, 'medium')}</div>`;
 	}
 	_renderPostScore() {
 		if (this.discussionPostEntity && this.discussionPostEntity.properties && this.discussionPostEntity.properties.outOf) {
