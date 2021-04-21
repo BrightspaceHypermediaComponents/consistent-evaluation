@@ -1,5 +1,6 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
+import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
 
 export function findFile(fileId, submissions) {
 	for (let i = 0; i < submissions.length; i++) {
@@ -41,5 +42,28 @@ export async function getSubmissions(submissionInfo, token) {
 			return file;
 		});
 		return Promise.all(submissionEntities);
+	}
+}
+
+export function formatDateTime(postDate) {
+	const date = postDate ? new Date(postDate) : undefined;
+
+	const formattedDate = (date) ? formatDate(
+		date,
+		{ format: 'medium' }) : '';
+	const formattedTime = (date) ? formatTime(
+		date,
+		{ format: 'short' }) : '';
+	return `${formattedDate} ${formattedTime}`;
+}
+
+export function getLinkIconTypeFromUrl(url) {
+	const lowerCaseUrl = url.toLowerCase();
+	if (lowerCaseUrl.includes('type=audio')) {
+		return 'file-audio';
+	} else if (lowerCaseUrl.includes('type=video')) {
+		return 'file-video';
+	} else {
+		return 'link';
 	}
 }

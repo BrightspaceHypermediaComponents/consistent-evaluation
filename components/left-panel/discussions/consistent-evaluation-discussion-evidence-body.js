@@ -4,7 +4,7 @@ import '@brightspace-ui/core/components/list/list-item.js';
 import './consistent-evaluation-discussion-post-score.js';
 import { bodyCompactStyles, bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
-import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
+import { formatDateTime, getLinkIconTypeFromUrl } from '../../helpers/submissionsAndFilesHelpers';
 import { getFileIconTypeFromExtension } from '@brightspace-ui/core/components/icons/getFileIconType';
 import { linkStyles } from '@brightspace-ui/core/components/link/link.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
@@ -130,28 +130,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		window.location.href = href;
 
 	}
-	_formatDateTime() {
-		const date = this.postDate ? new Date(this.postDate) : undefined;
-
-		const formattedDate = (date) ? formatDate(
-			date,
-			{ format: 'medium' }) : '';
-		const formattedTime = (date) ? formatTime(
-			date,
-			{ format: 'short' }) : '';
-		return `${formattedDate} ${formattedTime}`;
-	}
-
-	_getLinkIconTypeFromUrl(url) {
-		const lowerCaseUrl = url.toLowerCase();
-		if (lowerCaseUrl.includes('type=audio')) {
-			return 'file-audio';
-		} else if (lowerCaseUrl.includes('type=video')) {
-			return 'file-video';
-		} else {
-			return 'link';
-		}
-	}
 
 	_getReadableFileSizeString(fileSizeBytes) {
 		let i = -1;
@@ -187,7 +165,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 
 				let iconType;
 				if (extension === 'url') {
-					iconType = this._getLinkIconTypeFromUrl(href);
+					iconType = getLinkIconTypeFromUrl(href);
 				} else if (extension === 'html') {
 					iconType = 'browser';
 				} else {
@@ -216,7 +194,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			</div>`;
 	}
 	_renderDate() {
-		return html `<div class="d2l-body-small">${this._formatDateTime()}</div>`;
+		return html `<div class="d2l-body-small">${formatDateTime(this.postDate)}</div>`;
 	}
 	_renderPostScore() {
 		if (this.discussionPostEntity && this.discussionPostEntity.properties && this.discussionPostEntity.properties.outOf) {
