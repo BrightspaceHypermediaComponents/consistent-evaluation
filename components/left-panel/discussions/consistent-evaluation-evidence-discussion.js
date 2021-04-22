@@ -91,7 +91,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	}
 
 	render() {
-		if (this.discussionPostList && this.discussionPostList.length === 0) {
+		if (this.discussionPostList && this.discussionPostList.length === 0 && !this.skeleton) {
 			this._finishedLoading();
 			return html`${this._renderNoAssessablePosts()}`;
 		}
