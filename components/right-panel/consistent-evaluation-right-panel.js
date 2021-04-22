@@ -35,6 +35,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				attribute: 'allow-record-audio',
 				type: Boolean
 			},
+			canSaveOverallGrade: {
+				attribute: 'can-save-overall-grade',
+				type: Boolean
+			},
 			feedbackText: {
 				attribute: false
 			},
@@ -205,6 +209,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		this.canAddFeedbackFile = false;
 		this.canRecordFeedbackVideo = false;
 		this.canRecordFeedbackAudio = false;
+		this.canSaveOverallGrade = false;
 		this.useNewHtmlEditor = false;
 		this._specialAccessId = getUniqueId();
 		this._editActivityId = getUniqueId();
@@ -386,6 +391,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 					.token=${this.token}
 					?show-active-scoring-rubric-options=${showActiveScoringRubric}
 					?read-only=${this.rubricReadOnly}
+					?can-save-overall-grade=${this.canSaveOverallGrade}
 					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
 					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
 					@d2l-rubric-compact-expanded-changed=${this._updateRubricOpenState}

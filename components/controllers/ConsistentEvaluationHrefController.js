@@ -207,6 +207,16 @@ export class ConsistentEvaluationHrefController {
 			return undefined;
 		}
 	}
+	async getEvaluationEntity() {
+		const root = await this._getRootEntity(false);
+		if (root && root.entity) {
+
+			const evaluationHref = this._getHref(root.entity, Rels.Activities.evaluation);
+			const evaluationEntity = await this._getEntityFromHref(evaluationHref, false);
+			return evaluationEntity;
+		}
+		return undefined;
+	}
 	async getGradeItemInfo() {
 		const root = await this._getRootEntity(false);
 		let evaluationUrl, statsUrl, gradeItemName;

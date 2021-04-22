@@ -42,6 +42,10 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 			readonly: {
 				attribute: 'read-only',
 				type: Boolean
+			},
+			canSaveOverallGrade: {
+				attribute: 'can-save-overall-grade',
+				type: Boolean
 			}
 		};
 	}
@@ -101,6 +105,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 		this.rubricWindowPopout = undefined;
 		this.closeRubricWindow = this._closePopout.bind(this);
 		this.logger = createClient(appId);
+		this.canSaveOverallGrade = false;
 	}
 
 	connectedCallback() {
@@ -305,7 +310,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 			html`<h2 aria-label=${this.localize('rubricTitle')} class='d2l-consistent-evaluation-rubric-title'>${rubricTitle}</h2>`;
 	}
 	_syncActiveRubricGrade(score, targetRubricId, bypassRubricState) {
-		if (this.showActiveScoringRubricOptions && this.activeScoringRubric !== targetRubricId) {
+		if ((this.showActiveScoringRubricOptions && this.activeScoringRubric !== targetRubricId) || !this.canSaveOverallGrade) {
 			return;
 		}
 
