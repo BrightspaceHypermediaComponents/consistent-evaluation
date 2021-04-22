@@ -16,7 +16,7 @@ import './consistent-evaluation-tii-similarity.js';
 import { bodySmallStyles, heading3Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { fileSubmission, textSubmission, tiiReportCompleteStatus } from '../../controllers/constants';
-import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
+import { formatDateTime, getLinkIconTypeFromUrl } from '../../helpers/submissionsAndFilesHelpers';
 import { toggleFlagActionName, toggleIsReadActionName } from '../../controllers/constants.js';
 import { getFileIconTypeFromExtension } from '@brightspace-ui/core/components/icons/getFileIconType';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
@@ -311,17 +311,6 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		});
 		this.dispatchEvent(event);
 	}
-	_formatDateTime() {
-		const date = this.dateStr ? new Date(this.dateStr) : undefined;
-
-		const formattedDate = (date) ? formatDate(
-			date,
-			{ format: 'full' }) : '';
-		const formattedTime = (date) ? formatTime(
-			date,
-			{ format: 'short' }) : '';
-		return `${formattedDate} ${formattedTime}`;
-	}
 	_getFileExtension(filename) {
 		const index = filename.lastIndexOf('.');
 		if (index < 0) {
@@ -337,17 +326,6 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			return '';
 		} else {
 			return filename.substring(0, index);
-		}
-	}
-
-	_getLinkIconTypeFromUrl(url) {
-		const lowerCaseUrl = url.toLowerCase();
-		if (lowerCaseUrl.includes('type=audio')) {
-			return 'file-audio';
-		} else if (lowerCaseUrl.includes('type=video')) {
-			return 'file-video';
-		} else {
-			return 'link';
 		}
 	}
 	_getReadableFileSizeString(fileSizeBytes) {
@@ -390,7 +368,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			<d2l-list-item>
 				<div slot="illustration" class="d2l-submission-attachment-icon-container">
 					<d2l-icon class="d2l-submission-attachment-icon-container-inner"
-						icon="tier2:${extension === 'url' ? this._getLinkIconTypeFromUrl(href) :  getFileIconTypeFromExtension(extension)}"
+						icon="tier2:${extension === 'url' ? getLinkIconTypeFromUrl(href) :  getFileIconTypeFromExtension(extension)}"
 						aria-label="${getFileIconTypeFromExtension(extension)}"></d2l-icon>
 					${this._renderReadStatus(read)}
 				</div>
@@ -469,7 +447,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 				${this._renderEvaluationState()}
 			</span>
 			<span class="d2l-body-small">
-				${this._formatDateTime()}
+				${formatDateTime(this.dateStr, 'full')}
 			</span>
 			</div>
 		</d2l-list-item-content>
@@ -528,7 +506,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 				${this._renderLateStatus()}
 				${this._renderEvaluationState()}
 				${this._renderFlaggedStatus(flagged)}
-				<span class="d2l-body-small">${this._formatDateTime()}</span>
+				<span class="d2l-body-small">${formatDateTime(this.dateStr, 'full')}</span>
 			</div>
 		</d2l-list-item-content>
 		${this._addMenuOptions(read, flagged, href, extension, id)}

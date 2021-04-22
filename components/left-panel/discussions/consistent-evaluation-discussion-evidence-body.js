@@ -4,7 +4,8 @@ import '@brightspace-ui/core/components/list/list-item.js';
 import './consistent-evaluation-discussion-post-score.js';
 import { bodyCompactStyles, bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
-import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
+import { formatDateTime, getLinkIconTypeFromUrl } from '../../helpers/submissionsAndFilesHelpers';
+import { getFileIconTypeFromExtension } from '@brightspace-ui/core/components/icons/getFileIconType';
 import { linkStyles } from '@brightspace-ui/core/components/link/link.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
@@ -129,17 +130,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		window.location.href = href;
 
 	}
-	_formatDateTime() {
-		const date = this.postDate ? new Date(this.postDate) : undefined;
-
-		const formattedDate = (date) ? formatDate(
-			date,
-			{ format: 'medium' }) : '';
-		const formattedTime = (date) ? formatTime(
-			date,
-			{ format: 'short' }) : '';
-		return `${formattedDate} ${formattedTime}`;
-	}
 
 	_getReadableFileSizeString(fileSizeBytes) {
 		let i = -1;
@@ -165,7 +155,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 	_renderAttachments() {
 		if (this.attachmentsList) {
 			return html`${this.attachmentsList.map((attachment) => {
-				const { name, size, href } = attachment.properties;
+				const { name, size, extension, href } = attachment.properties;
 				const onClickHandler = () => this._downloadAttachment(href);
 				const onKeydownHandler = (e) => {
 					if (e.key === 'Enter' || e.key === ' ') {
@@ -173,9 +163,18 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 					}
 				};
 
+				let iconType;
+				if (extension === 'url') {
+					iconType = getLinkIconTypeFromUrl(href);
+				} else if (extension === 'html') {
+					iconType = 'browser';
+				} else {
+					iconType = getFileIconTypeFromExtension(extension);
+				}
+
 				return html`<d2l-list-item class="d2l-consistent-evaluation-discussion-attachment-list-item-content">
 							<div>
-								<d2l-icon icon="d2l-tier1:file-document"></d2l-icon>
+								<d2l-icon icon="tier1:${iconType}"></d2l-icon>
 								<a
 									class="d2l-link d2l-body-compact"
 									tabindex="0"
@@ -195,7 +194,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			</div>`;
 	}
 	_renderDate() {
-		return html `<div class="d2l-body-small">${this._formatDateTime()}</div>`;
+		return html `<div class="d2l-body-small">${formatDateTime(this.postDate, 'medium')}</div>`;
 	}
 	_renderPostScore() {
 		if (this.discussionPostEntity && this.discussionPostEntity.properties && this.discussionPostEntity.properties.outOf) {
