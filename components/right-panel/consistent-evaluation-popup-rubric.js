@@ -56,7 +56,9 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 
 			const evaluationEntity = controller.getEvaluationEntity();
 			const gradeEntity = evaluationEntity.getSubEntityByRel('grade');
-			this._canSaveOverallGrade = gradeEntity.hasActionByName(saveGradeActionName);
+			if (gradeEntity) {
+				this._canSaveOverallGrade = gradeEntity.hasActionByName(saveGradeActionName);
+			}
 		}
 
 	}
