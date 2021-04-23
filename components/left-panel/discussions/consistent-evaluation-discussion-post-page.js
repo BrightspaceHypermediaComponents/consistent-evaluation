@@ -240,15 +240,17 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	async _getDiscussionPostEntities() {
 		this._discussionPostObjects = [];
 		if (this._discussionPostList !== undefined) {
-			for (const discussionPostEvaluationEntity of this._discussionPostList) {
-				if (discussionPostEvaluationEntity.links && discussionPostEvaluationEntity.links[0].href) {
-					const discussionPost = await this._getDiscussionPostEntity(discussionPostEvaluationEntity.links[0].href);
-					if (discussionPost && discussionPost.entity) {
-						const discussionPostObject = await this._formatDiscussionPostObject(discussionPost.entity, discussionPostEvaluationEntity);
-						this._discussionPostObjects.push(discussionPostObject);
+
+				this._discussionPostObjects = await Promise.all(this._discussionPostList.map(async discussionPostEvaluationEntity => {
+
+					if (discussionPostEvaluationEntity.links && discussionPostEvaluationEntity.links[0].href) {
+						const discussionPost = await this._getDiscussionPostEntity(discussionPostEvaluationEntity.links[0].href);
+						if (discussionPost && discussionPost.entity) {
+							const discussionPostObject = await this._formatDiscussionPostObject(discussionPost.entity, discussionPostEvaluationEntity);
+							return discussionPostObject
+						}
 					}
-				}
-			}
+				}));
 
 			this._currentSortingMethod = this.sortingMethod;
 			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
