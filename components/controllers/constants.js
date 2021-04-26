@@ -59,3 +59,6 @@ export const filterByThreads = 'threads';
 export const filterByReplies = 'replies';
 export const filterByScored = 'scored';
 export const filterByUnscored = 'unscored';
+export const fivestarRatingClass = 'fivestar-rating';
+export const upvoteDownvoteRatingClass = 'upvotedownvote-rating';
+export const upvoteOnlyRatingClass = 'upvoteonly-rating';
