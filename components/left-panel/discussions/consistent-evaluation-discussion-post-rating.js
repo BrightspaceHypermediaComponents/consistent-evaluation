@@ -32,7 +32,6 @@ export class ConsistentEvaluationDiscussionPostRating extends RtlMixin(LocalizeC
 				d2l-icon {
 					padding-bottom: 5px;
 				}
-			}
 		`];
 	}
 

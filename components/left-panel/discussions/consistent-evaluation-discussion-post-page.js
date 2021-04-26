@@ -3,6 +3,7 @@ import { attachmentClassName, attachmentListClassName, fivestarRatingClass, lmsS
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element';
 import { filterDiscussionPosts, sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
@@ -336,7 +337,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 						post-date=${discussionPost.createdDateString}
 						?is-reply=${discussionPost.isReply}
 						thread-title=${discussionPost.threadTitle}
-						rating-method=${this._ratingMethod}
+						rating-method=${ifDefined(this._ratingMethod)}
 						.attachmentsList=${discussionPost.attachmentList}
 						.ratingInformation=${discussionPost.ratingInformation}
 						.discussionPostEntity=${discussionPost.discussionPostEvaluationEntity}
