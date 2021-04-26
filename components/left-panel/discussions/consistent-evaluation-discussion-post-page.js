@@ -1,5 +1,5 @@
 import './consistent-evaluation-discussion-evidence-body';
-import { attachmentClassName, attachmentListClassName, lmsSourceRel } from '../../controllers/constants.js';
+import { attachmentClassName, attachmentListClassName, fivestarRatingClass, lmsSourceRel, upvoteDownvoteRatingClass, upvoteOnlyRatingClass } from '../../controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element';
 import { filterDiscussionPosts, sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
@@ -34,6 +34,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			_displayedDiscussionPostObjects: {
 				attribute: false,
 				type: Array
+			},
+			_ratingMethod: {
+				attribute: false,
+				type: String
 			}
 		};
 	}
@@ -194,7 +198,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		const postHref = discussionPostEntity.getLinkByRel(lmsSourceRel).href;
 		const postTitle = discussionPostEntity.properties.subject;
 		const postBody = discussionPostEntity.properties.message;
-		const ratingInformation = { upVotes: 0, downVotes: 0 };
+		const ratingInformation = this._formatDiscussionRatings(discussionPostEntity);
 		const isUnscored = discussionPostEvaluationEntity.properties ? discussionPostEvaluationEntity.properties.score === null : false;
 
 		let createdDate = undefined;
@@ -236,6 +240,34 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			attachmentList,
 			discussionPostEvaluationEntity
 		};
+	}
+	_formatDiscussionRatings(discussionPostEntity) {
+		let ratingsInfo = {};
+		if (discussionPostEntity.class.includes(fivestarRatingClass)) {
+			this._ratingMethod = fivestarRatingClass;
+			if (discussionPostEntity.properties.ratingAverage !== undefined && discussionPostEntity.properties.numRatings !== undefined) {
+				ratingsInfo = {
+					ratingAverage : discussionPostEntity.properties.ratingAverage,
+					numRatings : discussionPostEntity.properties.numRatings
+				};
+			}
+		} else if (discussionPostEntity.class.includes(upvoteDownvoteRatingClass)) {
+			this._ratingMethod = upvoteDownvoteRatingClass;
+			if (discussionPostEntity.properties.numUpVotes !== undefined && discussionPostEntity.properties.numDownVotes !== undefined) {
+				ratingsInfo = {
+					numUpVotes : discussionPostEntity.properties.numUpVotes,
+					numDownVotes : discussionPostEntity.properties.numDownVotes
+				};
+			}
+		} else if (discussionPostEntity.class.includes(upvoteOnlyRatingClass)) {
+			this._ratingMethod = upvoteOnlyRatingClass;
+			if (discussionPostEntity.properties.numUpVotes !== undefined) {
+				ratingsInfo = {
+					numUpVotes : discussionPostEntity.properties.numUpVotes
+				};
+			}
+		}
+		return ratingsInfo;
 	}
 	async _getDiscussionPostEntities() {
 		this._discussionPostObjects = [];
@@ -304,6 +336,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 						post-date=${discussionPost.createdDateString}
 						?is-reply=${discussionPost.isReply}
 						thread-title=${discussionPost.threadTitle}
+						rating-method=${this._ratingMethod}
 						.attachmentsList=${discussionPost.attachmentList}
 						.ratingInformation=${discussionPost.ratingInformation}
 						.discussionPostEntity=${discussionPost.discussionPostEvaluationEntity}

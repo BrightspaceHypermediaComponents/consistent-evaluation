@@ -67,6 +67,7 @@ export default {
 	"noPostsInFilteredRange": "No posts in the filtered range.",
 	"noSubmissions": "No submissions made for this assignment",
 	"notGradedSummary" : "not graded yet",
+	"numRatings" : "{num} ratings",
 	"observedInPerson": "Observed In Person",
 	"onPaperSubmission": "On Paper Submission",
 	"openGroupOptions": "Open Group Options",
