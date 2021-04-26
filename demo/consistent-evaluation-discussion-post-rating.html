@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en-us">
+	<head>
+		<link rel="stylesheet" href="/node_modules/@brightspace-ui/core/components/demo/styles.css" type="text/css">
+		<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+		<script type="module">
+			import '@brightspace-ui/core/components/demo/demo-page.js';
+			import '../components/left-panel/discussions/consistent-evaluation-discussion-post-rating.js';
+
+			const ratingInformation = { ratingAverage: 4.3, numRatings: 23, numUpVotes: 23, numDownVotes: 9 };
+			const tests = document.getElementsByTagName('d2l-consistent-evaluation-discussion-post-rating');
+			for (let i = 0; i < tests.length; i++) {
+				if (tests[i].id === 'noRatings') {
+					tests[i].ratingInformation = { ratingAverage: 4.3, numRatings: 0 };
+				} else {
+					tests[i].ratingInformation = ratingInformation;
+				}
+			}
+		</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<d2l-demo-page page-title="d2l-consistent-evaluation-discussion-post-rating">
+
+			<h2>Discussion post rating - Five Star Rating</h2>
+            <d2l-demo-snippet>
+				<d2l-consistent-evaluation-discussion-post-rating
+					rating-method="fivestar-rating">
+				</d2l-consistent-evaluation-discussion-post-rating>
+			</d2l-demo-snippet>
+
+			<h2>Discussion post rating - Five Star no Rating</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-discussion-post-rating
+					id ="noRatings"
+					rating-method="fivestar-rating">
+				</d2l-consistent-evaluation-discussion-post-rating>
+			</d2l-demo-snippet>
+
+			<h2>Discussion post rating - Up Vote & Down Vote Rating</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-discussion-post-rating
+					rating-method="upvotedownvote-rating">
+				</d2l-consistent-evaluation-discussion-post-rating>
+			</d2l-demo-snippet>
+
+			<h2>Discussion post rating - Up Vote only Rating</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-discussion-post-rating
+				rating-method="upvoteonly-rating">
+				</d2l-consistent-evaluation-discussion-post-rating>
+            </d2l-demo-snippet>
+
+		</d2l-demo-page>
+	</body>
+</html>
