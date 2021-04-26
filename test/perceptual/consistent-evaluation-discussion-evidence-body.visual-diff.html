@@ -13,13 +13,14 @@
 			const postTitle = 'The Mid-Atlantic Ridge may play a more active role in plate tectonics than thought';
 			const postBody = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non tincidunt nibh. Integer eu rhoncus enim. Morbi vitae rhoncus est, vel ornare nulla. Quisque scelerisque, sapien vel pellentesque porttitor, tortor odio pulvinar nisi, a consectetur augue nulla a tellus. In purus eros, convallis a lacinia vitae, interdum molestie nunc. Donec in magna accumsan, rhoncus massa a, blandit dui. Phasellus accumsan scelerisque ipsum, quis pulvinar ante rhoncus pharetra. Fusce nec magna nisi. In ut lacus pharetra nibh mattis aliquam. Aenean viverra consequat nibh et malesuada.</p>';
 			const postDate = new Date('January 28, 2020 13:24:00');
-			const ratingInformation = { upVotes: 12, downVotes: 0 };
+			const ratingInformation = { numUpVotes: 12, numDownVotes: 0 };
 			const tests = document.getElementsByTagName('d2l-consistent-evaluation-discussion-evidence-body');
 			for (let i = 0; i < tests.length; i++) {
 				tests[i].threadTitle = threadTitle;
 				tests[i].postTitle = postTitle;
 				tests[i].postBody = postBody;
 				tests[i].postDate = postDate;
+				tests[i].ratingMethod = 'upvotedownvote-rating';
 				tests[i].ratingInformation = ratingInformation;
 			}
 			const postWithAttachments = document.getElementById('discussion-post-with-attachments-body');

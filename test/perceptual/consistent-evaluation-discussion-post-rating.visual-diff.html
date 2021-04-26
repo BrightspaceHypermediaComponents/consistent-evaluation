@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>d2l-consistent-evaluation discussion post visual diff tests</title>
+		<script type="module">
+			import '@brightspace-ui/core/components/typography/styles.js';
+			import '@brightspace-ui/core/components/typography/typography.js';
+			import '@brightspace-ui/core/components/icons/icon.js';
+			import '../../components/left-panel/discussions/consistent-evaluation-discussion-post-rating.js';
+
+			const ratingInformation = { ratingAverage: 4.3, numRatings: 23, numUpVotes: 23, numDownVotes: 9 };
+			const tests = document.getElementsByTagName('d2l-consistent-evaluation-discussion-post-rating');
+			for (let i = 0; i < tests.length; i++) {
+				if (tests[i].id === 'noRatings') {
+					tests[i].ratingInformation = { ratingAverage: 4.3, numRatings: 0 };
+				} else {
+					tests[i].ratingInformation = ratingInformation;
+				}
+			}
+		</script>
+		<style>
+			html {
+				font-size: 20px;
+			}
+			div {
+				padding: 50px;
+				display: flex;
+				justify-content: center;
+			}
+		</style>
+	</head>
+	<body class="d2l-typography">
+
+		<div id="fivestar-rating">
+			<d2l-consistent-evaluation-discussion-post-rating
+				rating-method="fivestar-rating">
+			</d2l-consistent-evaluation-discussion-post-rating>
+		</div>
+
+		<div id="no-fivestar-rating">
+			<d2l-consistent-evaluation-discussion-post-rating
+				id="noRatings"
+				rating-method="fivestar-rating">
+			</d2l-consistent-evaluation-discussion-post-rating>
+		</div>
+
+		<div id="upvotedownvote-rating">
+			<d2l-consistent-evaluation-discussion-post-rating
+				rating-method="upvotedownvote-rating">
+			</d2l-consistent-evaluation-discussion-post-rating>
+		</div>
+
+		<div id="upvoteonly-rating">
+			<d2l-consistent-evaluation-discussion-post-rating
+				rating-method="upvoteonly-rating">
+			</d2l-consistent-evaluation-discussion-post-rating>
+		</div>
+
+	</body>
+</html>
