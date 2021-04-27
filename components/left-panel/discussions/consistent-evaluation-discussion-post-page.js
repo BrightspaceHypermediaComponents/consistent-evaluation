@@ -243,32 +243,14 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		};
 	}
 	_formatDiscussionRatings(discussionPostEntity) {
-		let ratingsInfo = {};
 		if (discussionPostEntity.class.includes(fivestarRatingClass)) {
-			this._ratingMethod = fivestarRatingClass;
-			if (discussionPostEntity.properties.ratingAverage !== undefined && discussionPostEntity.properties.numRatings !== undefined) {
-				ratingsInfo = {
-					ratingAverage : discussionPostEntity.properties.ratingAverage,
-					numRatings : discussionPostEntity.properties.numRatings
-				};
-			}
+			return this._getRatingsInfo(fivestarRatingClass, discussionPostEntity);
 		} else if (discussionPostEntity.class.includes(upvoteDownvoteRatingClass)) {
-			this._ratingMethod = upvoteDownvoteRatingClass;
-			if (discussionPostEntity.properties.numUpVotes !== undefined && discussionPostEntity.properties.numDownVotes !== undefined) {
-				ratingsInfo = {
-					numUpVotes : discussionPostEntity.properties.numUpVotes,
-					numDownVotes : discussionPostEntity.properties.numDownVotes
-				};
-			}
+			return this._getRatingsInfo(upvoteDownvoteRatingClass, discussionPostEntity);
 		} else if (discussionPostEntity.class.includes(upvoteOnlyRatingClass)) {
-			this._ratingMethod = upvoteOnlyRatingClass;
-			if (discussionPostEntity.properties.numUpVotes !== undefined) {
-				ratingsInfo = {
-					numUpVotes : discussionPostEntity.properties.numUpVotes
-				};
-			}
+			return this._getRatingsInfo(upvoteOnlyRatingClass, discussionPostEntity);
 		}
-		return ratingsInfo;
+		return {};
 	}
 	async _getDiscussionPostEntities() {
 		this._discussionPostObjects = [];
@@ -290,6 +272,28 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {
 		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
+	}
+	_getRatingsInfo(ratingMethod, discussionPostEntity) {
+		this._ratingMethod = ratingMethod;
+		switch (ratingMethod) {
+			case fivestarRatingClass:
+				if (discussionPostEntity.properties.ratingAverage !== undefined && discussionPostEntity.properties.numRatings !== undefined) {
+					return { ratingAverage : discussionPostEntity.properties.ratingAverage,
+						numRatings : discussionPostEntity.properties.numRatings };
+				}
+				break;
+			case upvoteDownvoteRatingClass:
+				if (discussionPostEntity.properties.numUpVotes !== undefined && discussionPostEntity.properties.numDownVotes !== undefined) {
+					return { numUpVotes : discussionPostEntity.properties.numUpVotes,
+						numDownVotes : discussionPostEntity.properties.numDownVotes };
+				}
+				break;
+			case upvoteOnlyRatingClass:
+				if (discussionPostEntity.properties.numUpVotes !== undefined) {
+					return { numUpVotes : discussionPostEntity.properties.numUpVotes };
+				}
+				break;
+		}
 	}
 	_getUnscoredPostsCount() {
 		// if the posts aren't individually scored return 'NaN'
