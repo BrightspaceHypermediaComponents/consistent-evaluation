@@ -48,12 +48,17 @@ export class ConsistentEvaluationDiscussionPostRating extends RtlMixin(LocalizeC
 		}
 	}
 
+	_checkMaxRatingDisplay(num) {
+		return (num > 99) ? '99+' : num;
+	}
+
 	_renderFiveStarRating() {
+		this.ratingInformation.numRatings = 100;
 		return html`
 			<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text center">
 				${(this.ratingInformation.numRatings <= 0) ? '-' : this.ratingInformation.ratingAverage} / 5
 				<d2l-icon icon="tier1:subscribe-filled"></d2l-icon> <br>
-				(${this.localize('numRatings', 'num', (this.ratingInformation.numRatings > 99) ? '99+' : this.ratingInformation.numRatings)})
+				(${this.localize('numRatings', 'num', this._checkMaxRatingDisplay(this.ratingInformation.numRatings))})
 			</div>
 		`;
 	}
@@ -61,8 +66,8 @@ export class ConsistentEvaluationDiscussionPostRating extends RtlMixin(LocalizeC
 	_renderUpvoteDownvote() {
 		return html`
 			<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">
-				${this.localize('upVotes', 'numUpVotes', (this.ratingInformation.numUpVotes > 99) ? '99+' : this.ratingInformation.numUpVotes)}<br>
-				${this.localize('downVotes', 'numDownVotes', (this.ratingInformation.numDownVotes > 99) ? '99+' : this.ratingInformation.numDownVotes)}
+				${this.localize('upVotes', 'numUpVotes', this._checkMaxRatingDisplay(this.ratingInformation.numUpVotes))}<br>
+				${this.localize('downVotes', 'numDownVotes', this._checkMaxRatingDisplay(this.ratingInformation.numDownVotes))}
 			</div>
 		`;
 	}
@@ -70,7 +75,7 @@ export class ConsistentEvaluationDiscussionPostRating extends RtlMixin(LocalizeC
 	_renderUpvoteOnly() {
 		return html`
 			<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">
-				${this.localize('upVotes', 'numUpVotes', (this.ratingInformation.numUpVotes > 99) ? '99+' : this.ratingInformation.numUpVotes)}
+				${this.localize('upVotes', 'numUpVotes', this._checkMaxRatingDisplay(this.ratingInformation.numUpVotes))}
 			</div>
 		`;
 	}
