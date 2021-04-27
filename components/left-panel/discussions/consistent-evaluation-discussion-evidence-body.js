@@ -252,7 +252,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		return html`
 			<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>
 			<span class="d2l-body-small">
-				<a class="d2l-word-count-bold">${this.wordCount} </a>
+				<a class="d2l-word-count-bold">${(this.wordCount > 9999) ? '9999+' : this.wordCount} </a>
 				${this.localize('wordCount')}
 			</span>
 		`;
