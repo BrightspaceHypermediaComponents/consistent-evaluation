@@ -201,6 +201,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		const postBody = discussionPostEntity.properties.message;
 		const ratingInformation = this._formatDiscussionRatings(discussionPostEntity);
 		const isUnscored = discussionPostEvaluationEntity.properties ? discussionPostEvaluationEntity.properties.score === null : false;
+		const wordCount = discussionPostEntity.properties.wordCount;
 
 		let createdDate = undefined;
 		let createdDateString = undefined;
@@ -239,7 +240,8 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			isUnscored,
 			threadTitle,
 			attachmentList,
-			discussionPostEvaluationEntity
+			discussionPostEvaluationEntity,
+			wordCount
 		};
 	}
 	_formatDiscussionRatings(discussionPostEntity) {
@@ -342,6 +344,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 						?is-reply=${discussionPost.isReply}
 						thread-title=${discussionPost.threadTitle}
 						rating-method=${ifDefined(this._ratingMethod)}
+						word-count=${ifDefined(discussionPost.wordCount)}
 						.attachmentsList=${discussionPost.attachmentList}
 						.ratingInformation=${discussionPost.ratingInformation}
 						.discussionPostEntity=${discussionPost.discussionPostEvaluationEntity}

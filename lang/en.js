@@ -154,5 +154,6 @@ export default {
 	"userIteratorText": "User {num} of {total}",
 	"userSubmissions": "User Submissions",
 	"viewFullSubmission": "View Full Submission",
-	"warning": "Warning"
+	"warning": "Warning",
+	"wordCount": "words"
 };
