@@ -53,7 +53,6 @@ export class ConsistentEvaluationDiscussionPostRating extends RtlMixin(LocalizeC
 	}
 
 	_renderFiveStarRating() {
-		this.ratingInformation.numRatings = 100;
 		return html`
 			<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text center">
 				${(this.ratingInformation.numRatings <= 0) ? '-' : this.ratingInformation.ratingAverage} / 5
