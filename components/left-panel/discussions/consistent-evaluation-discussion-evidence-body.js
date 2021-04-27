@@ -2,6 +2,7 @@ import '@brightspace-ui/core/components/icons/icon.js';
 import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/list/list-item.js';
 import './consistent-evaluation-discussion-post-score.js';
+import './consistent-evaluation-discussion-post-rating.js';
 import { bodyCompactStyles, bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { formatDateTime, getLinkIconTypeFromUrl } from '../../helpers/submissionsAndFilesHelpers';
@@ -42,6 +43,10 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				attribute: false,
 				type: Object
 			},
+			ratingMethod: {
+				attribute: 'rating-method',
+				type: String
+			},
 			attachmentsList: {
 				attribute: false,
 				type: Array
@@ -80,12 +85,12 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				margin-right: 4px;
 			}
 
-			.d2l-consistent-evaluation-discussion-evidence-body-rating-container {
+			d2l-consistent-evaluation-discussion-post-rating {
 				float: right;
 				margin-left: 12px;
 			}
 
-			:host([dir="rtl"]) .d2l-consistent-evaluation-discussion-evidence-body-rating-container {
+			:host([dir="rtl"]) d2l-consistent-evaluation-discussion-post-rating {
 				float: left;
 				margin-right: 12px;
 			}
@@ -202,10 +207,11 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		}
 	}
 	_renderRating() {
-		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-rating-container">
-				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('upVotes', 'numUpVotes', this.ratingInformation.upVotes)}</div>
-				<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-rating-text">${this.localize('downVotes', 'numDownVotes', this.ratingInformation.downVotes)}</div>
-			</div>`;
+		return html`
+			<d2l-consistent-evaluation-discussion-post-rating
+				rating-method=${this.ratingMethod}
+				.ratingInformation=${this.ratingInformation}>
+			</d2l-consistent-evaluation-discussion-post-rating>`;
 	}
 	_renderRepliedInThread() {
 		if (this.isReply) {

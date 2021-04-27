@@ -1,8 +1,9 @@
 import './consistent-evaluation-discussion-evidence-body';
-import { attachmentClassName, attachmentListClassName, lmsSourceRel } from '../../controllers/constants.js';
+import { attachmentClassName, attachmentListClassName, fivestarRatingClass, lmsSourceRel, upvoteDownvoteRatingClass, upvoteOnlyRatingClass } from '../../controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element';
 import { filterDiscussionPosts, sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
@@ -34,6 +35,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			_displayedDiscussionPostObjects: {
 				attribute: false,
 				type: Array
+			},
+			_ratingMethod: {
+				attribute: false,
+				type: String
 			}
 		};
 	}
@@ -194,7 +199,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		const postHref = discussionPostEntity.getLinkByRel(lmsSourceRel).href;
 		const postTitle = discussionPostEntity.properties.subject;
 		const postBody = discussionPostEntity.properties.message;
-		const ratingInformation = { upVotes: 0, downVotes: 0 };
+		const ratingInformation = this._formatDiscussionRatings(discussionPostEntity);
 		const isUnscored = discussionPostEvaluationEntity.properties ? discussionPostEvaluationEntity.properties.score === null : false;
 
 		let createdDate = undefined;
@@ -237,6 +242,16 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			discussionPostEvaluationEntity
 		};
 	}
+	_formatDiscussionRatings(discussionPostEntity) {
+		if (discussionPostEntity.class.includes(fivestarRatingClass)) {
+			return this._getRatingsInfo(fivestarRatingClass, discussionPostEntity);
+		} else if (discussionPostEntity.class.includes(upvoteDownvoteRatingClass)) {
+			return this._getRatingsInfo(upvoteDownvoteRatingClass, discussionPostEntity);
+		} else if (discussionPostEntity.class.includes(upvoteOnlyRatingClass)) {
+			return this._getRatingsInfo(upvoteOnlyRatingClass, discussionPostEntity);
+		}
+		return {};
+	}
 	async _getDiscussionPostEntities() {
 		this._discussionPostObjects = [];
 		if (this._discussionPostList !== undefined) {
@@ -257,6 +272,28 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {
 		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
+	}
+	_getRatingsInfo(ratingMethod, discussionPostEntity) {
+		this._ratingMethod = ratingMethod;
+		switch (ratingMethod) {
+			case fivestarRatingClass:
+				if (discussionPostEntity.properties.ratingAverage !== undefined && discussionPostEntity.properties.numRatings !== undefined) {
+					return { ratingAverage : discussionPostEntity.properties.ratingAverage,
+						numRatings : discussionPostEntity.properties.numRatings };
+				}
+				break;
+			case upvoteDownvoteRatingClass:
+				if (discussionPostEntity.properties.numUpVotes !== undefined && discussionPostEntity.properties.numDownVotes !== undefined) {
+					return { numUpVotes : discussionPostEntity.properties.numUpVotes,
+						numDownVotes : discussionPostEntity.properties.numDownVotes };
+				}
+				break;
+			case upvoteOnlyRatingClass:
+				if (discussionPostEntity.properties.numUpVotes !== undefined) {
+					return { numUpVotes : discussionPostEntity.properties.numUpVotes };
+				}
+				break;
+		}
 	}
 	_getUnscoredPostsCount() {
 		// if the posts aren't individually scored return 'NaN'
@@ -304,6 +341,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 						post-date=${discussionPost.createdDateString}
 						?is-reply=${discussionPost.isReply}
 						thread-title=${discussionPost.threadTitle}
+						rating-method=${ifDefined(this._ratingMethod)}
 						.attachmentsList=${discussionPost.attachmentList}
 						.ratingInformation=${discussionPost.ratingInformation}
 						.discussionPostEntity=${discussionPost.discussionPostEvaluationEntity}
