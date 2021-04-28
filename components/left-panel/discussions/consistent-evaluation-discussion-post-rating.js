@@ -49,7 +49,7 @@ export class ConsistentEvaluationDiscussionPostRating extends RtlMixin(LocalizeC
 	}
 
 	_checkMaxRatingDisplay(num) {
-		return (num > 99) ? '99+' : num;
+		return (num > 99) ? this.localize('maxRatingCount') : num;
 	}
 
 	_renderFiveStarRating() {

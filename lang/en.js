@@ -51,6 +51,8 @@ export default {
 	"markRead": "Mark as Read",
 	"markUnread": "Mark as Unread",
 	"maximumMessageScore": "Maximum post score",
+	"maxRatingCount": "99+",
+	"maxWordCount": "9999+ words",
 	"minimumMessageScore": "Minimum post score",
 	"modeHighestMessageScore": "Mode post score - Highest on multiple",
 	"modeLowestMessageScore": "Mode post score - Lowest on multiple",
@@ -155,5 +157,5 @@ export default {
 	"userSubmissions": "User Submissions",
 	"viewFullSubmission": "View Full Submission",
 	"warning": "Warning",
-	"wordCount": "words"
+	"wordCount": "{num} words"
 };

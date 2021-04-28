@@ -106,10 +106,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				text-align: left;
 			}
 
-			.d2l-word-count-bold {
-				font-weight: bold;
-			}
-
 			.d2l-separator-icon {
 				margin-left: -5px;
 				margin-right: -5px;
@@ -252,8 +248,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		return html`
 			<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>
 			<span class="d2l-body-small">
-				<a class="d2l-word-count-bold">${(this.wordCount > 9999) ? '9999+' : this.wordCount} </a>
-				${this.localize('wordCount')}
+				${(this.wordCount > 9999) ? this.localize('maxWordCount') : this.localize('wordCount', { num : this.wordCount })}
 			</span>
 		`;
 	}
