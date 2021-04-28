@@ -17,6 +17,7 @@ export const publishedClassName = 'published';
 export const attachmentClassName = 'attachment';
 export const attachmentListClassName = 'attachment-list';
 export const assessorUserRel = 'https://api.brightspace.com/rels/assessor-user';
+export const alignmentsRel = 'https://alignments.api.brightspace.com/rels/alignments';
 export const userProgressOutcomeRel = 'user-progress-outcome';
 export const userProgressAssessmentsRel = 'https://assessments.api.brightspace.com/rels/user-progress';
 export const demonstrationRel = 'https://achievements.api.brightspace.com/rels/demonstration';
