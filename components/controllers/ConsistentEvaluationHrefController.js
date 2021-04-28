@@ -308,7 +308,7 @@ export class ConsistentEvaluationHrefController {
 			previousHref = this._getHref(root, previousRel);
 			actorHref = this._getHref(root, Rels.Activities.actorActivityUsage);
 			userHref = this._getHref(root, Rels.user);
-			alignmentsHref = this._getHref(root, Rels.assessment);
+			alignmentsHref = this._getHref(root, Rels.Alignments.alignments);
 			groupHref = this._getHref(root, Rels.group);
 			userProgressOutcomeHref = this._getHref(root, userProgressOutcomeRel);
 
