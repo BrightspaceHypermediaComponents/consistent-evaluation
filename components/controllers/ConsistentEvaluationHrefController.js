@@ -1,5 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { alignmentsRel, assessorUserRel, assignmentActivity, assignmentClass,
+import { assessorUserRel, assignmentActivity, assignmentClass,
 	checkedClassName, coaActivity, coaClass, demonstrationRel, discussionActivity, discussionClass,
 	evidenceRel, nextRel, postClass, previousRel, publishedClassName,
 	userProgressAssessmentsRel, userProgressOutcomeRel } from './constants.js';
@@ -308,7 +308,7 @@ export class ConsistentEvaluationHrefController {
 			previousHref = this._getHref(root, previousRel);
 			actorHref = this._getHref(root, Rels.Activities.actorActivityUsage);
 			userHref = this._getHref(root, Rels.user);
-			alignmentsHref = this._getHref(root, alignmentsRel);
+			alignmentsHref = this._getHref(root, Rels.Alignments.alignments);
 			groupHref = this._getHref(root, Rels.group);
 			userProgressOutcomeHref = this._getHref(root, userProgressOutcomeRel);
 
