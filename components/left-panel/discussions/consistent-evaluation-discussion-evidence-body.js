@@ -47,6 +47,10 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				attribute: 'rating-method',
 				type: String
 			},
+			wordCount: {
+				attribute: 'word-count',
+				type: Number
+			},
 			attachmentsList: {
 				attribute: false,
 				type: Array
@@ -62,7 +66,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		return [bodyCompactStyles, bodySmallStyles, linkStyles, css`
 			.d2l-consistent-evaluation-discussion-evidence-body-title {
 				font-weight: bold;
-				margin-bottom: 9px;
 			}
 
 			.d2l-consistent-evaluation-reply-to-container {
@@ -103,6 +106,10 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				text-align: left;
 			}
 
+			.d2l-separator-icon {
+				margin-left: -5px;
+				margin-right: -5px;
+			}
 
 			.d2l-truncate {
 				overflow: hidden;
@@ -124,6 +131,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			${this._renderRepliedInThread()}
 			${this._renderTitle()}
 			${this._renderDate()}
+			${this._renderWordCount()}
 			${this._renderBody()}
 			<d2l-list aria-role="list" separators="between">
 				${this._renderAttachments()}
@@ -199,7 +207,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			</div>`;
 	}
 	_renderDate() {
-		return html `<div class="d2l-body-small">${formatDateTime(this.postDate, 'medium')}</div>`;
+		return html `<span class="d2l-body-small">${formatDateTime(this.postDate, 'medium')}</span>`;
 	}
 	_renderPostScore() {
 		if (this.discussionPostEntity && this.discussionPostEntity.properties && this.discussionPostEntity.properties.outOf) {
@@ -226,12 +234,23 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		}
 	}
 	_renderTitle() {
-		return html `<a
+		return html `<div
 			class="d2l-body-compact d2l-link d2l-consistent-evaluation-discussion-evidence-body-title"
 			tabindex="0"
 			@click=${this._onPostTitleClicked}
 			@keydown=${this._onPostTitleKeydown}
-		>${this.postTitle}</a>`;
+		>${this.postTitle}</div>`;
+	}
+	_renderWordCount() {
+		if (this.wordCount === undefined) {
+			return html``;
+		}
+		return html`
+			<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>
+			<span class="d2l-body-small">
+				${(this.wordCount > 9999) ? this.localize('maxWordCount') : this.localize('wordCount', { num : this.wordCount })}
+			</span>
+		`;
 	}
 
 }
