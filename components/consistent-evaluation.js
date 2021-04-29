@@ -164,10 +164,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 					this._iteratorTotal = await controller.getIteratorInfo('total');
 					this._iteratorIndex = await controller.getIteratorInfo('index');
 					this._editActivityPath = await controller.getEditActivityPath();
+					this._gradeItemInfo = await controller.getGradeItemInfo();
 					if (this._activityType === assignmentActivity || this._activityType === coaActivity) {
 						this._loadingComponents.discussions = false;
 						this._submissionInfo = await controller.getSubmissionInfo();
-						this._gradeItemInfo = await controller.getGradeItemInfo();
 						this._userName = await controller.getUserName();
 						this._navTitleInfo = {
 							'titleName' : await controller.getAssignmentOrganizationName('assignment'),
