@@ -13,14 +13,18 @@ export function findFile(fileId, submissions) {
 			}
 		}
 	}
-
 }
 
 export function getSubmissionFiles(submission) {
 	const attachments = submission.entity.getSubEntityByRel(Rels.Assignments.attachmentList);
 	return attachments.entities.map(sf => {
 		if (submission.entity.getSubEntityByClass(Classes.assignments.submissionComment)) {
-			sf.properties.comment = submission.entity.getSubEntityByClass(Classes.assignments.submissionComment).properties.html;
+			const submissionComment = submission.entity.getSubEntityByClass(Classes.assignments.submissionComment);
+			if (submissionComment.properties.html) {
+				sf.properties.comment = submissionComment.properties.html;
+			} else {
+				sf.properties.comment = submissionComment.properties.text;
+			}
 		}
 
 		if (submission.entity.getSubEntityByClass(Classes.assignments.submissionDate)) {
