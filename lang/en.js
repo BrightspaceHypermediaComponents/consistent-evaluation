@@ -38,6 +38,7 @@ export default {
 	"flagged": "Flagged",
 	"flaggedFile": "{fileName} flagged",
 	"gradedBy": "Graded by {assessorName}",
+	"gradedByUnknown": "Graded by Unknown",
 	"gradeSummary": "{grade} out of {outOf}",
 	"gradingRubric": "Grading Rubric",
 	"groupIteratorText": "Group {num} of {total}",
