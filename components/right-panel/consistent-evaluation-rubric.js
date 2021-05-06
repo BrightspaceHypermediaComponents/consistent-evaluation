@@ -192,7 +192,11 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 	}
 	_getGradedByText(assessorName) {
 		if (assessorName) {
-			return this.localize('gradedBy', { assessorName: assessorName });
+			if (assessorName === 'unknown') {
+				return this.localize('gradedByUnknown');
+			} else {
+				return this.localize('gradedBy', { assessorName: assessorName });
+			}
 		}
 		return `(${this.localize('notGradedSummary')})`;
 	}

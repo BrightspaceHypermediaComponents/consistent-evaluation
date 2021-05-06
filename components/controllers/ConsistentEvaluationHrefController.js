@@ -395,7 +395,11 @@ export class ConsistentEvaluationHrefController {
 						const assessorUserHref = this._getHref(assessmentEntity.entity, assessorUserRel);
 						if (assessorUserHref) {
 							const assessorUserEntity = await this._getEntityFromHref(assessorUserHref, false);
-							assessorDisplayName = assessorUserEntity.entity.getSubEntityByRel(Rels.displayName).properties.name;
+							if (assessorUserEntity && assessorUserEntity.entity) {
+								assessorDisplayName = assessorUserEntity.entity.getSubEntityByRel(Rels.displayName).properties.name;
+							} else {
+								assessorDisplayName = 'unknown';
+							}
 						}
 
 						return {
