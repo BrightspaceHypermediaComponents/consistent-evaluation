@@ -225,7 +225,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 
 			if (numberOfSubmittedFiles === 1) {
 				const isTiiEnabled = attachmentList.entities[0].hasSubEntityByRel(Rels.Assignments.turnItIn);
-				const hasComments = attachmentList.entities[0].properties.comment || false;
+				const hasComments = attachmentList.entities[0].properties?.comment || false;
 				if (!isTiiEnabled && !hasComments) {
 					const attachmentEntity = attachmentList.getSubEntityByClass(attachmentClassName);
 					// If the attachment is a link attachment, it should not be opened in the file viewer.
