@@ -294,7 +294,12 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 	}
 	_getComment(submissionEntity) {
 		if (submissionEntity.getSubEntityByClass(Classes.assignments.submissionComment)) {
-			return submissionEntity.getSubEntityByClass(Classes.assignments.submissionComment).properties.html;
+			const submissionComment = submissionEntity.getSubEntityByClass(Classes.assignments.submissionComment);
+			if (submissionComment.properties.html) {
+				return submissionComment.properties.html;
+			} else {
+				return submissionComment.properties.text;
+			}
 		}
 		return '';
 	}
