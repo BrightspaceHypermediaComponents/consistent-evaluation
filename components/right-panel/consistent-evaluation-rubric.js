@@ -133,7 +133,6 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 	}
 	updated(changedProperties) {
 		super.updated(changedProperties);
-
 		if (changedProperties.has('activeScoringRubric')) {
 			const activeRubricDropdown = this.shadowRoot.querySelector('.d2l-consistent-evaluation-active-scoring-rubric');
 			if (activeRubricDropdown) {
