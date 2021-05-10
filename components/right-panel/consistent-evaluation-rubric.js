@@ -111,10 +111,12 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 	connectedCallback() {
 		super.connectedCallback();
 		window.addEventListener('beforeunload', this.closeRubricWindow);
+		window.addEventListener('d2l-on-evaluation-save', this.closeRubricWindow);
 	}
 
 	disconnectedCallback() {
 		window.removeEventListener('beforeunload', this.closeRubricWindow);
+		window.removeEventListener('d2l-on-evaluation-save', this.closeRubricWindow);
 		super.disconnectedCallback();
 	}
 
@@ -133,6 +135,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 	}
 	updated(changedProperties) {
 		super.updated(changedProperties);
+
 		if (changedProperties.has('activeScoringRubric')) {
 			const activeRubricDropdown = this.shadowRoot.querySelector('.d2l-consistent-evaluation-active-scoring-rubric');
 			if (activeRubricDropdown) {
