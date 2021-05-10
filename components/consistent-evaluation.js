@@ -167,7 +167,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						controller.getIteratorInfo('index'),
 						controller.getEditActivityPath(),
 						controller.getGradeItemInfo()
-					].map( p => p.catch( e => undefined));
+					].map(p => p.catch(undefined));
 
 					await Promise.all(mainPagePromises).then(([
 						childHrefs,
@@ -189,14 +189,14 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						this._anonymousInfo = anonymousInfo;
 						this._iteratorTotal = iteratorTotal;
 						this._iteratorIndex = iteratorIndex;
-						this._editActivityPath =editActivityPath;
-						this._gradeItemInfo = gradeItemInfo
+						this._editActivityPath = editActivityPath;
+						this._gradeItemInfo = gradeItemInfo;
 					});
 
 					if (this._activityType === assignmentActivity || this._activityType === coaActivity) {
 						this._loadingComponents.discussions = false;
 						const stripped = this._stripFileIdFromUrl();
-						var hasOneFileAndSubmission = false;
+						let hasOneFileAndSubmission = false;
 
 						const assignmentPromises = [
 							controller.getSubmissionInfo(),
@@ -204,7 +204,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 							controller.getAssignmentOrganizationName('assignment'),
 							controller.getAssignmentOrganizationName('organization'),
 							this._hasOneFileAndOneSubmission()
-						].map( p => p.catch(e => undefined));
+						].map(p => p.catch(undefined));
 
 						await Promise.all(assignmentPromises).then(([
 							submissionInfo,
@@ -238,14 +238,14 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						const discussionPromises = [
 							controller.getDiscussionPostsInfo(),
 							controller.getDiscussionTopicInfo()
-						].map( p => p.catch(e => undefined));
+						].map(p => p.catch(undefined));
 
 						await Promise.all(discussionPromises).then(([
 							discussionPostList,
 							discussionTopicInfo
 						]) => {
 							this._discussionPostList = discussionPostList;
-							this._discussionTopicInfo = discussionTopicInfo
+							this._discussionTopicInfo = discussionTopicInfo;
 						});
 
 						this._navTitleInfo = {
