@@ -143,6 +143,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}
 				@d2l-consistent-eval-rubric-popup-closed=${this._refreshRubrics}
+				@d2l-on-evaluation-save=${this._refreshRubrics}
 			></d2l-consistent-evaluation-page>
 		`;
 	}

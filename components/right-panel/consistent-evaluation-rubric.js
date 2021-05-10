@@ -111,12 +111,10 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 	connectedCallback() {
 		super.connectedCallback();
 		window.addEventListener('beforeunload', this.closeRubricWindow);
-		window.addEventListener('d2l-on-evaluation-save', this.closeRubricWindow);
 	}
 
 	disconnectedCallback() {
 		window.removeEventListener('beforeunload', this.closeRubricWindow);
-		window.removeEventListener('d2l-on-evaluation-save', this.closeRubricWindow);
 		super.disconnectedCallback();
 	}
 

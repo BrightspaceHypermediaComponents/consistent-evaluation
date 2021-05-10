@@ -793,7 +793,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	async _saveEvaluation() {
 		await this._flushAndWait();
 
-		window.dispatchEvent(new CustomEvent('d2l-on-evaluation-save', {
+		this.dispatchEvent(new CustomEvent('d2l-on-evaluation-save', {
 			composed: true,
 			bubbles: true
 		}));
