@@ -17,6 +17,9 @@ export function findFile(fileId, submissions) {
 
 export function getSubmissionFiles(submission) {
 	const attachments = submission.entity.getSubEntityByRel(Rels.Assignments.attachmentList);
+	if (!attachments) {
+		return [];
+	}
 	return attachments.entities.map(sf => {
 		if (submission.entity.getSubEntityByClass(Classes.assignments.submissionComment)) {
 			const submissionComment = submission.entity.getSubEntityByClass(Classes.assignments.submissionComment);

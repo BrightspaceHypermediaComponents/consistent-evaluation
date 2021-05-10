@@ -156,26 +156,73 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			await this._mutex.dispatch(
 				async() => {
 					const controller = new ConsistentEvaluationHrefController(this.href, this.token);
-					this._childHrefs = await controller.getHrefs();
-					this._activityType = await controller.getActivityType(); // should be one of the first api calls to confirm activity-type for CE-page
-					this._rubricInfos = await controller.getRubricInfos(false);
-					this._enrolledUser = await controller.getEnrolledUser();
-					this._groupInfo = await controller.getGroupInfo();
-					this._anonymousInfo = await controller.getAnonymousInfo();
-					this._iteratorTotal = await controller.getIteratorInfo('total');
-					this._iteratorIndex = await controller.getIteratorInfo('index');
-					this._editActivityPath = await controller.getEditActivityPath();
-					this._gradeItemInfo = await controller.getGradeItemInfo();
+
+					const mainPagePromises = [
+						controller.getHrefs(),
+						controller.getActivityType(),
+						controller.getRubricInfos(false),
+						controller.getEnrolledUser(),
+						controller.getGroupInfo(),
+						controller.getAnonymousInfo(),
+						controller.getIteratorInfo('total'),
+						controller.getIteratorInfo('index'),
+						controller.getEditActivityPath(),
+						controller.getGradeItemInfo()
+					].map(p => p.catch(undefined));
+
+					await Promise.all(mainPagePromises).then(([
+						childHrefs,
+						activityType,
+						rubricInfos,
+						enrolledUser,
+						groupInfo,
+						anonymousInfo,
+						iteratorTotal,
+						iteratorIndex,
+						editActivityPath,
+						gradeItemInfo
+					]) => {
+						this._childHrefs = childHrefs;
+						this._activityType = activityType;
+						this._rubricInfos = rubricInfos;
+						this._enrolledUser = enrolledUser;
+						this._groupInfo = groupInfo;
+						this._anonymousInfo = anonymousInfo;
+						this._iteratorTotal = iteratorTotal;
+						this._iteratorIndex = iteratorIndex;
+						this._editActivityPath = editActivityPath;
+						this._gradeItemInfo = gradeItemInfo;
+					});
+
 					if (this._activityType === assignmentActivity || this._activityType === coaActivity) {
 						this._loadingComponents.discussions = false;
-						this._submissionInfo = await controller.getSubmissionInfo();
-						this._userName = await controller.getUserName();
-						this._navTitleInfo = {
-							'titleName' : await controller.getAssignmentOrganizationName('assignment'),
-							'subtitleName': await controller.getAssignmentOrganizationName('organization') };
-
 						const stripped = this._stripFileIdFromUrl();
-						const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
+						let hasOneFileAndSubmission = false;
+
+						const assignmentPromises = [
+							controller.getSubmissionInfo(),
+							controller.getUserName(),
+							controller.getAssignmentOrganizationName('assignment'),
+							controller.getAssignmentOrganizationName('organization'),
+							this._hasOneFileAndOneSubmission()
+						].map(p => p.catch(undefined));
+
+						await Promise.all(assignmentPromises).then(([
+							submissionInfo,
+							userName,
+							titleName,
+							subtitleName,
+							oneFileAndSubmission
+						])  => {
+							this._submissionInfo = submissionInfo;
+							this._userName = userName;
+							this._navTitleInfo = {
+								'titleName' : titleName,
+								'subtitleName': subtitleName
+							};
+							hasOneFileAndSubmission = oneFileAndSubmission;
+						});
+
 						if (!stripped && !hasOneFileAndSubmission) {
 							this.currentFileId = undefined;
 							this.shadowRoot.querySelector('d2l-consistent-evaluation-page')._setSubmissionsView();
@@ -188,9 +235,24 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						}
 					} else if (this._activityType === discussionActivity) {
 						this._loadingComponents.submissions = false;
-						this._discussionPostList = await controller.getDiscussionPostsInfo();
-						this._discussionTopicInfo = await controller.getDiscussionTopicInfo();
-						this._navTitleInfo = { 'titleName' : this._discussionTopicInfo.topicName, 'subtitleName': this._discussionTopicInfo.forumName };
+
+						const discussionPromises = [
+							controller.getDiscussionPostsInfo(),
+							controller.getDiscussionTopicInfo()
+						].map(p => p.catch(undefined));
+
+						await Promise.all(discussionPromises).then(([
+							discussionPostList,
+							discussionTopicInfo
+						]) => {
+							this._discussionPostList = discussionPostList;
+							this._discussionTopicInfo = discussionTopicInfo;
+						});
+
+						this._navTitleInfo = {
+							'titleName' : this._discussionTopicInfo.topicName,
+							'subtitleName': this._discussionTopicInfo.forumName
+						};
 					}
 
 					this._loadingComponents.main = false;
