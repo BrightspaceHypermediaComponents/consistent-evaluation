@@ -197,22 +197,19 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 					if (this._activityType === assignmentActivity || this._activityType === coaActivity) {
 						this._loadingComponents.discussions = false;
 						const stripped = this._stripFileIdFromUrl();
-						let hasOneFileAndSubmission = false;
 
 						const assignmentPromises = [
 							controller.getSubmissionInfo(),
 							controller.getUserName(),
 							controller.getAssignmentOrganizationName('assignment'),
 							controller.getAssignmentOrganizationName('organization'),
-							this._hasOneFileAndOneSubmission()
 						].map(p => p.catch(undefined));
 
 						await Promise.all(assignmentPromises).then(([
 							submissionInfo,
 							userName,
 							titleName,
-							subtitleName,
-							oneFileAndSubmission
+							subtitleName
 						])  => {
 							this._submissionInfo = submissionInfo;
 							this._userName = userName;
@@ -220,8 +217,8 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 								'titleName' : titleName,
 								'subtitleName': subtitleName
 							};
-							hasOneFileAndSubmission = oneFileAndSubmission;
 						});
+						const hasOneFileAndSubmission = this._hasOneFileAndOneSubmission();
 
 						if (!stripped && !hasOneFileAndSubmission) {
 							this.currentFileId = undefined;
