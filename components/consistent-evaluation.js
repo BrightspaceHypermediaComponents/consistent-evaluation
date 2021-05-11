@@ -218,7 +218,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 								'titleName' : titleName,
 								'subtitleName': subtitleName
 							};
-
 							hasOneFileAndSubmission = this._hasOneFileAndOneSubmission();
 						});
 
