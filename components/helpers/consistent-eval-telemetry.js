@@ -38,7 +38,7 @@ export class ConsistentEvalTelemetry {
 	}
 
 	async _logUserEvent(href, action, type, performanceMeasureName, activityType, submissionCount) {
-		if (!href || !action || !type || !performanceMeasureName) { return; }
+		if (!href || !action || !type || !performanceMeasureName || !this._dataTelemetryEndpoint) { return; }
 		const eventBody = new Events.PerformanceEventBody()
 			.setAction(action)
 			.setObject(href, type)
