@@ -21,7 +21,7 @@ export function getReadableFileSizeString(fileSizeBytes, localize) {
 	do {
 		fileSizeBytes = fileSizeBytes / 1024;
 		i++;
-	} while (fileSizeBytes > 1024);
+	} while (fileSizeBytes > 1024 && i < byteUnits.length - 1);
 	const unit = localize(byteUnits[i]);
 	return Math.max(fileSizeBytes, 0.1).toFixed(1) + unit;
 }

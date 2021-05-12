@@ -13,7 +13,7 @@ import '@brightspace-ui/core/components/more-less/more-less.js';
 import '@brightspace-ui/core/components/status-indicator/status-indicator.js';
 import './consistent-evaluation-tii-grade-mark.js';
 import './consistent-evaluation-tii-similarity.js';
-import { AttachmentTypes, getAttachmentType, getReadableFileSizeString } from '../../helpers/attachmentsHelper.js';
+import { AttachmentTypes, getAttachmentType, getReadableFileSizeString } from '../../helpers/attachmentsHelpers.js';
 import { bodySmallStyles, heading3Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { fileSubmission, textSubmission, tiiReportCompleteStatus } from '../../controllers/constants';
@@ -374,7 +374,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 							${this._renderFlaggedStatus(flagged)}
 							${extension.toUpperCase()}
 							${isLinkAttachment ? html`` : html`<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>`}
-							${isLinkAttachment ? html`` : getReadableFileSizeString(size, this.localize)}
+							${isLinkAttachment ? html`` : getReadableFileSizeString(size, this.localize.bind(this))}
 						</div>
 					</d2l-list-item-content>
 					${this._renderTii(id, name, attachment)}
