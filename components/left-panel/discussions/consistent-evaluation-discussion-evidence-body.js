@@ -133,7 +133,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			${this._renderDate()}
 			${this._renderWordCount()}
 			${this._renderBody()}
-			<d2l-list aria-role="list" separators="between">
+			<d2l-list aria-role="attachment list" separators="between">
 				${this._renderAttachments()}
 			</d2l-list>
 			${this._renderPostScore()}
