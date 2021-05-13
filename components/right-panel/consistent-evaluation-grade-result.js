@@ -146,6 +146,11 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 
 	onGradeChanged(e) {
 		const score = e.detail.value;
+
+		if(this.grade.isNumberGrade && score < 0) {
+			return;
+		}
+
 		this._debounceJobs.grade = Debouncer.debounce(
 			this._debounceJobs.grade,
 			timeOut.after(800),
