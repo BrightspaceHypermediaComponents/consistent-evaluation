@@ -3,6 +3,7 @@ import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/list/list-item.js';
 import './consistent-evaluation-discussion-post-score.js';
 import './consistent-evaluation-discussion-post-rating.js';
+import { AttachmentTypes, getAttachmentType, getReadableFileSizeString } from '../../helpers/attachmentsHelpers.js';
 import { bodyCompactStyles, bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { formatDateTime, getLinkIconTypeFromUrl } from '../../helpers/submissionsAndFilesHelpers';
@@ -144,17 +145,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 
 	}
 
-	_getReadableFileSizeString(fileSizeBytes) {
-		let i = -1;
-		const byteUnits = ['kB', 'MB', 'GB'];
-		do {
-			fileSizeBytes = fileSizeBytes / 1024;
-			i++;
-		} while (fileSizeBytes > 1024);
-		const unit = this.localize(byteUnits[i]);
-		return Math.max(fileSizeBytes, 0.1).toFixed(1) + unit;
-	}
-
 	_onPostTitleClicked() {
 		window.open(this.postHref);
 	}
@@ -176,13 +166,18 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 					}
 				};
 
+				const attachmentType = getAttachmentType(attachment);
+
 				let iconType;
-				if (extension === 'url') {
-					iconType = getLinkIconTypeFromUrl(href);
-				} else if (extension === 'html') {
-					iconType = 'browser';
-				} else {
-					iconType = getFileIconTypeFromExtension(extension);
+				switch (attachmentType) {
+					case AttachmentTypes.LINK:
+						iconType = getLinkIconTypeFromUrl(href);
+						break;
+					case AttachmentTypes.PAGE:
+						iconType = 'browser';
+						break;
+					default:
+						iconType = getFileIconTypeFromExtension(extension);
 				}
 
 				return html`<d2l-list-item class="d2l-consistent-evaluation-discussion-attachment-list-item-content">
@@ -195,7 +190,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 									@keydown=${onKeydownHandler}
 									@click=${onClickHandler}
 								>${name}</a>
-								<span class="d2l-body-compact">(${this._getReadableFileSizeString(size)})</span>
+								${attachmentType === AttachmentTypes.LINK ? html`` : html`<span class="d2l-body-compact">(${getReadableFileSizeString(size, this.localize.bind(this))})</span>` }
 							</div>
 						</d2l-list-item>`;
 			})}`;

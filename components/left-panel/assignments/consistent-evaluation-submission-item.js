@@ -13,6 +13,7 @@ import '@brightspace-ui/core/components/more-less/more-less.js';
 import '@brightspace-ui/core/components/status-indicator/status-indicator.js';
 import './consistent-evaluation-tii-grade-mark.js';
 import './consistent-evaluation-tii-similarity.js';
+import { AttachmentTypes, getAttachmentType, getReadableFileSizeString } from '../../helpers/attachmentsHelpers.js';
 import { bodySmallStyles, heading3Styles, labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { fileSubmission, textSubmission, tiiReportCompleteStatus } from '../../controllers/constants';
@@ -328,33 +329,22 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 			return filename.substring(0, index);
 		}
 	}
-	_getReadableFileSizeString(fileSizeBytes) {
-		let i = -1;
-		const byteUnits = ['kB', 'MB', 'GB'];
-		do {
-			fileSizeBytes = fileSizeBytes / 1024;
-			i++;
-		} while (fileSizeBytes > 1024);
-		const unit = this.localize(byteUnits[i]);
-		return Math.max(fileSizeBytes, 0.1).toFixed(1) + unit;
-	}
+
 	_isClamped(element) {
 		return element.clientHeight < element.scrollHeight;
 	}
 	//Helper methods
 
-	_isLinkAttachment(attachment) {
-		return attachment.properties.extension === 'url';
-	}
-
 	_renderAttachments() {
 		return html`${this.attachments.map((attachment) => {
 			const { id, name, size, extension, flagged, read, href } = attachment.properties;
 
+			const isLinkAttachment = getAttachmentType(attachment) === AttachmentTypes.LINK;
+
 			let displayedName;
 			let onClickHandler;
 			let onKeydownHandler;
-			if (this._isLinkAttachment(attachment)) {
+			if (isLinkAttachment) {
 				displayedName = name;
 				onClickHandler = () => this._dispatchLinkAttachmentClickedEvent(id, href);
 				onKeydownHandler = (e) => this._dispatchLinkAttachmentKeydownEvent(e, id, href);
@@ -383,8 +373,8 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 						<div slot="supporting-info">
 							${this._renderFlaggedStatus(flagged)}
 							${extension.toUpperCase()}
-							${this._isLinkAttachment(attachment) ? html`` : html`<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>`}
-							${this._isLinkAttachment(attachment) ? html`` : this._getReadableFileSizeString(size)}
+							${isLinkAttachment ? html`` : html`<d2l-icon class="d2l-separator-icon" aria-hidden="true" icon="tier1:dot"></d2l-icon>`}
+							${isLinkAttachment ? html`` : getReadableFileSizeString(size, this.localize.bind(this))}
 						</div>
 					</d2l-list-item-content>
 					${this._renderTii(id, name, attachment)}
