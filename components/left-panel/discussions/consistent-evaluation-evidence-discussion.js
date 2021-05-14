@@ -41,22 +41,28 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 
 	static get styles() {
 		return css`
+			.d2l-consistent-evaluation-evidence-discussion-list-modifiers {
+				justify-content: flex-end;
+				display: flex;
+			}
+			:host([dir="rtl"]) .d2l-consistent-evaluation-evidence-discussion-list-modifiers {
+				display: flex;
+			}
+
 			.d2l-consistent-evaluation-evidence-discussion-sort-by-dropdown {
-				float: right;
 				margin-left: 1rem;
 				margin-right: 1rem;
 				margin-top: 1rem;
 			}
 			:host([dir="rtl"]) .d2l-consistent-evaluation-evidence-discussion-sort-by-dropdown {
-				float: left;
+				margin-right: 0rem;
 			}
 
 			.d2l-consistent-evaluation-evidence-discussion-filter-by-dropdown {
-				float: right;
 				margin-top: 1rem;
 			}
 			:host([dir="rtl"]) .d2l-consistent-evaluation-evidence-discussion-filter-by-dropdown {
-				float: left;
+				margin-left: 1rem;
 			}
 
 			.d2l-consistent-evaluation-no-assessable-posts-padding {
@@ -96,8 +102,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			return html`${this._renderNoAssessablePosts()}`;
 		}
 		return html`
-			${this._renderSortDropDownList()}
-			${this._renderFilterDropDownList()}
+			${this._renderListModifiers()}
 			${this._renderDiscussionPost()}
 		`;
 	}
@@ -146,6 +151,13 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			</d2l-labs-filter-dropdown>
 			<div style="clear: both;"></div>
 		`;
+	}
+	_renderListModifiers() {
+		return html`
+			<div class="d2l-consistent-evaluation-evidence-discussion-list-modifiers">
+				${this._renderFilterDropDownList()}
+				${this._renderSortDropDownList()}
+			</div>`;
 	}
 	_renderNoAssessablePosts() {
 		return html`
