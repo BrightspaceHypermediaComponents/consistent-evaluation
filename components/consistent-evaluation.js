@@ -218,7 +218,8 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 								'subtitleName': subtitleName
 							};
 						});
-						const hasOneFileAndSubmission = this._hasOneFileAndOneSubmission();
+
+						const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
 
 						if (!stripped && !hasOneFileAndSubmission) {
 							this.currentFileId = undefined;
