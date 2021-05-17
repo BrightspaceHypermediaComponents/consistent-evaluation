@@ -42,11 +42,8 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	static get styles() {
 		return css`
 			.d2l-consistent-evaluation-evidence-discussion-list-modifiers {
+				display: flex;
 				justify-content: flex-end;
-				display: flex;
-			}
-			:host([dir="rtl"]) .d2l-consistent-evaluation-evidence-discussion-list-modifiers {
-				display: flex;
 			}
 
 			.d2l-consistent-evaluation-evidence-discussion-sort-by-dropdown {
@@ -55,7 +52,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				margin-top: 1rem;
 			}
 			:host([dir="rtl"]) .d2l-consistent-evaluation-evidence-discussion-sort-by-dropdown {
-				margin-right: 0rem;
+				margin-right: 0;
 			}
 
 			.d2l-consistent-evaluation-evidence-discussion-filter-by-dropdown {
