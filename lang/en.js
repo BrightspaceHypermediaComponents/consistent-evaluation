@@ -100,6 +100,7 @@ export default {
 	"retracting": "Retracting",
 	"retracted":   "Evaluation retracted",
 	"rubrics": "Rubrics",
+	"rubricPublishedWarning": "This assessment has been published. Any changes made to the rubric will be immediately visible to learners. To avoid this, retract feedback before making changes.",
 	"rubricSummary": "1 rubric attached",
 	"rubricsSummary": "{num} rubrics attached",
 	"rubricTitle": "Rubric Title",

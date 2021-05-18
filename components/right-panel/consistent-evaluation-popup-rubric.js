@@ -1,9 +1,10 @@
 import './consistent-evaluation-rubric.js';
-import { html, LitElement } from 'lit-element';
+import '@brightspace-ui/core/components/alert/alert.js';
+import { css, html, LitElement } from 'lit-element';
+import { publishedState, saveGradeActionName } from '../controllers/constants.js';
 import { ConsistentEvaluationHrefController } from '../controllers/ConsistentEvaluationHrefController.js';
 import { convertToken } from '../helpers/converterHelpers.js';
 import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
-import { saveGradeActionName } from '../controllers/constants.js';
 
 export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluation(LitElement) {
 
@@ -15,10 +16,21 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 				reflect: true,
 				converter: (value) => convertToken(value),
 			},
+			_published: { type: Boolean },
 			_pageTitle: { type: String },
 			_rubricInfos: { type: Array },
 			_canSaveOverallGrade: { type: Boolean }
 		};
+	}
+
+	static get styles() {
+		return [css`
+			.d2l-consistent-evaluation-rubric-warning {
+				margin: 0.75rem 0.75rem 1rem 0.75rem;
+				max-width: initial;
+				width: initial;
+			}
+		`];
 	}
 
 	constructor() {
@@ -32,6 +44,13 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 			return html ``;
 		}
 		return html`
+			<d2l-alert
+				class="d2l-consistent-evaluation-rubric-warning"
+				?hidden=${!this._published}
+				type="warning"
+			>
+				${this.localize('rubricPublishedWarning')}
+			</d2l-alert>
 		    <d2l-consistent-evaluation-rubric
 				header=${this.localize('rubrics')}
 				.rubricInfos=${this._rubricInfos}
@@ -60,6 +79,12 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 				this._canSaveOverallGrade = gradeEntity.hasActionByName(saveGradeActionName);
 			} else {
 				this._canSaveOverallGrade = false;
+			}
+
+			if (evaluationEntity.entity.properties.state === publishedState) {
+				this._published = true;
+			} else {
+				this._published = false;
 			}
 		}
 
