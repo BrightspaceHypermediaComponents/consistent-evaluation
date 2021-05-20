@@ -230,9 +230,11 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 	}
 	_renderTitle() {
 		return html `
-		<div>
+		<div
+			class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-title"
+		>
 			<a 
-				class="d2l-body-compact d2l-link d2l-consistent-evaluation-discussion-evidence-body-title"
+				class="d2l-link"
 				tabindex="0"
 				@click=${this._onPostTitleClicked}
 				@keydown=${this._onPostTitleKeydown}
