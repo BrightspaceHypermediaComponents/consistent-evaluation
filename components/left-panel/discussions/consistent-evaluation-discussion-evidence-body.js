@@ -229,12 +229,15 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		}
 	}
 	_renderTitle() {
-		return html `<div
-			class="d2l-body-compact d2l-link d2l-consistent-evaluation-discussion-evidence-body-title"
-			tabindex="0"
-			@click=${this._onPostTitleClicked}
-			@keydown=${this._onPostTitleKeydown}
-		>${this.postTitle}</div>`;
+		return html `
+		<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-title">
+			<a 
+				class="d2l-link"
+				tabindex="0"
+				@click=${this._onPostTitleClicked}
+				@keydown=${this._onPostTitleKeydown}
+			>${this.postTitle}</a>
+		</div>`;
 	}
 	_renderWordCount() {
 		if (this.wordCount === undefined) {
