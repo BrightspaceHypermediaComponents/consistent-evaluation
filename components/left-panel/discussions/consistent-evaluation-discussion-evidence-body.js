@@ -186,7 +186,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 								<a
 									class="d2l-link d2l-body-compact"
 									tabindex="0"
-									aria-label="${this.localize('clickToDownloadFile', 'fileName', name)}"
+									aria-label="${this.localize('clickToDownloadAttachmentFile', 'fileName', name)}"
 									@keydown=${onKeydownHandler}
 									@click=${onClickHandler}
 								>${name}</a>
