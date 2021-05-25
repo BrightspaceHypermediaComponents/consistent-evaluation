@@ -196,7 +196,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 
 					if (this._activityType === assignmentActivity || this._activityType === coaActivity) {
 						this._loadingComponents.discussions = false;
-						const stripped = this._stripFileIdFromUrl();
 
 						const assignmentPromises = [
 							controller.getSubmissionInfo(),
@@ -219,6 +218,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 							};
 						});
 
+						const stripped = this._stripFileIdFromUrl();
 						const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
 
 						if (!stripped && !hasOneFileAndSubmission) {
