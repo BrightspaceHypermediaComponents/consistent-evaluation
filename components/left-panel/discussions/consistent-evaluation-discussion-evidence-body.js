@@ -67,6 +67,7 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		return [bodyCompactStyles, bodySmallStyles, linkStyles, css`
 			.d2l-consistent-evaluation-discussion-evidence-body-title {
 				font-weight: bold;
+				margin: 0;
 			}
 
 			.d2l-consistent-evaluation-reply-to-container {
@@ -230,14 +231,14 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 	}
 	_renderTitle() {
 		return html `
-		<div class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-title">
-			<a 
+		<h2 class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-title">
+			<a
 				class="d2l-link"
 				tabindex="0"
 				@click=${this._onPostTitleClicked}
 				@keydown=${this._onPostTitleKeydown}
 			>${this.postTitle}</a>
-		</div>`;
+		</h2>`;
 	}
 	_renderWordCount() {
 		if (this.wordCount === undefined) {
