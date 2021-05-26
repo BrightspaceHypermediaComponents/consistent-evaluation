@@ -3,8 +3,6 @@ import 'd2l-rubric/d2l-rubric.js';
 import '@brightspace-ui/core/components/button/button.js';
 import '@brightspace-ui/core/components/icons/icon.js';
 import { css, html, LitElement } from 'lit-element';
-import { appId } from '../controllers/constants.js';
-import { createClient } from '@brightspace-ui/logging';
 import { labelStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
@@ -104,7 +102,6 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 		this.isPopout = false;
 		this.rubricWindowPopout = undefined;
 		this.closeRubricWindow = this._closePopout.bind(this);
-		this.logger = createClient(appId);
 		this.canSaveOverallGrade = false;
 	}
 
