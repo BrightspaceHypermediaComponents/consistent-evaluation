@@ -8,9 +8,6 @@ import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluati
 class ConsistentEvaluationOutcomes extends LocalizeConsistentEvaluation(LitElement) {
 	static get properties() {
 		return {
-			header: {
-				type: String
-			},
 			href: {
 				type: String
 			},
@@ -18,6 +15,10 @@ class ConsistentEvaluationOutcomes extends LocalizeConsistentEvaluation(LitEleme
 				type: Object,
 				reflect: true,
 				converter: (value) => convertToken(value),
+			},
+			outcomeTerm: {
+				attribute: 'outcome-term',
+				type: String
 			},
 			description: {
 				type: String
@@ -33,8 +34,8 @@ class ConsistentEvaluationOutcomes extends LocalizeConsistentEvaluation(LitEleme
 		return html`
 			<d2l-consistent-evaluation-right-panel-block
 				class="d2l-consistent-evaluation-outcomes-block"
-				supportingInfo=${this.localize('outcomesSummary')}
-				title=${this.header}>
+				supportingInfo=${this.localize('outcomesSummary', 'outcome', this.outcomeTerm)}
+				title=${this.localize('outcomeTerm', 'outcome', this.outcomeTerm)}>
 					<d2l-activity-alignments
 						href=${this.href}
 						.token=${this.token}>

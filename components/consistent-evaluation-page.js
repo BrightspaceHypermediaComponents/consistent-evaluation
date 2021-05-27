@@ -162,6 +162,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'activity-type',
 				type: String
 			},
+			outcomeTerm: {
+				attribute: 'outcome-term',
+				type: String
+			},
 			_displayToast: {
 				type: Boolean
 			},
@@ -376,6 +380,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						rubric-popout-location=${ifDefined(this.rubricPopoutLocation)}
 						.richTextEditorConfig=${this._getRichTextEditorConfig()}
 						special-access-href=${ifDefined(this.specialAccessHref)}
+						outcome-term="${this.outcomeTerm}"
 						discussion-calculation-type=${ifDefined(this.discussionCalculationType)}
 						.grade=${this._grade}
 						.gradeItemInfo=${this.gradeItemInfo}

@@ -123,6 +123,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				attribute: false,
 				type: String
 			},
+			outcomeTerm: {
+				attribute: 'outcome-term',
+				type: String
+			},
 			token: {
 				type: Object,
 				reflect: true,
@@ -333,7 +337,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 			return html`
 				<d2l-consistent-evaluation-outcomes
 					aria-hidden="${this.skeleton}"
-					header=${this.localize('outcomes')}
+					outcome-term="${this.outcomeTerm}"
 					href=${this.outcomesHref}
 					.token=${this.token}
 				></d2l-consistent-evaluation-outcomes>
