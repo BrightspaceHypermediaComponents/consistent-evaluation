@@ -289,16 +289,9 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	_getPostsCounts() {
 		let threads = 0;
 		let replies = 0;
-		for (let i = 0; i < this._displayedDiscussionPostObjects.length; i++) {
-			if (this._displayedDiscussionPostObjects[i]) {
-				const discussionPost = this._displayedDiscussionPostObjects[i];
-				if (discussionPost.isReply) {
-					replies++;
-				} else {
-					threads++;
-				}
-			}
-		}
+		this._displayedDiscussionPostObjects.forEach(discussionPost => {
+			discussionPost.isReply ? replies++ : threads++;
+		});
 
 		return {
 			threads: threads,
