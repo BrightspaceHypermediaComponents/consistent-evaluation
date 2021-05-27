@@ -403,19 +403,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			return html``;
 		}
 
-		let threadsText;
-		if (postsCountInfo.threads === 1) {
-			threadsText = this.localize('threadsCountSingle');
-		} else {
-			threadsText = this.localize('threadsCountMultiple', { num: postsCountInfo.threads });
-		}
-		let repliesText;
-		if (postsCountInfo.replies === 1) {
-			repliesText = this.localize('repliesCountSingle');
-		} else {
-			repliesText = this.localize('repliesCountMultiple', { num: postsCountInfo.replies });
-		}
-		const postsCountsText = this.localize('postsCount', { threadsText: threadsText, repliesText: repliesText });
+		const postsCountsText = this.localize('postsCount', { numThreads: postsCountInfo.threads, numReplies: postsCountInfo.replies });
 
 		return html`
 			<span class="d2l-body-compact d2l-consistent-evaluation-discussion-posts-counts">
