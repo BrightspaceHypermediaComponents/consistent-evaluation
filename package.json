@@ -43,7 +43,6 @@
     "@brightspace-ui-labs/user-profile-card": "^0.1.4",
     "@brightspace-ui/core": "^1",
     "@brightspace-ui/htmleditor": "^1",
-    "@brightspace-ui/logging": "^1.2.1",
     "d2l-activities": "github:BrightspaceHypermediaComponents/activities#semver:^3",
     "d2l-activity-alignments": "github:Brightspace/d2l-activity-alignments#semver:^2",
     "d2l-html-editor": "github:Brightspace/d2l-html-editor#semver:^2",

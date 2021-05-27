@@ -5,8 +5,6 @@ import '@brightspace-ui/core/components/dropdown/dropdown-context-menu.js';
 
 import { bodyCompactStyles, bodyStandardStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
-import { appId } from '../controllers/constants.js';
-import { createClient } from '@brightspace-ui/logging';
 import { EntityMixinLit } from 'siren-sdk/src/mixin/entity-mixin-lit.js';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
@@ -114,8 +112,6 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		this.messagePopout = undefined;
 		this.emailPopout = undefined;
 		this._setEntityType(UserEntity);
-		this.logger = createClient(appId);
-
 	}
 
 	firstUpdated() {

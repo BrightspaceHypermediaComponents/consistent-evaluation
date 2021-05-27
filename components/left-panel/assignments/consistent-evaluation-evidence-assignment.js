@@ -3,17 +3,16 @@ import './consistent-evaluation-evidence-non-viewable.js';
 import './consistent-evaluation-evidence-text.js';
 import './consistent-evaluation-submissions-page.js';
 import './consistent-evaluation-outcomes-overall-achievement.js';
-import { appId, toggleIsReadActionName } from '../../controllers/constants.js';
 import { bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
 import { fileSubmission, observedInPerson, onPaperSubmission, submissionTypesWithNoEvidence, textSubmission } from '../../controllers/constants';
 import { findFile, getSubmissions } from '../../helpers/submissionsAndFilesHelpers.js';
-import { createClient } from '@brightspace-ui/logging';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
-const logger = createClient(appId);
+import { toggleIsReadActionName } from '../../controllers/constants.js';
+
 function getSubmissionTypeName(type) {
 	switch (type) {
 		case fileSubmission:
@@ -24,8 +23,6 @@ function getSubmissionTypeName(type) {
 			return 'observedInPerson';
 		case onPaperSubmission:
 			return 'onPaperSubmission';
-		default:
-			logger.log(`Consistent-Eval: Unknown submission type "${type}"`);
 	}
 }
 
@@ -189,7 +186,6 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 		const currentFile = findFile(this.currentFileId, submissions);
 
 		if (!currentFile) {
-			logger.log(`Cannot find fileId ${this.currentFileId}`);
 			return;
 		}
 
