@@ -1,0 +1,29 @@
+{
+    "class": [
+        "level",
+        "overridden"
+    ],
+    "properties": {
+        "name": "Level 1"
+    },
+    "links": [
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/rubric/198/groups/175/levels/1471.json"
+        },
+        {
+            "rel": [
+                "up"
+            ],
+            "href": "data/rubric/198/groups/175/levels.json"
+        },
+        {
+            "rel": [
+                "prev"
+            ],
+            "href": "data/rubric/198/groups/175/levels/1470.json"
+        }
+    ]
+}
