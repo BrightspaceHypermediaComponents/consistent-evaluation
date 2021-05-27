@@ -210,19 +210,17 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 			if (!rubric) {
 				return html``;
 			}
+
 			return html`
 				<div class="d2l-consistent-evaluation-rubric ${this.isPopout ? 'd2l-consistent-evaluation-popout' : ''}">
 					${this._renderRubricTitle(rubric.rubricTitle)}
 					${this._renderGradedBy(rubric.assessorDisplayName)}
 					<d2l-rubric
-						data-rubric-id=${rubric.rubricId}
 						href=${rubric.rubricHref}
 						assessment-href=${rubric.rubricAssessmentHref}
 						.token=${this.token}
 						?read-only=${this.readonly}
 						?force-compact=${!this.isPopout}
-						overall-score-flag
-						selected
 						@d2l-rubric-total-score-changed=${this._syncActiveScoringRubricGradeHandler}
 					></d2l-rubric>
 				</div>
