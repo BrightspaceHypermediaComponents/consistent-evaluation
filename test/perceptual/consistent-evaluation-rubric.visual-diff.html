@@ -14,11 +14,17 @@
 			for (let i = 0; i < tests.length; i++) {
 				if (tests[i].id === 'multiple-rubrics') {
 					tests[i].rubricInfos = [
-						{ rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json', rubricTitle: 'firstRubric' },
-						{ rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json', rubricTitle: 'secondRubric' }];
+						{ rubricHref: 'data/rubric/198.json',
+							rubricAssessmentHref: 'data/rubric/198/assessment/8.json',
+							rubricTitle: 'firstRubric'
+						},
+						{ rubricHref: 'data/rubric/198.json',
+							rubricAssessmentHref: 'data/rubric/198/assessment/8.json',
+							rubricTitle: 'secondRubric'
+						}];
 					continue;
 				}
-				tests[i].rubricInfos = [{ rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json' }];
+				tests[i].rubricInfos = [{ rubricHref: 'data/rubric/198.json', rubricAssessmentHref: 'data/rubric/198/assessment/8.json', rubricTitle: 'firstRubric' }];
 			}
 		</script>
 		<style>

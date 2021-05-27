@@ -21,6 +21,9 @@
 						}];
 					continue;
 				}
+				if (tests[i].id === 'published-warning') {
+					tests[i]._published = true;
+				}
 				tests[i]._rubricInfos = [{ rubricHref: 'data/rubric/198.json', rubricAssessmentHref: 'data/rubric/198/assessment/8.json', rubricTitle: 'firstRubric' }];
 			}
 		</script>
@@ -34,7 +37,14 @@
 			<h2>Single Rubric</h2>
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-popup-rubric
-					header="Rubrics"
+					token="abcde"
+				></d2l-consistent-evaluation-popup-rubric>
+			</d2l-demo-snippet>
+
+			<h2>Single Rubric with Published Warning</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-popup-rubric
+					id="published-warning"
 					token="abcde"
 				></d2l-consistent-evaluation-popup-rubric>
 			</d2l-demo-snippet>
