@@ -1,13 +1,12 @@
 /* global moment:false */
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import '@brightspace-ui/core/components/button/button-subtle.js';
-import { appId, submissions } from '../controllers/constants';
 import { css, html, LitElement } from 'lit-element';
 import { findFile, getSubmissionFiles, getSubmissions } from '../helpers/submissionsAndFilesHelpers.js';
-import { createClient } from '@brightspace-ui/logging';
 import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { selectStyles } from '@brightspace-ui/core/components/inputs/input-select-styles.js';
+import { submissions } from '../controllers/constants';
 
 export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeConsistentEvaluation(LitElement)) {
 
@@ -63,10 +62,6 @@ export class ConsistentEvaluationLcbFileContext extends RtlMixin(LocalizeConsist
 				}
 			`
 		];
-	}
-	constructor() {
-		super();
-		this.logger = createClient(appId);
 	}
 
 	render() {
