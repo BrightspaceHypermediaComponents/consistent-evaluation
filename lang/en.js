@@ -86,6 +86,7 @@ export default {
 	"overflowMenu": "Overflow Menu",
 	"postSubject": "Post Subject",
 	"posts": "Posts",
+	"postsCount" : "Post: {numThreads} {numThreads, plural, =1 {thread} other {threads}}, {numReplies} {numReplies, plural, =1 {reply} other {replies}}",
 	"publish": "Publish",
 	"published":   "Evaluation published",
 	"publishError": "Unable to publish evaluation. Please try again.",
