@@ -3,6 +3,7 @@ import { attachmentClassName, attachmentListClassName, fivestarRatingClass, lmsS
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element';
 import { filterDiscussionPosts, sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
+import { bodyCompactStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
@@ -44,7 +45,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 
 	static get styles() {
-		return [super.styles, css`
+		return [super.styles, bodyCompactStyles, css`
 			:host([skeleton]) d2l-consistent-evaluation-discussion-evidence-body {
 				display: none;
 			}
@@ -119,6 +120,16 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				padding: 2rem;
 				width: 100%;
 			}
+
+			.d2l-consistent-evaluation-discussion-posts-counts {
+				float: left;
+				margin-left: 20px;
+			}
+
+			:host([dir="rtl"]) .d2l-consistent-evaluation-discussion-posts-counts {
+				float: right;
+			}
+
 			.d2l-consistent-evaluation-unscored-status-indicator {
 				float: left;
 				margin-left: 1rem;
@@ -182,7 +193,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		return html`
 			${this._renderDiscussionItemSkeleton()}
 			${this._renderDiscussionItemSkeleton()}
-			${this._renderUnscoredStatus()}
+			${this._renderPostsHeader()}
 			${this._renderDiscussionPostEntities()}
 		`;
 	}
@@ -275,6 +286,25 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {
 		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
 	}
+	_getPostsCounts() {
+		let threads = 0;
+		let replies = 0;
+		for (let i = 0; i < this._displayedDiscussionPostObjects.length; i++) {
+			if (this._displayedDiscussionPostObjects[i]) {
+				const discussionPost = this._displayedDiscussionPostObjects[i];
+				if (discussionPost.isReply) {
+					replies++;
+				} else {
+					threads++;
+				}
+			}
+		}
+
+		return {
+			threads: threads,
+			replies: replies
+		};
+	}
 	_getRatingsInfo(ratingMethod, discussionPostEntity) {
 		this._ratingMethod = ratingMethod;
 		switch (ratingMethod) {
@@ -366,7 +396,40 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				</div>
 			</div>`;
 	}
+	_renderPostsCounts() {
+		const postsCountInfo = this._getPostsCounts();
 
+		if (postsCountInfo.threads === 0 && postsCountInfo.replies === 0) {
+			return html``;
+		}
+
+		let threadsText;
+		if (postsCountInfo.threads === 1) {
+			threadsText = this.localize('threadsCountSingle');
+		} else {
+			threadsText = this.localize('threadsCountMultiple', { num: postsCountInfo.threads });
+		}
+		let repliesText;
+		if (postsCountInfo.replies === 1) {
+			repliesText = this.localize('repliesCountSingle');
+		} else {
+			repliesText = this.localize('repliesCountMultiple', { num: postsCountInfo.replies });
+		}
+		const postsCountsText = this.localize('postsCount', { threadsText: threadsText, repliesText: repliesText });
+
+		return html`
+			<span class="d2l-body-compact d2l-consistent-evaluation-discussion-posts-counts">
+				${postsCountsText}
+			</span>
+		`;
+	}
+	_renderPostsHeader() {
+		return html`
+			${this._renderPostsCounts()}
+			${this._renderUnscoredStatus()}
+			<br>
+		`;
+	}
 	_renderUnscoredStatus() {
 		const unscoredPosts = this._getUnscoredPostsCount();
 		if (!isNaN(unscoredPosts)) {
@@ -379,7 +442,6 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				</d2l-status-indicator>
 			`;
 		}
-
 	}
 
 }
