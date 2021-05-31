@@ -153,13 +153,16 @@ export class ConsistentEvaluationDialogs extends LocalizeConsistentEvaluation(Li
 			</d2l-dialog>`;
 	}
 	async _showUnsavedChangesDialog() {
-		const controller = new ConsistentEvaluationController(this.evaluationHref, this.token);
-		const entity = await controller.fetchEvaluationEntity(false);
-		if (entity.hasClass('unsaved')) {
-			this._unsavedChangesDialogOpened = true;
-		} else {
-			this._fireNavigateEvent();
+		if (this.evaluationHref) {
+			const controller = new ConsistentEvaluationController(this.evaluationHref, this.token);
+			const entity = await controller.fetchEvaluationEntity(false);
+			if (entity.hasClass('unsaved')) {
+				this._unsavedChangesDialogOpened = true;
+				return;
+			}
 		}
+
+		this._fireNavigateEvent();
 	}
 
 	async _showUnscoredCriteriaDialog() {

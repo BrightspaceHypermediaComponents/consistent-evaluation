@@ -656,9 +656,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	async _navigate() {
 		switch (this._navigationTarget) {
 			case 'back':
-				if (this.evaluationEntity.hasClass('unsaved')) {
-					window.removeEventListener('beforeunload', this.unsavedChangesHandler);
-				}
+				window.removeEventListener('beforeunload', this.unsavedChangesHandler);
 				window.location.assign(this.returnHref);
 				break;
 			case 'next':
