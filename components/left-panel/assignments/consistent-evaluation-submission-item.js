@@ -249,7 +249,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		});
 		this.dispatchEvent(event);
 
-		window.open(downloadHref, "_blank");
+		window.open(downloadHref, '_blank');
 	}
 	_dispatchFileSelectedEvent(fileId) {
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-file-selected', {
