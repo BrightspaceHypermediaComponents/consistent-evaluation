@@ -249,7 +249,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		});
 		this.dispatchEvent(event);
 
-		window.location = downloadHref;
+		window.open(downloadHref, '_blank');
 	}
 	_dispatchFileSelectedEvent(fileId) {
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-file-selected', {
@@ -369,7 +369,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 						tabindex=0
 						@keydown=${onKeydownHandler}
 						@click="${onClickHandler}">
-						<div class="truncate" aria-label="heading">${displayedName}</div>
+						<a class="truncate" aria-label="${this.localize('clickToDownloadAttachmentFile', 'fileName', displayedName)}">${displayedName}</a>
 						<div slot="supporting-info">
 							${this._renderFlaggedStatus(flagged)}
 							${extension.toUpperCase()}

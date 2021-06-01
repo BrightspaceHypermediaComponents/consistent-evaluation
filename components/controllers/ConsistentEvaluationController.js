@@ -1,6 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { appId, publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentAFieldName, saveFeedbackAttachmentFileActionName, saveFeedbackAttachmentLinkActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, saveScoreActionName, updateActionName } from './constants.js';
-import { createClient } from '@brightspace-ui/logging';
+import { publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentAFieldName, saveFeedbackAttachmentFileActionName, saveFeedbackAttachmentLinkActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, saveScoreActionName, updateActionName } from './constants.js';
 import { Grade } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 
@@ -22,8 +21,6 @@ export const ConsistentEvaluationControllerErrors = {
 
 export class ConsistentEvaluationController {
 	constructor(evaluationHref, token) {
-		this.logger = createClient(appId);
-
 		if (!evaluationHref) {
 			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_HREF);
 		}

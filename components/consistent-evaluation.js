@@ -39,6 +39,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				attribute: 'display-conversion-warning',
 				type: Boolean
 			},
+			outcomeTerm: {
+				attribute: 'outcome-term',
+				type: String
+			},
 			_rubricReadOnly: { type: Boolean },
 			_childHrefs: { type: Object },
 			_rubricInfos: { type: Array },
@@ -119,6 +123,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				download-all-submissions-location=${ifDefined(this._childHrefs && this._childHrefs.downloadAllSubmissionLink)}
 				edit-activity-path=${ifDefined(this._editActivityPath)}
 				activity-type=${this._activityType}
+				outcome-term="${this.outcomeTerm}"
 				discussion-calculation-type=${ifDefined(this._discussionTopicInfo && this._discussionTopicInfo.calculationType)}
 				discussion-topic-link=${ifDefined(this._discussionTopicInfo && this._discussionTopicInfo.topicLink)}
 				.currentFileId=${this.currentFileId}
@@ -196,7 +201,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 
 					if (this._activityType === assignmentActivity || this._activityType === coaActivity) {
 						this._loadingComponents.discussions = false;
-						const stripped = this._stripFileIdFromUrl();
 
 						const assignmentPromises = [
 							controller.getSubmissionInfo(),
@@ -219,6 +223,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 							};
 						});
 
+						const stripped = this._stripFileIdFromUrl();
 						const hasOneFileAndSubmission = await this._hasOneFileAndOneSubmission();
 
 						if (!stripped && !hasOneFileAndSubmission) {

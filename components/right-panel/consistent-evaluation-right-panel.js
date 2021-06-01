@@ -7,9 +7,7 @@ import './consistent-evaluation-right-panel-skeleton.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-context-menu.js';
 import { css, html, LitElement } from 'lit-element';
 import { getRubricAssessmentScore, mapRubricScoreToGrade } from '../helpers/rubricGradeSyncHelpers.js';
-import { appId } from '../controllers/constants.js';
 import { convertToken } from '../helpers/converterHelpers.js';
-import { createClient } from '@brightspace-ui/logging';
 import { getUniqueId } from '@brightspace-ui/core/helpers/uniqueId.js';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
@@ -125,6 +123,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				attribute: false,
 				type: String
 			},
+			outcomeTerm: {
+				attribute: 'outcome-term',
+				type: String
+			},
 			token: {
 				type: Object,
 				reflect: true,
@@ -214,7 +216,6 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		this._specialAccessId = getUniqueId();
 		this._editActivityId = getUniqueId();
 		this.rubricsOpen = 0;
-		this.logger = createClient(appId);
 	}
 
 	render() {
@@ -336,7 +337,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 			return html`
 				<d2l-consistent-evaluation-outcomes
 					aria-hidden="${this.skeleton}"
-					header=${this.localize('outcomes')}
+					outcome-term="${this.outcomeTerm}"
 					href=${this.outcomesHref}
 					.token=${this.token}
 				></d2l-consistent-evaluation-outcomes>

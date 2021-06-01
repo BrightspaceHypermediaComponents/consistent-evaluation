@@ -2,8 +2,6 @@ import '@brightspace-ui-labs/grade-result/d2l-grade-result.js';
 import './consistent-evaluation-right-panel-block';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { html, LitElement } from 'lit-element';
-import { appId } from '../controllers/constants.js';
-import { createClient } from '@brightspace-ui/logging';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { getComposedActiveElement } from '@brightspace-ui/core/helpers/focus.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
@@ -77,7 +75,6 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 		this._gradeButtonTooltip = undefined;
 		this._reportsButtonTooltip = undefined;
 		this._isGradeAutoCompleted = false;
-		this.logger = createClient(appId);
 	}
 
 	connectedCallback() {
@@ -147,7 +144,7 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 	onGradeChanged(e) {
 		const score = e.detail.value;
 
-		if (this.grade.isNumberGrade && score < 0) {
+		if (this.grade.isNumberGrade && (score < 0 || score > 9999999999)) {
 			return;
 		}
 
