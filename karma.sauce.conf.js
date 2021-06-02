@@ -50,7 +50,11 @@ module.exports = config => {
 			reporters: ['dots', 'saucelabs'],
 			browserNoActivityTimeout: 100000,
 			singleRun: true,
-			hostname: '127.0.0.1'
+			hostname: '127.0.0.1',
+			flags: [
+				'--disable-gpu',
+				'--no-sandbox'
+			]
 		}),
 	);
 	return config;
