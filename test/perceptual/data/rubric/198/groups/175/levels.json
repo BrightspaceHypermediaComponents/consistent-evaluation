@@ -1,0 +1,165 @@
+{
+    "class": [
+        "collection",
+        "levels"
+    ],
+    "properties": {
+        "total": 4
+    },
+    "entities": [
+        {
+            "class": [
+                "level",
+                "overridden"
+            ],
+            "rel": [
+                "https://rubrics.api.brightspace.com/rels/level"
+            ],
+            "properties": {
+                "name": "Level 4"
+            },
+            "links": [
+                {
+                    "rel": [
+                        "self"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels/1468.json"
+                },
+                {
+                    "rel": [
+                        "up"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels.json"
+                },
+                {
+                    "rel": [
+                        "next"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels/1469.json"
+                }
+            ]
+        },
+        {
+            "class": [
+                "level",
+                "overridden"
+            ],
+            "rel": [
+                "https://rubrics.api.brightspace.com/rels/level"
+            ],
+            "properties": {
+                "name": "Level 3"
+            },
+            "links": [
+                {
+                    "rel": [
+                        "self"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels/1469.json"
+                },
+                {
+                    "rel": [
+                        "up"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels.json"
+                },
+                {
+                    "rel": [
+                        "prev"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels/1468.json"
+                },
+                {
+                    "rel": [
+                        "next"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels/1470.json"
+                }
+            ]
+        },
+        {
+            "class": [
+                "level",
+                "overridden"
+            ],
+            "rel": [
+                "https://rubrics.api.brightspace.com/rels/level"
+            ],
+            "properties": {
+                "name": "Level 2"
+            },
+            "links": [
+                {
+                    "rel": [
+                        "self"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels/1470.json"
+                },
+                {
+                    "rel": [
+                        "up"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels.json"
+                },
+                {
+                    "rel": [
+                        "prev"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels/1469.json"
+                },
+                {
+                    "rel": [
+                        "next"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels/1471.json"
+                }
+            ]
+        },
+        {
+            "class": [
+                "level",
+                "overridden"
+            ],
+            "rel": [
+                "https://rubrics.api.brightspace.com/rels/level"
+            ],
+            "properties": {
+                "name": "Level 1"
+            },
+            "links": [
+                {
+                    "rel": [
+                        "self"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels/1471.json"
+                },
+                {
+                    "rel": [
+                        "up"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels.json"
+                },
+                {
+                    "rel": [
+                        "prev"
+                    ],
+                    "href": "data/rubric/198/groups/175/levels/1470.json"
+                }
+            ]
+        }
+    ],
+    "links": [
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/rubric/198/groups/175/levels.json"
+        },
+        {
+            "rel": [
+                "up"
+            ],
+            "href": "data/rubric/198/groups/175.json"
+        }
+    ]
+}

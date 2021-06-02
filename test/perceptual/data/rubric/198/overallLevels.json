@@ -1,0 +1,225 @@
+{
+    "class": [
+        "collection",
+        "overall-levels"
+    ],
+    "properties": {
+        "total": 4
+    },
+    "entities": [
+        {
+            "class": [
+                "overall-level"
+            ],
+            "rel": [
+                "https://rubrics.api.brightspace.com/rels/overall-level"
+            ],
+            "properties": {
+                "name": "Level 4",
+                "rangeStart": 11.0
+            },
+            "entities": [
+                {
+                    "class": [
+                        "richtext",
+                        "description"
+                    ],
+                    "rel": [
+                        "item"
+                    ],
+                    "properties": {
+                        "text": "",
+                        "html": ""
+                    }
+                }
+            ],
+            "links": [
+                {
+                    "rel": [
+                        "self"
+                    ],
+                    "href": "data/rubric/198/overallLevels/1475.json"
+                },
+                {
+                    "rel": [
+                        "up"
+                    ],
+                    "href": "data/rubric/198/overallLevels.json"
+                },
+                {
+                    "rel": [
+                        "next"
+                    ],
+                    "href": "data/rubric/198/overallLevels/1474.json"
+                }
+            ]
+        },
+        {
+            "class": [
+                "overall-level"
+            ],
+            "rel": [
+                "https://rubrics.api.brightspace.com/rels/overall-level"
+            ],
+            "properties": {
+                "name": "Level 3",
+                "rangeStart": 8.0
+            },
+            "entities": [
+                {
+                    "class": [
+                        "richtext",
+                        "description"
+                    ],
+                    "rel": [
+                        "item"
+                    ],
+                    "properties": {
+                        "text": "",
+                        "html": ""
+                    }
+                }
+            ],
+            "links": [
+                {
+                    "rel": [
+                        "self"
+                    ],
+                    "href": "data/rubric/198/overallLevels/1474.json"
+                },
+                {
+                    "rel": [
+                        "up"
+                    ],
+                    "href": "data/rubric/198/overallLevels.json"
+                },
+                {
+                    "rel": [
+                        "prev"
+                    ],
+                    "href": "data/rubric/198/overallLevels/1475.json"
+                },
+                {
+                    "rel": [
+                        "next"
+                    ],
+                    "href": "data/rubric/198/overallLevels/1473.json"
+                }
+            ]
+        },
+        {
+            "class": [
+                "overall-level"
+            ],
+            "rel": [
+                "https://rubrics.api.brightspace.com/rels/overall-level"
+            ],
+            "properties": {
+                "name": "Level 2",
+                "rangeStart": 5.0
+            },
+            "entities": [
+                {
+                    "class": [
+                        "richtext",
+                        "description"
+                    ],
+                    "rel": [
+                        "item"
+                    ],
+                    "properties": {
+                        "text": "",
+                        "html": ""
+                    }
+                }
+            ],
+            "links": [
+                {
+                    "rel": [
+                        "self"
+                    ],
+                    "href": "data/rubric/198/overallLevels/1473.json"
+                },
+                {
+                    "rel": [
+                        "up"
+                    ],
+                    "href": "data/rubric/198/overallLevels.json"
+                },
+                {
+                    "rel": [
+                        "prev"
+                    ],
+                    "href": "data/rubric/198/overallLevels/1474.json"
+                },
+                {
+                    "rel": [
+                        "next"
+                    ],
+                    "href": "data/rubric/198/overallLevels/1472.json"
+                }
+            ]
+        },
+        {
+            "class": [
+                "overall-level"
+            ],
+            "rel": [
+                "https://rubrics.api.brightspace.com/rels/overall-level"
+            ],
+            "properties": {
+                "name": "Level 1",
+                "rangeStart": 0.0
+            },
+            "entities": [
+                {
+                    "class": [
+                        "richtext",
+                        "description"
+                    ],
+                    "rel": [
+                        "item"
+                    ],
+                    "properties": {
+                        "text": "",
+                        "html": ""
+                    }
+                }
+            ],
+            "links": [
+                {
+                    "rel": [
+                        "self"
+                    ],
+                    "href": "data/rubric/198/overallLevels/1472.json"
+                },
+                {
+                    "rel": [
+                        "up"
+                    ],
+                    "href": "data/rubric/198/overallLevels.json"
+                },
+                {
+                    "rel": [
+                        "prev"
+                    ],
+                    "href": "data/rubric/198/overallLevels/1473.json"
+                }
+            ]
+        }
+    ],
+    "links": [
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/rubric/198/overallLevels.json"
+        },
+        {
+            "rel": [
+                "up"
+            ],
+            "href": "data/rubric/198.json"
+        }
+    ]
+}
