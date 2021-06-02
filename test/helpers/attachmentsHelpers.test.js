@@ -6,8 +6,6 @@ function localizeStub(str) {
 }
 
 describe('attachmentsHelpers tests', () => {
-	this.timeout(45000);
-
 	describe('getAttachmentType tests', () => {
 
 		const extensionAndExpectedTypePairs = [
