@@ -57,6 +57,8 @@ const nextStudentComponent = html`
 const eventTimeoutMS = 1000;
 
 describe('d2l-consistent-evaluation-footer event tests', () => {
+	this.timeout(45000);
+
 	it('should pass all axe tests', async() => {
 		const el = await fixture(defaultComponent);
 		await expect(el).to.be.accessible();

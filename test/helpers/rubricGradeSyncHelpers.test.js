@@ -4,6 +4,8 @@ import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grad
 import sinon from 'sinon';
 
 describe('rubricGradeSyncHelpers', () => {
+	this.timeout(45000);
+
 	describe('mapRubricScoreToGrade', () => {
 		const defaultLetterGradeOptions = {
 			0: { 'LetterGrade': 'None', 'PercentStart': null },

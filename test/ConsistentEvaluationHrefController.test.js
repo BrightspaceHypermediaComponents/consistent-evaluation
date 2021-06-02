@@ -8,6 +8,8 @@ import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
 
 describe('ConsistentEvaluationHrefController', () => {
+	this.timeout(45000);
+
 	describe('instantiates properly and throws the correct errors', () => {
 		it('accepts a proper href and token string', () => {
 			assert.doesNotThrow(() => {

@@ -3,6 +3,8 @@ import { filterDiscussionPosts, sortDiscussionPosts } from '../../components/hel
 import { assert } from '@open-wc/testing';
 
 describe('discussionPostHelpers', () => {
+	this.timeout(45000);
+
 	describe('sortDiscussionPosts', () => {
 		const discussionPostObjects = [
 			{

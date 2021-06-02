@@ -3,6 +3,7 @@ import { formatDateTime, getLinkIconTypeFromUrl } from '../../components/helpers
 import { assert } from '@open-wc/testing';
 
 describe('submissionsAndFilesHelpers tests', () => {
+	this.timeout(45000);
 
 	describe('formatDateTime tests', () => {
 		const dateStr = '2021-03-25T02:41:52.707Z';
