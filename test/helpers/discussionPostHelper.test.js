@@ -2,7 +2,7 @@ import { filterByReplies, filterByScored, filterByThreads, filterByUnscored, sor
 import { filterDiscussionPosts, sortDiscussionPosts } from '../../components/helpers/discussionPostsHelper.js';
 import { assert } from '@open-wc/testing';
 
-describe('discussionPostHelpers', function() {
+describe('discussionPostHelpers', () => {
 	this.timeout(45000);
 
 	describe('sortDiscussionPosts', () => {

@@ -1,7 +1,7 @@
 import { assert } from '@open-wc/testing';
 import { TransientSaveAwaiter } from '../components/transient-save-awaiter.js';
 
-describe('Awaiter', function() {
+describe('Awaiter', () => {
 	this.timeout(45000);
 
 	it('should add and await actions properly', async() => {
