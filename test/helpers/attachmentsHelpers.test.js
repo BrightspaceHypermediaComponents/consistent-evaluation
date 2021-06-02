@@ -5,7 +5,7 @@ function localizeStub(str) {
 	return str;
 }
 
-describe('attachmentsHelpers tests', () => {
+describe('attachmentsHelpers tests', function() {
 	this.timeout(45000);
 
 	describe('getAttachmentType tests', () => {

@@ -1,7 +1,7 @@
 import { assert } from '@open-wc/testing';
 import { Awaiter } from '../components/awaiter.js';
 
-describe('Awaiter', () => {
+describe('Awaiter', function() {
 	this.timeout(45000);
 
 	it('should do nothing when there is only one lock', async() => {

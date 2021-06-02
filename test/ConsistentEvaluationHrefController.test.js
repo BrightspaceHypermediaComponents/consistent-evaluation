@@ -7,7 +7,7 @@ import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerE
 import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
 
-describe('ConsistentEvaluationHrefController', () => {
+describe('ConsistentEvaluationHrefController', function() {
 	this.timeout(45000);
 
 	describe('instantiates properly and throws the correct errors', () => {

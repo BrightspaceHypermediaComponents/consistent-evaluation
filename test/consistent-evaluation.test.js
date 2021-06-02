@@ -1,7 +1,7 @@
 import '../consistent-evaluation.js';
 import { expect, fixture, html } from '@open-wc/testing';
 
-describe('d2l-consistent-evaluation', () => {
+describe('d2l-consistent-evaluation', function() {
 	this.timeout(45000);
 
 	it('should pass all axe tests', async() => {

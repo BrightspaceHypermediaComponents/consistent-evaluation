@@ -2,7 +2,7 @@ import { formatDate, formatTime } from '@brightspace-ui/intl/lib/dateTime.js';
 import { formatDateTime, getLinkIconTypeFromUrl } from '../../components/helpers/submissionsAndFilesHelpers.js';
 import { assert } from '@open-wc/testing';
 
-describe('submissionsAndFilesHelpers tests', () => {
+describe('submissionsAndFilesHelpers tests', function() {
 	this.timeout(45000);
 
 	describe('formatDateTime tests', () => {

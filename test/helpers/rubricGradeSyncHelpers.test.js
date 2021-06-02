@@ -3,7 +3,7 @@ import { assert } from '@open-wc/testing';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import sinon from 'sinon';
 
-describe('rubricGradeSyncHelpers', () => {
+describe('rubricGradeSyncHelpers', function() {
 	this.timeout(45000);
 
 	describe('mapRubricScoreToGrade', () => {

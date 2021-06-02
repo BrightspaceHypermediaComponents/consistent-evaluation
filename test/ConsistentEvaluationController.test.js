@@ -4,7 +4,7 @@ import { publishActionName, retractActionName, saveActionName, saveFeedbackActio
 import { assert } from '@open-wc/testing';
 import sinon from 'sinon';
 
-describe('ConsistentEvaluationController', () => {
+describe('ConsistentEvaluationController', function() {
 	this.timeout(45000);
 
 	describe('instantiates properly and throws the correct errors', () => {
