@@ -50,15 +50,6 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 		this._displayToast = true;
 	}
 
-	updated(changedProperties) {
-		super.updated(changedProperties);
-
-		if (changedProperties.has('url')) {
-			const iframe = this.shadowRoot.getElementById('d2l-annotations-iframe');
-			iframe.contentWindow.location.replace(this.url);
-		}
-	}
-
 	connectedCallback() {
 		super.connectedCallback();
 		window.addEventListener('d2l-template-primary-secondary-resize-start', this._resizeStart);
@@ -88,11 +79,22 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 			${this._renderToast()}
 		`;
 	}
+
+	updated(changedProperties) {
+		super.updated(changedProperties);
+
+		if (changedProperties.has('url')) {
+			const iframe = this.shadowRoot.getElementById('d2l-annotations-iframe');
+			iframe.contentWindow.location.replace(this.url);
+		}
+	}
+
 	flush() {
 		if (this._debounceJobs.annotations && this._debounceJobs.annotations.isActive()) {
 			this._debounceJobs.annotations.flush();
 		}
 	}
+
 	_handleAnnotationsSetup(e) {
 		if (typeof this.token === 'string') {
 			this._postTokenResponse(e, this.token);
