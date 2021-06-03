@@ -40,6 +40,7 @@ export default {
 	"gradedBy": "Graded by {assessorName}",
 	"gradedByUnknown": "Graded by Unknown",
 	"gradeSummary": "{grade} out of {outOf}",
+	"gradeValueRangeError": "Number must be greater than or equal to 0 and less than or equal to 9,999,999,999.",
 	"gradingRubric": "Grading Rubric",
 	"groupIteratorText": "Group {num} of {total}",
 	"groupMembers": "Group Members - {groupName}",
