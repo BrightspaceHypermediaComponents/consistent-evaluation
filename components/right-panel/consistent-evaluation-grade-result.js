@@ -266,7 +266,7 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 		} else if (gradeType === GradeType.Letter) {
 			summary = score;
 		} else {
-			let renderScore = Math.round(score * 100) / 100;
+			const renderScore = Math.round(score * 100) / 100;
 			summary = this.localize('gradeSummary', { grade: renderScore, outOf: scoreOutOf });
 		}
 		this._gradeSummaryInfo = summary;
