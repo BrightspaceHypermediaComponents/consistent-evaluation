@@ -8,6 +8,7 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
+import { tableStyles } from '@brightspace-ui/core/components/table/table-wrapper.js';
 
 export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 	static get properties() {
@@ -45,7 +46,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 
 	static get styles() {
-		return [super.styles, bodyCompactStyles, css`
+		return [super.styles, bodyCompactStyles, tableStyles, css`
 			:host([skeleton]) d2l-consistent-evaluation-discussion-evidence-body {
 				display: none;
 			}
@@ -193,8 +194,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		return html`
 			${this._renderDiscussionItemSkeleton()}
 			${this._renderDiscussionItemSkeleton()}
-			${this._renderPostsHeader()}
-			${this._renderDiscussionPostEntities()}
+			${this._renderTable()}
 		`;
 	}
 	_finishedLoading() {
@@ -350,7 +350,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	_renderDiscussionPostEntities() {
 		if (this._displayedDiscussionPostObjects.length === 0) {
-			return html`${this._renderNoPostsInFilteredRange()}`;
+			return html`<tr>${this._renderNoPostsInFilteredRange()}</tr>`;
 		}
 
 		const itemTemplate = [];
@@ -358,20 +358,23 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			if (this._displayedDiscussionPostObjects[i]) {
 				const discussionPost = this._displayedDiscussionPostObjects[i];
 				itemTemplate.push(html`
-					<d2l-consistent-evaluation-discussion-evidence-body
-						aria-hidden="${this.skeleton}"
-						post-href=${discussionPost.postHref}
-						post-title=${discussionPost.postTitle}
-						post-body=${discussionPost.postBody}
-						post-date=${discussionPost.createdDateString}
-						?is-reply=${discussionPost.isReply}
-						thread-title=${discussionPost.threadTitle}
-						rating-method=${ifDefined(this._ratingMethod)}
-						word-count=${ifDefined(discussionPost.wordCount)}
-						.attachmentsList=${discussionPost.attachmentList}
-						.ratingInformation=${discussionPost.ratingInformation}
-						.discussionPostEntity=${discussionPost.discussionPostEvaluationEntity}
-					></d2l-consistent-evaluation-discussion-evidence-body>`);
+					<tr><td>
+						<d2l-consistent-evaluation-discussion-evidence-body
+							aria-hidden="${this.skeleton}"
+							post-href=${discussionPost.postHref}
+							post-title=${discussionPost.postTitle}
+							post-body=${discussionPost.postBody}
+							post-date=${discussionPost.createdDateString}
+							?is-reply=${discussionPost.isReply}
+							thread-title=${discussionPost.threadTitle}
+							rating-method=${ifDefined(this._ratingMethod)}
+							word-count=${ifDefined(discussionPost.wordCount)}
+							.attachmentsList=${discussionPost.attachmentList}
+							.ratingInformation=${discussionPost.ratingInformation}
+							.discussionPostEntity=${discussionPost.discussionPostEvaluationEntity}
+						></d2l-consistent-evaluation-discussion-evidence-body>
+					</td></tr>
+				`);
 			}
 		}
 		return html`${itemTemplate}`;
@@ -409,6 +412,20 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			${this._renderPostsCounts()}
 			${this._renderUnscoredStatus()}
 			<br>
+		`;
+	}
+	_renderTable() {
+		return html`
+			<d2l-table-wrapper>
+				<table class="d2l-table">
+					<thead>
+						<th>${this._renderPostsHeader()}</th>
+					</tead>
+					<tbody>
+						${this._renderDiscussionPostEntities()}
+					</tbody>
+				</table>
+			</d2l-table-wrapper>
 		`;
 	}
 	_renderUnscoredStatus() {
