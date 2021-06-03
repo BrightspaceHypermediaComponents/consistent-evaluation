@@ -69,8 +69,9 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 	render() {
 		return html`
 			<d2l-consistent-evaluation-evidence-top-bar></d2l-consistent-evaluation-evidence-top-bar>
-			<iframe ?data-resizing=${this._resizing}
-				src="${this.url}"
+			<iframe
+				id="d2l-annotations-iframe"
+				?data-resizing=${this._resizing}
 				frameborder="0"
 				scrolling="no"
 				allow="fullscreen"
@@ -78,11 +79,22 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 			${this._renderToast()}
 		`;
 	}
+
+	updated(changedProperties) {
+		super.updated(changedProperties);
+
+		if (changedProperties.has('url')) {
+			const iframe = this.shadowRoot.getElementById('d2l-annotations-iframe');
+			iframe.contentWindow.location.replace(this.url);
+		}
+	}
+
 	flush() {
 		if (this._debounceJobs.annotations && this._debounceJobs.annotations.isActive()) {
 			this._debounceJobs.annotations.flush();
 		}
 	}
+
 	_handleAnnotationsSetup(e) {
 		if (typeof this.token === 'string') {
 			this._postTokenResponse(e, this.token);
