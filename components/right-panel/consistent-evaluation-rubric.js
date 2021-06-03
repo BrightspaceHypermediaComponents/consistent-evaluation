@@ -207,6 +207,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 			if (!rubric) {
 				return html``;
 			}
+
 			return html`
 				<div class="d2l-consistent-evaluation-rubric ${this.isPopout ? 'd2l-consistent-evaluation-popout' : ''}">
 					${this._renderRubricTitle(rubric.rubricTitle)}
