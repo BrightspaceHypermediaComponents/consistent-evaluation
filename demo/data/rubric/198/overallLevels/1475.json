@@ -1,0 +1,44 @@
+{
+    "class": [
+        "overall-level"
+    ],
+    "properties": {
+        "name": "Level 4",
+        "rangeStart": 11.0
+    },
+    "entities": [
+        {
+            "class": [
+                "richtext",
+                "description"
+            ],
+            "rel": [
+                "item"
+            ],
+            "properties": {
+                "text": "",
+                "html": ""
+            }
+        }
+    ],
+    "links": [
+        {
+            "rel": [
+                "self"
+            ],
+            "href": "data/rubric/198/overallLevels/1475.json"
+        },
+        {
+            "rel": [
+                "up"
+            ],
+            "href": "data/rubric/198/overallLevels.json"
+        },
+        {
+            "rel": [
+                "next"
+            ],
+            "href": "data/rubric/198/overallLevels/1474.json"
+        }
+    ]
+}
