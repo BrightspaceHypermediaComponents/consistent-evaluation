@@ -166,7 +166,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'outcome-term',
 				type: String
 			},
-			_isInvalidGrade: {
+			_isValidGrade: {
 				type: Boolean
 			},
 			_displayToast: {
@@ -271,7 +271,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._isPublishClicked = false;
 		this._shouldWaitForAnnotations = false;
 		this._currentlySaving = false;
-		this._isInvalidGrade = false;
+		this._isValidGrade = true;
 	}
 
 	get evaluationEntity() {
@@ -647,7 +647,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	_isValidEvaluation() {
-		if (this._isInvalidGrade) {
+		if (!this._isValidGrade) {
 			this._showToast(this.localize('gradeValueRangeError'), true);
 			return false;
 		}
@@ -978,8 +978,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					}
 				}
 				else if (type === GradeType.Number) {
-					this._isInvalidGrade = e.detail.isInvalidGrade;
-					if (this._isInvalidGrade) {
+					this._isValidGrade = e.detail.isValidGrade;
+					if (!this._isValidGrade) {
 						return;
 					}
 
