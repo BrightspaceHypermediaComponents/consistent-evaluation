@@ -1,7 +1,6 @@
 import '@brightspace-ui/core/components/icons/icon.js';
 import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/list/list-item.js';
-import './consistent-evaluation-discussion-post-score.js';
 import './consistent-evaluation-discussion-post-rating.js';
 import { AttachmentTypes, getAttachmentType, getReadableFileSizeString } from '../../helpers/attachmentsHelpers.js';
 import { bodyCompactStyles, bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
@@ -55,10 +54,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			attachmentsList: {
 				attribute: false,
 				type: Array
-			},
-			discussionPostEntity: {
-				attribute: false,
-				type: Object
 			}
 		};
 	}
@@ -138,7 +133,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			<d2l-list aria-role="attachment list" separators="between">
 				${this._renderAttachments()}
 			</d2l-list>
-			${this._renderPostScore()}
 		</div>`;
 	}
 	_downloadAttachment(href) {
@@ -204,11 +198,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 	}
 	_renderDate() {
 		return html `<span class="d2l-body-small">${formatDateTime(this.postDate, 'medium')}</span>`;
-	}
-	_renderPostScore() {
-		if (this.discussionPostEntity && this.discussionPostEntity.properties && this.discussionPostEntity.properties.outOf) {
-			return html`<d2l-consistent-evaluation-discussion-post-score .discussionPostEntity=${this.discussionPostEntity}></d2l-consistent-evaluation-discussion-post-score>`;
-		}
 	}
 	_renderRating() {
 		return html`
