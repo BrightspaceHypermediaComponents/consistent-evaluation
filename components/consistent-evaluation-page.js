@@ -166,7 +166,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'outcome-term',
 				type: String
 			},
-			_isValidGrade: {
+			_isInvalidGrade: {
 				type: Boolean
 			},
 			_displayToast: {
@@ -271,6 +271,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._isPublishClicked = false;
 		this._shouldWaitForAnnotations = false;
 		this._currentlySaving = false;
+		this._isInvalidGrade = false;
 	}
 
 	get evaluationEntity() {
@@ -490,7 +491,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this.currentFileId = newFileId;
 	}
 	async _checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, errorTerm, successTerm) {
-		if (!newEvaluationEntity || newEvaluationEntity.score === null) {
+		if (!newEvaluationEntity) {
 			this._showToast(this.localize(errorTerm), true);
 		} else {
 			this.evaluationEntity = newEvaluationEntity;
@@ -646,12 +647,11 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	}
 
 	_isValidEvaluation() {
-		if (this._isValidGrade) {
-			return true;
-		} else {
+		if (this._isInvalidGrade) {
 			this._showToast(this.localize('gradeValueRangeError'), true);
 			return false;
 		}
+		return true;
 	}
 
 	get _navBarSubtitleText() {
@@ -820,11 +820,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 		await this._mutex.dispatch(
 			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newEvaluationEntity = await this._controller.save(entity);
-				this._currentlySaving = false;
+				if (this._isValidEvaluation()) {
+					const entity = await this._controller.fetchEvaluationEntity(false);
+					const newEvaluationEntity = await this._controller.save(entity);
 
-				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
+					this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
+				}
+				this._currentlySaving = false;
 			}
 		);
 	}
@@ -978,8 +980,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					}
 				}
 				else if (type === GradeType.Number) {
-					this._isValidGrade = e.detail.isValid;
-					if (!this._isValidGrade) {
+					this._isInvalidGrade = e.detail.isInvalidGrade;
+					if (this._isInvalidGrade) {
 						return;
 					}
 
