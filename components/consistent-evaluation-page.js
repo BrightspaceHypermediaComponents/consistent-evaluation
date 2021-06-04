@@ -166,8 +166,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'outcome-term',
 				type: String
 			},
-			_gradeNumberValue: {
-				type: Number
+			_isValidGrade: {
+				type: Boolean
 			},
 			_displayToast: {
 				type: Boolean
@@ -645,12 +645,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		return this.evaluationEntity.properties.state === publishedState;
 	}
 
-	_isInvalidGradeValue() {
-		if (this._gradeNumberValue < 0 || this._gradeNumberValue > 9999999999) {
-			this._showToast(this.localize('gradeValueRangeError'), true);
+	_isValidEvaluation() {
+		if (this._isValidGrade) {
 			return true;
+		} else {
+			this._showToast(this.localize('gradeValueRangeError'), true);
+			return false;
 		}
-		return false;
 	}
 
 	get _navBarSubtitleText() {
@@ -740,7 +741,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 		await this._mutex.dispatch(
 			async() => {
-				if (!(this._isInvalidGradeValue())) {
+				if (this._isValidEvaluation()) {
 					const entity = await this._controller.fetchEvaluationEntity(false);
 					const newEvaluationEntity = await this._controller.publish(entity);
 
@@ -977,11 +978,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					}
 				}
 				else if (type === GradeType.Number) {
-					newGradeVal = e.detail.grade.score;
-					this._gradeNumberValue = newGradeVal;
-					if (newGradeVal < 0 || newGradeVal > 9999999999) {
+					this._isValidGrade = e.detail.isValid;
+					if (!this._isValidGrade) {
 						return;
 					}
+
+					newGradeVal = e.detail.grade.score;
 				}
 				this.evaluationEntity = await this._controller.transientSaveGrade(entity, newGradeVal);
 			}
@@ -997,7 +999,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 		await this._mutex.dispatch(
 			async() => {
-				if (!(this._isInvalidGradeValue())) {
+				if (this._isValidEvaluation()) {
 					const entity = await this._controller.fetchEvaluationEntity(false);
 					const newEvaluationEntity = await this._controller.update(entity);
 
