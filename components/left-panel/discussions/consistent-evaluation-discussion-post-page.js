@@ -142,6 +142,15 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			:host([dir="rtl"]) .d2l-consistent-evaluation-unscored-status-indicator {
 				float: right;
 			}
+
+			.d2l-consistent-evaluation-discussion-table {
+				display: flex;
+			}
+
+			.d2l-table-wrapper {
+				margin-left: 1rem;
+				margin-right: 1rem;
+			}
 		`];
 	}
 
@@ -383,20 +392,20 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			${this._renderUnscoredStatus()}
 		`;
 	}
-	_renderTableHeader() {
-		if (this._displayedDiscussionPostObjects.length > 0) {
-			const discussionPost = this._displayedDiscussionPostObjects[0];
-			const discussionPostEntity = discussionPost.discussionPostEvaluationEntity;
-
-			if (discussionPostEntity && discussionPostEntity.properties && discussionPostEntity.properties.outOf) {
-				return html`
-					<th>${this._renderPostsHeader()}</th>
-					<th>Score</th>
-				`;
-			}
-		}
+	_renderTable() {
 		return html`
-			<th>${this._renderPostsHeader()}</th>
+			<div class="d2l-consistent-evaluation-discussion-table">
+				<d2l-table-wrapper class="d2l-table-wrapper">
+					<table class="d2l-table">
+						<thead>
+							<tr>${this._renderTableHeader()}</tr>
+						</thead>
+						<tbody>
+							${this._renderTableBody()}
+						</tbody>
+					</table>
+				</d2l-table-wrapper>
+			</div>
 		`;
 	}
 	_renderTableBody() {
@@ -460,18 +469,20 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		}
 		return html`${itemTemplate}`;
 	}
-	_renderTable() {
+	_renderTableHeader() {
+		if (this._displayedDiscussionPostObjects.length > 0) {
+			const discussionPost = this._displayedDiscussionPostObjects[0];
+			const discussionPostEntity = discussionPost.discussionPostEvaluationEntity;
+
+			if (discussionPostEntity && discussionPostEntity.properties && discussionPostEntity.properties.outOf) {
+				return html`
+					<th>${this._renderPostsHeader()}</th>
+					<th>${this.localize('score')}</th>
+				`;
+			}
+		}
 		return html`
-			<d2l-table-wrapper>
-				<table class="d2l-table">
-					<thead>
-						${this._renderTableHeader()}
-					</tead>
-					<tbody>
-						${this._renderTableBody()}
-					</tbody>
-				</table>
-			</d2l-table-wrapper>
+			<th>${this._renderPostsHeader()}</th>
 		`;
 	}
 	_renderUnscoredStatus() {
