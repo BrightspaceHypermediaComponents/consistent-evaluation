@@ -188,7 +188,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
 		}
 
-		this._displayedDiscussionPostObjects = filterDiscussionPosts(this._discussionPostObjects, this.selectedPostFilters, this.selectedScoreFilters);
+		this._displayedDiscussionPostObjects = this._discussionPostObjects;
 
 		return html`
 			${this._renderDiscussionItemSkeleton()}
@@ -280,6 +280,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 			this._currentSortingMethod = this.sortingMethod;
 			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
+			filterDiscussionPosts(this._discussionPostObjects, this.selectedPostFilters, this.selectedScoreFilters);
 			this._finishedLoading();
 		}
 	}
