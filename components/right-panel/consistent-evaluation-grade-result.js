@@ -144,23 +144,22 @@ export class ConsistentEvaluationGradeResult extends LocalizeConsistentEvaluatio
 	onGradeChanged(e) {
 		const score = e.detail.value;
 
-		if (this.grade.isNumberGrade && (score < 0 || score > 9999999999)) {
-			return;
-		}
+		const isValidGrade = !this.grade.isNumberGrade || (this.grade.isNumberGrade && (score >= 0 && score <= 9999999999)) || score === undefined;
 
 		this._debounceJobs.grade = Debouncer.debounce(
 			this._debounceJobs.grade,
 			timeOut.after(800),
-			() => this._emitGradeChangeEvent(score)
+			() => this._emitGradeChangeEvent(isValidGrade, score)
 		);
 	}
 
-	_emitGradeChangeEvent(score) {
+	_emitGradeChangeEvent(isValidGrade, score) {
 		this.grade.setScore(score);
 		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-grade-changed', {
 			composed: true,
 			bubbles: true,
 			detail: {
+				isValidGrade: isValidGrade,
 				grade: this.grade
 			}
 		}));

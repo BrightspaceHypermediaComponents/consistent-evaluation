@@ -166,6 +166,9 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'outcome-term',
 				type: String
 			},
+			_isValidGrade: {
+				type: Boolean
+			},
 			_displayToast: {
 				type: Boolean
 			},
@@ -268,6 +271,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._isPublishClicked = false;
 		this._shouldWaitForAnnotations = false;
 		this._currentlySaving = false;
+		this._isValidGrade = true;
 	}
 
 	get evaluationEntity() {
@@ -641,6 +645,15 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		}
 		return this.evaluationEntity.properties.state === publishedState;
 	}
+
+	_isValidEvaluation() {
+		if (!this._isValidGrade) {
+			this._showToast(this.localize('gradeValueRangeError'), true);
+			return false;
+		}
+		return true;
+	}
+
 	get _navBarSubtitleText() {
 		if (this.userProgressOutcomeHref) {
 			return this.localize('overallAchievement');
@@ -726,14 +739,16 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 		await this._mutex.dispatch(
 			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newEvaluationEntity = await this._controller.publish(entity);
-				this._currentlySaving = false;
+				if (this._isValidEvaluation()) {
+					const entity = await this._controller.fetchEvaluationEntity(false);
+					const newEvaluationEntity = await this._controller.publish(entity);
 
-				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
-				if (this.submissionInfo) {
-					this.submissionInfo.evaluationState = publishedState;
+					this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
+					if (this.submissionInfo) {
+						this.submissionInfo.evaluationState = publishedState;
+					}
 				}
+				this._currentlySaving = false;
 			}
 		);
 	}
@@ -803,11 +818,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 		await this._mutex.dispatch(
 			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newEvaluationEntity = await this._controller.save(entity);
-				this._currentlySaving = false;
+				if (this._isValidEvaluation()) {
+					const entity = await this._controller.fetchEvaluationEntity(false);
+					const newEvaluationEntity = await this._controller.save(entity);
 
-				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
+					this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
+				}
+				this._currentlySaving = false;
 			}
 		);
 	}
@@ -961,6 +978,11 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					}
 				}
 				else if (type === GradeType.Number) {
+					this._isValidGrade = e.detail.isValidGrade;
+					if (!this._isValidGrade) {
+						return;
+					}
+
 					newGradeVal = e.detail.grade.score;
 				}
 				this.evaluationEntity = await this._controller.transientSaveGrade(entity, newGradeVal);
@@ -977,11 +999,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 		await this._mutex.dispatch(
 			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newEvaluationEntity = await this._controller.update(entity);
-				this._currentlySaving = false;
+				if (this._isValidEvaluation()) {
+					const entity = await this._controller.fetchEvaluationEntity(false);
+					const newEvaluationEntity = await this._controller.update(entity);
 
-				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
+					this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
+				}
+				this._currentlySaving = false;
 			}
 		);
 	}
