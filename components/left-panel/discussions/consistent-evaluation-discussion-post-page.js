@@ -149,6 +149,8 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		this._token = undefined;
 		this._discussionPostObjects = [];
 		this._currentSortingMethod = undefined;
+		this._currentPostFilteringMethod = undefined;
+		this._currentScoreFilteringMethod = undefined;
 		this.selectedPostFilters = [];
 		this.selectedScoreFilters = [];
 	}
@@ -188,7 +190,15 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
 		}
 
-		this._displayedDiscussionPostObjects = filterDiscussionPosts(this._discussionPostObjects, this.selectedPostFilters, this.selectedScoreFilters);
+		if (this.selectedPostFilters.length === 0 && this.selectedScoreFilters.length === 0) {
+			this._displayedDiscussionPostObjects = this._discussionPostObjects;
+		}
+
+		if (this._currentPostFilteringMethod !== this.selectedPostFilters || this._currentScoreFilteringMethod !== this.selectedScoreFilters) {
+			this._currentPostFilteringMethod = this.selectedPostFilters;
+			this._currentScoreFilteringMethod = this.selectedScoreFilters;
+			this._displayedDiscussionPostObjects = filterDiscussionPosts(this._discussionPostObjects, this.selectedPostFilters, this.selectedScoreFilters);
+		}
 
 		return html`
 			${this._renderDiscussionItemSkeleton()}
