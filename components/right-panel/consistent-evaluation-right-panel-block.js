@@ -38,6 +38,10 @@ class ConsistentEvaluationRightPanelBlock extends LitElement {
 			.d2l-list-item {
 				overflow: hidden;
 			}
+			.d2l-list-item:focus {
+				border: 2px solid var(--d2l-color-celestine);
+				outline: none 0;
+			}
 			.d2l-list-item-content {
 				padding-left: 1.25rem;
 			}
