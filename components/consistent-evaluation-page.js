@@ -530,7 +530,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._currentlySaving = false;
 	}
 	_confirmUnsavedChangesBeforeUnload(e) {
-		if (this.evaluationEntity.hasClass('unsaved')) {
+		if (this.evaluationEntity && this.evaluationEntity.hasClass('unsaved')) {
 			//Triggers the native browser confirmation dialog
 			e.preventDefault();
 			e.returnValue = 'Unsaved changes';
