@@ -190,7 +190,9 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
 		}
 
-		this._displayedDiscussionPostObjects = this._discussionPostObjects;
+		if (this.selectedPostFilters.length == 0 && this.selectedScoreFilters.length == 0) {
+			this._displayedDiscussionPostObjects = this._discussionPostObjects;
+		}
 
 		if (this._currentPostFilteringMethod !== this.selectedPostFilters || this._currentScoreFilteringMethod !== this.selectedScoreFilters) {
 			this._currentPostFilteringMethod = this.selectedPostFilters;
