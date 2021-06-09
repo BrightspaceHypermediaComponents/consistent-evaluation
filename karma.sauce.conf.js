@@ -17,6 +17,11 @@ const customLaunchers = {
 		base: 'SauceLabs',
 		browserName: 'microsoftedge',
 		platform: 'Windows 10'
+	},
+	safari: {
+		base: 'SauceLabs',
+		browserName: 'safari',
+		platform: 'macOS 11.00'
 	}
 };
 
@@ -45,6 +50,11 @@ module.exports = config => {
 			reporters: ['dots', 'saucelabs'],
 			browserNoActivityTimeout: 100000,
 			singleRun: true,
+			client: {
+				mocha: {
+					timeout : 5000 // default 2000
+				}
+			},
 			hostname: '127.0.0.1'
 		}),
 	);
