@@ -71,8 +71,8 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			}
 
 			.d2l-consistent-evaluation-discussion-evidence-body-container {
-				padding-top: 10px;
 				padding-bottom: 4px;
+				padding-top: 10px;
 			}
 
 			.d2l-consistent-evaluation-evidence-body-reply-icon {
