@@ -979,7 +979,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				}
 				else if (type === GradeType.Number) {
 					this._isValidGrade = e.detail.isValidGrade;
-					if (!this._isValidGrade) {
+					if (!this._isValidGrade && this._isValidGrade !== undefined) {
 						return;
 					}
 
