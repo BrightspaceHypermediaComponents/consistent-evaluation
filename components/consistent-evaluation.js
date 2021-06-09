@@ -338,7 +338,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._discussionPostList = await controller.getDiscussionPostsInfo();
 	}
 
-	async _refreshnIfos() {
+	async _refreshInfos() {
 		if (this._activityType === discussionActivity) {
 			this._refreshDiscussionPosts();
 		}
