@@ -125,7 +125,6 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 			.d2l-consistent-evaluation-discussion-posts-counts {
 				float: left;
-				margin-left: 20px;
 			}
 
 			:host([dir="rtl"]) .d2l-consistent-evaluation-discussion-posts-counts {
@@ -134,6 +133,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 			.d2l-consistent-evaluation-unscored-status-indicator {
 				float: left;
+				margin-top: 0.2rem;
 				margin-left: 1rem;
 				margin-right: 1rem;
 				text-transform: none;
