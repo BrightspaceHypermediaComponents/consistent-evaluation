@@ -978,11 +978,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					}
 				}
 				else if (type === GradeType.Number) {
-					this._isValidGrade = e.detail.isValidGrade;
-					if (!this._isValidGrade && this._isValidGrade !== undefined) {
-						return;
+					if (typeof e.detail.isValidGrade !== 'undefined') {
+						this._isValidGrade = e.detail.isValidGrade;
+						if (!this._isValidGrade) {
+							return;
+						}
 					}
-
 					newGradeVal = e.detail.grade.score;
 				}
 				this.evaluationEntity = await this._controller.transientSaveGrade(entity, newGradeVal);
