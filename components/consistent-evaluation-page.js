@@ -886,7 +886,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				const annotationsData = e.detail.value;
 				let fileId = this.currentFileId;
 
-				if(e.detail.fileId) {
+				if (e.detail.fileId) {
 					fileId = e.detail.fileId;
 				}
 
