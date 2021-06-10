@@ -39,7 +39,9 @@ export function filterDiscussionPosts(discussionPostObjects, selectedPostFilters
 			satisfiesPostFilters = discussionPost.isReply ? selectedPostFilters.includes(filterByReplies) : selectedPostFilters.includes(filterByThreads);
 		}
 		if (selectedScoreFilters.length > 0) {
-			const score = discussionPost.discussionPostEvaluationEntity.properties.score;
+			// console.log(discussionPost)
+			// console.log(discussionPost.discussionPostEvaluationEntity)
+			const score = discussionPost.properties.score;
 			satisfiesScoreFilters = score === null ? selectedScoreFilters.includes(filterByUnscored) : selectedScoreFilters.includes(filterByScored);
 		}
 		return satisfiesPostFilters && satisfiesScoreFilters;
