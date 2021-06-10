@@ -2,7 +2,6 @@ import './consistent-evaluation-discussion-evidence-body';
 import { attachmentClassName, attachmentListClassName, fivestarRatingClass, lmsSourceRel, upvoteDownvoteRatingClass, upvoteOnlyRatingClass } from '../../controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element';
-import { filterDiscussionPosts, sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
 import { bodyCompactStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
@@ -12,17 +11,9 @@ import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton
 export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 	static get properties() {
 		return {
-			discussionPostList: {
-				attribute: false,
-				type: Array
-			},
 			_displayedDiscussionPostList: {
 				attribute: false,
 				type: Array
-			},
-			sortingMethod: {
-				attribute: 'sorting-method',
-				type: String
 			},
 			token: { type: Object },
 			_ratingMethod: {
@@ -133,25 +124,9 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 	constructor() {
 		super();
-		this._discussionPostList = [];
 		this._displayedDiscussionPostList = [];
 		this._token = undefined;
 		this._displayedDiscussionPostObjects = [];
-		this._currentSortingMethod = undefined;
-	}
-
-	get discussionPostList() {
-		return this._discussionPostList;
-	}
-
-	set discussionPostList(val) {
-		const oldVal = this.discussionPostList;
-		if (oldVal !== val) {
-			this._discussionPostList = val;
-			if (this._discussionPostList && this._token) {
-				this._getDiscussionPostEntities().then(() => this.requestUpdate());
-			}
-		}
 	}
 
 	set displayedDiscussionPostList(val) {
@@ -172,25 +147,13 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		const oldVal = this.token;
 		if (oldVal !== val) {
 			this._token = val;
-			if (this._discussionPostList && this._token) {
+			if (this._displayedDiscussionPostList && this._token) {
 				this._getDiscussionPostEntities().then(() => this.requestUpdate());
 			}
 		}
 	}
 
-	// updated(changedProperties) {
-	// 	super.updated();
-	// 	console.log(changedProperties);
-	// };
-
 	render() {
-		// if (this._currentSortingMethod !== this.sortingMethod && this._discussionPostObjects.length > 0) {
-		// 	this._currentSortingMethod = this.sortingMethod;
-		// 	sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
-		// }
-		console.log('rendering post page')
-		console.log(this._displayedDiscussionPostList)
-
 		return html`
 			${this._renderDiscussionItemSkeleton()}
 			${this._renderDiscussionItemSkeleton()}
@@ -325,7 +288,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	_getUnscoredPostsCount() {
 		// if the posts aren't individually scored return 'NaN'
-		if (this._discussionPostList !== undefined && this._discussionPostList[0] !== undefined && !('properties' in this._discussionPostList[0])) {
+		if (typeof this._displayedDiscussionPostList !== 'undefined' && typeof this._displayedDiscussionPostList[0] !== 'undefined' && !('properties' in this._displayedDiscussionPostList[0])) {
 			return 'NaN';
 		}
 
