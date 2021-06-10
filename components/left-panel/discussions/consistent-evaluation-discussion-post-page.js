@@ -125,17 +125,22 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 			.d2l-consistent-evaluation-discussion-posts-counts {
 				float: left;
-				margin-left: 20px;
 			}
 
 			:host([dir="rtl"]) .d2l-consistent-evaluation-discussion-posts-counts {
 				float: right;
 			}
 
+			.d2l-consistent-evaluation-discussion-evidence-body {
+				min-width: 350px;
+				width: 100%;
+			}
+
 			.d2l-consistent-evaluation-unscored-status-indicator {
 				float: left;
 				margin-left: 1rem;
 				margin-right: 1rem;
+				margin-top: 0.2rem;
 				text-transform: none;
 			}
 
@@ -432,7 +437,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				if (discussionPostEntity && discussionPostEntity.properties && discussionPostEntity.properties.outOf) {
 					itemTemplate.push(html`
 						<tr>
-							<td>
+							<td class="d2l-consistent-evaluation-discussion-evidence-body">
 								<d2l-consistent-evaluation-discussion-evidence-body
 									aria-hidden="${this.skeleton}"
 									post-href=${discussionPost.postHref}
@@ -447,7 +452,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 									.ratingInformation=${discussionPost.ratingInformation}
 								></d2l-consistent-evaluation-discussion-evidence-body>
 							</td>
-							<td>
+							<td class="d2l-consistent-evaluation-discussion-post-score">
 								<d2l-consistent-evaluation-discussion-post-score
 									.discussionPostEntity=${discussionPostEntity}
 								></d2l-consistent-evaluation-discussion-post-score>
@@ -457,7 +462,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				} else {
 					itemTemplate.push(html`
 						<tr>
-							<td>
+							<td class="d2l-consistent-evaluation-discussion-evidence-body">
 								<d2l-consistent-evaluation-discussion-evidence-body
 									aria-hidden="${this.skeleton}"
 									post-href=${discussionPost.postHref}

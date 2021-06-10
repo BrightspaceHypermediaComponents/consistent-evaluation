@@ -444,6 +444,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 			composed: true,
 			bubbles: true,
 			detail: {
+				isValidGrade: true,
 				grade: newGrade
 			}
 		}));
