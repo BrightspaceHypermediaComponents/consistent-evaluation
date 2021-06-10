@@ -12,7 +12,7 @@ export default {
 	"allPostsScored" : "Tout est noté",
 	"anonymousMarkingPublishButtonSummary": "Utilisez le bouton « Tout publier » qui se trouve dans Travaux ou dans Évaluation rapide pour publier des soumissions lors de l'utilisation de l'attribution anonyme d'état.",
 	"attachedGradeItem": "{gradeItemName} ci-joint",
-	"assignmentPageTitle": "Évaluation du travail – {userName} – {activityName}",
+	"assignmentPageTitle": "Évaluation du tâche – {userName} – {activityName}",
 	"averageMessageScore": "Moyenne de la note de l'article",
 	"backToUserSubmissions": "Retour à Soumissions de l’utilisateur",
 	"cancelBtn": "Annuler",
