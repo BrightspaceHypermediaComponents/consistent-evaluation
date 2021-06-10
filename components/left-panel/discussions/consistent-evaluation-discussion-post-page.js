@@ -178,10 +178,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		}
 	}
 
-	updated(changedProperties) {
-		super.updated();
-		console.log(changedProperties);
-	};
+	// updated(changedProperties) {
+	// 	super.updated();
+	// 	console.log(changedProperties);
+	// };
 
 	render() {
 		// if (this._currentSortingMethod !== this.sortingMethod && this._discussionPostObjects.length > 0) {
@@ -280,8 +280,6 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 					}
 				}
 			}));
-			console.log('hi')
-			console.log(this._displayedDiscussionPostObjects)
 			this._finishedLoading();
 		}
 	}

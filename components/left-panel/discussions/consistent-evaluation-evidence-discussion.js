@@ -24,23 +24,19 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				attribute: 'discussion-topic-link',
 				type: String
 			},
+			token: { type: Object },
 			_displayedDiscussionPostList: {
 				attribute: false,
 				type: Array
 			},
-			token: { type: Object },
 			_sortingMethod: {
 				attribute: false,
 				type: String
 			},
-			_selectedPostFilters: {
+			_selectedFilters: {
 				attribute: false,
 				type: Array
 			},
-			_selectedScoreFilters: {
-				attribute: false,
-				type: Array
-			}
 		};
 	}
 
@@ -95,15 +91,16 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	constructor() {
 		super();
 		this._sortingMethod = sortByOldestFirst;
-		this._selectedPostFilters = [];
-		this._selectedScoreFilters = [];
+		this._selectedFilters = [];
 	}
 
-	// updated(changedProperties) {
-	// 	super.updated();
-	// 	console.log(changedProperties);
-	// };
+	updated(changedProperties) {
+		super.updated();
+		console.log(changedProperties);
+	};
 	render() {
+		console.log('yoyo')
+		console.log(this.discussionPostList)
 		if (this.discussionPostList && this.discussionPostList.length === 0 && !this.skeleton) {
 			this._finishedLoading();
 			return html`${this._renderNoAssessablePosts()}`;
@@ -121,10 +118,13 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		if (changedProperties.has('discussionTopicLink')) {
 			this._clearFilters();
 		}
+		if (changedProperties.has('discussionPostList')) {
+			this._displayedDiscussionPostList = filterDiscussionPosts(this.discussionPostList, this._selectedFilters);
+			this.requestUpdate()
+		}
 	}
 	_clearFilters() {
-		this._selectedPostFilters = [];
-		this._selectedScoreFilters = [];
+		this._selectedFilters = [];
 	}
 	_finishedLoading() {
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
@@ -140,8 +140,6 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		return html`
 			<d2l-consistent-evaluation-discussion-post-page
 				sorting-method=${this._sortingMethod}
-				.selectedPostFilters=${this._selectedPostFilters}
-				.selectedScoreFilters=${this._selectedScoreFilters}
 				?skeleton=${this.skeleton}
 				.discussionPostList=${this.discussionPostList}
 				.displayedDiscussionPostList=${this._displayedDiscussionPostList}
@@ -153,7 +151,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		return html`
 			<d2l-labs-filter-dropdown
 				class="d2l-consistent-evaluation-evidence-discussion-filter-by-dropdown"
-				total-selected-option-count=${this._selectedPostFilters.length + this._selectedScoreFilters.length}
+				total-selected-option-count=${this._selectedFilters.length}
 				min-width="200"
 				@d2l-labs-filter-dropdown-cleared=${this._clearFilters}
 			>
@@ -181,19 +179,19 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	_renderPostFilters() {
 		return html `<d2l-labs-filter-dropdown-category
 				category-text=${this.localize('posts')}
-				selected-option-count=${this._selectedPostFilters.length}
+				selected-option-count=${this._selectedFilters.length}
 				disable-search
-				@d2l-labs-filter-dropdown-option-change=${this._setPostsFilter}
+				@d2l-labs-filter-dropdown-option-change=${this._filterPosts}
 			>
 				<d2l-labs-filter-dropdown-option
 					value=${filterByThreads}
 					text=${this.localize('threads')}
-					?selected=${this._selectedPostFilters.includes(filterByThreads)}
+					?selected=${this._selectedFilters.includes(filterByThreads)}
 				></d2l-labs-filter-dropdown-option>
 				<d2l-labs-filter-dropdown-option
 					value=${filterByReplies}
 					text=${this.localize('replies')}
-					?selected=${this._selectedPostFilters.includes(filterByReplies)}
+					?selected=${this._selectedFilters.includes(filterByReplies)}
 				></d2l-labs-filter-dropdown-option>
 			</d2l-labs-filter-dropdown-category>`;
 	}
@@ -202,19 +200,19 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		if (this.discussionPostList && this.discussionPostList.some(postEntity => postEntity.properties && postEntity.properties.outOf)) {
 			return html`<d2l-labs-filter-dropdown-category
 					category-text=${this.localize('score')}
-					selected-option-count=${this._selectedScoreFilters.length}
+					selected-option-count=${this._selectedFilters.length}
 					disable-search
-					@d2l-labs-filter-dropdown-option-change=${this._setScoredFilter}
+					@d2l-labs-filter-dropdown-option-change=${this._filterPosts}
 				>
 					<d2l-labs-filter-dropdown-option
 						value=${filterByUnscored}
 						text=${this.localize('unscored')}
-						?selected=${this._selectedScoreFilters.includes(filterByUnscored)}
+						?selected=${this._selectedFilters.includes(filterByUnscored)}
 					></d2l-labs-filter-dropdown-option>
 					<d2l-labs-filter-dropdown-option
 						value=${filterByScored}
 						text=${this.localize('scored')}
-						?selected=${this._selectedScoreFilters.includes(filterByScored)}
+						?selected=${this._selectedFilters.includes(filterByScored)}
 					></d2l-labs-filter-dropdown-option>
 				</d2l-labs-filter-dropdown-category>`;
 		} else {
@@ -235,8 +233,8 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		`;
 	}
 
-	_setPostsFilter(e) {
-		const newFilters = [...this._selectedPostFilters];
+	_filterPosts(e) {
+		const newFilters = [...this._selectedFilters];
 		const newFilter = e.detail.menuItemKey;
 		const indexOfFilter = newFilters.indexOf(newFilter);
 		if (indexOfFilter >= 0) {
@@ -244,30 +242,9 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		} else {
 			newFilters.push(newFilter);
 		}
-		this._selectedPostFilters = newFilters;
+		this._selectedFilters = newFilters;
 
-		// console.log('pre-filter + post-filter:');
-		// console.log(this._displayedDiscussionPostList)
-		this._displayedDiscussionPostList = filterDiscussionPosts(this.discussionPostList, this._selectedPostFilters, this._selectedScoreFilters);
-		// console.log(this._displayedDiscussionPostList);
-		this.requestUpdate()
-	}
-
-	_setScoredFilter(e) {
-		const newFilters = [...this._selectedScoreFilters];
-		const newFilter = e.detail.menuItemKey;
-		const indexOfFilter = newFilters.indexOf(newFilter);
-		if (indexOfFilter >= 0) {
-			newFilters.splice(indexOfFilter, 1);
-		} else {
-			newFilters.push(newFilter);
-		}
-		this._selectedScoreFilters = newFilters;
-
-		// console.log('pre-filter + post-filter:');
-		// console.log(this._displayedDiscussionPostList)
-		this._displayedDiscussionPostList = filterDiscussionPosts(this.discussionPostList, this._selectedPostFilters, this._selectedScoreFilters);
-		// console.log(this._displayedDiscussionPostList);
+		this._displayedDiscussionPostList = filterDiscussionPosts(this.discussionPostList, this._selectedFilters);
 		this.requestUpdate()
 	}
 

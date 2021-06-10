@@ -24,28 +24,20 @@ export function sortDiscussionPosts(discussionPostObjects, sortingMethod) {
 	return discussionPostObjects;
 }
 
-export function filterDiscussionPosts(discussionPostObjects, selectedPostFilters, selectedScoreFilters) {
+export function filterDiscussionPosts(discussionPostList, selectedFilters) {
 	// if all filters/no filters are selected don't filter out anything
-	if (selectedPostFilters.length === 0 || selectedPostFilters.length === 2) {
-		if (selectedScoreFilters.length === 0 || selectedScoreFilters.length === 2) {
-			return discussionPostObjects;
-		}
+	if (selectedFilters.length === 0 || selectedFilters.length === 4) {
+		return discussionPostList;
 	}
 
-	const newDiscussionPostObjects = discussionPostObjects.filter(discussionPost => {
-		let satisfiesPostFilters = true;
-		let satisfiesScoreFilters = true;
-		if (selectedPostFilters.length > 0) {
-			satisfiesPostFilters = discussionPost.isReply ? selectedPostFilters.includes(filterByReplies) : selectedPostFilters.includes(filterByThreads);
-		}
-		if (selectedScoreFilters.length > 0) {
-			// console.log(discussionPost)
-			// console.log(discussionPost.discussionPostEvaluationEntity)
+	const newDiscussionPostList = discussionPostList.filter(discussionPost => {
+		let satisfiesFilters = true;
+		if (selectedFilters.length > 0) {
+			satisfiesFilters = discussionPost.isReply ? selectedPostFilters.includes(filterByReplies) : selectedFilters.includes(filterByThreads);
 			const score = discussionPost.properties.score;
-			satisfiesScoreFilters = score === null ? selectedScoreFilters.includes(filterByUnscored) : selectedScoreFilters.includes(filterByScored);
+			satisfiesFilters = score === null ? selectedFilters.includes(filterByUnscored) : selectedFilters.includes(filterByScored);
 		}
-		return satisfiesPostFilters && satisfiesScoreFilters;
-
+		return satisfiesFilters;
 	});
-	return newDiscussionPostObjects;
+	return newDiscussionPostList;
 }
