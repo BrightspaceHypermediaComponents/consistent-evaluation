@@ -103,6 +103,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				attribute: 'use-new-html-editor',
 				type: Boolean
 			},
+			useInlineGradingRevamp: {
+				attribute: 'use-inline-grading-revamp',
+				type: Boolean
+			},
 			discussionCalulationType: {
 				attribute: 'discussion-calculation-type',
 				type: String
@@ -393,6 +397,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 					?show-active-scoring-rubric-options=${showActiveScoringRubric}
 					?read-only=${this.rubricReadOnly}
 					?can-save-overall-grade=${this.canSaveOverallGrade}
+					?use-inline-grading-revamp=${this.useInlineGradingRevamp}
 					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
 					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
 					@d2l-rubric-compact-expanded-changed=${this._updateRubricOpenState}
