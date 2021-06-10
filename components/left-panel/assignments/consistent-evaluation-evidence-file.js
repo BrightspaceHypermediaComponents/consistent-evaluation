@@ -112,7 +112,7 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 			() => this.dispatchEvent(new CustomEvent('d2l-consistent-eval-annotations-update', {
 				composed: true,
 				bubbles: true,
-				detail: e.data.value
+				detail: e.data
 			}))
 		);
 	}

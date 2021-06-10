@@ -883,8 +883,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
-				const annotationsData = e.detail;
-				const fileId = this.currentFileId;
+				const annotationsData = e.detail.value;
+				let fileId = this.currentFileId;
+
+				if(e.detail.fileId) {
+					fileId = e.detail.fileId;
+				}
 
 				this.evaluationEntity = await this._controller.transientSaveAnnotations(entity, annotationsData, fileId);
 			}
