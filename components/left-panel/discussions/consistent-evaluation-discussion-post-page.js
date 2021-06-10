@@ -16,27 +16,15 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				attribute: false,
 				type: Array
 			},
+			_displayedDiscussionPostList: {
+				attribute: false,
+				type: Array
+			},
 			sortingMethod: {
 				attribute: 'sorting-method',
 				type: String
 			},
-			selectedPostFilters: {
-				attribute: false,
-				type: Array
-			},
-			selectedScoreFilters: {
-				attribute: false,
-				type: Array
-			},
 			token: { type: Object },
-			_discussionPostEntities: {
-				attribute: false,
-				type: Array
-			},
-			_displayedDiscussionPostObjects: {
-				attribute: false,
-				type: Array
-			},
 			_ratingMethod: {
 				attribute: false,
 				type: String
@@ -146,13 +134,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	constructor() {
 		super();
 		this._discussionPostList = [];
+		this._displayedDiscussionPostList = [];
 		this._token = undefined;
-		this._discussionPostObjects = [];
+		this._displayedDiscussionPostObjects = [];
 		this._currentSortingMethod = undefined;
-		this._currentPostFilteringMethod = undefined;
-		this._currentScoreFilteringMethod = undefined;
-		this.selectedPostFilters = [];
-		this.selectedScoreFilters = [];
 	}
 
 	get discussionPostList() {
@@ -169,12 +154,21 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		}
 	}
 
+	set displayedDiscussionPostList(val) {
+		const oldVal = this._displayedDiscussionPostList;
+		if (oldVal !== val) {
+			this._displayedDiscussionPostList = val;
+			if (this._displayedDiscussionPostList && this._token) {
+				this._getDiscussionPostEntities().then(() => this.requestUpdate());
+			}
+		}
+	}
+
 	get token() {
 		return this._token;
 	}
 
 	set token(val) {
-
 		const oldVal = this.token;
 		if (oldVal !== val) {
 			this._token = val;
@@ -184,21 +178,18 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		}
 	}
 
+	updated(changedProperties) {
+		super.updated();
+		console.log(changedProperties);
+	};
+
 	render() {
-		if (this._currentSortingMethod !== this.sortingMethod && this._discussionPostObjects.length > 0) {
-			this._currentSortingMethod = this.sortingMethod;
-			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
-		}
-
-		if (this.selectedPostFilters.length === 0 && this.selectedScoreFilters.length === 0) {
-			this._displayedDiscussionPostObjects = this._discussionPostObjects;
-		}
-
-		if (this._currentPostFilteringMethod !== this.selectedPostFilters || this._currentScoreFilteringMethod !== this.selectedScoreFilters) {
-			this._currentPostFilteringMethod = this.selectedPostFilters;
-			this._currentScoreFilteringMethod = this.selectedScoreFilters;
-			this._displayedDiscussionPostObjects = filterDiscussionPosts(this._discussionPostObjects, this.selectedPostFilters, this.selectedScoreFilters);
-		}
+		// if (this._currentSortingMethod !== this.sortingMethod && this._discussionPostObjects.length > 0) {
+		// 	this._currentSortingMethod = this.sortingMethod;
+		// 	sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
+		// }
+		console.log('rendering post page')
+		console.log(this._displayedDiscussionPostList)
 
 		return html`
 			${this._renderDiscussionItemSkeleton()}
@@ -265,6 +256,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			wordCount
 		};
 	}
+
 	_formatDiscussionRatings(discussionPostEntity) {
 		if (discussionPostEntity.class.includes(fivestarRatingClass)) {
 			return this._getRatingsInfo(fivestarRatingClass, discussionPostEntity);
@@ -275,10 +267,11 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		}
 		return {};
 	}
+
 	async _getDiscussionPostEntities() {
-		this._discussionPostObjects = [];
-		if (this._discussionPostList !== undefined) {
-			this._discussionPostObjects = await Promise.all(this._discussionPostList.map(async discussionPostEvaluationEntity => {
+		this._displayedDiscussionPostObjects = [];
+		if (this._displayedDiscussionPostList !== undefined) {
+			this._displayedDiscussionPostObjects = await Promise.all(this._displayedDiscussionPostList.map(async discussionPostEvaluationEntity => {
 				if (discussionPostEvaluationEntity.links && discussionPostEvaluationEntity.links[0].href) {
 					const discussionPost = await this._getDiscussionPostEntity(discussionPostEvaluationEntity.links[0].href);
 					if (discussionPost && discussionPost.entity) {
@@ -287,15 +280,16 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 					}
 				}
 			}));
-
-			this._currentSortingMethod = this.sortingMethod;
-			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
+			console.log('hi')
+			console.log(this._displayedDiscussionPostObjects)
 			this._finishedLoading();
 		}
 	}
+
 	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {
 		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
 	}
+
 	_getPostsCounts() {
 		let threads = 0;
 		let replies = 0;
@@ -308,6 +302,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			replies: replies
 		};
 	}
+
 	_getRatingsInfo(ratingMethod, discussionPostEntity) {
 		this._ratingMethod = ratingMethod;
 		switch (ratingMethod) {
