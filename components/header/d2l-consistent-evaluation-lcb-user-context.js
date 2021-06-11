@@ -27,9 +27,13 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				attribute: false,
 				type: Object
 			},
-			enrolledUser: {
-				attribute: false,
-				type: Object
+			enrolledUserHref: {
+				attribute: 'enrolled-user-href',
+				type: String
+			},
+			userProgressAssessmentsHref: {
+				attribute: 'user-progress-assessments-href',
+				type: String
 			},
 			groupInfo: {
 				attribute: false,
@@ -254,10 +258,11 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				.token=${this.token}
 				small
 			></d2l-profile-image>`;
-		} else {
+		} else if (this.enrolledUserHref) {
 			return html `
 			<d2l-labs-user-profile-card
-				href=${this.enrolledUser.enrolledUserHref}
+				href=${this.enrolledUserHref}
+				user-progress-href=${ifDefined(this.userProgressAssessmentsHref)}
 				.token=${this.token}>
 			</d2l-labs-user-profile-card>`;
 		}

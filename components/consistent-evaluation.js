@@ -48,7 +48,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			_rubricInfos: { type: Array },
 			_submissionInfo: { type: Object },
 			_gradeItemInfo: { type: Object },
-			_enrolledUser: { type: Object },
 			_groupInfo: { type: Object },
 			_userName: { type: String },
 			_navTitleInfo: { type: Object },
@@ -112,8 +111,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				evaluation-href=${ifDefined(this._childHrefs && this._childHrefs.evaluationHref)}
 				next-student-href=${ifDefined(this._childHrefs && this._childHrefs.nextHref)}
 				user-href=${ifDefined(this._childHrefs && this._childHrefs.userHref)}
+				enrolled-user-href=${ifDefined(this._childHrefs && this._childHrefs.enrolledUserHref)}
 				group-href=${ifDefined(this._childHrefs && this._childHrefs.groupHref)}
 				user-progress-outcome-href=${ifDefined(this._childHrefs && this._childHrefs.userProgressOutcomeHref)}
+				user-progress-assessments-href=${ifDefined(this._childHrefs && this._childHrefs.userProgressAssessmentsHref)}
 				coa-demonstration-href=${ifDefined(this._childHrefs && this._childHrefs.coaDemonstrationHref)}
 				special-access-href=${ifDefined(this._childHrefs && this._childHrefs.specialAccessHref)}
 				return-href=${ifDefined(this.returnHref)}
@@ -136,7 +137,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				.iteratorIndex=${this._iteratorIndex}
 				.token=${this.token}
 				.href=${this.href}
-				.enrolledUser=${this._enrolledUser}
 				.groupInfo=${this._groupInfo}
 				.anonymousInfo=${this._anonymousInfo}
 				.discussionPostList=${this._discussionPostList}
@@ -166,7 +166,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						controller.getHrefs(),
 						controller.getActivityType(),
 						controller.getRubricInfos(false),
-						controller.getEnrolledUser(),
 						controller.getGroupInfo(),
 						controller.getAnonymousInfo(),
 						controller.getIteratorInfo('total'),
@@ -179,7 +178,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						childHrefs,
 						activityType,
 						rubricInfos,
-						enrolledUser,
 						groupInfo,
 						anonymousInfo,
 						iteratorTotal,
@@ -190,7 +188,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						this._childHrefs = childHrefs;
 						this._activityType = activityType;
 						this._rubricInfos = rubricInfos;
-						this._enrolledUser = enrolledUser;
 						this._groupInfo = groupInfo;
 						this._anonymousInfo = anonymousInfo;
 						this._iteratorTotal = iteratorTotal;
