@@ -11,6 +11,8 @@ import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evalu
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { filterDiscussionPosts, sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
+import { Classes, Rels } from 'd2l-hypermedia-constants';
+import { attachmentClassName, attachmentListClassName, fivestarRatingClass, lmsSourceRel, upvoteDownvoteRatingClass, upvoteOnlyRatingClass } from '../../controllers/constants.js';
 
 export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 
@@ -29,13 +31,17 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				attribute: false,
 				type: Array
 			},
-			_sortingMethod: {
+			_displayedDiscussionPostObjects: {
 				attribute: false,
-				type: String
+				type: Array
 			},
 			_selectedFilters: {
 				attribute: false,
 				type: Array
+			},
+			_sortingMethod: {
+				attribute: false,
+				type: String
 			},
 		};
 	}
@@ -92,40 +98,146 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		super();
 		this._sortingMethod = sortByOldestFirst;
 		this._selectedFilters = [];
+		this._displayedDiscussionPostObjects = []
 	}
 
-	updated(changedProperties) {
-		super.updated();
-		console.log(changedProperties);
-	};
+	get token() {
+		return this._token;
+	}
+
+	set token(val) {
+		console.log('token setter')
+		const oldVal = this.token;
+		if (oldVal !== val) {
+			this._token = val;
+			if (this._displayedDiscussionPostList && this._token) {
+				this._getDiscussionPostEntities().then(() => this.requestUpdate());
+			}
+		}
+	}
+
 	render() {
-		console.log('yoyo')
-		console.log(this.discussionPostList)
+
 		if (this.discussionPostList && this.discussionPostList.length === 0 && !this.skeleton) {
 			this._finishedLoading();
 			return html`${this._renderNoAssessablePosts()}`;
 		}
+
 		if (typeof this._displayedDiscussionPostList === 'undefined') {
 			this._displayedDiscussionPostList = this.discussionPostList;
 		}
+
+		console.log('parent render')
+		console.log(this._displayedDiscussionPostList)
+		console.log(this._displayedDiscussionPostObjects)
+		
 		return html`
 			${this._renderListModifiers()}
 			${this._renderDiscussionPost()}
 		`;
 	}
-	async updated(changedProperties) {
+
+	updated(changedProperties) {
 		super.updated(changedProperties);
 		if (changedProperties.has('discussionTopicLink')) {
 			this._clearFilters();
 		}
 		if (changedProperties.has('discussionPostList')) {
+			console.log('discussionPostList update')
 			this._displayedDiscussionPostList = filterDiscussionPosts(this.discussionPostList, this._selectedFilters);
-			this.requestUpdate()
+			if (this._displayedDiscussionPostList && this._token) {
+				this._getDiscussionPostEntities().then(() => this.requestUpdate());
+			}
 		}
 	}
+
 	_clearFilters() {
 		this._selectedFilters = [];
 	}
+
+	async _getDiscussionPostEntities() {
+		console.log('_getDiscussionPostEntities')
+		this._displayedDiscussionPostObjects = [];
+		if (typeof this._displayedDiscussionPostList !== 'undefined') {
+			this._displayedDiscussionPostObjects = await Promise.all(this._displayedDiscussionPostList.map(async discussionPostEvaluationEntity => {
+				if (discussionPostEvaluationEntity.links && discussionPostEvaluationEntity.links[0].href) {
+					const discussionPost = await this._getDiscussionPostEntity(discussionPostEvaluationEntity.links[0].href);
+					if (discussionPost && discussionPost.entity) {
+						const discussionPostObject = await this._formatDiscussionPostObject(discussionPost.entity, discussionPostEvaluationEntity);
+						return discussionPostObject;
+					}
+				}
+			}));
+			sortDiscussionPosts(this._displayedDiscussionPostObjects, this._sortingMethod);
+			this._finishedLoading();
+		}
+	}
+
+	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {
+		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
+	}
+
+	async _formatDiscussionPostObject(discussionPostEntity, discussionPostEvaluationEntity) {
+		const postHref = discussionPostEntity.getLinkByRel(lmsSourceRel).href;
+		const postTitle = discussionPostEntity.properties.subject;
+		const postBody = discussionPostEntity.properties.message;
+		const ratingInformation = this._formatDiscussionRatings(discussionPostEntity);
+		const isUnscored = discussionPostEvaluationEntity.properties ? discussionPostEvaluationEntity.properties.score === null : false;
+		const wordCount = discussionPostEntity.properties.wordCount;
+
+		let createdDate = undefined;
+		let createdDateString = undefined;
+		if (discussionPostEntity.hasSubEntityByClass(Classes.assignments.date)) {
+			createdDateString = discussionPostEntity.getSubEntityByClass(Classes.assignments.date).properties.date;
+			createdDate = new Date(createdDateString);
+		} else {
+			console.warn('Consistent Evaluation discussion post date not found');
+		}
+
+		let threadTitle = undefined;
+		let isReply = false;
+		if (discussionPostEntity.hasLinkByRel(Rels.Discussions.thread)) {
+			isReply = true;
+			const threadHref = discussionPostEntity.getLinkByRel(Rels.Discussions.thread).href;
+			const threadEntity = await this._getDiscussionPostEntity(threadHref);
+			if (threadEntity && threadEntity.entity) {
+				threadTitle = threadEntity.entity.properties.subject;
+			}
+		}
+
+		let attachmentList = undefined;
+		if (discussionPostEntity.hasSubEntityByClass(attachmentListClassName)) {
+			const attachmentListEntity = discussionPostEntity.getSubEntityByClass(attachmentListClassName);
+			attachmentList = attachmentListEntity.getSubEntitiesByClass(attachmentClassName);
+		}
+
+		return {
+			createdDate,
+			createdDateString,
+			postHref,
+			postTitle,
+			postBody,
+			ratingInformation,
+			isReply,
+			isUnscored,
+			threadTitle,
+			attachmentList,
+			discussionPostEvaluationEntity,
+			wordCount
+		};
+	}
+
+	_formatDiscussionRatings(discussionPostEntity) {
+		if (discussionPostEntity.class.includes(fivestarRatingClass)) {
+			return this._getRatingsInfo(fivestarRatingClass, discussionPostEntity);
+		} else if (discussionPostEntity.class.includes(upvoteDownvoteRatingClass)) {
+			return this._getRatingsInfo(upvoteDownvoteRatingClass, discussionPostEntity);
+		} else if (discussionPostEntity.class.includes(upvoteOnlyRatingClass)) {
+			return this._getRatingsInfo(upvoteOnlyRatingClass, discussionPostEntity);
+		}
+		return {};
+	}
+
 	_finishedLoading() {
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
 			composed: true,
@@ -139,10 +251,8 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	_renderDiscussionPost() {
 		return html`
 			<d2l-consistent-evaluation-discussion-post-page
-				sorting-method=${this._sortingMethod}
 				?skeleton=${this.skeleton}
-				.discussionPostList=${this.discussionPostList}
-				.displayedDiscussionPostList=${this._displayedDiscussionPostList}
+				.displayedDiscussionPostObjects=${this._displayedDiscussionPostObjects}
 				.token=${this.token}
 			></d2l-consistent-evaluation-discussion-post-page>
 		`;
@@ -245,11 +355,16 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		this._selectedFilters = newFilters;
 
 		this._displayedDiscussionPostList = filterDiscussionPosts(this.discussionPostList, this._selectedFilters);
-		this.requestUpdate()
+		if (this._displayedDiscussionPostList && this._token) {
+			this._getDiscussionPostEntities().then(() => this.requestUpdate());
+		}
 	}
 
 	_setSort(e) {
 		this._sortingMethod = e.detail.value;
+		if (this._displayedDiscussionPostList && this._token) {
+			this._getDiscussionPostEntities().then(() => this.requestUpdate());
+		}
 	}
 
 }
