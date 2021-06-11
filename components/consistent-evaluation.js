@@ -60,6 +60,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			_iteratorIndex: { type: Number },
 			_editActivityPath: { type: String },
 			_activityType: { type: String },
+			_discussionPostList: { type: Object },
 			fileId: {
 				attribute: 'file-id',
 				type: String
@@ -153,7 +154,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}
 				@d2l-consistent-eval-rubric-popup-closed=${this._refreshRubrics}
-				@d2l-consistent-eval-on-evaluation-save=${this._refreshRubrics}
+				@d2l-consistent-eval-on-evaluation-save=${this._refreshInfos}
 			></d2l-consistent-evaluation-page>
 		`;
 	}
@@ -337,6 +338,18 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			}
 		);
 	}
+	async _refreshDiscussionPosts() {
+		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
+		this._discussionPostList = await controller.getDiscussionPostsInfo();
+	}
+
+	async _refreshInfos() {
+		if (this._activityType === discussionActivity) {
+			this._refreshDiscussionPosts();
+		}
+		this._refreshRubrics();
+	}
+
 	async _refreshRubrics() {
 		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 		this._rubricInfos = await controller.getRubricInfos(true);
