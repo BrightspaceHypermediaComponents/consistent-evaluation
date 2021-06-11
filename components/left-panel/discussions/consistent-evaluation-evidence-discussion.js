@@ -106,7 +106,6 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	}
 
 	set token(val) {
-		console.log('token setter')
 		const oldVal = this.token;
 		if (oldVal !== val) {
 			this._token = val;
@@ -127,10 +126,6 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			this._displayedDiscussionPostList = this.discussionPostList;
 		}
 
-		console.log('parent render')
-		console.log(this._displayedDiscussionPostList)
-		console.log(this._displayedDiscussionPostObjects)
-		
 		return html`
 			${this._renderListModifiers()}
 			${this._renderDiscussionPost()}
@@ -143,7 +138,6 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			this._clearFilters();
 		}
 		if (changedProperties.has('discussionPostList')) {
-			console.log('discussionPostList update')
 			this._displayedDiscussionPostList = filterDiscussionPosts(this.discussionPostList, this._selectedFilters);
 			if (this._displayedDiscussionPostList && this._token) {
 				this._getDiscussionPostEntities().then(() => this.requestUpdate());
@@ -156,7 +150,6 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	}
 
 	async _getDiscussionPostEntities() {
-		console.log('_getDiscussionPostEntities')
 		this._displayedDiscussionPostObjects = [];
 		if (typeof this._displayedDiscussionPostList !== 'undefined') {
 			this._displayedDiscussionPostObjects = await Promise.all(this._displayedDiscussionPostList.map(async discussionPostEvaluationEntity => {
@@ -334,7 +327,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		return html`
 			<d2l-labs-sort-by-dropdown
 				class="d2l-consistent-evaluation-evidence-discussion-sort-by-dropdown"
-				@d2l-labs-sort-by-dropdown-change=${this._setSort}
+				@d2l-labs-sort-by-dropdown-change=${this._sortPosts}
 			>
 				<d2l-labs-sort-by-dropdown-option value=${sortByOldestFirst} text=${this.localize('oldestFirst')} ?selected=${this._sortingMethod === sortByOldestFirst}></d2l-labs-sort-by-dropdown-option>
 				<d2l-labs-sort-by-dropdown-option value=${sortByNewestFirst} text=${this.localize('newestFirst')} ?selected=${this._sortingMethod === sortByNewestFirst}></d2l-labs-sort-by-dropdown-option>
@@ -360,7 +353,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		}
 	}
 
-	_setSort(e) {
+	_sortPosts(e) {
 		this._sortingMethod = e.detail.value;
 		if (this._displayedDiscussionPostList && this._token) {
 			this._getDiscussionPostEntities().then(() => this.requestUpdate());

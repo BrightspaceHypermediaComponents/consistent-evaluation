@@ -263,14 +263,14 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		`;
 	}
 	_renderTableBody() {
-		if (this._displayedDiscussionPostObjects.length === 0) {
+		if (this.displayedDiscussionPostObjects.length === 0) {
 			return html`<tr><td>${this._renderNoPostsInFilteredRange()}</td></tr>`;
 		}
 
 		const itemTemplate = [];
-		for (let i = 0; i < this._displayedDiscussionPostObjects.length; i++) {
-			if (this._displayedDiscussionPostObjects[i]) {
-				const discussionPost = this._displayedDiscussionPostObjects[i];
+		for (let i = 0; i < this.displayedDiscussionPostObjects.length; i++) {
+			if (this.displayedDiscussionPostObjects[i]) {
+				const discussionPost = this.displayedDiscussionPostObjects[i];
 				const discussionPostEntity = discussionPost.discussionPostEvaluationEntity;
 
 				if (discussionPostEntity && discussionPostEntity.properties && discussionPostEntity.properties.outOf) {
@@ -324,8 +324,8 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		return html`${itemTemplate}`;
 	}
 	_renderTableHeader() {
-		if (this._displayedDiscussionPostObjects.length > 0) {
-			const discussionPost = this._displayedDiscussionPostObjects[0];
+		if (this.displayedDiscussionPostObjects.length > 0) {
+			const discussionPost = this.displayedDiscussionPostObjects[0];
 			const discussionPostEntity = discussionPost.discussionPostEvaluationEntity;
 
 			if (discussionPostEntity && discussionPostEntity.properties && discussionPostEntity.properties.outOf) {
