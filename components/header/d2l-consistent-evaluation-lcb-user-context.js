@@ -248,6 +248,12 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 	_renderProfileImage() {
 		if (this.isGroupActivity) {
 			return html``;
+		} else if (this.anonymousInfo && this.anonymousInfo.isAnonymous && !this.anonymousInfo.assignmentHasPublishedSubmission) {
+			return html`<d2l-profile-image
+				href=${this.href}
+				.token=${this.token}
+				small
+			></d2l-profile-image>`;
 		} else {
 			return html `
 			<d2l-labs-user-profile-card
