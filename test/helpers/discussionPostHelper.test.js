@@ -188,40 +188,39 @@ describe('discussionPostHelpers', () => {
 		];
 
 		it('correctly filters with no filters', async() => {
-			const actualResult = filterDiscussionPosts(discussionPostObjects, [], []);
+			const actualResult = filterDiscussionPosts(discussionPostObjects, []);
 			assert.equal(actualResult.length, 4);
 			assert.deepEqual(actualResult, discussionPostObjects);
 		});
 		it('correctly filters with all filters', async() => {
 			const actualResult = filterDiscussionPosts(
 				discussionPostObjects,
-				[filterByReplies, filterByThreads],
-				[filterByScored, filterByUnscored]
+				[filterByReplies, filterByThreads, filterByScored, filterByUnscored]
 			);
 			assert.equal(actualResult.length, 4);
 			assert.deepEqual(actualResult, discussionPostObjects);
 		});
 
 		it('correctly filters with multiple filters', async() => {
-			const actualResult = filterDiscussionPosts(discussionPostObjects, [filterByReplies], [filterByScored]);
+			const actualResult = filterDiscussionPosts(discussionPostObjects, [filterByReplies, filterByScored]);
 			assert.equal(actualResult.length, 1);
 			assert.deepEqual(actualResult, discussionPostObjectsTwoFiltersExpected);
 		});
 
 		it('correctly filters one post filter', async() => {
-			const actualResult = filterDiscussionPosts(discussionPostObjects, [filterByReplies], []);
+			const actualResult = filterDiscussionPosts(discussionPostObjects, [filterByReplies]);
 			assert.equal(actualResult.length, 2);
 			assert.deepEqual(actualResult, discussionPostObjectsOnePostFilterExpected);
 		});
 
 		it('correctly filters one scored filter', async() => {
-			const actualResult = filterDiscussionPosts(discussionPostObjects, [], [filterByUnscored]);
+			const actualResult = filterDiscussionPosts(discussionPostObjects, [filterByUnscored]);
 			assert.equal(actualResult.length, 2);
 			assert.deepEqual(actualResult, discussionPostObjectsOneScoreFilterExpected);
 		});
 
 		it('correctly filters two post filters', async() => {
-			const actualResult = sortDiscussionPosts(discussionPostObjects, [filterByReplies, filterByThreads], []);
+			const actualResult = sortDiscussionPosts(discussionPostObjects, [filterByReplies, filterByThreads]);
 			assert.equal(actualResult.length, 4);
 			assert.deepEqual(actualResult, discussionPostObjects);
 		});

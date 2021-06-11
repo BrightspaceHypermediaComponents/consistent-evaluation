@@ -5,14 +5,14 @@ import '@brightspace-ui-labs/facet-filter-sort/components/filter-dropdown/filter
 import '@brightspace-ui-labs/facet-filter-sort/components/filter-dropdown/filter-dropdown-category.js';
 import '@brightspace-ui-labs/facet-filter-sort/components/filter-dropdown/filter-dropdown-option.js';
 import './consistent-evaluation-discussion-post-page';
+import { attachmentClassName, attachmentListClassName, fivestarRatingClass, lmsSourceRel, upvoteDownvoteRatingClass, upvoteOnlyRatingClass } from '../../controllers/constants.js';
+import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element';
 import { filterByReplies, filterByScored, filterByThreads, filterByUnscored, sortByNewestFirst, sortByOldestFirst, sortBySubject } from '../../controllers/constants';
+import { filterDiscussionPosts, sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
-import { filterDiscussionPosts, sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
-import { Classes, Rels } from 'd2l-hypermedia-constants';
-import { attachmentClassName, attachmentListClassName, fivestarRatingClass, lmsSourceRel, upvoteDownvoteRatingClass, upvoteOnlyRatingClass } from '../../controllers/constants.js';
 
 export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 
@@ -27,10 +27,6 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				type: String
 			},
 			token: { type: Object },
-			_displayedDiscussionPostList: {
-				attribute: false,
-				type: Array
-			},
 			_displayedDiscussionPostObjects: {
 				attribute: false,
 				type: Array
@@ -98,7 +94,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		super();
 		this._sortingMethod = sortByOldestFirst;
 		this._selectedFilters = [];
-		this._displayedDiscussionPostObjects = []
+		this._displayedDiscussionPostObjects = [];
 	}
 
 	get token() {
@@ -109,7 +105,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		const oldVal = this.token;
 		if (oldVal !== val) {
 			this._token = val;
-			if (this._displayedDiscussionPostList && this._token) {
+			if (this._displayedDiscussionPostObjects && this._token) {
 				this._getDiscussionPostEntities().then(() => this.requestUpdate());
 			}
 		}
@@ -122,8 +118,8 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			return html`${this._renderNoAssessablePosts()}`;
 		}
 
-		if (typeof this._displayedDiscussionPostList === 'undefined') {
-			this._displayedDiscussionPostList = this.discussionPostList;
+		if (typeof this._displayedDiscussionPostObjects === 'undefined') {
+			this._displayedDiscussionPostObjects = this.discussionPostList;
 		}
 
 		return html`
@@ -138,8 +134,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			this._clearFilters();
 		}
 		if (changedProperties.has('discussionPostList')) {
-			this._displayedDiscussionPostList = filterDiscussionPosts(this.discussionPostList, this._selectedFilters);
-			if (this._displayedDiscussionPostList && this._token) {
+			if (this._displayedDiscussionPostObjects && this._token) {
 				this._getDiscussionPostEntities().then(() => this.requestUpdate());
 			}
 		}
@@ -147,27 +142,43 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 
 	_clearFilters() {
 		this._selectedFilters = [];
-	}
-
-	async _getDiscussionPostEntities() {
-		this._displayedDiscussionPostObjects = [];
-		if (typeof this._displayedDiscussionPostList !== 'undefined') {
-			this._displayedDiscussionPostObjects = await Promise.all(this._displayedDiscussionPostList.map(async discussionPostEvaluationEntity => {
-				if (discussionPostEvaluationEntity.links && discussionPostEvaluationEntity.links[0].href) {
-					const discussionPost = await this._getDiscussionPostEntity(discussionPostEvaluationEntity.links[0].href);
-					if (discussionPost && discussionPost.entity) {
-						const discussionPostObject = await this._formatDiscussionPostObject(discussionPost.entity, discussionPostEvaluationEntity);
-						return discussionPostObject;
-					}
-				}
-			}));
-			sortDiscussionPosts(this._displayedDiscussionPostObjects, this._sortingMethod);
-			this._finishedLoading();
+		if (this._displayedDiscussionPostObjects && this._token) {
+			this._getDiscussionPostEntities().then(() => this.requestUpdate());
 		}
 	}
 
-	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {
-		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
+	_countPostFilters() {
+		return this._selectedFilters.includes(filterByThreads) + this._selectedFilters.includes(filterByReplies);
+	}
+
+	_countScoreFilters() {
+		return this._selectedFilters.includes(filterByUnscored) + this._selectedFilters.includes(filterByScored);
+	}
+
+	_filterPosts(e) {
+		const newFilters = [...this._selectedFilters];
+		const newFilter = e.detail.menuItemKey;
+		const indexOfFilter = newFilters.indexOf(newFilter);
+		if (indexOfFilter >= 0) {
+			newFilters.splice(indexOfFilter, 1);
+		} else {
+			newFilters.push(newFilter);
+		}
+		this._selectedFilters = newFilters;
+
+		if (this._displayedDiscussionPostObjects && this._token) {
+			this._getDiscussionPostEntities().then(() => this.requestUpdate());
+		}
+	}
+
+	_finishedLoading() {
+		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				component: 'discussions'
+			}
+		}));
 	}
 
 	async _formatDiscussionPostObject(discussionPostEntity, discussionPostEvaluationEntity) {
@@ -231,14 +242,26 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		return {};
 	}
 
-	_finishedLoading() {
-		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				component: 'discussions'
-			}
-		}));
+	async _getDiscussionPostEntities() {
+		this._displayedDiscussionPostObjects = [];
+		if (typeof this.discussionPostList !== 'undefined') {
+			this._displayedDiscussionPostObjects = await Promise.all(this.discussionPostList.map(async discussionPostEvaluationEntity => {
+				if (discussionPostEvaluationEntity.links && discussionPostEvaluationEntity.links[0].href) {
+					const discussionPost = await this._getDiscussionPostEntity(discussionPostEvaluationEntity.links[0].href);
+					if (discussionPost && discussionPost.entity) {
+						const discussionPostObject = await this._formatDiscussionPostObject(discussionPost.entity, discussionPostEvaluationEntity);
+						return discussionPostObject;
+					}
+				}
+			}));
+			this._displayedDiscussionPostObjects = filterDiscussionPosts(this._displayedDiscussionPostObjects, this._selectedFilters);
+			sortDiscussionPosts(this._displayedDiscussionPostObjects, this._sortingMethod);
+			this._finishedLoading();
+		}
+	}
+
+	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {
+		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
 	}
 
 	_renderDiscussionPost() {
@@ -282,7 +305,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	_renderPostFilters() {
 		return html `<d2l-labs-filter-dropdown-category
 				category-text=${this.localize('posts')}
-				selected-option-count=${this._selectedFilters.length}
+				selected-option-count=${this._countPostFilters()}
 				disable-search
 				@d2l-labs-filter-dropdown-option-change=${this._filterPosts}
 			>
@@ -303,7 +326,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		if (this.discussionPostList && this.discussionPostList.some(postEntity => postEntity.properties && postEntity.properties.outOf)) {
 			return html`<d2l-labs-filter-dropdown-category
 					category-text=${this.localize('score')}
-					selected-option-count=${this._selectedFilters.length}
+					selected-option-count=${this._countScoreFilters()}
 					disable-search
 					@d2l-labs-filter-dropdown-option-change=${this._filterPosts}
 				>
@@ -336,26 +359,9 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		`;
 	}
 
-	_filterPosts(e) {
-		const newFilters = [...this._selectedFilters];
-		const newFilter = e.detail.menuItemKey;
-		const indexOfFilter = newFilters.indexOf(newFilter);
-		if (indexOfFilter >= 0) {
-			newFilters.splice(indexOfFilter, 1);
-		} else {
-			newFilters.push(newFilter);
-		}
-		this._selectedFilters = newFilters;
-
-		this._displayedDiscussionPostList = filterDiscussionPosts(this.discussionPostList, this._selectedFilters);
-		if (this._displayedDiscussionPostList && this._token) {
-			this._getDiscussionPostEntities().then(() => this.requestUpdate());
-		}
-	}
-
 	_sortPosts(e) {
 		this._sortingMethod = e.detail.value;
-		if (this._displayedDiscussionPostList && this._token) {
+		if (this._displayedDiscussionPostObjects && this._token) {
 			this._getDiscussionPostEntities().then(() => this.requestUpdate());
 		}
 	}
