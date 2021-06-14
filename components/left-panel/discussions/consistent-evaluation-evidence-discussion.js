@@ -105,7 +105,6 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	}
 
 	render() {
-
 		if (this.discussionPostList && this.discussionPostList.length === 0 && !this.skeleton) {
 			this._finishedLoading();
 			return html`${this._renderNoAssessablePosts()}`;
@@ -121,13 +120,13 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		`;
 	}
 
-	updated(changedProperties) {
+	async updated(changedProperties) {
 		super.updated(changedProperties);
 		if (changedProperties.has('discussionTopicLink')) {
 			this._clearFilters();
 		}
 		if (changedProperties.has('skeleton')) {
-			// when student changes or page reloads, reset this variable
+			// on student change or page reload, reset variable to prompt refiltering/sorting of posts
 			this._displayedDiscussionPostObjects = undefined;
 		}
 	}

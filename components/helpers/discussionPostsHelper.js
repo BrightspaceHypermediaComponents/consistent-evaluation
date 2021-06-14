@@ -24,12 +24,12 @@ export function sortDiscussionPosts(discussionPostObjects, sortingMethod) {
 	return discussionPostObjects;
 }
 
-export function filterDiscussionPosts(discussionPostList, selectedFilters) {
+export function filterDiscussionPosts(discussionPostObjects, selectedFilters) {
 	// if all filters/no filters are selected don't filter out anything
 	const filterScore = !(selectedFilters.includes(filterByScored) === selectedFilters.includes(filterByUnscored));
 	const filterPosts = !(selectedFilters.includes(filterByThreads) === selectedFilters.includes(filterByReplies));
 
-	const newDiscussionPostList = discussionPostList.filter(discussionPost => {
+	const newDiscussionPostObjects = discussionPostObjects.filter(discussionPost => {
 		let satisfiesPostFilters = true;
 		let satisfiesScoreFilters = true;
 		if (filterPosts) {
@@ -41,5 +41,5 @@ export function filterDiscussionPosts(discussionPostList, selectedFilters) {
 		}
 		return satisfiesPostFilters && satisfiesScoreFilters;
 	});
-	return newDiscussionPostList;
+	return newDiscussionPostObjects;
 }
