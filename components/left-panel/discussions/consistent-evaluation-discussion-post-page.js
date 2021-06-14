@@ -152,9 +152,11 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	_getPostsCounts() {
 		let threads = 0;
 		let replies = 0;
-		this.displayedDiscussionPostObjects.forEach(discussionPost => {
-			discussionPost.isReply ? replies++ : threads++;
-		});
+		if (this.displayedDiscussionPostObjects) {
+			this.displayedDiscussionPostObjects.forEach(discussionPost => {
+				discussionPost.isReply ? replies++ : threads++;
+			});
+		}
 
 		return {
 			threads: threads,
@@ -263,7 +265,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		`;
 	}
 	_renderTableBody() {
-		if (this.displayedDiscussionPostObjects.length === 0) {
+		if (typeof this.displayedDiscussionPostObjects === 'undefined' || (this.displayedDiscussionPostObjects && this.displayedDiscussionPostObjects.length === 0)) {
 			return html`<tr><td>${this._renderNoPostsInFilteredRange()}</td></tr>`;
 		}
 
@@ -324,7 +326,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		return html`${itemTemplate}`;
 	}
 	_renderTableHeader() {
-		if (this.displayedDiscussionPostObjects.length > 0) {
+		if (this.displayedDiscussionPostObjects && this.displayedDiscussionPostObjects.length > 0) {
 			const discussionPost = this.displayedDiscussionPostObjects[0];
 			const discussionPostEntity = discussionPost.discussionPostEvaluationEntity;
 
