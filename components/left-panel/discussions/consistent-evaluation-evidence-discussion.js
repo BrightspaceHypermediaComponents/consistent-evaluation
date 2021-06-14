@@ -99,8 +99,38 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			return html`${this._renderNoAssessablePosts()}`;
 		}
 		return html`
-			${this._renderListModifiers()}
-			${this._renderDiscussionPost()}
+		<d2l-labs-filter-dropdown id="filter" total-selected-option-count="4">
+			<d2l-labs-filter-dropdown-category key="1" category-text="Category 1">
+				<d2l-labs-filter-dropdown-option selected text="Option 1 - 1 test test test test test test test test test test test test test test test test test test" value="1"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option text="Option 1 - 2" value="2"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option selected text="Option 1 - 3" value="3"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option selected text="Option 1 - 4" value="4"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option text="Option 1 - 5" value="5"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option text="Option 1 - 6" value="6"></d2l-labs-filter-dropdown-option>
+			</d2l-labs-filter-dropdown-category>
+			<d2l-labs-filter-dropdown-category key="2" category-text="Category 2">
+				<d2l-labs-filter-dropdown-option selected text="Option 2 - 1" value="1"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option text="Option 2 - 2" value="2"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option text="Option 2 - 3" value="3"></d2l-labs-filter-dropdown-option>
+			</d2l-labs-filter-dropdown-category>
+			<d2l-labs-filter-dropdown-category key="3" category-text="Category 3">
+				<d2l-labs-filter-dropdown-option text="Option 3 - 1" value="1"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option text="Option 3 - 2" value="2"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option text="Option 3 - 3" value="3"></d2l-labs-filter-dropdown-option>
+			</d2l-labs-filter-dropdown-category>
+			<d2l-labs-filter-dropdown-category key="4" category-text="Category 4">
+				<d2l-labs-filter-dropdown-option text="Option 4 - 1" value="1"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option text="Option 4 - 2" value="2"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option text="Option 4 - 3" value="3"></d2l-labs-filter-dropdown-option>
+			</d2l-labs-filter-dropdown-category>
+			<d2l-labs-filter-dropdown-category key="5" category-text="Category 5" disable-search>
+				<d2l-labs-filter-dropdown-option text="Option 5 - 1" value="1"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option text="Option 5 - 2" value="2"></d2l-labs-filter-dropdown-option>
+				<d2l-labs-filter-dropdown-option text="Option 5 - 3" value="3"></d2l-labs-filter-dropdown-option>
+			</d2l-labs-filter-dropdown-category>
+		</d2l-labs-filter-dropdown>
+		<d2l-labs-filter-dropdown id="hello" total-selected-option-count="4">
+		</d2l-labs-filter-dropdown>
 		`;
 	}
 	async updated(changedProperties) {
