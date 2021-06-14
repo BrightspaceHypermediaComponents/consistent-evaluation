@@ -1,4 +1,5 @@
 import { filterByReplies, filterByScored, filterByThreads, filterByUnscored, sortByNewestFirst, sortByOldestFirst, sortBySubject } from '../controllers/constants';
+import { Rels } from 'd2l-hypermedia-constants';
 
 export function sortDiscussionPosts(discussionPostObjects, sortingMethod) {
 	if (sortingMethod === sortByNewestFirst) {
@@ -32,9 +33,14 @@ export function filterDiscussionPosts(discussionPostList, selectedFilters) {
 
 	const newDiscussionPostList = discussionPostList.filter(discussionPost => {
 		let satisfiesFilters = true;
-		satisfiesFilters = discussionPost.isReply ? selectedFilters.includes(filterByReplies) : selectedFilters.includes(filterByThreads);
-		const score = discussionPost.properties.score;
-		satisfiesFilters = score === null ? selectedFilters.includes(filterByUnscored) : selectedFilters.includes(filterByScored);
+		let isReply = discussionPost.hasLinkByRel(Rels.Discussions.thread);
+		let isScored = discussionPost.properties.score !== null;
+		if (isReply && selectedFilters.includes(filterByThreads) || !isReply && selectedFilters.includes(filterByReplies)) {
+			satisfiesFilters = false;
+		}
+		if (!isScored && selectedFilters.includes(filterByScored) || isScored && selectedFilters.includes(filterByUnscored)) {
+			satisfiesFilters = false;
+		}
 		return satisfiesFilters;
 	});
 	return newDiscussionPostList;
