@@ -1,4 +1,5 @@
 import './consistent-evaluation-discussion-evidence-body';
+import './consistent-evaluation-discussion-post-score.js';
 import { attachmentClassName, attachmentListClassName, fivestarRatingClass, lmsSourceRel, upvoteDownvoteRatingClass, upvoteOnlyRatingClass } from '../../controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element';
@@ -8,6 +9,7 @@ import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
+import { tableStyles } from '@brightspace-ui/core/components/table/table-wrapper.js';
 
 export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 	static get properties() {
@@ -45,7 +47,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 
 	static get styles() {
-		return [super.styles, bodyCompactStyles, css`
+		return [super.styles, bodyCompactStyles, tableStyles, css`
 			:host([skeleton]) d2l-consistent-evaluation-discussion-evidence-body {
 				display: none;
 			}
@@ -123,22 +125,36 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 			.d2l-consistent-evaluation-discussion-posts-counts {
 				float: left;
-				margin-left: 20px;
 			}
 
 			:host([dir="rtl"]) .d2l-consistent-evaluation-discussion-posts-counts {
 				float: right;
 			}
 
+			.d2l-consistent-evaluation-discussion-evidence-body {
+				min-width: 350px;
+				width: 100%;
+			}
+
 			.d2l-consistent-evaluation-unscored-status-indicator {
 				float: left;
 				margin-left: 1rem;
 				margin-right: 1rem;
+				margin-top: 0.2rem;
 				text-transform: none;
 			}
 
 			:host([dir="rtl"]) .d2l-consistent-evaluation-unscored-status-indicator {
 				float: right;
+			}
+
+			.d2l-consistent-evaluation-discussion-table {
+				display: flex;
+			}
+
+			.d2l-table-wrapper {
+				margin-left: 1rem;
+				margin-right: 1rem;
 			}
 		`];
 	}
@@ -203,8 +219,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		return html`
 			${this._renderDiscussionItemSkeleton()}
 			${this._renderDiscussionItemSkeleton()}
-			${this._renderPostsHeader()}
-			${this._renderDiscussionPostEntities()}
+			${this._renderTable()}
 		`;
 	}
 	_finishedLoading() {
@@ -358,34 +373,6 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			</div>
 		`;
 	}
-	_renderDiscussionPostEntities() {
-		if (this._displayedDiscussionPostObjects.length === 0) {
-			return html`${this._renderNoPostsInFilteredRange()}`;
-		}
-
-		const itemTemplate = [];
-		for (let i = 0; i < this._displayedDiscussionPostObjects.length; i++) {
-			if (this._displayedDiscussionPostObjects[i]) {
-				const discussionPost = this._displayedDiscussionPostObjects[i];
-				itemTemplate.push(html`
-					<d2l-consistent-evaluation-discussion-evidence-body
-						aria-hidden="${this.skeleton}"
-						post-href=${discussionPost.postHref}
-						post-title=${discussionPost.postTitle}
-						post-body=${discussionPost.postBody}
-						post-date=${discussionPost.createdDateString}
-						?is-reply=${discussionPost.isReply}
-						thread-title=${discussionPost.threadTitle}
-						rating-method=${ifDefined(this._ratingMethod)}
-						word-count=${ifDefined(discussionPost.wordCount)}
-						.attachmentsList=${discussionPost.attachmentList}
-						.ratingInformation=${discussionPost.ratingInformation}
-						.discussionPostEntity=${discussionPost.discussionPostEvaluationEntity}
-					></d2l-consistent-evaluation-discussion-evidence-body>`);
-			}
-		}
-		return html`${itemTemplate}`;
-	}
 	_renderDiscussionRatingSkeleton() {
 		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-rating-container-skeleton">
 				<div class="d2l-skeletize d2l-consistent-evaluation-discussion-evidence-body-rating-skeleton"></div>
@@ -418,7 +405,99 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		return html`
 			${this._renderPostsCounts()}
 			${this._renderUnscoredStatus()}
-			<br>
+		`;
+	}
+	_renderTable() {
+		return html`
+			<div class="d2l-consistent-evaluation-discussion-table">
+				<d2l-table-wrapper class="d2l-table-wrapper">
+					<table class="d2l-table">
+						<thead>
+							<tr>${this._renderTableHeader()}</tr>
+						</thead>
+						<tbody>
+							${this._renderTableBody()}
+						</tbody>
+					</table>
+				</d2l-table-wrapper>
+			</div>
+		`;
+	}
+	_renderTableBody() {
+		if (this._displayedDiscussionPostObjects.length === 0) {
+			return html`<tr><td>${this._renderNoPostsInFilteredRange()}</td></tr>`;
+		}
+
+		const itemTemplate = [];
+		for (let i = 0; i < this._displayedDiscussionPostObjects.length; i++) {
+			if (this._displayedDiscussionPostObjects[i]) {
+				const discussionPost = this._displayedDiscussionPostObjects[i];
+				const discussionPostEntity = discussionPost.discussionPostEvaluationEntity;
+
+				if (discussionPostEntity && discussionPostEntity.properties && discussionPostEntity.properties.outOf) {
+					itemTemplate.push(html`
+						<tr>
+							<td class="d2l-consistent-evaluation-discussion-evidence-body">
+								<d2l-consistent-evaluation-discussion-evidence-body
+									aria-hidden="${this.skeleton}"
+									post-href=${discussionPost.postHref}
+									post-title=${discussionPost.postTitle}
+									post-body=${discussionPost.postBody}
+									post-date=${discussionPost.createdDateString}
+									?is-reply=${discussionPost.isReply}
+									thread-title=${discussionPost.threadTitle}
+									rating-method=${ifDefined(this._ratingMethod)}
+									word-count=${ifDefined(discussionPost.wordCount)}
+									.attachmentsList=${discussionPost.attachmentList}
+									.ratingInformation=${discussionPost.ratingInformation}
+								></d2l-consistent-evaluation-discussion-evidence-body>
+							</td>
+							<td class="d2l-consistent-evaluation-discussion-post-score">
+								<d2l-consistent-evaluation-discussion-post-score
+									.discussionPostEntity=${discussionPostEntity}
+								></d2l-consistent-evaluation-discussion-post-score>
+							</td>
+						</tr>
+					`);
+				} else {
+					itemTemplate.push(html`
+						<tr>
+							<td class="d2l-consistent-evaluation-discussion-evidence-body">
+								<d2l-consistent-evaluation-discussion-evidence-body
+									aria-hidden="${this.skeleton}"
+									post-href=${discussionPost.postHref}
+									post-title=${discussionPost.postTitle}
+									post-body=${discussionPost.postBody}
+									post-date=${discussionPost.createdDateString}
+									?is-reply=${discussionPost.isReply}
+									thread-title=${discussionPost.threadTitle}
+									rating-method=${ifDefined(this._ratingMethod)}
+									word-count=${ifDefined(discussionPost.wordCount)}
+									.attachmentsList=${discussionPost.attachmentList}
+									.ratingInformation=${discussionPost.ratingInformation}
+								></d2l-consistent-evaluation-discussion-evidence-body>
+							</td>
+						</tr>
+					`);
+				}
+			}
+		}
+		return html`${itemTemplate}`;
+	}
+	_renderTableHeader() {
+		if (this._displayedDiscussionPostObjects.length > 0) {
+			const discussionPost = this._displayedDiscussionPostObjects[0];
+			const discussionPostEntity = discussionPost.discussionPostEvaluationEntity;
+
+			if (discussionPostEntity && discussionPostEntity.properties && discussionPostEntity.properties.outOf) {
+				return html`
+					<th>${this._renderPostsHeader()}</th>
+					<th>${this.localize('score')}</th>
+				`;
+			}
+		}
+		return html`
+			<th>${this._renderPostsHeader()}</th>
 		`;
 	}
 	_renderUnscoredStatus() {
