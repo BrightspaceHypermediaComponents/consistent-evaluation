@@ -263,7 +263,8 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			<d2l-labs-user-profile-card
 				href=${this.enrolledUserHref}
 				user-progress-href=${ifDefined(this.userProgressAssessmentsHref)}
-				.token=${this.token}>
+				.token=${this.token}
+				small-opener>
 			</d2l-labs-user-profile-card>`;
 		}
 	}
