@@ -24,18 +24,18 @@ export function sortDiscussionPosts(discussionPostObjects, sortingMethod) {
 	return discussionPostObjects;
 }
 
-export function filterDiscussionPosts(discussionPostObjects, selectedFilters) {
+export function filterDiscussionPosts(discussionPostList, selectedFilters) {
 	// if all filters/no filters are selected don't filter out anything
 	if (selectedFilters.length === 0 || selectedFilters.length === 4) {
-		return discussionPostObjects;
+		return discussionPostList;
 	}
 
-	const newDiscussionPostObjects  = discussionPostObjects.filter(discussionPost => {
+	const newDiscussionPostList = discussionPostList.filter(discussionPost => {
 		let satisfiesFilters = true;
 		satisfiesFilters = discussionPost.isReply ? selectedFilters.includes(filterByReplies) : selectedFilters.includes(filterByThreads);
-		const score = discussionPost.discussionPostEvaluationEntity.properties.score;
+		const score = discussionPost.properties.score;
 		satisfiesFilters = score === null ? selectedFilters.includes(filterByUnscored) : selectedFilters.includes(filterByScored);
 		return satisfiesFilters;
 	});
-	return newDiscussionPostObjects;
+	return newDiscussionPostList;
 }
