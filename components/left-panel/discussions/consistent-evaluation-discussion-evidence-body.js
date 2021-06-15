@@ -75,8 +75,12 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 				padding-top: 10px;
 			}
 
-			.d2l-consistent-evaluation-discussion-text-info {
-				float: left;
+			.d2l-consistent-evaluation-discussion-properties {
+				display: flex;
+			}
+
+			.d2l-consistent-evaluation-discussion-text {
+				flex-grow: 1;
 			}
 
 			.d2l-consistent-evaluation-evidence-body-reply-icon {
@@ -128,16 +132,16 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 
 	render() {
 		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-container">
-			<div>
-				<div class="d2l-consistent-evaluation-discussion-text-info">
+			<div class="d2l-consistent-evaluation-discussion-properties">
+				<div class="d2l-consistent-evaluation-discussion-text">
 					${this._renderRepliedInThread()}
 					${this._renderTitle()}
 					${this._renderDate()}
 					${this._renderWordCount()}
-					${this._renderBody()}
 				</div>
 				${this._renderRating()}
 			</div>
+			${this._renderBody()}
 			<d2l-list aria-role="attachment list" separators="between">
 				${this._renderAttachments()}
 			</d2l-list>
