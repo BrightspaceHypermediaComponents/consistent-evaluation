@@ -1,0 +1,134 @@
+{
+  "class": [
+    "user",
+    "enrolled"
+  ],
+  "entities": [
+    {
+      "class": [
+        "email"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/email"
+      ],
+      "properties": {
+        "path": "#fake-email-path"
+      }
+    },
+    {
+      "class": [
+        "pager",
+        "relative-uri"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/pager"
+      ],
+      "properties": {
+        "path": "#fake-pager-path"
+      }
+    },
+    {
+      "class": [
+        "profile"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/user-profile"
+      ],
+      "properties": {
+        "path": "#fake-profile-path",
+        "isOnline": true
+      },
+      "entities": [
+        {
+          "class": [
+            "file",
+            "image",
+            "default-image"
+          ],
+          "rel": [
+            "https://api.brightspace.com/rels/profile-image"
+          ],
+          "properties": {},
+          "links": [
+            {
+              "rel": [
+                "alternate"
+              ],
+							"href": "./img/d2l-moose.png"
+						},
+            {
+              "rel": [
+                "preview",
+                "https://api.brightspace.com/rels/thumbnail#small"
+              ],
+              "href": "./small-thumbnail-not-in-demo-data"
+            },
+            {
+              "rel": [
+                "preview",
+                "https://api.brightspace.com/rels/thumbnail#regular"
+              ],
+              "href": "./regular-thumbnail-not-in-demo-data"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "class": [
+        "display",
+        "name"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/display-name"
+      ],
+      "properties": {
+        "name": "Leonidas Crawford"
+      }
+    },
+    {
+      "class": [
+        "first",
+        "name"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/first-name"
+      ],
+      "properties": {
+        "name": "Leonidas"
+      }
+    },
+    {
+      "class": [
+        "last",
+        "name"
+      ],
+      "rel": [
+        "https://api.brightspace.com/rels/last-name"
+      ],
+      "properties": {
+        "name": "Crawford"
+      }
+    }
+  ],
+  "links": [
+    {
+      "rel": [
+        "https://api.brightspace.com/rels/user-enrollment"
+      ],
+      "href": "https://fake.enrollments.api.dev.brightspace.com/enrolled-user/izYIE472AdiVQIiWZeWVD5DqX7njxEq_d85Y9NuOSxA/enrollment"
+    },
+    {
+      "rel": [
+        "self"
+      ],
+      "href": "https://fake.enrollments.api.dev.brightspace.com/enrolled-user/izYIE472AdiVQIiWZeWVD5DqX7njxEq_d85Y9NuOSxA"
+    },
+    {
+      "rel": [
+        "https://users.api.brightspace.com/rels/canonical-user"
+      ],
+      "href": "./data/user.json"
+    }
+  ]
+}

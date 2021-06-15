@@ -149,64 +149,6 @@ export class ConsistentEvaluationHrefController {
 		}
 		return editActivityPath;
 	}
-	async getEnrolledUser() {
-		const root = await this._getRootEntity(false);
-		if (root && root.entity) {
-			const enrolledUserHref = this._getHref(root.entity, Rels.enrolledUser);
-			const groupHref = this._getHref(root.entity, Rels.group);
-			if (enrolledUserHref) {
-				const enrolledUserEntity = await this._getEntityFromHref(enrolledUserHref, false);
-				const pagerEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.pager);
-				const emailEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.email, false);
-				const userProfileEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.userProfile);
-				const displayNameEntity = enrolledUserEntity.entity.getSubEntityByRel(Rels.displayName);
-				const userProgressEntity = root.entity.getSubEntityByRel(userProgressAssessmentsRel, false);
-
-				let displayName = undefined;
-				let pagerPath = undefined;
-				let userProgressPath = undefined;
-				let emailPath = undefined;
-				let userProfilePath = undefined;
-
-				if (displayNameEntity) {
-					displayName = displayNameEntity.properties.name;
-				}
-				if (pagerEntity) {
-					pagerPath = pagerEntity.properties.path;
-				}
-				if (userProgressEntity) {
-					userProgressPath = userProgressEntity.properties.path;
-				}
-				if (emailEntity) {
-					emailPath = emailEntity.properties.path;
-				}
-				if (userProfileEntity) {
-					userProfilePath = userProfileEntity.properties.path;
-				}
-				return {
-					displayName,
-					enrolledUserHref,
-					emailPath,
-					pagerPath,
-					userProgressPath,
-					userProfilePath
-				};
-			} else if (groupHref) {
-				const groupEntity = await this._getEntityFromHref(groupHref, false);
-				const pagerEntity = groupEntity.entity.getSubEntityByRel(Rels.pager);
-				let pagerPath = undefined;
-				if (pagerEntity) {
-					pagerPath = pagerEntity.properties.path;
-				}
-				return {
-					groupHref,
-					pagerPath
-				};
-			}
-
-			return undefined;
-		}
-	}
 	async getEvaluationEntity() {
 		const root = await this._getRootEntity(false);
 		if (root && root.entity) {
@@ -292,9 +234,11 @@ export class ConsistentEvaluationHrefController {
 		let previousHref = undefined;
 		let alignmentsHref = undefined;
 		let userHref = undefined;
+		let enrolledUserHref = undefined;
 		let groupHref = undefined;
 		let actorHref = undefined;
 		let userProgressOutcomeHref = undefined;
+		let userProgressAssessmentsHref = undefined;
 		let coaDemonstrationHref = undefined;
 		let specialAccessHref = undefined;
 		let rubricPopoutLocation = undefined;
@@ -308,9 +252,13 @@ export class ConsistentEvaluationHrefController {
 			previousHref = this._getHref(root, previousRel);
 			actorHref = this._getHref(root, Rels.Activities.actorActivityUsage);
 			userHref = this._getHref(root, Rels.user);
+			enrolledUserHref = this._getHref(root, Rels.enrolledUser);
 			alignmentsHref = this._getHref(root, Rels.Alignments.alignments);
 			groupHref = this._getHref(root, Rels.group);
 			userProgressOutcomeHref = this._getHref(root, userProgressOutcomeRel);
+
+			const userProgressAssessmentsEntity = root.getSubEntityByRel(userProgressAssessmentsRel, false);
+			userProgressAssessmentsHref = userProgressAssessmentsEntity && userProgressAssessmentsEntity.properties && userProgressAssessmentsEntity.properties.path;
 
 			if (alignmentsHref) {
 				const alignmentsEntity = await this._getEntityFromHref(alignmentsHref, bypassCache);
@@ -359,8 +307,10 @@ export class ConsistentEvaluationHrefController {
 			alignmentsHref,
 			previousHref,
 			userHref,
+			enrolledUserHref,
 			groupHref,
 			userProgressOutcomeHref,
+			userProgressAssessmentsHref,
 			coaDemonstrationHref,
 			specialAccessHref,
 			rubricPopoutLocation,
