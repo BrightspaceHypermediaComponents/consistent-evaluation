@@ -17,11 +17,6 @@ const customLaunchers = {
 		base: 'SauceLabs',
 		browserName: 'microsoftedge',
 		platform: 'Windows 10'
-	},
-	safari: {
-		base: 'SauceLabs',
-		browserName: 'safari',
-		platform: 'macOS 11.00'
 	}
 };
 
