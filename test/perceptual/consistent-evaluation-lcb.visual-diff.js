@@ -33,16 +33,6 @@ describe('d2l-consistent-evaluation', () => {
 			const lcb = elem.querySelector('d2l-consistent-evaluation-learner-context-bar');
 			const userContext = lcb.shadowRoot.querySelector('d2l-consistent-evaluation-lcb-user-context');
 			const card = userContext.shadowRoot.querySelector('d2l-labs-user-profile-card');
-			card._userProfileCardSettings = {
-				showPicture: true,
-				showTagline: true,
-				showHomepageUrl: true,
-				showSocial: true,
-				showOnlineStatus: true,
-				showRole: true,
-				showBadgeTrophy: true,
-				showOrgDefinedId: true
-			};
 			const listener = new Promise((resolve) => {
 				card.addEventListener('d2l-labs-user-profile-card-opened', resolve, { once: true });
 			});
