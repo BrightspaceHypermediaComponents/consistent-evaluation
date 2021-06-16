@@ -51,6 +51,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'special-access-href',
 				type: String
 			},
+			enrolledUserHref: {
+				attribute: 'enrolled-user-href',
+				type: String
+			},
 			href: {
 				attribute: 'href',
 				type: String
@@ -75,6 +79,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'user-progress-outcome-href',
 				type: String
 			},
+			userProgressAssessmentsHref: {
+				attribute: 'user-progress-assessments-href',
+				type: String
+			},
 			coaDemonstrationHref: {
 				attribute: 'coa-demonstration-href',
 				type: String
@@ -92,10 +100,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				type: Object
 			},
 			gradeItemInfo: {
-				attribute: false,
-				type: Object
-			},
-			enrolledUser: {
 				attribute: false,
 				type: Object
 			},
@@ -152,6 +156,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			},
 			useNewHtmlEditor: {
 				attribute: 'use-new-html-editor',
+				type: Boolean
+			},
+			useInlineGradingRevamp: {
+				attribute: 'use-inline-grading-revamp',
 				type: Boolean
 			},
 			displayConversionWarning: {
@@ -401,6 +409,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?allow-record-audio=${canRecordFeedbackAudio}
 						?skeleton=${this.skeleton}
 						?use-new-html-editor=${this.useNewHtmlEditor}
+						?use-inline-grading-revamp=${this.useInlineGradingRevamp}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
 						@on-d2l-consistent-eval-feedback-attachments-add=${this._transientAddAttachment}
 						@on-d2l-consistent-eval-feedback-attachments-remove=${this._transientRemoveAttachment}
@@ -761,13 +770,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			return html`
 				<d2l-consistent-evaluation-learner-context-bar
 					user-href=${ifDefined(this.userHref)}
+					enrolled-user-href=${this.enrolledUserHref}
+					user-progress-assessments-href=${ifDefined(this.userProgressAssessmentsHref)}
 					group-href=${ifDefined(this.groupHref)}
 					special-access-href=${ifDefined(this.specialAccessHref)}
 					.anonymousInfo=${this.anonymousInfo}
 					.token=${this.token}
 					.currentFileId=${this.currentFileId}
 					.submissionInfo=${this.submissionInfo}
-					.enrolledUser=${this.enrolledUser}
 					.groupInfo=${this.groupInfo}
 					?skeleton=${this.skeleton}
 				></d2l-consistent-evaluation-learner-context-bar>
