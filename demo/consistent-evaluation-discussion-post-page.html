@@ -6,22 +6,119 @@
 		<script type="text/javascript" src="https://s.brightspace.com/lib/moment.js/2.15.2/moment.min.js"></script>
 		<script type="module">
 			import '@brightspace-ui/core/components/demo/demo-page.js';
-			import '../components/left-panel/discussions/consistent-evaluation-evidence-discussion.js';
+			import '../components/left-panel/discussions/consistent-evaluation-discussion-post-page.js';
+
+			const defaultPost = {
+				attachmentList: undefined,
+				createdDate: 'Tue Jun 15 2021 10:16:57 GMT-0400 (Eastern Daylight Time)',
+				createdDateString: '2021-06-15T14:16:57.187Z',
+				isReply: false,
+				isUnscored: true,
+				postBody: '<p>This is a thread post</p>',
+				postHref: 'href',
+				postTitle: 'Post 1',
+				ratingInformation: {},
+				threadTitle: 'Demo Thread 1',
+				wordCount: 55
+			};
+
+			const defaultReply = {
+				attachmentList: undefined,
+				createdDate: 'Tue Jun 15 2021 10:16:57 GMT-0400 (Eastern Daylight Time)',
+				createdDateString: '2021-06-15T14:16:57.187Z',
+				isReply: true,
+				isUnscored: true,
+				postBody: '<p>This is a thread reply</p>',
+				postHref: 'href',
+				postTitle: 'Reply 1',
+				ratingInformation: {},
+				threadTitle: 'Demo Thread 1',
+				wordCount: 17
+			};
+
+			const postWithScore = {
+				attachmentList: undefined,
+				createdDate: 'Tue Jun 15 2021 10:16:57 GMT-0400 (Eastern Daylight Time)',
+				createdDateString: '2021-06-15T14:16:57.187Z',
+				discussionPostEvaluationEntity: {
+					properties: {
+						outOf: 10,
+						score: 8
+					}
+				},
+				isReply: false,
+				isUnscored: false,
+				postBody: '<p>This is a thread post with a score</p>',
+				postHref: 'href',
+				postTitle: 'Post 2',
+				ratingInformation: {},
+				threadTitle: 'Demo Thread 1',
+				wordCount: 7
+			};
+
+			const replyWithScore = {
+				attachmentList: undefined,
+				createdDate: 'Tue Jun 15 2021 10:16:57 GMT-0400 (Eastern Daylight Time)',
+				createdDateString: '2021-06-15T14:16:57.187Z',
+				discussionPostEvaluationEntity: {
+					properties: {
+						outOf: 10,
+						score: 7
+					}
+				},
+				isReply: true,
+				isUnscored: false,
+				postBody: '<p>This is a thread reply with a score</p>',
+				postHref: 'href',
+				postTitle: 'Reply 2',
+				ratingInformation: {},
+				threadTitle: 'Demo Thread 1',
+				wordCount: 7
+			};
+
+			const defaultCase = document.getElementById('default');
+			defaultCase._displayedDiscussionPostObjects = [defaultPost, defaultReply];
+
+			const postsScored = document.getElementById('posts-scored');
+			postsScored._displayedDiscussionPostObjects = [postWithScore, replyWithScore];
+
+			const postFilter = ["threads"];
+			defaultCase.selectedPostFilters = postFilter;
+			defaultCase._currentPostFilteringMethod = postFilter;
+			postsScored.selectedPostFilters = postFilter;
+			postsScored._currentPostFilteringMethod = postFilter;
+
+			const scoreFilter = ["scored"];
+			defaultCase.selectedScoreFilters = scoreFilter;
+			defaultCase._currentScoreFilteringMethod = scoreFilter;
+			postsScored.selectedScoreFilters = scoreFilter;
+			postsScored._currentScoreFilteringMethod = scoreFilter;
 		</script>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<meta charset="UTF-8">
 	</head>
 	<body>
+		<d2l-demo-page page-title="d2l-consistent-evaluation-discussion-post-page">
 
-		<d2l-demo-page page-title="d2l-consistent-evaluation-evidence-discussion">
-			<h2>Discussion Page</h2>
+			<h2>Empty Discussion Post Page</h2>
 			<d2l-demo-snippet>
-				<d2l-consistent-evaluation-evidence-discussion id="discussion-post-with-attachments"
-				></d2l-consistent-evaluation-evidence-discussion>
+				<d2l-consistent-evaluation-discussion-post-page id="empty"
+				></d2l-consistent-evaluation-discussion-post-page>
+			</d2l-demo-snippet>
+
+			<h2>Default Discussion Post Page</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-discussion-post-page id="default"
+				></d2l-consistent-evaluation-discussion-post-page>
+			</d2l-demo-snippet>
+
+			<h2>Discussion Post Page With Post Scoring</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-discussion-post-page id="posts-scored"
+				></d2l-consistent-evaluation-discussion-post-page>
 			</d2l-demo-snippet>
 
 		</d2l-demo-page>
-
 	</body>
 </html>
