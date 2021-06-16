@@ -44,6 +44,10 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 			canSaveOverallGrade: {
 				attribute: 'can-save-overall-grade',
 				type: Boolean
+			},
+			useInlineGradingRevamp: {
+				attribute: 'use-inline-grading-revamp',
+				type: Boolean
 			}
 		};
 	}
@@ -221,6 +225,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 						?force-compact=${!this.isPopout}
 						overall-score-flag
 						selected
+						legacy=${!this.useInlineGradingRevamp}
 						include-statistics
 						@d2l-rubric-total-score-changed=${this._syncActiveScoringRubricGradeHandler}
 					></d2l-rubric>

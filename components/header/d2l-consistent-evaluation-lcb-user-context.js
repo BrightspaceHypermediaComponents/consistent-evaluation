@@ -1,7 +1,6 @@
-import 'd2l-users/components/d2l-profile-image.js';
-import './consistent-evaluation-user-profile-card.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-menu.js';
 import '@brightspace-ui/core/components/dropdown/dropdown-context-menu.js';
+import '@brightspace-ui-labs/user-profile-card/user-profile-card.js';
 
 import { bodyCompactStyles, bodyStandardStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
@@ -28,9 +27,13 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 				attribute: false,
 				type: Object
 			},
-			enrolledUser: {
-				attribute: false,
-				type: Object
+			enrolledUserHref: {
+				attribute: 'enrolled-user-href',
+				type: String
+			},
+			userProgressAssessmentsHref: {
+				attribute: 'user-progress-assessments-href',
+				type: String
 			},
 			groupInfo: {
 				attribute: false,
@@ -39,10 +42,6 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			_displayName: {
 				attribute: false,
 				type: String
-			},
-			_showProfileCard: {
-				attribute: false,
-				type: Boolean
 			},
 			_groupEmailItemID: {
 				attribute: false,
@@ -95,15 +94,6 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			.d2l-user-group-context-menu {
 				padding-left: 0.25rem;
 			}
-			.d2l-consistent-evaluation-user-profile-card-container {
-				position: absolute;
-				top: 4rem;
-				z-index: 1;
-			}
-			d2l-consistent-evaluation-user-profile-card {
-				position: relative;
-				top: 1.75rem;
-			}
 		`];
 	}
 
@@ -115,10 +105,6 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 	}
 
 	firstUpdated() {
-		const userContextContainer = this.shadowRoot.querySelector('.d2l-user-context-container');
-		userContextContainer.addEventListener('focus', () => {
-			this._toggleOnProfileCard();
-		});
 		this._groupEmailItemID = getUniqueId();
 		this._groupIMItemID = getUniqueId();
 		this._groupMembersItemID = getUniqueId();
@@ -128,14 +114,11 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 		return html`
 		<div class="d2l-user-context-container"
 			tabindex="0"
-			aria-label=${ifDefined(this._displayName)}
-			@mouseover=${this._toggleOnProfileCard}
-			@mouseleave=${this._toggleOffProfileCard}>
+			aria-label=${ifDefined(this._displayName)}>
 
 			${this._renderProfileImage()}
 			<h2 class="d2l-body-compact d2l-consistent-evaluation-lcb-user-name" title="${ifDefined(this._displayName)}">${ifDefined(this._displayName)}</h2>
 			${this._getExemptText()}
-			${this._renderProfileCard()}
 			${this._renderGroupOptions()}
 
 		</div>
@@ -266,63 +249,24 @@ export class ConsistentEvaluationLcbUserContext extends EntityMixinLit(RtlMixin(
 			` :
 			html``;
 	}
-	_renderProfileCard() {
-		let emailHref = undefined;
-		let instantMessageHref = undefined;
-		let userProgressHref = undefined;
-		let userProfileHref = undefined;
-		let displayName = undefined;
-		if (this.enrolledUser) {
-			emailHref = this.enrolledUser.emailPath;
-			instantMessageHref = this.enrolledUser.pagerPath;
-			userProgressHref = this.enrolledUser.userProgressPath;
-			userProfileHref = this.enrolledUser.userProfilePath;
-			displayName = this.enrolledUser.displayName;
-		}
-
-		if (this.anonymousInfo && this.anonymousInfo.isAnonymous && !this.anonymousInfo.assignmentHasPublishedSubmission) {
-			return html ``;
-		}
-
-		return (this._showProfileCard && !this.isGroupActivity) ?
-			html`
-			<div class="d2l-consistent-evaluation-user-profile-card-container" @click=${this._toggleOffProfileCard}>
-				<d2l-consistent-evaluation-user-profile-card
-					.token=${this.token}
-					display-name=${displayName}
-					.emailHref=${emailHref}
-					.instantMessageHref=${instantMessageHref}
-					.userProgressHref=${userProgressHref}
-					.userProfileHref=${userProfileHref}
-					.userHref=${this.href}
-					@d2l-consistent-eval-profile-card-mouse-leave=${this._toggleOffProfileCard}
-					@d2l-consistent-eval-profile-card-tab-leave=${this._toggleOffProfileCard}>
-				</d2l-consistent-evaluation-user-profile-card>
-			</div>
-			` :
-			html``;
-	}
 	_renderProfileImage() {
 		if (this.isGroupActivity) {
 			return html``;
-		} else {
-			return html `
-			<d2l-profile-image
+		} else if (this.anonymousInfo && this.anonymousInfo.isAnonymous && !this.anonymousInfo.assignmentHasPublishedSubmission) {
+			return html`<d2l-profile-image
 				href=${this.href}
 				.token=${this.token}
 				small
 			></d2l-profile-image>`;
+		} else if (this.enrolledUserHref) {
+			return html `
+			<d2l-labs-user-profile-card
+				href=${this.enrolledUserHref}
+				user-progress-href=${ifDefined(this.userProgressAssessmentsHref)}
+				.token=${this.token}
+				small-opener>
+			</d2l-labs-user-profile-card>`;
 		}
-	}
-
-	_toggleOffProfileCard(event) {
-		//Don't close/flciker the profile card when mousing off of it and onto the user-context-container
-		if (event.type !== 'd2l-consistent-eval-profile-card-mouse-leave') {
-			this._showProfileCard = false;
-		}
-	}
-	_toggleOnProfileCard() {
-		this._showProfileCard = true;
 	}
 
 }

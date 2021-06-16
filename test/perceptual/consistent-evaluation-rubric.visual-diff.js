@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const VisualDiff = require('@brightspace-ui/visual-diff');
 
-describe('d2l-consistent-evaluation-rubric', () => {
+describe.skip('d2l-consistent-evaluation-rubric', () => {
 
 	const visualDiff = new VisualDiff('consistent-evaluation-rubric', __dirname);
 

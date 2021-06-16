@@ -1,7 +1,6 @@
 // import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import { assignmentActivity, assignmentClass, checkedClassName, coaActivity, coaClass, discussionActivity, discussionClass,
-	evidenceRel, nextRel, previousRel, publishedClassName,
-	userProgressAssessmentsRel } from '../components/controllers/constants.js';
+	evidenceRel, nextRel, previousRel, publishedClassName } from '../components/controllers/constants.js';
 import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { ConsistentEvaluationHrefController, ConsistentEvaluationHrefControllerErrors } from '../components/controllers/ConsistentEvaluationHrefController';
 import { assert } from '@open-wc/testing';
@@ -254,54 +253,6 @@ describe('ConsistentEvaluationHrefController', () => {
 			const returnedEvaluationEntity = await controller.getEvaluationEntity();
 
 			assert.equal(returnedEvaluationEntity, evaluationEntity);
-		});
-	});
-
-	describe('getEnrolledUser gets correct enrolled user info', () => {
-		it('sets the enrolled user info', async() => {
-			const enrolledUserHref = 'enrolledUserHref';
-			const emailPath = 'emailPath';
-			const pagerPath = 'pagerPath';
-			const userProgressPath = 'userProgress';
-			const userProfilePath = 'userProfilePath';
-			const displayName = 'displayName';
-
-			const controller = new ConsistentEvaluationHrefController('href', 'token');
-
-			sinon.stub(controller, '_getRootEntity').returns({
-				entity: {
-					getSubEntityByRel: (r) => {
-						if (r === userProgressAssessmentsRel) {
-							return { properties: { path: userProgressPath } };
-						}
-					}
-				}
-			});
-
-			sinon.stub(controller, '_getHref').returns(enrolledUserHref);
-			sinon.stub(controller, '_getEntityFromHref').returns({
-				entity: {
-					getSubEntityByRel: (r) => {
-						if (r === Rels.pager) {
-							return { properties: { path: pagerPath } };
-						} else if (r === Rels.email) {
-							return { properties: { path: emailPath } };
-						} else if (r === Rels.displayName) {
-							return { properties: { name: displayName } };
-						} else {
-							return { properties: { path: userProfilePath } };
-						}
-					}
-				}
-			});
-
-			const enrolledUser = await controller.getEnrolledUser();
-			assert.equal(enrolledUser.enrolledUserHref, enrolledUserHref);
-			assert.equal(enrolledUser.pagerPath, pagerPath);
-			assert.equal(enrolledUser.userProgressPath, userProgressPath);
-			assert.equal(enrolledUser.userProfilePath, userProfilePath);
-			assert.equal(enrolledUser.emailPath, emailPath);
-			assert.equal(enrolledUser.displayName, displayName);
 		});
 	});
 
