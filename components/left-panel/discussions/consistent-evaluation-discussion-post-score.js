@@ -10,6 +10,10 @@ export class ConsistentEvaluationDiscussionPostScore extends LitElement {
 			discussionPostEntity: {
 				attribute: false,
 				type: Object
+			},
+			_score: {
+				attribute: false,
+				type: Number
 			}
 		};
 	}
@@ -24,7 +28,7 @@ export class ConsistentEvaluationDiscussionPostScore extends LitElement {
 
 	constructor() {
 		super();
-		this.score = 0;
+		this._score = 0;
 		this.outOf = 0;
 		this._debounceJobs = {};
 		this.flush = this.flush.bind(this);
@@ -66,9 +70,9 @@ export class ConsistentEvaluationDiscussionPostScore extends LitElement {
 	}
 	_emitGradeChangeEvent(score) {
 		if (score === undefined) {
-			this.score = '';
+			this._score = '';
 		} else if (score >= 0) {
-			this.score = score;
+			this._score = score;
 		} else {
 			return;
 		}
@@ -76,7 +80,7 @@ export class ConsistentEvaluationDiscussionPostScore extends LitElement {
 			composed: true,
 			bubbles: true,
 			detail: {
-				score: this.score,
+				score: this._score,
 				entity: this.discussionPostEntity
 			}
 		}));
