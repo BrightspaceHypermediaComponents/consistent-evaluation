@@ -35,6 +35,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				attribute: 'use-new-html-editor',
 				type: Boolean
 			},
+			useInlineGradingRevamp: {
+				attribute: 'use-inline-grading-revamp',
+				type: Boolean
+			},
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
 				type: Boolean
@@ -144,6 +148,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				?use-new-html-editor=${this.useNewHtmlEditor}
+				?use-inline-grading-revamp=${this.useInlineGradingRevamp}
 				?display-conversion-warning=${this.displayConversionWarning}
 				@d2l-consistent-evaluation-previous-student-click=${this._onPreviousStudentClick}
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
