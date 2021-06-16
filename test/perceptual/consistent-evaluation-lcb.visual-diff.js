@@ -2,7 +2,6 @@ const puppeteer = require('puppeteer');
 const VisualDiff = require('@brightspace-ui/visual-diff');
 
 describe('d2l-consistent-evaluation', () => {
-
 	const visualDiff = new VisualDiff('consistent-evaluation-learner-context-bar', __dirname);
 
 	let browser, page;
@@ -26,6 +25,21 @@ describe('d2l-consistent-evaluation', () => {
 
 	it('renders learner context bar', async function() {
 		const rect = await visualDiff.getRect(page, '#default');
+		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
+	});
+
+	it('renders learner profile card', async function() {
+		await page.$eval('#open-card', async(elem) => {
+			const lcb = elem.querySelector('d2l-consistent-evaluation-learner-context-bar');
+			const userContext = lcb.shadowRoot.querySelector('d2l-consistent-evaluation-lcb-user-context');
+			const card = userContext.shadowRoot.querySelector('d2l-labs-user-profile-card');
+			const listener = new Promise((resolve) => {
+				card.addEventListener('d2l-labs-user-profile-card-opened', resolve, { once: true });
+			});
+			card.open();
+			return listener;
+		});
+		const rect = await visualDiff.getRect(page, '#open-card-wrapper');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
