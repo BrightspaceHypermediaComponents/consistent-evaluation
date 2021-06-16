@@ -158,6 +158,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'use-new-html-editor',
 				type: Boolean
 			},
+			useInlineGradingRevamp: {
+				attribute: 'use-inline-grading-revamp',
+				type: Boolean
+			},
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
 				type: Boolean
@@ -405,6 +409,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?allow-record-audio=${canRecordFeedbackAudio}
 						?skeleton=${this.skeleton}
 						?use-new-html-editor=${this.useNewHtmlEditor}
+						?use-inline-grading-revamp=${this.useInlineGradingRevamp}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
 						@on-d2l-consistent-eval-feedback-attachments-add=${this._transientAddAttachment}
 						@on-d2l-consistent-eval-feedback-attachments-remove=${this._transientRemoveAttachment}
