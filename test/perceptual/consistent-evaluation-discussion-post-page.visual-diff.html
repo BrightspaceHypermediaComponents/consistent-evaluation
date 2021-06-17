@@ -79,22 +79,11 @@
 			};
 
 			const defaultCase = document.getElementById('defaultCase');
-			defaultCase._displayedDiscussionPostObjects = [defaultPost, defaultReply];
+			defaultCase.displayedDiscussionPostObjects = [defaultPost, defaultReply];
 
 			const postsScored = document.getElementById('postsScored');
-			postsScored._displayedDiscussionPostObjects = [postWithScore, replyWithScore];
+			postsScored.displayedDiscussionPostObjects = [postWithScore, replyWithScore];
 
-			const postFilter = ['threads'];
-			defaultCase.selectedPostFilters = postFilter;
-			defaultCase._currentPostFilteringMethod = postFilter;
-			postsScored.selectedPostFilters = postFilter;
-			postsScored._currentPostFilteringMethod = postFilter;
-
-			const scoreFilter = ['scored'];
-			defaultCase.selectedScoreFilters = scoreFilter;
-			defaultCase._currentScoreFilteringMethod = scoreFilter;
-			postsScored.selectedScoreFilters = scoreFilter;
-			postsScored._currentScoreFilteringMethod = scoreFilter;
 		</script>
 	</head>
 	<body class="d2l-typography">

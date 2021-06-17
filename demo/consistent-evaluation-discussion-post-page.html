@@ -77,22 +77,11 @@
 			};
 
 			const defaultCase = document.getElementById('default');
-			defaultCase._displayedDiscussionPostObjects = [defaultPost, defaultReply];
+			defaultCase.displayedDiscussionPostObjects = [defaultPost, defaultReply];
 
 			const postsScored = document.getElementById('posts-scored');
-			postsScored._displayedDiscussionPostObjects = [postWithScore, replyWithScore];
+			postsScored.displayedDiscussionPostObjects = [postWithScore, replyWithScore];
 
-			const postFilter = ['threads'];
-			defaultCase.selectedPostFilters = postFilter;
-			defaultCase._currentPostFilteringMethod = postFilter;
-			postsScored.selectedPostFilters = postFilter;
-			postsScored._currentPostFilteringMethod = postFilter;
-
-			const scoreFilter = ['scored'];
-			defaultCase.selectedScoreFilters = scoreFilter;
-			defaultCase._currentScoreFilteringMethod = scoreFilter;
-			postsScored.selectedScoreFilters = scoreFilter;
-			postsScored._currentScoreFilteringMethod = scoreFilter;
 		</script>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
