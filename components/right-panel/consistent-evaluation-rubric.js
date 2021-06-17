@@ -225,7 +225,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 						?force-compact=${!this.isPopout}
 						overall-score-flag
 						selected
-						legacy=${!this.useInlineGradingRevamp}
+						?legacy=${!this.useInlineGradingRevamp}
 						include-statistics
 						@d2l-rubric-total-score-changed=${this._syncActiveScoringRubricGradeHandler}
 					></d2l-rubric>
