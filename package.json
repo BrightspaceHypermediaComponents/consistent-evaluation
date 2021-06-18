@@ -40,7 +40,7 @@
   "dependencies": {
     "@brightspace-ui-labs/facet-filter-sort": "^4.1.0",
     "@brightspace-ui-labs/grade-result": "^1.2.4",
-    "@brightspace-ui-labs/user-profile-card": "^0.5.3",
+    "@brightspace-ui-labs/user-profile-card": "^0.5.4",
     "@brightspace-ui/core": "^1",
     "@brightspace-ui/htmleditor": "^1",
     "d2l-activities": "github:BrightspaceHypermediaComponents/activities#semver:^3",
