@@ -19,7 +19,11 @@ module.exports = config => {
 				// if you are using 'bare module imports' you will need this option
 				nodeResolve: true,
 			},
-			hostname: '127.0.0.1'
+			hostname: '127.0.0.1',
+			flags: [
+				'--disable-gpu',
+				'--no-sandbox'
+			]
 		}),
 	);
 	return config;
