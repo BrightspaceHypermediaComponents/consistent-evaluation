@@ -126,6 +126,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			}
 
 			.d2l-consistent-evaluation-discussion-table {
+				margin-top: 10px;
 				display: flex;
 			}
 
