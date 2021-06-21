@@ -231,9 +231,11 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		}
 	}
 	_renderTitle() {
+		const labelText = `${this.postTitle} (${this.localize('opensInANewTab')})`;
 		return html `
 		<h2 class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-title">
 			<a
+				aria-label=${labelText}
 				class="d2l-link"
 				tabindex="0"
 				@click=${this._onPostTitleClicked}

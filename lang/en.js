@@ -78,6 +78,7 @@ export default {
 	"ok": "OK",
 	"oldestFirst": "Oldest First",
 	"openPopoutRubric": "Open popout rubric",
+	"opensInANewTab": "opens in a new tab",
 	"outcomesSummary" : "{outcome, select, competencies {Competencies} expectations {Expectations} objectives {Objectives} outcomes {Outcomes} standards {Standards} other {Standards}} aligned",
 	"outcomeTerm": "{outcome, select, competencies {Competencies} expectations {Expectations} objectives {Objectives} outcomes {Outcomes} standards {Standards} other {Standards}}",
 	"overallAchievement": "Overall Achievement",
