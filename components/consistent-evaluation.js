@@ -243,14 +243,17 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						this._loadingComponents.submissions = false;
 
 						const discussionPromises = [
+							controller.getUserName(),
 							controller.getDiscussionPostsInfo(),
 							controller.getDiscussionTopicInfo()
 						].map(p => p.catch(undefined));
 
 						await Promise.all(discussionPromises).then(([
+							userName,
 							discussionPostList,
 							discussionTopicInfo
 						]) => {
+							this._userName = userName;
 							this._discussionPostList = discussionPostList;
 							this._discussionTopicInfo = discussionTopicInfo;
 						});
@@ -360,7 +363,12 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 	_setTitle() {
 		if (this._userName && this._navTitleInfo.titleName) {
 			const title = document.createElement('title');
-			title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._navTitleInfo.titleName });
+			if (this._activityType === assignmentActivity) {
+				title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._navTitleInfo.titleName });
+			} else if (this._activityType === discussionActivity) {
+				title.textContent = this.localize('discussionPageTitle', { userName: this._userName, activityName: this._navTitleInfo.titleName });
+			}
+
 			document.head.insertBefore(title, document.head.firstChild);
 		}
 	}

@@ -20,6 +20,7 @@ export default {
 	"closeBtn": "Close",
 	"comments": "Comments",
 	"continueGrading": "Continue Grading",
+	"discussionPageTitle": "Discussion Evaluation - {userName} - {activityName}",
 	"downVotes": "Down Votes: {numDownVotes}",
 	"download": "Download",
 	"downloadAll": "Download all files",
