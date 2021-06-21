@@ -31,6 +31,10 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				attribute: false,
 				type: Array
 			},
+			_filteredStatus: {
+				attribute: false,
+				type: String
+			},
 			_selectedFilters: {
 				attribute: false,
 				type: Array
@@ -94,6 +98,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		super();
 		this._sortingMethod = sortByOldestFirst;
 		this._selectedFilters = [];
+		this._filteredStatus = '';
 	}
 
 	get token() {
@@ -105,9 +110,11 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	}
 
 	render() {
+		// console.log('rendery')
+		// console.log(this._filteredStatus)
 		if (this.discussionPostList && this.discussionPostList.length === 0 && !this.skeleton) {
 			this._finishedLoading();
-			return html`${this._renderNoAssessablePosts()}`;
+			return html`${this._renderNoAssessablePosts()}<div role="alert" aria-label=${this._filteredStatus}></div>`;
 		}
 
 		if (this.discussionPostList && typeof this._displayedDiscussionPostObjects === 'undefined') {
@@ -117,6 +124,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		return html`
 			${this._renderListModifiers()}
 			${this._renderDiscussionPost()}
+			<div role="alert" aria-label=${this._filteredStatus}></div>
 		`;
 	}
 
@@ -129,6 +137,9 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			// on student change or page reload, reset variable to prompt refiltering/sorting of posts
 			this._displayedDiscussionPostObjects = undefined;
 		}
+		// if (changedProperties.has('_filteredStatus')) {
+		// 	console.log('updated vairable')
+		// }
 	}
 
 	_clearFilters() {
@@ -153,7 +164,15 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			newFilters.push(newFilter);
 		}
 		this._selectedFilters = newFilters;
-		this._getDiscussionPostEntities().then(() => this.requestUpdate());
+		this._filteredStatus = '';
+		this._getDiscussionPostEntities().then(() => {
+			if (this._displayedDiscussionPostObjects.length > 0) {
+				this._filteredStatus = this.localize('filteringComplete');
+			} else {
+				this._filteredStatus = this.localize('noPostsInFilteredRange');
+			}
+			this.requestUpdate()
+		});
 	}
 
 	_finishedLoading() {
