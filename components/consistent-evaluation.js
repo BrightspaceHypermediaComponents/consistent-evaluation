@@ -243,14 +243,17 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						this._loadingComponents.submissions = false;
 
 						const discussionPromises = [
+							controller.getUserName(),
 							controller.getDiscussionPostsInfo(),
 							controller.getDiscussionTopicInfo()
 						].map(p => p.catch(undefined));
 
 						await Promise.all(discussionPromises).then(([
+							userName,
 							discussionPostList,
 							discussionTopicInfo
 						]) => {
+							this._userName = userName;
 							this._discussionPostList = discussionPostList;
 							this._discussionTopicInfo = discussionTopicInfo;
 						});
