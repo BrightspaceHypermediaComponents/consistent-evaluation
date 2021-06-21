@@ -53,7 +53,7 @@
 				postBody: '<p>This is a thread post with a score</p>',
 				postHref: 'href',
 				postTitle: 'Post 2',
-				ratingInformation: {},
+				ratingInformation: { numRatings: 10, ratingAverage: 2.6 },
 				threadTitle: 'Demo Thread 1',
 				wordCount: 7
 			};
@@ -73,7 +73,7 @@
 				postBody: '<p>This is a thread reply with a score</p>',
 				postHref: 'href',
 				postTitle: 'Reply 2',
-				ratingInformation: {},
+				ratingInformation: { numRatings: 1, ratingAverage: 3 },
 				threadTitle: 'Demo Thread 1',
 				wordCount: 7
 			};
@@ -83,6 +83,9 @@
 
 			const postsScored = document.getElementById('postsScored');
 			postsScored.displayedDiscussionPostObjects = [postWithScore, replyWithScore];
+
+			const postsScoredRating = document.getElementById('posts-scored-rating');
+			postsScoredRating.displayedDiscussionPostObjects = [postWithScore, replyWithScore];
 
 		</script>
 	</head>
@@ -103,5 +106,9 @@
 			></d2l-consistent-evaluation-discussion-post-page>
 		</div>
 
+		<div id="posts-scored-rating">
+			<d2l-consistent-evaluation-discussion-post-page id="postsScored" rating-method="fivestar-rating"
+			></d2l-consistent-evaluation-discussion-post-page>
+		</div>
 	</body>
 </html>
