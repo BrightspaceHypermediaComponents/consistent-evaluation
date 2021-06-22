@@ -138,6 +138,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 
 	_clearFilters() {
 		this._selectedFilters = [];
+		this._displayedDiscussionPostObjects = undefined;
 	}
 
 	_countPostFilters() {
