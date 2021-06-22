@@ -9,7 +9,7 @@
     "lint:eslint": "eslint . --ext .js,.html",
     "lint:lit": "lit-analyzer consistent-evaluation.js components demo test",
     "lint:style": "stylelint \"**/*.js\"",
-    "start": "es-dev-server --app-index demo/index.html --node-resolve --dedupe --open --watch",
+    "start": "es-dev-server --app-index demo/index.html --node-resolve --dedupe --preserve-symlinks --open --watch",
     "test": "npm run lint && npm run test:headless",
     "test:headless": "karma start",
     "test:headless:watch": "karma start --auto-watch=true --single-run=false",
