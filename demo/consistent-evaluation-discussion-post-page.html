@@ -51,7 +51,7 @@
 				postBody: '<p>This is a thread post with a score</p>',
 				postHref: 'href',
 				postTitle: 'Post 2',
-				ratingInformation: {},
+				ratingInformation: { numRatings: 10, ratingAverage: 2.6 },
 				threadTitle: 'Demo Thread 1',
 				wordCount: 7
 			};
@@ -71,7 +71,7 @@
 				postBody: '<p>This is a thread reply with a score</p>',
 				postHref: 'href',
 				postTitle: 'Reply 2',
-				ratingInformation: {},
+				ratingInformation: { numRatings: 1, ratingAverage: 3 },
 				threadTitle: 'Demo Thread 1',
 				wordCount: 7
 			};
@@ -81,6 +81,9 @@
 
 			const postsScored = document.getElementById('posts-scored');
 			postsScored.displayedDiscussionPostObjects = [postWithScore, replyWithScore];
+
+			const postsScoredRating = document.getElementById('posts-scored-rating');
+			postsScoredRating.displayedDiscussionPostObjects = [postWithScore, replyWithScore];
 
 		</script>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -105,6 +108,12 @@
 			<h2>Discussion Post Page With Post Scoring</h2>
 			<d2l-demo-snippet>
 				<d2l-consistent-evaluation-discussion-post-page id="posts-scored"
+				></d2l-consistent-evaluation-discussion-post-page>
+			</d2l-demo-snippet>
+
+			<h2>Discussion Post Page With Post Scoring and ratings</h2>
+			<d2l-demo-snippet>
+				<d2l-consistent-evaluation-discussion-post-page id="posts-scored-rating" rating-method="fivestar-rating"
 				></d2l-consistent-evaluation-discussion-post-page>
 			</d2l-demo-snippet>
 

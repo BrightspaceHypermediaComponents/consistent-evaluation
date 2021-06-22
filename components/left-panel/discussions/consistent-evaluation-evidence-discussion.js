@@ -43,6 +43,10 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				attribute: false,
 				type: String
 			},
+			_ratingMethod: {
+				attribute: false,
+				type: String
+			}
 		};
 	}
 
@@ -99,6 +103,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		this._sortingMethod = sortByOldestFirst;
 		this._selectedFilters = [];
 		this._filteredStatus = '';
+		this._ratingMethod = '';
 	}
 
 	get token() {
@@ -268,10 +273,34 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
 	}
 
+	_getRatingsInfo(ratingMethod, discussionPostEntity) {
+		this._ratingMethod = ratingMethod;
+		switch (ratingMethod) {
+			case fivestarRatingClass:
+				if (discussionPostEntity.properties.ratingAverage !== undefined && discussionPostEntity.properties.numRatings !== undefined) {
+					return { ratingAverage : discussionPostEntity.properties.ratingAverage,
+						numRatings : discussionPostEntity.properties.numRatings };
+				}
+				break;
+			case upvoteDownvoteRatingClass:
+				if (discussionPostEntity.properties.numUpVotes !== undefined && discussionPostEntity.properties.numDownVotes !== undefined) {
+					return { numUpVotes : discussionPostEntity.properties.numUpVotes,
+						numDownVotes : discussionPostEntity.properties.numDownVotes };
+				}
+				break;
+			case upvoteOnlyRatingClass:
+				if (discussionPostEntity.properties.numUpVotes !== undefined) {
+					return { numUpVotes : discussionPostEntity.properties.numUpVotes };
+				}
+				break;
+		}
+	}
+
 	_renderDiscussionPost() {
 		return html`
 			<d2l-consistent-evaluation-discussion-post-page
 				?skeleton=${this.skeleton}
+				rating-method=${this._ratingMethod}
 				.displayedDiscussionPostObjects=${this._displayedDiscussionPostObjects}
 				.token=${this.token}
 			></d2l-consistent-evaluation-discussion-post-page>
