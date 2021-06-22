@@ -1,7 +1,6 @@
 import '@brightspace-ui/core/components/icons/icon.js';
 import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/list/list-item.js';
-import './consistent-evaluation-discussion-post-score.js';
 import './consistent-evaluation-discussion-post-rating.js';
 import { AttachmentTypes, getAttachmentType, getReadableFileSizeString } from '../../helpers/attachmentsHelpers.js';
 import { bodyCompactStyles, bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
@@ -55,10 +54,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			attachmentsList: {
 				attribute: false,
 				type: Array
-			},
-			discussionPostEntity: {
-				attribute: false,
-				type: Object
 			}
 		};
 	}
@@ -76,8 +71,16 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 			}
 
 			.d2l-consistent-evaluation-discussion-evidence-body-container {
-				margin: 20px 18px;
-				padding-bottom: 10px;
+				padding-bottom: 4px;
+				padding-top: 10px;
+			}
+
+			.d2l-consistent-evaluation-discussion-properties {
+				display: flex;
+			}
+
+			.d2l-consistent-evaluation-discussion-text {
+				flex-grow: 1;
 			}
 
 			.d2l-consistent-evaluation-evidence-body-reply-icon {
@@ -129,16 +132,19 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 
 	render() {
 		return html`<div class="d2l-consistent-evaluation-discussion-evidence-body-container">
-			${this._renderRating()}
-			${this._renderRepliedInThread()}
-			${this._renderTitle()}
-			${this._renderDate()}
-			${this._renderWordCount()}
+			<div class="d2l-consistent-evaluation-discussion-properties">
+				<div class="d2l-consistent-evaluation-discussion-text">
+					${this._renderRepliedInThread()}
+					${this._renderTitle()}
+					${this._renderDate()}
+					${this._renderWordCount()}
+				</div>
+				${this._renderRating()}
+			</div>
 			${this._renderBody()}
 			<d2l-list aria-role="attachment list" separators="between">
 				${this._renderAttachments()}
 			</d2l-list>
-			${this._renderPostScore()}
 		</div>`;
 	}
 	_downloadAttachment(href) {
@@ -205,11 +211,6 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 	_renderDate() {
 		return html `<span class="d2l-body-small">${formatDateTime(this.postDate, 'medium')}</span>`;
 	}
-	_renderPostScore() {
-		if (this.discussionPostEntity && this.discussionPostEntity.properties && this.discussionPostEntity.properties.outOf) {
-			return html`<d2l-consistent-evaluation-discussion-post-score .discussionPostEntity=${this.discussionPostEntity}></d2l-consistent-evaluation-discussion-post-score>`;
-		}
-	}
 	_renderRating() {
 		return html`
 			<d2l-consistent-evaluation-discussion-post-rating
@@ -230,9 +231,11 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 		}
 	}
 	_renderTitle() {
+		const labelText = `${this.postTitle} (${this.localize('opensInANewTab')})`;
 		return html `
 		<h2 class="d2l-body-compact d2l-consistent-evaluation-discussion-evidence-body-title">
 			<a
+				aria-label=${labelText}
 				class="d2l-link"
 				tabindex="0"
 				@click=${this._onPostTitleClicked}

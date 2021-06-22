@@ -5,8 +5,11 @@ import '@brightspace-ui-labs/facet-filter-sort/components/filter-dropdown/filter
 import '@brightspace-ui-labs/facet-filter-sort/components/filter-dropdown/filter-dropdown-category.js';
 import '@brightspace-ui-labs/facet-filter-sort/components/filter-dropdown/filter-dropdown-option.js';
 import './consistent-evaluation-discussion-post-page';
+import { attachmentClassName, attachmentListClassName, fivestarRatingClass, lmsSourceRel, upvoteDownvoteRatingClass, upvoteOnlyRatingClass } from '../../controllers/constants.js';
+import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element';
 import { filterByReplies, filterByScored, filterByThreads, filterByUnscored, sortByNewestFirst, sortByOldestFirst, sortBySubject } from '../../controllers/constants';
+import { filterDiscussionPosts, sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
@@ -24,17 +27,21 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				type: String
 			},
 			token: { type: Object },
+			_displayedDiscussionPostObjects: {
+				attribute: false,
+				type: Array
+			},
+			_selectedFilters: {
+				attribute: false,
+				type: Array
+			},
 			_sortingMethod: {
 				attribute: false,
 				type: String
 			},
-			_selectedPostFilters: {
+			_ratingMethod: {
 				attribute: false,
-				type: Array
-			},
-			_selectedScoreFilters: {
-				attribute: false,
-				type: Array
+				type: String
 			}
 		};
 	}
@@ -86,11 +93,20 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			}
 		`;
 	}
+
 	constructor() {
 		super();
 		this._sortingMethod = sortByOldestFirst;
-		this._selectedPostFilters = [];
-		this._selectedScoreFilters = [];
+		this._selectedFilters = [];
+		this._ratingMethod = '';
+	}
+
+	get token() {
+		return this._token;
+	}
+
+	set token(val) {
+		this._token = val;
 	}
 
 	render() {
@@ -98,21 +114,53 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			this._finishedLoading();
 			return html`${this._renderNoAssessablePosts()}`;
 		}
+
+		if (this.discussionPostList && typeof this._displayedDiscussionPostObjects === 'undefined') {
+			this._getDiscussionPostEntities().then(() => this.requestUpdate());
+		}
+
 		return html`
 			${this._renderListModifiers()}
 			${this._renderDiscussionPost()}
 		`;
 	}
+
 	async updated(changedProperties) {
 		super.updated(changedProperties);
 		if (changedProperties.has('discussionTopicLink')) {
 			this._clearFilters();
 		}
+		if (changedProperties.has('skeleton')) {
+			// on student change or page reload, reset variable to prompt refiltering/sorting of posts
+			this._displayedDiscussionPostObjects = undefined;
+		}
 	}
+
 	_clearFilters() {
-		this._selectedPostFilters = [];
-		this._selectedScoreFilters = [];
+		this._selectedFilters = [];
 	}
+
+	_countPostFilters() {
+		return this._selectedFilters.includes(filterByThreads) + this._selectedFilters.includes(filterByReplies);
+	}
+
+	_countScoreFilters() {
+		return this._selectedFilters.includes(filterByUnscored) + this._selectedFilters.includes(filterByScored);
+	}
+
+	_filterPosts(e) {
+		const newFilters = [...this._selectedFilters];
+		const newFilter = e.detail.menuItemKey;
+		const indexOfFilter = newFilters.indexOf(newFilter);
+		if (indexOfFilter >= 0) {
+			newFilters.splice(indexOfFilter, 1);
+		} else {
+			newFilters.push(newFilter);
+		}
+		this._selectedFilters = newFilters;
+		this._getDiscussionPostEntities().then(() => this.requestUpdate());
+	}
+
 	_finishedLoading() {
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
 			composed: true,
@@ -123,14 +171,118 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		}));
 	}
 
+	async _formatDiscussionPostObject(discussionPostEntity, discussionPostEvaluationEntity) {
+		const postHref = discussionPostEntity.getLinkByRel(lmsSourceRel).href;
+		const postTitle = discussionPostEntity.properties.subject;
+		const postBody = discussionPostEntity.properties.message;
+		const ratingInformation = this._formatDiscussionRatings(discussionPostEntity);
+		const isUnscored = discussionPostEvaluationEntity.properties ? discussionPostEvaluationEntity.properties.score === null : false;
+		const wordCount = discussionPostEntity.properties.wordCount;
+
+		let createdDate = undefined;
+		let createdDateString = undefined;
+		if (discussionPostEntity.hasSubEntityByClass(Classes.assignments.date)) {
+			createdDateString = discussionPostEntity.getSubEntityByClass(Classes.assignments.date).properties.date;
+			createdDate = new Date(createdDateString);
+		} else {
+			console.warn('Consistent Evaluation discussion post date not found');
+		}
+
+		let threadTitle = undefined;
+		let isReply = false;
+		if (discussionPostEntity.hasLinkByRel(Rels.Discussions.thread)) {
+			isReply = true;
+			const threadHref = discussionPostEntity.getLinkByRel(Rels.Discussions.thread).href;
+			const threadEntity = await this._getDiscussionPostEntity(threadHref);
+			if (threadEntity && threadEntity.entity) {
+				threadTitle = threadEntity.entity.properties.subject;
+			}
+		}
+
+		let attachmentList = undefined;
+		if (discussionPostEntity.hasSubEntityByClass(attachmentListClassName)) {
+			const attachmentListEntity = discussionPostEntity.getSubEntityByClass(attachmentListClassName);
+			attachmentList = attachmentListEntity.getSubEntitiesByClass(attachmentClassName);
+		}
+
+		return {
+			createdDate,
+			createdDateString,
+			postHref,
+			postTitle,
+			postBody,
+			ratingInformation,
+			isReply,
+			isUnscored,
+			threadTitle,
+			attachmentList,
+			discussionPostEvaluationEntity,
+			wordCount
+		};
+	}
+
+	_formatDiscussionRatings(discussionPostEntity) {
+		if (discussionPostEntity.class.includes(fivestarRatingClass)) {
+			return this._getRatingsInfo(fivestarRatingClass, discussionPostEntity);
+		} else if (discussionPostEntity.class.includes(upvoteDownvoteRatingClass)) {
+			return this._getRatingsInfo(upvoteDownvoteRatingClass, discussionPostEntity);
+		} else if (discussionPostEntity.class.includes(upvoteOnlyRatingClass)) {
+			return this._getRatingsInfo(upvoteOnlyRatingClass, discussionPostEntity);
+		}
+		return {};
+	}
+
+	async _getDiscussionPostEntities() {
+		this._displayedDiscussionPostObjects = [];
+		if (typeof this.discussionPostList !== 'undefined') {
+			this._displayedDiscussionPostObjects = await Promise.all(this.discussionPostList.map(async discussionPostEvaluationEntity => {
+				if (discussionPostEvaluationEntity.links && discussionPostEvaluationEntity.links[0].href) {
+					const discussionPost = await this._getDiscussionPostEntity(discussionPostEvaluationEntity.links[0].href);
+					if (discussionPost && discussionPost.entity) {
+						const discussionPostObject = await this._formatDiscussionPostObject(discussionPost.entity, discussionPostEvaluationEntity);
+						return discussionPostObject;
+					}
+				}
+			}));
+			this._displayedDiscussionPostObjects = filterDiscussionPosts(this._displayedDiscussionPostObjects, this._selectedFilters);
+			sortDiscussionPosts(this._displayedDiscussionPostObjects, this._sortingMethod);
+			this._finishedLoading();
+		}
+	}
+
+	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {
+		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
+	}
+
+	_getRatingsInfo(ratingMethod, discussionPostEntity) {
+		this._ratingMethod = ratingMethod;
+		switch (ratingMethod) {
+			case fivestarRatingClass:
+				if (discussionPostEntity.properties.ratingAverage !== undefined && discussionPostEntity.properties.numRatings !== undefined) {
+					return { ratingAverage : discussionPostEntity.properties.ratingAverage,
+						numRatings : discussionPostEntity.properties.numRatings };
+				}
+				break;
+			case upvoteDownvoteRatingClass:
+				if (discussionPostEntity.properties.numUpVotes !== undefined && discussionPostEntity.properties.numDownVotes !== undefined) {
+					return { numUpVotes : discussionPostEntity.properties.numUpVotes,
+						numDownVotes : discussionPostEntity.properties.numDownVotes };
+				}
+				break;
+			case upvoteOnlyRatingClass:
+				if (discussionPostEntity.properties.numUpVotes !== undefined) {
+					return { numUpVotes : discussionPostEntity.properties.numUpVotes };
+				}
+				break;
+		}
+	}
+
 	_renderDiscussionPost() {
 		return html`
 			<d2l-consistent-evaluation-discussion-post-page
-				sorting-method=${this._sortingMethod}
-				.selectedPostFilters=${this._selectedPostFilters}
-				.selectedScoreFilters=${this._selectedScoreFilters}
 				?skeleton=${this.skeleton}
-				.discussionPostList=${this.discussionPostList}
+				rating-method=${this._ratingMethod}
+				.displayedDiscussionPostObjects=${this._displayedDiscussionPostObjects}
 				.token=${this.token}
 			></d2l-consistent-evaluation-discussion-post-page>
 		`;
@@ -139,7 +291,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		return html`
 			<d2l-labs-filter-dropdown
 				class="d2l-consistent-evaluation-evidence-discussion-filter-by-dropdown"
-				total-selected-option-count=${this._selectedPostFilters.length + this._selectedScoreFilters.length}
+				total-selected-option-count=${this._selectedFilters.length}
 				min-width="200"
 				@d2l-labs-filter-dropdown-cleared=${this._clearFilters}
 			>
@@ -167,19 +319,19 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	_renderPostFilters() {
 		return html `<d2l-labs-filter-dropdown-category
 				category-text=${this.localize('posts')}
-				selected-option-count=${this._selectedPostFilters.length}
+				selected-option-count=${this._countPostFilters()}
 				disable-search
-				@d2l-labs-filter-dropdown-option-change=${this._setPostsFilter}
+				@d2l-labs-filter-dropdown-option-change=${this._filterPosts}
 			>
 				<d2l-labs-filter-dropdown-option
 					value=${filterByThreads}
 					text=${this.localize('threads')}
-					?selected=${this._selectedPostFilters.includes(filterByThreads)}
+					?selected=${this._selectedFilters.includes(filterByThreads)}
 				></d2l-labs-filter-dropdown-option>
 				<d2l-labs-filter-dropdown-option
 					value=${filterByReplies}
 					text=${this.localize('replies')}
-					?selected=${this._selectedPostFilters.includes(filterByReplies)}
+					?selected=${this._selectedFilters.includes(filterByReplies)}
 				></d2l-labs-filter-dropdown-option>
 			</d2l-labs-filter-dropdown-category>`;
 	}
@@ -188,19 +340,19 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		if (this.discussionPostList && this.discussionPostList.some(postEntity => postEntity.properties && postEntity.properties.outOf)) {
 			return html`<d2l-labs-filter-dropdown-category
 					category-text=${this.localize('score')}
-					selected-option-count=${this._selectedScoreFilters.length}
+					selected-option-count=${this._countScoreFilters()}
 					disable-search
-					@d2l-labs-filter-dropdown-option-change=${this._setScoredFilter}
+					@d2l-labs-filter-dropdown-option-change=${this._filterPosts}
 				>
 					<d2l-labs-filter-dropdown-option
 						value=${filterByUnscored}
 						text=${this.localize('unscored')}
-						?selected=${this._selectedScoreFilters.includes(filterByUnscored)}
+						?selected=${this._selectedFilters.includes(filterByUnscored)}
 					></d2l-labs-filter-dropdown-option>
 					<d2l-labs-filter-dropdown-option
 						value=${filterByScored}
 						text=${this.localize('scored')}
-						?selected=${this._selectedScoreFilters.includes(filterByScored)}
+						?selected=${this._selectedFilters.includes(filterByScored)}
 					></d2l-labs-filter-dropdown-option>
 				</d2l-labs-filter-dropdown-category>`;
 		} else {
@@ -212,7 +364,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		return html`
 			<d2l-labs-sort-by-dropdown
 				class="d2l-consistent-evaluation-evidence-discussion-sort-by-dropdown"
-				@d2l-labs-sort-by-dropdown-change=${this._setSort}
+				@d2l-labs-sort-by-dropdown-change=${this._sortPosts}
 			>
 				<d2l-labs-sort-by-dropdown-option value=${sortByOldestFirst} text=${this.localize('oldestFirst')} ?selected=${this._sortingMethod === sortByOldestFirst}></d2l-labs-sort-by-dropdown-option>
 				<d2l-labs-sort-by-dropdown-option value=${sortByNewestFirst} text=${this.localize('newestFirst')} ?selected=${this._sortingMethod === sortByNewestFirst}></d2l-labs-sort-by-dropdown-option>
@@ -221,31 +373,9 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		`;
 	}
 
-	_setPostsFilter(e) {
-		const newFilters = [...this._selectedPostFilters];
-		const newFilter = e.detail.menuItemKey;
-		const indexOfFilter = newFilters.indexOf(newFilter);
-		if (indexOfFilter >= 0) {
-			newFilters.splice(indexOfFilter, 1);
-		} else {
-			newFilters.push(newFilter);
-		}
-		this._selectedPostFilters = newFilters;
-	}
-	_setScoredFilter(e) {
-		const newFilters = [...this._selectedScoreFilters];
-		const newFilter = e.detail.menuItemKey;
-		const indexOfFilter = newFilters.indexOf(newFilter);
-		if (indexOfFilter >= 0) {
-			newFilters.splice(indexOfFilter, 1);
-		} else {
-			newFilters.push(newFilter);
-		}
-		this._selectedScoreFilters = newFilters;
-	}
-
-	_setSort(e) {
+	_sortPosts(e) {
 		this._sortingMethod = e.detail.value;
+		this._getDiscussionPostEntities().then(() => this.requestUpdate());
 	}
 
 }

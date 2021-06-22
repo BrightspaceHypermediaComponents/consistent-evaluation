@@ -32,6 +32,9 @@
 				padding: 50px;
 				justify-content: center;
 			}
+			#open-card-wrapper {
+				height: 300px;
+			}
 		</style>
 	</head>
 	<body class="d2l-typography">
@@ -47,6 +50,8 @@
 		<div id="default">
 			<d2l-consistent-evaluation-learner-context-bar
 				user-href="data/user.json"
+				enrolled-user-href="data/user-enrolled.json"
+				user-progress-assessments-href="#user-progress"
 				token="token"
 			></d2l-consistent-evaluation-learner-context-bar>
 		</div>
@@ -57,7 +62,18 @@
 				user-href="data/user.json"
 				token="token"
 			></d2l-consistent-evaluation-learner-context-bar>
-        </div>
+    </div>
+
+		<div id="open-card-wrapper">
+			<div id="open-card">
+				<d2l-consistent-evaluation-learner-context-bar
+					user-href="data/user.json"
+					enrolled-user-href="data/user-enrolled.json"
+					user-progress-assessments-href="#user-progress"
+					token="token"
+				></d2l-consistent-evaluation-learner-context-bar>
+			</div>
+		</div>
 
 	</body>
 </html>

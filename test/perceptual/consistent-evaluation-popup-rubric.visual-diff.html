@@ -14,11 +14,20 @@
 			for (let i = 0; i < tests.length; i++) {
 				if (tests[i].id === 'multiple-rubrics') {
 					tests[i]._rubricInfos = [
-						{ rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json' },
-						{ rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json' }];
+						{ rubricHref: 'data/rubric/198.json',
+							rubricAssessmentHref: 'data/rubric/198/assessment/8.json',
+							rubricTitle: 'firstRubric'
+						},
+						{ rubricHref: 'data/rubric/198.json',
+							rubricAssessmentHref: 'data/rubric/198/assessment/8.json',
+							rubricTitle: 'secondRubric'
+						}];
 					continue;
 				}
-				tests[i]._rubricInfos = [{ rubricHref: 'data/rubric.json', rubricAssessmentHref: 'data/assessment.json' }];
+				if (tests[i].id === 'published-warning') {
+					tests[i]._published = true;
+				}
+				tests[i]._rubricInfos = [{ rubricHref: 'data/rubric/198.json', rubricAssessmentHref: 'data/rubric/198/assessment/8.json', rubricTitle: 'firstRubric' }];
 			}
 		</script>
 		<style>
@@ -36,6 +45,13 @@
 
 		<div id="default">
 			<d2l-consistent-evaluation-popup-rubric
+				token="token"
+			></d2l-consistent-evaluation-popup-rubric>
+		</div>
+
+		<div id="published-warning">
+			<d2l-consistent-evaluation-popup-rubric
+				id="published-warning"
 				token="token"
 			></d2l-consistent-evaluation-popup-rubric>
 		</div>

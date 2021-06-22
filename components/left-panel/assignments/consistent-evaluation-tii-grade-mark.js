@@ -95,6 +95,7 @@ export class ConsistentEvaluationTiiGradeMark extends LocalizeConsistentEvaluati
 
 		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-evidence-refresh-grade-mark', {
 			detail: {
+				isValidGrade: true,
 				fileId: this.fileId,
 				gradeMarkAutoTransfer: this.gradeMarkAutoTransfer
 			},

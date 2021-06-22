@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const VisualDiff = require('@brightspace-ui/visual-diff');
 
-describe('d2l-consistent-evaluation-popup-rubric', () => {
+describe.skip('d2l-consistent-evaluation-popup-rubric', () => {
 
 	const visualDiff = new VisualDiff('consistent-evaluation-popup-rubric', __dirname);
 
@@ -19,12 +19,17 @@ describe('d2l-consistent-evaluation-popup-rubric', () => {
 
 	after(async() => await browser.close());
 
-	it.skip('renders rubric popout', async function() {
+	it('renders rubric popout', async function() {
 		const rect = await visualDiff.getRect(page, '#default');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
 
-	it.skip('renders rubric popout multiple rubrics', async function() {
+	it('renders rubric popout with warning if rubric published', async function() {
+		const rect = await visualDiff.getRect(page, '#published-warning');
+		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
+	});
+
+	it('renders rubric popout multiple rubrics', async function() {
 		const rect = await visualDiff.getRect(page, '#multiple-rubrics');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});

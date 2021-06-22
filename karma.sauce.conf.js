@@ -13,11 +13,6 @@ const customLaunchers = {
 		browserName: 'firefox',
 		platform: 'macOS 11.00'
 	},
-	safari: {
-		base: 'SauceLabs',
-		browserName: 'safari',
-		platform: 'macOS 11.00'
-	},
 	edge: {
 		base: 'SauceLabs',
 		browserName: 'microsoftedge',
@@ -49,7 +44,16 @@ module.exports = config => {
 			browsers: Object.keys(customLaunchers),
 			reporters: ['dots', 'saucelabs'],
 			browserNoActivityTimeout: 100000,
+			flags: [
+				'--disable-gpu',
+				'--no-sandbox'
+			],
 			singleRun: true,
+			client: {
+				mocha: {
+					timeout : 5000 // default 2000
+				}
+			},
 			hostname: '127.0.0.1'
 		}),
 	);

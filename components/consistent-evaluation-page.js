@@ -51,6 +51,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'special-access-href',
 				type: String
 			},
+			enrolledUserHref: {
+				attribute: 'enrolled-user-href',
+				type: String
+			},
 			href: {
 				attribute: 'href',
 				type: String
@@ -75,6 +79,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'user-progress-outcome-href',
 				type: String
 			},
+			userProgressAssessmentsHref: {
+				attribute: 'user-progress-assessments-href',
+				type: String
+			},
 			coaDemonstrationHref: {
 				attribute: 'coa-demonstration-href',
 				type: String
@@ -92,10 +100,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				type: Object
 			},
 			gradeItemInfo: {
-				attribute: false,
-				type: Object
-			},
-			enrolledUser: {
 				attribute: false,
 				type: Object
 			},
@@ -154,6 +158,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'use-new-html-editor',
 				type: Boolean
 			},
+			useInlineGradingRevamp: {
+				attribute: 'use-inline-grading-revamp',
+				type: Boolean
+			},
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
 				type: Boolean
@@ -165,6 +173,9 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			outcomeTerm: {
 				attribute: 'outcome-term',
 				type: String
+			},
+			_isValidGrade: {
+				type: Boolean
 			},
 			_displayToast: {
 				type: Boolean
@@ -270,6 +281,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._isPublishClicked = false;
 		this._shouldWaitForAnnotations = false;
 		this._currentlySaving = false;
+		this._isValidGrade = true;
 	}
 
 	get evaluationEntity() {
@@ -403,6 +415,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?allow-add-link-one-drive=${canAddFeedbackOneDriveLink}
 						?skeleton=${this.skeleton}
 						?use-new-html-editor=${this.useNewHtmlEditor}
+						?use-inline-grading-revamp=${this.useInlineGradingRevamp}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
 						@on-d2l-consistent-eval-feedback-attachments-add=${this._transientAddAttachment}
 						@on-d2l-consistent-eval-feedback-attachments-add-link=${this._transientAddAttachmentLink}
@@ -533,7 +546,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._currentlySaving = false;
 	}
 	_confirmUnsavedChangesBeforeUnload(e) {
-		if (this.evaluationEntity.hasClass('unsaved')) {
+		if (this.evaluationEntity && this.evaluationEntity.hasClass('unsaved')) {
 			//Triggers the native browser confirmation dialog
 			e.preventDefault();
 			e.returnValue = 'Unsaved changes';
@@ -648,6 +661,15 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		}
 		return this.evaluationEntity.properties.state === publishedState;
 	}
+
+	_isValidEvaluation() {
+		if (!this._isValidGrade) {
+			this._showToast(this.localize('gradeValueRangeError'), true);
+			return false;
+		}
+		return true;
+	}
+
 	get _navBarSubtitleText() {
 		if (this.userProgressOutcomeHref) {
 			return this.localize('overallAchievement');
@@ -663,9 +685,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 	async _navigate() {
 		switch (this._navigationTarget) {
 			case 'back':
-				if (this.evaluationEntity.hasClass('unsaved')) {
-					window.removeEventListener('beforeunload', this.unsavedChangesHandler);
-				}
+				window.removeEventListener('beforeunload', this.unsavedChangesHandler);
 				window.location.assign(this.returnHref);
 				break;
 			case 'next':
@@ -735,14 +755,16 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 		await this._mutex.dispatch(
 			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newEvaluationEntity = await this._controller.publish(entity);
-				this._currentlySaving = false;
+				if (this._isValidEvaluation()) {
+					const entity = await this._controller.fetchEvaluationEntity(false);
+					const newEvaluationEntity = await this._controller.publish(entity);
 
-				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
-				if (this.submissionInfo) {
-					this.submissionInfo.evaluationState = publishedState;
+					this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
+					if (this.submissionInfo) {
+						this.submissionInfo.evaluationState = publishedState;
+					}
 				}
+				this._currentlySaving = false;
 			}
 		);
 	}
@@ -755,13 +777,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			return html`
 				<d2l-consistent-evaluation-learner-context-bar
 					user-href=${ifDefined(this.userHref)}
+					enrolled-user-href=${this.enrolledUserHref}
+					user-progress-assessments-href=${ifDefined(this.userProgressAssessmentsHref)}
 					group-href=${ifDefined(this.groupHref)}
 					special-access-href=${ifDefined(this.specialAccessHref)}
 					.anonymousInfo=${this.anonymousInfo}
 					.token=${this.token}
 					.currentFileId=${this.currentFileId}
 					.submissionInfo=${this.submissionInfo}
-					.enrolledUser=${this.enrolledUser}
 					.groupInfo=${this.groupInfo}
 					?skeleton=${this.skeleton}
 				></d2l-consistent-evaluation-learner-context-bar>
@@ -812,11 +835,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 		await this._mutex.dispatch(
 			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newEvaluationEntity = await this._controller.save(entity);
-				this._currentlySaving = false;
+				if (this._isValidEvaluation()) {
+					const entity = await this._controller.fetchEvaluationEntity(false);
+					const newEvaluationEntity = await this._controller.save(entity);
 
-				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
+					this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
+				}
+				this._currentlySaving = false;
 			}
 		);
 	}
@@ -918,8 +943,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
-				const annotationsData = e.detail;
-				const fileId = this.currentFileId;
+				const annotationsData = e.detail.value;
+				let fileId = this.currentFileId;
+
+				if (e.detail.fileId) {
+					fileId = e.detail.fileId;
+				}
 
 				this.evaluationEntity = await this._controller.transientSaveAnnotations(entity, annotationsData, fileId);
 			}
@@ -982,6 +1011,12 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					}
 				}
 				else if (type === GradeType.Number) {
+					if (typeof e.detail.isValidGrade !== 'undefined') {
+						this._isValidGrade = e.detail.isValidGrade;
+						if (!this._isValidGrade) {
+							return;
+						}
+					}
 					newGradeVal = e.detail.grade.score;
 				}
 				this.evaluationEntity = await this._controller.transientSaveGrade(entity, newGradeVal);
@@ -998,11 +1033,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 		await this._mutex.dispatch(
 			async() => {
-				const entity = await this._controller.fetchEvaluationEntity(false);
-				const newEvaluationEntity = await this._controller.update(entity);
-				this._currentlySaving = false;
+				if (this._isValidEvaluation()) {
+					const entity = await this._controller.fetchEvaluationEntity(false);
+					const newEvaluationEntity = await this._controller.update(entity);
 
-				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
+					this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
+				}
+				this._currentlySaving = false;
 			}
 		);
 	}

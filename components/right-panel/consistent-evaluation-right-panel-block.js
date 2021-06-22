@@ -38,6 +38,10 @@ class ConsistentEvaluationRightPanelBlock extends LitElement {
 			.d2l-list-item {
 				overflow: hidden;
 			}
+			.d2l-list-item:focus {
+				border: 2px solid var(--d2l-color-celestine);
+				outline: none 0;
+			}
 			.d2l-list-item-content {
 				padding-left: 1.25rem;
 			}
@@ -111,10 +115,18 @@ class ConsistentEvaluationRightPanelBlock extends LitElement {
 		}
 	}
 
+	_onKeydownHandler(e) {
+		if (e.key === 'Enter' || e.key === ' ') {
+			this._toggleOpenDialog();
+		}
+	}
+
 	_renderListItems() {
 		return html`
 			<d2l-list-item class="d2l-list-item"
-				@click=${this._toggleOpenDialog}>
+				tabindex="0"
+				@click=${this._toggleOpenDialog}
+				@keydown=${this._onKeydownHandler}>
 				<d2l-list-item-content class="d2l-list-item-content">
 					${this._getTitle()}
 					<div class="d2l-truncate" slot="supporting-info">${this.supportingInfo}</div>

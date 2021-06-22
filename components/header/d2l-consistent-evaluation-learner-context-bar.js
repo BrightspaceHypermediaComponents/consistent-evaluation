@@ -3,6 +3,7 @@ import './d2l-consistent-evaluation-lcb-file-context.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import { css, html, LitElement } from 'lit-element';
 import { convertToken } from '../helpers/converterHelpers.js';
+import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { RtlMixin } from '@brightspace-ui/core/mixins/rtl-mixin.js';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { submissionTypesWithNoEvidence } from '../controllers/constants';
@@ -13,6 +14,14 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 		return {
 			userHref: {
 				attribute: 'user-href',
+				type: String
+			},
+			enrolledUserHref: {
+				attribute: 'enrolled-user-href',
+				type: String
+			},
+			userProgressAssessmentsHref: {
+				attribute: 'user-progress-assessments-href',
 				type: String
 			},
 			groupHref: {
@@ -38,10 +47,6 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 			},
 			currentFileId: {
 				type: String
-			},
-			enrolledUser: {
-				attribute: false,
-				type: Object
 			},
 			groupInfo: {
 				attribute: false,
@@ -131,7 +136,8 @@ export class ConsistentEvaluationLearnerContextBar extends SkeletonMixin(RtlMixi
 					.href=${this._getActorHref()}
 					.token=${this.token}
 					.anonymousInfo=${this.anonymousInfo}
-					.enrolledUser=${this.enrolledUser}
+					enrolled-user-href=${this.enrolledUserHref}
+					user-progress-assessments-href=${ifDefined(this.userProgressAssessmentsHref)}
 					.groupInfo=${this.groupInfo}
 					?is-exempt=${this._getIsExempt()}
 					?is-group-activity=${this.groupHref}

@@ -1,5 +1,6 @@
 import '@brightspace-ui/core/components/icons/icon.js';
-import { html, LitElement } from 'lit-element';
+import '@brightspace-ui-labs/grade-result/d2l-grade-result.js';
+import { css, html, LitElement } from 'lit-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
@@ -12,6 +13,14 @@ export class ConsistentEvaluationDiscussionPostScore extends LitElement {
 				type: Object
 			}
 		};
+	}
+
+	static get styles() {
+		return css`
+			d2l-labs-d2l-grade-result-presentational {
+				white-space: nowrap;
+			}
+		`;
 	}
 
 	constructor() {

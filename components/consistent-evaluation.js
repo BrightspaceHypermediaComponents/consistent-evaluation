@@ -35,6 +35,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				attribute: 'use-new-html-editor',
 				type: Boolean
 			},
+			useInlineGradingRevamp: {
+				attribute: 'use-inline-grading-revamp',
+				type: Boolean
+			},
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
 				type: Boolean
@@ -48,7 +52,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			_rubricInfos: { type: Array },
 			_submissionInfo: { type: Object },
 			_gradeItemInfo: { type: Object },
-			_enrolledUser: { type: Object },
 			_groupInfo: { type: Object },
 			_userName: { type: String },
 			_navTitleInfo: { type: Object },
@@ -56,6 +59,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			_iteratorIndex: { type: Number },
 			_editActivityPath: { type: String },
 			_activityType: { type: String },
+			_discussionPostList: { type: Object },
 			fileId: {
 				attribute: 'file-id',
 				type: String
@@ -112,8 +116,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				evaluation-href=${ifDefined(this._childHrefs && this._childHrefs.evaluationHref)}
 				next-student-href=${ifDefined(this._childHrefs && this._childHrefs.nextHref)}
 				user-href=${ifDefined(this._childHrefs && this._childHrefs.userHref)}
+				enrolled-user-href=${ifDefined(this._childHrefs && this._childHrefs.enrolledUserHref)}
 				group-href=${ifDefined(this._childHrefs && this._childHrefs.groupHref)}
 				user-progress-outcome-href=${ifDefined(this._childHrefs && this._childHrefs.userProgressOutcomeHref)}
+				user-progress-assessments-href=${ifDefined(this._childHrefs && this._childHrefs.userProgressAssessmentsHref)}
 				coa-demonstration-href=${ifDefined(this._childHrefs && this._childHrefs.coaDemonstrationHref)}
 				special-access-href=${ifDefined(this._childHrefs && this._childHrefs.specialAccessHref)}
 				return-href=${ifDefined(this.returnHref)}
@@ -136,19 +142,19 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				.iteratorIndex=${this._iteratorIndex}
 				.token=${this.token}
 				.href=${this.href}
-				.enrolledUser=${this._enrolledUser}
 				.groupInfo=${this._groupInfo}
 				.anonymousInfo=${this._anonymousInfo}
 				.discussionPostList=${this._discussionPostList}
 				?rubric-read-only=${this._rubricReadOnly}
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				?use-new-html-editor=${this.useNewHtmlEditor}
+				?use-inline-grading-revamp=${this.useInlineGradingRevamp}
 				?display-conversion-warning=${this.displayConversionWarning}
 				@d2l-consistent-evaluation-previous-student-click=${this._onPreviousStudentClick}
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}
 				@d2l-consistent-eval-rubric-popup-closed=${this._refreshRubrics}
-				@d2l-consistent-eval-on-evaluation-save=${this._refreshRubrics}
+				@d2l-consistent-eval-on-evaluation-save=${this._refreshInfos}
 			></d2l-consistent-evaluation-page>
 		`;
 	}
@@ -166,7 +172,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						controller.getHrefs(),
 						controller.getActivityType(),
 						controller.getRubricInfos(false),
-						controller.getEnrolledUser(),
 						controller.getGroupInfo(),
 						controller.getAnonymousInfo(),
 						controller.getIteratorInfo('total'),
@@ -179,7 +184,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						childHrefs,
 						activityType,
 						rubricInfos,
-						enrolledUser,
 						groupInfo,
 						anonymousInfo,
 						iteratorTotal,
@@ -190,7 +194,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						this._childHrefs = childHrefs;
 						this._activityType = activityType;
 						this._rubricInfos = rubricInfos;
-						this._enrolledUser = enrolledUser;
 						this._groupInfo = groupInfo;
 						this._anonymousInfo = anonymousInfo;
 						this._iteratorTotal = iteratorTotal;
@@ -240,14 +243,17 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 						this._loadingComponents.submissions = false;
 
 						const discussionPromises = [
+							controller.getUserName(),
 							controller.getDiscussionPostsInfo(),
 							controller.getDiscussionTopicInfo()
 						].map(p => p.catch(undefined));
 
 						await Promise.all(discussionPromises).then(([
+							userName,
 							discussionPostList,
 							discussionTopicInfo
 						]) => {
+							this._userName = userName;
 							this._discussionPostList = discussionPostList;
 							this._discussionTopicInfo = discussionTopicInfo;
 						});
@@ -332,6 +338,18 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			}
 		);
 	}
+	async _refreshDiscussionPosts() {
+		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
+		this._discussionPostList = await controller.getDiscussionPostsInfo();
+	}
+
+	async _refreshInfos() {
+		if (this._activityType === discussionActivity) {
+			this._refreshDiscussionPosts();
+		}
+		this._refreshRubrics();
+	}
+
 	async _refreshRubrics() {
 		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 		this._rubricInfos = await controller.getRubricInfos(true);
@@ -345,7 +363,12 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 	_setTitle() {
 		if (this._userName && this._navTitleInfo.titleName) {
 			const title = document.createElement('title');
-			title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._navTitleInfo.titleName });
+			if (this._activityType === assignmentActivity) {
+				title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._navTitleInfo.titleName });
+			} else if (this._activityType === discussionActivity) {
+				title.textContent = this.localize('discussionPageTitle', { userName: this._userName, activityName: this._navTitleInfo.titleName });
+			}
+
 			document.head.insertBefore(title, document.head.firstChild);
 		}
 	}
