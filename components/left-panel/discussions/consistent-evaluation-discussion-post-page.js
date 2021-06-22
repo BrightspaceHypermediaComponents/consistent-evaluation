@@ -1,7 +1,6 @@
 import './consistent-evaluation-discussion-evidence-body';
 import './consistent-evaluation-discussion-post-score.js';
 import { css, html, LitElement } from 'lit-element';
-import { fivestarRatingClass, upvoteDownvoteRatingClass, upvoteOnlyRatingClass } from '../../controllers/constants.js';
 import { bodyCompactStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
@@ -16,8 +15,8 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				attribute: false,
 				type: Array
 			},
-			_ratingMethod: {
-				attribute: false,
+			ratingMethod: {
+				attribute: 'rating-method',
 				type: String
 			}
 		};
@@ -143,6 +142,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	constructor() {
 		super();
 		this.displayedDiscussionPostObjects = [];
+		this.ratingMethod = '';
 	}
 
 	render() {
@@ -166,28 +166,6 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			threads: threads,
 			replies: replies
 		};
-	}
-	_getRatingsInfo(ratingMethod, discussionPostEntity) {
-		this._ratingMethod = ratingMethod;
-		switch (ratingMethod) {
-			case fivestarRatingClass:
-				if (discussionPostEntity.properties.ratingAverage !== undefined && discussionPostEntity.properties.numRatings !== undefined) {
-					return { ratingAverage : discussionPostEntity.properties.ratingAverage,
-						numRatings : discussionPostEntity.properties.numRatings };
-				}
-				break;
-			case upvoteDownvoteRatingClass:
-				if (discussionPostEntity.properties.numUpVotes !== undefined && discussionPostEntity.properties.numDownVotes !== undefined) {
-					return { numUpVotes : discussionPostEntity.properties.numUpVotes,
-						numDownVotes : discussionPostEntity.properties.numDownVotes };
-				}
-				break;
-			case upvoteOnlyRatingClass:
-				if (discussionPostEntity.properties.numUpVotes !== undefined) {
-					return { numUpVotes : discussionPostEntity.properties.numUpVotes };
-				}
-				break;
-		}
 	}
 	_getUnscoredPostsCount() {
 		// if the posts aren't individually scored return 'NaN'
@@ -290,7 +268,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 									post-date=${discussionPost.createdDateString}
 									?is-reply=${discussionPost.isReply}
 									thread-title=${discussionPost.threadTitle}
-									rating-method=${ifDefined(this._ratingMethod)}
+									rating-method=${ifDefined(this.ratingMethod)}
 									word-count=${ifDefined(discussionPost.wordCount)}
 									.attachmentsList=${discussionPost.attachmentList}
 									.ratingInformation=${discussionPost.ratingInformation}
@@ -315,7 +293,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 									post-date=${discussionPost.createdDateString}
 									?is-reply=${discussionPost.isReply}
 									thread-title=${discussionPost.threadTitle}
-									rating-method=${ifDefined(this._ratingMethod)}
+									rating-method=${ifDefined(this.ratingMethod)}
 									word-count=${ifDefined(discussionPost.wordCount)}
 									.attachmentsList=${discussionPost.attachmentList}
 									.ratingInformation=${discussionPost.ratingInformation}
