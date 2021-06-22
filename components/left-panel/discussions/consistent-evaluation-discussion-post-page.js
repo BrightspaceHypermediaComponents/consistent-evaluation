@@ -127,8 +127,15 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 			.d2l-consistent-evaluation-discussion-table {
 				display: flex;
-				padding-left: 1rem;
-				padding-right: 1rem;
+			}
+
+			:host([skeleton]) .d2l-consistent-evaluation-discussion-table {
+				display: none;
+			}
+
+			.d2l-table-wrapper {
+				margin-left: 1rem;
+				margin-right: 1rem;
 			}
 		`];
 	}
