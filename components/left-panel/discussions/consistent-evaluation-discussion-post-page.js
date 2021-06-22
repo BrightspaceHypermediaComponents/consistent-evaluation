@@ -1,9 +1,7 @@
 import './consistent-evaluation-discussion-evidence-body';
 import './consistent-evaluation-discussion-post-score.js';
-import { attachmentClassName, attachmentListClassName, fivestarRatingClass, lmsSourceRel, upvoteDownvoteRatingClass, upvoteOnlyRatingClass } from '../../controllers/constants.js';
-import { Classes, Rels } from 'd2l-hypermedia-constants';
 import { css, html, LitElement } from 'lit-element';
-import { filterDiscussionPosts, sortDiscussionPosts } from '../../helpers/discussionPostsHelper.js';
+import { fivestarRatingClass, upvoteDownvoteRatingClass, upvoteOnlyRatingClass } from '../../controllers/constants.js';
 import { bodyCompactStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
@@ -14,28 +12,7 @@ import { tableStyles } from '@brightspace-ui/core/components/table/table-wrapper
 export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMixin(LocalizeConsistentEvaluation(LitElement))) {
 	static get properties() {
 		return {
-			discussionPostList: {
-				attribute: false,
-				type: Array
-			},
-			sortingMethod: {
-				attribute: 'sorting-method',
-				type: String
-			},
-			selectedPostFilters: {
-				attribute: false,
-				type: Array
-			},
-			selectedScoreFilters: {
-				attribute: false,
-				type: Array
-			},
-			token: { type: Object },
-			_discussionPostEntities: {
-				attribute: false,
-				type: Array
-			},
-			_displayedDiscussionPostObjects: {
+			displayedDiscussionPostObjects: {
 				attribute: false,
 				type: Array
 			},
@@ -165,162 +142,25 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 
 	constructor() {
 		super();
-		this._discussionPostList = [];
-		this._token = undefined;
-		this._discussionPostObjects = [];
-		this._currentSortingMethod = undefined;
-		this._currentPostFilteringMethod = undefined;
-		this._currentScoreFilteringMethod = undefined;
-		this.selectedPostFilters = [];
-		this.selectedScoreFilters = [];
-	}
-
-	get discussionPostList() {
-		return this._discussionPostList;
-	}
-
-	set discussionPostList(val) {
-		const oldVal = this.discussionPostList;
-		if (oldVal !== val) {
-			this._discussionPostList = val;
-			if (this._discussionPostList && this._token) {
-				this._getDiscussionPostEntities().then(() => this.requestUpdate());
-			}
-		}
-	}
-
-	get token() {
-		return this._token;
-	}
-
-	set token(val) {
-
-		const oldVal = this.token;
-		if (oldVal !== val) {
-			this._token = val;
-			if (this._discussionPostList && this._token) {
-				this._getDiscussionPostEntities().then(() => this.requestUpdate());
-			}
-		}
+		this.displayedDiscussionPostObjects = [];
 	}
 
 	render() {
-		if (this._currentSortingMethod !== this.sortingMethod && this._discussionPostObjects.length > 0) {
-			this._currentSortingMethod = this.sortingMethod;
-			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
-		}
-
-		if (this.selectedPostFilters.length === 0 && this.selectedScoreFilters.length === 0) {
-			this._displayedDiscussionPostObjects = this._discussionPostObjects;
-		}
-
-		if (this._currentPostFilteringMethod !== this.selectedPostFilters || this._currentScoreFilteringMethod !== this.selectedScoreFilters) {
-			this._currentPostFilteringMethod = this.selectedPostFilters;
-			this._currentScoreFilteringMethod = this.selectedScoreFilters;
-			this._displayedDiscussionPostObjects = filterDiscussionPosts(this._discussionPostObjects, this.selectedPostFilters, this.selectedScoreFilters);
-		}
-
 		return html`
 			${this._renderDiscussionItemSkeleton()}
 			${this._renderDiscussionItemSkeleton()}
 			${this._renderTable()}
 		`;
 	}
-	_finishedLoading() {
-		this.dispatchEvent(new CustomEvent('d2l-consistent-evaluation-loading-finished', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				component: 'discussions'
-			}
-		}));
-	}
-	async _formatDiscussionPostObject(discussionPostEntity, discussionPostEvaluationEntity) {
-		const postHref = discussionPostEntity.getLinkByRel(lmsSourceRel).href;
-		const postTitle = discussionPostEntity.properties.subject;
-		const postBody = discussionPostEntity.properties.message;
-		const ratingInformation = this._formatDiscussionRatings(discussionPostEntity);
-		const isUnscored = discussionPostEvaluationEntity.properties ? discussionPostEvaluationEntity.properties.score === null : false;
-		const wordCount = discussionPostEntity.properties.wordCount;
 
-		let createdDate = undefined;
-		let createdDateString = undefined;
-		if (discussionPostEntity.hasSubEntityByClass(Classes.assignments.date)) {
-			createdDateString = discussionPostEntity.getSubEntityByClass(Classes.assignments.date).properties.date;
-			createdDate = new Date(createdDateString);
-		} else {
-			console.warn('Consistent Evaluation discussion post date not found');
-		}
-
-		let threadTitle = undefined;
-		let isReply = false;
-		if (discussionPostEntity.hasLinkByRel(Rels.Discussions.thread)) {
-			isReply = true;
-			const threadHref = discussionPostEntity.getLinkByRel(Rels.Discussions.thread).href;
-			const threadEntity = await this._getDiscussionPostEntity(threadHref);
-			if (threadEntity && threadEntity.entity) {
-				threadTitle = threadEntity.entity.properties.subject;
-			}
-		}
-
-		let attachmentList = undefined;
-		if (discussionPostEntity.hasSubEntityByClass(attachmentListClassName)) {
-			const attachmentListEntity = discussionPostEntity.getSubEntityByClass(attachmentListClassName);
-			attachmentList = attachmentListEntity.getSubEntitiesByClass(attachmentClassName);
-		}
-
-		return {
-			createdDate,
-			createdDateString,
-			postHref,
-			postTitle,
-			postBody,
-			ratingInformation,
-			isReply,
-			isUnscored,
-			threadTitle,
-			attachmentList,
-			discussionPostEvaluationEntity,
-			wordCount
-		};
-	}
-	_formatDiscussionRatings(discussionPostEntity) {
-		if (discussionPostEntity.class.includes(fivestarRatingClass)) {
-			return this._getRatingsInfo(fivestarRatingClass, discussionPostEntity);
-		} else if (discussionPostEntity.class.includes(upvoteDownvoteRatingClass)) {
-			return this._getRatingsInfo(upvoteDownvoteRatingClass, discussionPostEntity);
-		} else if (discussionPostEntity.class.includes(upvoteOnlyRatingClass)) {
-			return this._getRatingsInfo(upvoteOnlyRatingClass, discussionPostEntity);
-		}
-		return {};
-	}
-	async _getDiscussionPostEntities() {
-		this._discussionPostObjects = [];
-		if (this._discussionPostList !== undefined) {
-			this._discussionPostObjects = await Promise.all(this._discussionPostList.map(async discussionPostEvaluationEntity => {
-				if (discussionPostEvaluationEntity.links && discussionPostEvaluationEntity.links[0].href) {
-					const discussionPost = await this._getDiscussionPostEntity(discussionPostEvaluationEntity.links[0].href);
-					if (discussionPost && discussionPost.entity) {
-						const discussionPostObject = await this._formatDiscussionPostObject(discussionPost.entity, discussionPostEvaluationEntity);
-						return discussionPostObject;
-					}
-				}
-			}));
-
-			this._currentSortingMethod = this.sortingMethod;
-			sortDiscussionPosts(this._discussionPostObjects, this._currentSortingMethod);
-			this._finishedLoading();
-		}
-	}
-	async _getDiscussionPostEntity(discussionPostHref, bypassCache = false) {
-		return await window.D2L.Siren.EntityStore.fetch(discussionPostHref, this._token, bypassCache);
-	}
 	_getPostsCounts() {
 		let threads = 0;
 		let replies = 0;
-		this._displayedDiscussionPostObjects.forEach(discussionPost => {
-			discussionPost.isReply ? replies++ : threads++;
-		});
+		if (this.displayedDiscussionPostObjects) {
+			this.displayedDiscussionPostObjects.forEach(discussionPost => {
+				discussionPost.isReply ? replies++ : threads++;
+			});
+		}
 
 		return {
 			threads: threads,
@@ -356,8 +196,8 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		}
 
 		let unscoredPosts = 0;
-		if (this._displayedDiscussionPostObjects) {
-			this._displayedDiscussionPostObjects.forEach(postEntity => {
+		if (this.displayedDiscussionPostObjects) {
+			this.displayedDiscussionPostObjects.forEach(postEntity => {
 				if (postEntity.isUnscored) {
 					unscoredPosts++;
 				}
@@ -428,14 +268,14 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		`;
 	}
 	_renderTableBody() {
-		if (this._displayedDiscussionPostObjects.length === 0) {
+		if (typeof this.displayedDiscussionPostObjects === 'undefined' || (this.displayedDiscussionPostObjects && this.displayedDiscussionPostObjects.length === 0)) {
 			return html`<tr><td>${this._renderNoPostsInFilteredRange()}</td></tr>`;
 		}
 
 		const itemTemplate = [];
-		for (let i = 0; i < this._displayedDiscussionPostObjects.length; i++) {
-			if (this._displayedDiscussionPostObjects[i]) {
-				const discussionPost = this._displayedDiscussionPostObjects[i];
+		for (let i = 0; i < this.displayedDiscussionPostObjects.length; i++) {
+			if (this.displayedDiscussionPostObjects[i]) {
+				const discussionPost = this.displayedDiscussionPostObjects[i];
 				const discussionPostEntity = discussionPost.discussionPostEvaluationEntity;
 
 				if (discussionPostEntity && discussionPostEntity.properties && discussionPostEntity.properties.outOf) {
@@ -489,8 +329,8 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 		return html`${itemTemplate}`;
 	}
 	_renderTableHeader() {
-		if (this._displayedDiscussionPostObjects.length > 0) {
-			const discussionPost = this._displayedDiscussionPostObjects[0];
+		if (this.displayedDiscussionPostObjects && this.displayedDiscussionPostObjects.length > 0) {
+			const discussionPost = this.displayedDiscussionPostObjects[0];
 			const discussionPostEntity = discussionPost.discussionPostEvaluationEntity;
 
 			if (discussionPostEntity && discussionPostEntity.properties && discussionPostEntity.properties.outOf) {
