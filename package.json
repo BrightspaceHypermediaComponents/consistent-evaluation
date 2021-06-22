@@ -1,7 +1,7 @@
 {
   "name": "d2l-consistent-evaluation",
   "description": "A consistent evaluation page for all tools",
-  "version": "1.218.0",
+  "version": "1.223.0",
   "repository": "https://github.com/BrightspaceHypermediaComponents/consistent-evaluation.git",
   "private": true,
   "scripts": {
@@ -40,7 +40,7 @@
   "dependencies": {
     "@brightspace-ui-labs/facet-filter-sort": "^4.1.0",
     "@brightspace-ui-labs/grade-result": "^1.2.5",
-    "@brightspace-ui-labs/user-profile-card": "^0.5.3",
+    "@brightspace-ui-labs/user-profile-card": "^0.5.4",
     "@brightspace-ui/core": "^1",
     "@brightspace-ui/htmleditor": "^1",
     "d2l-activities": "github:BrightspaceHypermediaComponents/activities#semver:^3",
