@@ -32,4 +32,9 @@ describe('d2l-consistent-evaluation-discussion-post-page', () => {
 		const rect = await visualDiff.getRect(page, '#posts-scored');
 		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
 	});
+
+	it('renders a discussion post page with post scoring on and ratings', async function() {
+		const rect = await visualDiff.getRect(page, '#posts-scored-rating');
+		await visualDiff.screenshotAndCompare(page, this.test.fullTitle(), { clip: rect });
+	});
 });

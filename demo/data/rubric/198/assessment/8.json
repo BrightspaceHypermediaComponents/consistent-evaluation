@@ -1,128 +1,137 @@
 {
-  "class":[
+  "class": [
     "rubric-result",
     "completed"
   ],
-  "properties":{
-    "score":12
+  "properties": {
+    "score": 12
   },
-  "entities":[
+  "entities": [
     {
-      "class":[
+      "class": [
         "richtext",
         "overall-feedback"
       ],
-      "rel":[
+      "rel": [
         "item"
       ],
-      "properties":{
-        "text":"",
-        "html":""
+      "properties": {
+        "text": "",
+        "html": ""
       }
     },
     {
-      "class":[
+      "class": [
         "criterion-assessment-links"
       ],
-      "rel":[
+      "rel": [
         "item"
       ],
-      "links":[
+      "links": [
         {
-          "rel":[
+          "rel": [
             "https://rubrics.api.brightspace.com/rels/criteria-group"
           ],
-          "href":"data/rubric/198/groups/175.json"
+          "href": "data/rubric/198/groups/175.json"
         },
         {
-          "rel":[
+          "rel": [
             "https://rubrics.api.brightspace.com/rels/criterion"
           ],
-          "href":"data/rubric/198/groups/175/criteria/620.json"
+          "href": "data/rubric/198/groups/175/criteria/620.json"
         },
         {
-          "rel":[
+          "rel": [
             "https://assessments.api.brightspace.com/rels/assessment-criterion"
           ],
-          "href":"data/rubric/198/assessment/8/criterion/620.json"
+          "href": "data/rubric/198/assessment/8/criterion/620.json"
         }
       ]
     },
     {
-      "class":[
+      "class": [
         "criterion-assessment-links"
       ],
-      "rel":[
+      "rel": [
         "item"
       ],
-      "links":[
+      "links": [
         {
-          "rel":[
+          "rel": [
             "https://rubrics.api.brightspace.com/rels/criteria-group"
           ],
-          "href":"data/rubric/198/groups/175.json"
+          "href": "data/rubric/198/groups/175.json"
         },
         {
-          "rel":[
+          "rel": [
             "https://rubrics.api.brightspace.com/rels/criterion"
           ],
-          "href":"data/rubric/198/groups/175/criteria/621.json"
+          "href": "data/rubric/198/groups/175/criteria/621.json"
         },
         {
-          "rel":[
+          "rel": [
             "https://assessments.api.brightspace.com/rels/assessment-criterion"
           ],
-          "href":"data/rubric/198/assessment/8/criterion/621.json"
+          "href": "data/rubric/198/assessment/8/criterion/621.json"
         }
       ]
     },
     {
-      "class":[
+      "class": [
         "criterion-assessment-links"
       ],
-      "rel":[
+      "rel": [
         "item"
       ],
-      "links":[
+      "links": [
         {
-          "rel":[
+          "rel": [
             "https://rubrics.api.brightspace.com/rels/criteria-group"
           ],
-          "href":"data/rubric/198/groups/175.json"
+          "href": "data/rubric/198/groups/175.json"
         },
         {
-          "rel":[
+          "rel": [
             "https://rubrics.api.brightspace.com/rels/criterion"
           ],
-          "href":"data/rubric/198/groups/175/criteria/622.json"
+          "href": "data/rubric/198/groups/175/criteria/622.json"
         },
         {
-          "rel":[
+          "rel": [
             "https://assessments.api.brightspace.com/rels/assessment-criterion"
           ],
-          "href":"data/rubric/198/assessment/8/criterion/622.json"
+          "href": "data/rubric/198/assessment/8/criterion/622.json"
         }
       ]
     }
   ],
-  "links":[
+  "links": [
     {
-      "rel":[
+      "rel": [
         "self"
       ],
-      "href":"data/rubric/198/assessment/8.json"
+      "href": "data/rubric/198/assessment/8.json"
     },
     {
-      "rel":[
+      "class": [
+        "activity-statistics"
+      ],
+      "rel": [
+        "rubric-assessment-stats"
+      ],
+      "href": "data/rubric/198/assessment/8/stats.html"
+    },
+    {
+      "rel": [
         "https://api.brightspace.com/rels/rubric"
       ],
-      "href":"data/rubric/198.json"
+      "href": "data/rubric/198.json"
     },
     {
-      "rel":[
+      "rel": [
         "https://api.brightspace.com/rels/user"
       ],
-      "href":"data/rubric/198.json"
+      "href": "data/rubric/198.json"
     }
   ]
 }

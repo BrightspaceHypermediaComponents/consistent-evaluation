@@ -1,7 +1,7 @@
 {
   "name": "d2l-consistent-evaluation",
   "description": "A consistent evaluation page for all tools",
-  "version": "1.223.0",
+  "version": "1.227.0",
   "repository": "https://github.com/BrightspaceHypermediaComponents/consistent-evaluation.git",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "lint:eslint": "eslint . --ext .js,.html",
     "lint:lit": "lit-analyzer consistent-evaluation.js components demo test",
     "lint:style": "stylelint \"**/*.js\"",
-    "start": "es-dev-server --app-index demo/index.html --node-resolve --dedupe --open --watch",
+    "start": "es-dev-server --app-index demo/index.html --node-resolve --dedupe --preserve-symlinks --open --watch",
     "test": "npm run lint && npm run test:headless",
     "test:headless": "karma start",
     "test:headless:watch": "karma start --auto-watch=true --single-run=false",
