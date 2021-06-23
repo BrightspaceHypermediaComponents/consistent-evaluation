@@ -107,7 +107,7 @@ export default {
 	"rubrics": "Rubrics",
 	"rubricPublishedWarning": "This assessment has been published. Any changes made to the rubric will be immediately visible to learners. To avoid this, retract feedback before making changes.",
 	"rubricSummary": "1 rubric attached",
-	"rubricsSummary": "{num} rubrics attached",
+	"rubricsSummary": "{num} {num, plural, =1 {rubric} other {rubrics}} attached",
 	"rubricTitle": "Rubric Title",
 	"rubricsAssess": "Assess Rubrics for {username}",
 	"saveBtn": "Save",
