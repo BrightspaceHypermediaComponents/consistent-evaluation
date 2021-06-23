@@ -70,6 +70,7 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 		return html`
 			<d2l-consistent-evaluation-evidence-top-bar></d2l-consistent-evaluation-evidence-top-bar>
 			<iframe
+				src="${this.url}"
 				id="d2l-annotations-iframe"
 				?data-resizing=${this._resizing}
 				frameborder="0"
