@@ -39,6 +39,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				attribute: 'use-inline-grading-revamp',
 				type: Boolean
 			},
+			useNewInlineRubricTile: {
+				attribute: 'use-new-inline-rubric-tile',
+				type: Boolean
+			},			
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
 				type: Boolean
@@ -149,6 +153,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				?use-new-html-editor=${this.useNewHtmlEditor}
 				?use-inline-grading-revamp=${this.useInlineGradingRevamp}
+				?use-new-inline-rubric-tile=${this.useNewInlineRubricTile}
 				?display-conversion-warning=${this.displayConversionWarning}
 				@d2l-consistent-evaluation-previous-student-click=${this._onPreviousStudentClick}
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
