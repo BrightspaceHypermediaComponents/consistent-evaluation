@@ -1,5 +1,6 @@
 import './consistent-evaluation-discussion-evidence-body';
 import './consistent-evaluation-discussion-post-score.js';
+import '@brightspace-ui/core/components/offscreen/offscreen.js';
 import { css, html, LitElement } from 'lit-element';
 import { bodyCompactStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
@@ -14,6 +15,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			displayedDiscussionPostObjects: {
 				attribute: false,
 				type: Array
+			},
+			filteredStatus: {
+				attribute: false,
+				type: String
 			},
 			ratingMethod: {
 				attribute: 'rating-method',
@@ -203,6 +208,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	_renderNoPostsInFilteredRange() {
 		return html`
+			<d2l-offscreen role="alert">${this.filteredStatus}</d2l-offscreen>
 			<div class="d2l-consistent-evaluation-no-posts-in-range-padding">
 				<div class="d2l-consistent-evaluation-no-posts-in-range-container">
 					<div class="d2l-consistent-evaluation-no-posts-in-range d2l-body-standard">${this.localize('noPostsInFilteredRange')}</div>
@@ -305,7 +311,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				}
 			}
 		}
-		return html`${itemTemplate}`;
+		return html`<d2l-offscreen role="alert">${this.filteredStatus}</d2l-offscreen>${itemTemplate}`;
 	}
 	_renderTableHeader() {
 		if (this.displayedDiscussionPostObjects && this.displayedDiscussionPostObjects.length > 0) {

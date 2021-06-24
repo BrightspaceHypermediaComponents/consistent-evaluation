@@ -113,13 +113,10 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	set token(val) {
 		this._token = val;
 	}
-
 	render() {
-		// console.log('rendery')
-		// console.log(this._filteredStatus)
 		if (this.discussionPostList && this.discussionPostList.length === 0 && !this.skeleton) {
 			this._finishedLoading();
-			return html`${this._renderNoAssessablePosts()}<div role="alert" aria-label=${this._filteredStatus}></div>`;
+			return html`${this._renderNoAssessablePosts()}`;
 		}
 
 		if (this.discussionPostList && typeof this._displayedDiscussionPostObjects === 'undefined') {
@@ -128,9 +125,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 
 		return html`
 			${this._renderListModifiers()}
-			${this._renderDiscussionPost()}
-			<div role="alert" aria-label=${this._filteredStatus}></div>
-		`;
+			${this._renderDiscussionPost()}`;
 	}
 
 	async updated(changedProperties) {
@@ -142,9 +137,6 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			// on student change or page reload, reset variable to prompt refiltering/sorting of posts
 			this._displayedDiscussionPostObjects = undefined;
 		}
-		// if (changedProperties.has('_filteredStatus')) {
-		// 	console.log('updated vairable')
-		// }
 	}
 
 	_clearFilters() {
@@ -177,7 +169,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			} else {
 				this._filteredStatus = this.localize('noPostsInFilteredRange');
 			}
-			this.requestUpdate()
+			this.requestUpdate();
 		});
 	}
 
@@ -304,6 +296,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				rating-method=${this._ratingMethod}
 				.displayedDiscussionPostObjects=${this._displayedDiscussionPostObjects}
 				.token=${this.token}
+				.filteredStatus=${this._filteredStatus}
 			></d2l-consistent-evaluation-discussion-post-page>
 		`;
 	}
