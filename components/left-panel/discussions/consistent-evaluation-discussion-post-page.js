@@ -208,7 +208,6 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	_renderNoPostsInFilteredRange() {
 		return html`
-			<d2l-offscreen role="alert">${this.filteredStatus}</d2l-offscreen>
 			<div class="d2l-consistent-evaluation-no-posts-in-range-padding">
 				<div class="d2l-consistent-evaluation-no-posts-in-range-container">
 					<div class="d2l-consistent-evaluation-no-posts-in-range d2l-body-standard">${this.localize('noPostsInFilteredRange')}</div>
@@ -254,7 +253,8 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	_renderTableBody() {
 		if (typeof this.displayedDiscussionPostObjects === 'undefined' || (this.displayedDiscussionPostObjects && this.displayedDiscussionPostObjects.length === 0)) {
-			return html`<tr><td>${this._renderNoPostsInFilteredRange()}</td></tr>`;
+			return html`<d2l-offscreen role="alert">${this.filteredStatus}</d2l-offscreen>
+						<tr><td>${this._renderNoPostsInFilteredRange()}</td></tr>`;
 		}
 
 		const itemTemplate = [];
@@ -311,7 +311,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				}
 			}
 		}
-		return html`<d2l-offscreen role="alert">${this.filteredStatus}</d2l-offscreen>${itemTemplate}`;
+		return html`${itemTemplate}<d2l-offscreen role="alert">${this.filteredStatus}</d2l-offscreen>`;
 	}
 	_renderTableHeader() {
 		if (this.displayedDiscussionPostObjects && this.displayedDiscussionPostObjects.length > 0) {

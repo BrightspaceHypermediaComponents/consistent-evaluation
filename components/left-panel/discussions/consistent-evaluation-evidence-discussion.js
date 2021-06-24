@@ -113,6 +113,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	set token(val) {
 		this._token = val;
 	}
+
 	render() {
 		if (this.discussionPostList && this.discussionPostList.length === 0 && !this.skeleton) {
 			this._finishedLoading();
@@ -125,7 +126,8 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 
 		return html`
 			${this._renderListModifiers()}
-			${this._renderDiscussionPost()}`;
+			${this._renderDiscussionPost()}
+		`;
 	}
 
 	async updated(changedProperties) {
