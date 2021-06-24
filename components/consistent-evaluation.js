@@ -106,7 +106,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this.returnHrefText = undefined;
 		this._mutex = new Awaiter();
 		this._loading = true;
-		this._pageTitle = undefined;
+		this._pageTitle = '';
 		this._loadingComponents = {
 			discussions: true,
 			main : true,
@@ -369,10 +369,8 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._loading = true;
 	}
 	_setTitle() {
-		const oldTitle = document.querySelector("title");
-		oldTitle.remove();
 		if (this._userName && this._navTitleInfo.titleName) {
-			const title = document.createElement('title');
+			const title = document.querySelector('title');
 			if (this._activityType === assignmentActivity) {
 				title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._navTitleInfo.titleName });
 			} else if (this._activityType === discussionActivity) {

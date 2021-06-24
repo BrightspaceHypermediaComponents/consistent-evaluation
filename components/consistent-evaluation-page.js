@@ -10,6 +10,7 @@ import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/templates/primary-secondary/primary-secondary.js';
 import '@brightspace-ui/core/components/dialog/dialog-confirm.js';
 import '@brightspace-ui/core/components/button/button.js';
+import '@brightspace-ui/core/components/offscreen/offscreen.js';
 import { assignmentActivity, draftState, evidenceRel, postClass, publishActionName, publishedState, retractActionName, saveActionName, saveGradeActionName, toggleIsReadActionName, updateActionName } from './controllers/constants.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
@@ -20,7 +21,6 @@ import { LocalizeConsistentEvaluation } from '../localize-consistent-evaluation.
 import { Rels } from 'd2l-hypermedia-constants';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { TransientSaveAwaiter } from './transient-save-awaiter.js';
-import '@brightspace-ui/core/components/offscreen/offscreen.js';
 
 const DIALOG_ACTION_DISCARD = 'discard';
 
