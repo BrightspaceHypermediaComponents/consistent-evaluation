@@ -31,7 +31,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				attribute: false,
 				type: Array
 			},
-			_filteredStatus: {
+			_filteringStatus: {
 				attribute: false,
 				type: String
 			},
@@ -102,7 +102,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		super();
 		this._sortingMethod = sortByOldestFirst;
 		this._selectedFilters = [];
-		this._filteredStatus = '';
+		this._filteringStatus = '';
 		this._ratingMethod = '';
 	}
 
@@ -164,12 +164,12 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 			newFilters.push(newFilter);
 		}
 		this._selectedFilters = newFilters;
-		this._filteredStatus = '';
+		this._filteringStatus = '';
 		this._getDiscussionPostEntities().then(() => {
 			if (this._displayedDiscussionPostObjects.length > 0) {
-				this._filteredStatus = this.localize('filteringComplete');
+				this._filteringStatus = this.localize('filteringComplete');
 			} else {
-				this._filteredStatus = this.localize('noPostsInFilteredRange');
+				this._filteringStatus = this.localize('noPostsInFilteredRange');
 			}
 			this.requestUpdate();
 		});
@@ -298,7 +298,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				rating-method=${this._ratingMethod}
 				.displayedDiscussionPostObjects=${this._displayedDiscussionPostObjects}
 				.token=${this.token}
-				.filteredStatus=${this._filteredStatus}
+				.filteringStatus=${this._filteringStatus}
 			></d2l-consistent-evaluation-discussion-post-page>
 		`;
 	}

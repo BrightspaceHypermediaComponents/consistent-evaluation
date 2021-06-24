@@ -16,7 +16,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				attribute: false,
 				type: Array
 			},
-			filteredStatus: {
+			filteringStatus: {
 				attribute: false,
 				type: String
 			},
@@ -253,7 +253,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	_renderTableBody() {
 		if (typeof this.displayedDiscussionPostObjects === 'undefined' || (this.displayedDiscussionPostObjects && this.displayedDiscussionPostObjects.length === 0)) {
-			return html`<d2l-offscreen role="alert">${this.filteredStatus}</d2l-offscreen>
+			return html`<d2l-offscreen role="alert">${this.filteringStatus}</d2l-offscreen>
 						<tr><td>${this._renderNoPostsInFilteredRange()}</td></tr>`;
 		}
 
@@ -311,7 +311,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				}
 			}
 		}
-		return html`${itemTemplate}<d2l-offscreen role="alert">${this.filteredStatus}</d2l-offscreen>`;
+		return html`${itemTemplate}<d2l-offscreen role="alert">${this.filteringStatus}</d2l-offscreen>`;
 	}
 	_renderTableHeader() {
 		if (this.displayedDiscussionPostObjects && this.displayedDiscussionPostObjects.length > 0) {
