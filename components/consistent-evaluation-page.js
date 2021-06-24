@@ -162,6 +162,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'use-inline-grading-revamp',
 				type: Boolean
 			},
+			useNewInlineRubricTile: {
+				attribute: 'use-new-inline-rubric-tile',
+				type: Boolean
+			},
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
 				type: Boolean
@@ -410,6 +414,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?skeleton=${this.skeleton}
 						?use-new-html-editor=${this.useNewHtmlEditor}
 						?use-inline-grading-revamp=${this.useInlineGradingRevamp}
+						?use-new-inline-rubric-tile=${this.useNewInlineRubricTile}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
 						@on-d2l-consistent-eval-feedback-attachments-add=${this._transientAddAttachment}
 						@on-d2l-consistent-eval-feedback-attachments-remove=${this._transientRemoveAttachment}
