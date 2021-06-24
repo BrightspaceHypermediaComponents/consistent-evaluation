@@ -44,6 +44,7 @@ module.exports = config => {
 			browsers: Object.keys(customLaunchers),
 			reporters: ['dots', 'saucelabs'],
 			browserNoActivityTimeout: 100000,
+			browserDisconnectTimeout: 60000,
 			flags: [
 				'--disable-gpu',
 				'--no-sandbox'
