@@ -1,7 +1,7 @@
 {
   "name": "d2l-consistent-evaluation",
   "description": "A consistent evaluation page for all tools",
-  "version": "1.225.1",
+  "version": "1.225.2",
   "repository": "https://github.com/BrightspaceHypermediaComponents/consistent-evaluation.git",
   "private": true,
   "scripts": {
