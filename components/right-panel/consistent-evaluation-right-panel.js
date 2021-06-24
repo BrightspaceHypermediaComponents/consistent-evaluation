@@ -115,6 +115,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				attribute: 'use-inline-grading-revamp',
 				type: Boolean
 			},
+			useInlineOverallScore: {
+				attribute: 'use-inline-overall-score',
+				type: Boolean
+			},
 			useNewInlineRubricTile: {
 				attribute: 'use-new-inline-rubric-tile',
 				type: Boolean
@@ -414,6 +418,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 					?read-only=${this.rubricReadOnly}
 					?can-save-overall-grade=${this.canSaveOverallGrade}
 					?use-inline-grading-revamp=${this.useInlineGradingRevamp}
+					?use-inline-overall-score=${this.useInlineOverallScore}
 					?new-inline-tile=${this.useNewInlineRubricTile}
 					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
 					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
