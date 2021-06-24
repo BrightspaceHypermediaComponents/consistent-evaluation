@@ -42,7 +42,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			useNewInlineRubricTile: {
 				attribute: 'use-new-inline-rubric-tile',
 				type: Boolean
-			},			
+			},
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
 				type: Boolean

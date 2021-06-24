@@ -165,7 +165,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			useNewInlineRubricTile: {
 				attribute: 'use-new-inline-rubric-tile',
 				type: Boolean
-			},			
+			},
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
 				type: Boolean
