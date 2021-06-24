@@ -266,6 +266,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			canAddFeedbackFile: false,
 			canRecordFeedbackVideo: false,
 			canRecordFeedbackAudio: false,
+			canAddFeedbackGoogleDriveLink: false,
+			canAddFeedbackOneDriveLink: false,
 			attachments: []
 		};
 		this._displayToast = false;
@@ -334,6 +336,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		const canAddFeedbackFile = this._attachmentsInfo.canAddFeedbackFile;
 		const canRecordFeedbackVideo = this._attachmentsInfo.canRecordFeedbackVideo;
 		const canRecordFeedbackAudio = this._attachmentsInfo.canRecordFeedbackAudio;
+		const canAddFeedbackGoogleDriveLink = this._attachmentsInfo.canAddFeedbackGoogleDriveLink;
+		const canAddFeedbackOneDriveLink = this._attachmentsInfo.canAddFeedbackOneDriveLink;
 		const attachments = this._attachmentsInfo.attachments;
 		return html`
 			<d2l-template-primary-secondary
@@ -407,11 +411,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?allow-add-file=${canAddFeedbackFile}
 						?allow-record-video=${canRecordFeedbackVideo}
 						?allow-record-audio=${canRecordFeedbackAudio}
+						?allow-add-link-google-drive=${canAddFeedbackGoogleDriveLink}
+						?allow-add-link-one-drive=${canAddFeedbackOneDriveLink}
 						?skeleton=${this.skeleton}
 						?use-new-html-editor=${this.useNewHtmlEditor}
 						?use-inline-grading-revamp=${this.useInlineGradingRevamp}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
 						@on-d2l-consistent-eval-feedback-attachments-add=${this._transientAddAttachment}
+						@on-d2l-consistent-eval-feedback-attachments-add-link=${this._transientAddAttachmentLink}
 						@on-d2l-consistent-eval-feedback-attachments-remove=${this._transientRemoveAttachment}
 						@on-d2l-consistent-eval-grade-changed=${this._transientSaveGrade}
 						@d2l-outcomes-coa-eval-override-change=${this._transientSaveCoaEvalOverride}
@@ -897,7 +904,19 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
 	}
+	async _transientAddAttachmentLink(e) {
+		await this._mutex.dispatch(
+			async() => {
+				const entity = await this._controller.fetchEvaluationEntity(false);
 
+				const title = e.detail.title;
+				const url = e.detail.url;
+				this.evaluationEntity = await this._controller.transientAddFeedbackAttachmentLink(entity, title, url);
+			}
+		);
+
+		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
+	}
 	async _transientRemoveAttachment(e) {
 		await this._mutex.dispatch(
 			async() => {

@@ -45,6 +45,8 @@ export class ConsistentEvaluationController {
 		const canAddFeedbackFile = attachmentsEntity.hasActionByName('add-file');
 		const canRecordFeedbackVideo = attachmentsEntity.hasActionByName('add-video-note');
 		const canRecordFeedbackAudio = attachmentsEntity.hasActionByName('add-audio-note');
+		const canAddFeedbackGoogleDriveLink = attachmentsEntity.hasActionByName('add-link-google-drive');
+		const canAddFeedbackOneDriveLink = attachmentsEntity.hasActionByName('add-link-one-drive');
 		const attachments = [];
 		if (attachmentsEntity.entities) {
 			attachmentsEntity.entities.forEach(a => {
@@ -67,6 +69,8 @@ export class ConsistentEvaluationController {
 			canAddFeedbackFile,
 			canRecordFeedbackVideo,
 			canRecordFeedbackAudio,
+			canAddFeedbackGoogleDriveLink,
+			canAddFeedbackOneDriveLink,
 			attachments
 		};
 	}
@@ -144,6 +148,30 @@ export class ConsistentEvaluationController {
 					}));
 			}
 		}
+
+		return updatedEntity;
+	}
+	async transientAddFeedbackAttachmentLink(evaluationEntity, title, url) {
+		if (!evaluationEntity) {
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
+		}
+
+		let updatedEntity = evaluationEntity;
+		const targetEntity = updatedEntity.getSubEntityByRel('attachments');
+		if (!targetEntity) {
+			throw new Error(ConsistentEvaluationControllerErrors.ERROR_FETCHING_ATTACHMENTS_ENTITY);
+		}
+
+		updatedEntity = await this._performAction(
+			targetEntity,
+			saveFeedbackAttachmentLinkActionName,
+			saveFeedbackAttachmentAFieldName,
+			JSON.stringify({
+				LinkId: title,
+				Name: title,
+				Url: url,
+				Urn: '',
+			}));
 
 		return updatedEntity;
 	}

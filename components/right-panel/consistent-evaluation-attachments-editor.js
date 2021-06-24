@@ -24,6 +24,14 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 			canRecordAudio: {
 				attribute: 'can-record-audio',
 				type: Boolean
+			},
+			canAddFeedbackGoogleDriveLink: {
+				attribute: 'allow-add-link-google-drive',
+				type: Boolean
+			},
+			canAddFeedbackOneDriveLink: {
+				attribute: 'allow-add-link-one-drive',
+				type: Boolean
 			}
 		};
 	}
@@ -59,21 +67,37 @@ class ConsistentEvaluationAttachmentsEditor extends LitElement {
 			<div ?hidden="${!this.canEditFeedback}">
 				<d2l-activity-attachments-picker-presentational
 					?can-add-file="${this.canAddFile}"
+					?can-add-googledrive-link="${this.canAddFeedbackGoogleDriveLink}"
+					?can-add-onedrive-link="${this.canAddFeedbackOneDriveLink}"
 					?can-record-video="${this.canRecordVideo}"
 					?can-record-audio="${this.canRecordAudio}"
 					@d2l-activity-attachments-picker-files-uploaded="${this._dispatchAddAttachmentEvent}"
+					@d2l-activity-attachments-picker-googledrive-link-dialog-opened="${this._dispatchAddAttachmentLinkEvent}"
+					@d2l-activity-attachments-picker-onedrive-link-dialog-opened="${this._dispatchAddAttachmentLinkEvent}"
 					@d2l-activity-attachments-picker-video-uploaded="${this._dispatchAddAttachmentEvent}"
 					@d2l-activity-attachments-picker-audio-uploaded="${this._dispatchAddAttachmentEvent}">
 				</d2l-activity-attachments-picker-presentational>
 			</div>
-`;
+		`;
 	}
+
 	_dispatchAddAttachmentEvent(e) {
 		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-attachments-add', {
 			composed: true,
 			bubbles: true,
 			detail: {
 				files: e.detail.files
+			}
+		}));
+	}
+
+	_dispatchAddAttachmentLinkEvent(e) {
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-attachments-add-link', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				title: e.detail.title,
+				url: e.detail.url
 			}
 		}));
 	}

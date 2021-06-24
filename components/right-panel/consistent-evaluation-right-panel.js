@@ -33,6 +33,14 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				attribute: 'allow-record-audio',
 				type: Boolean
 			},
+			canAddFeedbackGoogleDriveLink: {
+				attribute: 'allow-add-link-google-drive',
+				type: Boolean
+			},
+			canAddFeedbackOneDriveLink: {
+				attribute: 'allow-add-link-one-drive',
+				type: Boolean
+			},
 			canSaveOverallGrade: {
 				attribute: 'can-save-overall-grade',
 				type: Boolean
@@ -215,6 +223,8 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		this.canAddFeedbackFile = false;
 		this.canRecordFeedbackVideo = false;
 		this.canRecordFeedbackAudio = false;
+		this.canAddFeedbackGoogleDriveLink = false;
+		this.canAddFeedbackOneDriveLink = false;
 		this.canSaveOverallGrade = false;
 		this.useNewHtmlEditor = false;
 		this._specialAccessId = getUniqueId();
@@ -310,6 +320,8 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 					?can-add-file=${this.canAddFeedbackFile}
 					?can-record-video=${this.canRecordFeedbackVideo}
 					?can-record-audio=${this.canRecordFeedbackAudio}
+					?allow-add-link-google-drive=${this.canAddFeedbackGoogleDriveLink}
+					?allow-add-link-one-drive=${this.canAddFeedbackOneDriveLink}
 					?use-new-html-editor=${this.useNewHtmlEditor}
 					.feedbackText=${this.feedbackText}
 					.attachments=${this.feedbackAttachments}
