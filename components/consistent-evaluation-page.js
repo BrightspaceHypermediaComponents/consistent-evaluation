@@ -20,6 +20,7 @@ import { LocalizeConsistentEvaluation } from '../localize-consistent-evaluation.
 import { Rels } from 'd2l-hypermedia-constants';
 import { SkeletonMixin } from '@brightspace-ui/core/components/skeleton/skeleton-mixin.js';
 import { TransientSaveAwaiter } from './transient-save-awaiter.js';
+import '@brightspace-ui/core/components/offscreen/offscreen.js';
 
 const DIALOG_ACTION_DISCARD = 'discard';
 
@@ -176,6 +177,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			},
 			outcomeTerm: {
 				attribute: 'outcome-term',
+				type: String
+			},
+			pageTitle: {
+				attribute: false,
 				type: String
 			},
 			_isValidGrade: {
@@ -361,6 +366,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?is-group-activity="${this.groupHref}"
 						@d2l-consistent-evaluation-navigate=${this._showUnsavedChangesDialog}
 					></d2l-consistent-evaluation-nav-bar>
+					<d2l-offscreen role="alert">${this.pageTitle}</d2l-offscreen>
 					${this._renderLearnerContextBar()}
 				</div>
 				<div slot="primary" class="d2l-consistent-evaluation-page-primary-slot">
