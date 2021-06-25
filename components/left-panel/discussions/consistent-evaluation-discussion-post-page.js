@@ -170,7 +170,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	_getUnscoredPostsCount() {
 		// if the posts aren't individually scored return 'NaN'
-		if (this._discussionPostList !== undefined && this._discussionPostList[0] !== undefined && !('properties' in this._discussionPostList[0])) {
+		if (this.displayedDiscussionPostObjects !== undefined && this.displayedDiscussionPostObjects[0] !== undefined && !('properties' in this.displayedDiscussionPostObjects[0].discussionPostEvaluationEntity)) {
 			return 'NaN';
 		}
 
