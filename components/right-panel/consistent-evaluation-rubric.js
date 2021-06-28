@@ -49,6 +49,10 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 				attribute: 'use-inline-grading-revamp',
 				type: Boolean
 			},
+			useInlineOverallScore: {
+				attribute: 'use-inline-overall-score',
+				type: Boolean
+			},
 			newInlineTile: {
 				attribute: 'new-inline-tile',
 				type: Boolean
@@ -234,6 +238,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 						overall-score-flag
 						selected
 						?legacy=${!this.useInlineGradingRevamp}
+						?compact-overall-score=${this.useInlineOverallScore}
 						?new-inline-tile=${this.newInlineTile}
 						?use-new-brightspace-editor=${this.useNewBrightspaceEditor}
 						include-statistics

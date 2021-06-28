@@ -39,6 +39,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				attribute: 'use-inline-grading-revamp',
 				type: Boolean
 			},
+			useInlineOverallScore: {
+				attribute: 'use-inline-overall-score',
+				type: Boolean
+			},
 			useNewInlineRubricTile: {
 				attribute: 'use-new-inline-rubric-tile',
 				type: Boolean
@@ -68,6 +72,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			_editActivityPath: { type: String },
 			_activityType: { type: String },
 			_discussionPostList: { type: Object },
+			_pageTitle: { type: String },
 			fileId: {
 				attribute: 'file-id',
 				type: String
@@ -109,6 +114,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this.returnHrefText = undefined;
 		this._mutex = new Awaiter();
 		this._loading = true;
+		this._pageTitle = '';
 		this._loadingComponents = {
 			discussions: true,
 			main : true,
@@ -148,6 +154,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				.userName=${this._userName}
 				.iteratorTotal=${this._iteratorTotal}
 				.iteratorIndex=${this._iteratorIndex}
+				.pageTitle=${this._pageTitle}
 				.token=${this.token}
 				.href=${this.href}
 				.groupInfo=${this._groupInfo}
@@ -158,6 +165,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				?use-new-html-editor=${this.useNewHtmlEditor}
 				?use-inline-grading-revamp=${this.useInlineGradingRevamp}
 				?use-new-brightspace-editor=${this.useNewBrightspaceEditor}
+				?use-inline-overall-score=${this.useInlineOverallScore}
 				?use-new-inline-rubric-tile=${this.useNewInlineRubricTile}
 				?display-conversion-warning=${this.displayConversionWarning}
 				@d2l-consistent-evaluation-previous-student-click=${this._onPreviousStudentClick}
@@ -372,13 +380,14 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 	}
 	_setTitle() {
 		if (this._userName && this._navTitleInfo.titleName) {
-			const title = document.createElement('title');
+			const title = document.querySelector('title');
 			if (this._activityType === assignmentActivity) {
 				title.textContent = this.localize('assignmentPageTitle', { userName: this._userName, activityName: this._navTitleInfo.titleName });
 			} else if (this._activityType === discussionActivity) {
 				title.textContent = this.localize('discussionPageTitle', { userName: this._userName, activityName: this._navTitleInfo.titleName });
 			}
 
+			this._pageTitle = title.textContent;
 			document.head.insertBefore(title, document.head.firstChild);
 		}
 	}
