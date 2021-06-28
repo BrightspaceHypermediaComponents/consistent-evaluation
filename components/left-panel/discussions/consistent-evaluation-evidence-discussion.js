@@ -115,19 +115,22 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	}
 
 	render() {
-		if (this.discussionPostList && this.discussionPostList.length === 0 && !this.skeleton) {
-			this._finishedLoading();
-			return html`${this._renderNoAssessablePosts()}`;
-		}
 
 		if (this.discussionPostList && typeof this._displayedDiscussionPostObjects === 'undefined') {
 			this._getDiscussionPostEntities().then(() => this.requestUpdate());
 		}
 
-		return html`
-			${this._renderListModifiers()}
-			${this._renderDiscussionPost()}
-		`;
+		if (this.discussionPostList && this.discussionPostList.length === 0 && !this.skeleton) {
+			this._finishedLoading();
+			return html`${this._renderNoAssessablePosts()}`;
+		}
+		
+		if (this._displayedDiscussionPostObjects && this._displayedDiscussionPostObjects.length > 0) {
+			return html`
+				${this._renderListModifiers()}
+				${this._renderDiscussionPost()}
+			`;
+		}
 	}
 
 	async updated(changedProperties) {
