@@ -52,7 +52,11 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 			newInlineTile: {
 				attribute: 'new-inline-tile',
 				type: Boolean
-			}
+			},
+			useNewBrightspaceEditor: {
+				attribute: 'use-new-brightspace-editor',
+				type: Boolean
+			},
 		};
 	}
 
@@ -231,6 +235,7 @@ class ConsistentEvaluationRubric extends LocalizeConsistentEvaluation(RtlMixin(L
 						selected
 						?legacy=${!this.useInlineGradingRevamp}
 						?new-inline-tile=${this.newInlineTile}
+						?use-new-brightspace-editor=${this.useNewBrightspaceEditor}
 						include-statistics
 						@d2l-rubric-total-score-changed=${this._syncActiveScoringRubricGradeHandler}
 					></d2l-rubric>

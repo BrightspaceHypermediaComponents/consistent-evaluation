@@ -16,6 +16,10 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 				reflect: true,
 				converter: (value) => convertToken(value),
 			},
+			useNewBrightspaceEditor: {
+				attribute: 'use-new-brightspace-editor',
+				type: Boolean
+			},
 			_published: { type: Boolean },
 			_pageTitle: { type: String },
 			_rubricInfos: { type: Array },
@@ -56,6 +60,7 @@ export class ConsistentEvaluationPopupRubric extends LocalizeConsistentEvaluatio
 				.rubricInfos=${this._rubricInfos}
 				.token=${this.token}
 				?can-save-overall-grade=${this._canSaveOverallGrade}
+				?use-new-brightspace-editor=${this.useNewBrightspaceEditor}
 				is-popout
 			></d2l-consistent-evaluation-rubric>
 		`;
