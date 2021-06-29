@@ -1,5 +1,6 @@
 import './consistent-evaluation-discussion-evidence-body';
 import './consistent-evaluation-discussion-post-score.js';
+import '@brightspace-ui/core/components/offscreen/offscreen.js';
 import { css, html, LitElement } from 'lit-element';
 import { bodyCompactStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
@@ -14,6 +15,10 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 			displayedDiscussionPostObjects: {
 				attribute: false,
 				type: Array
+			},
+			filteringStatus: {
+				attribute: false,
+				type: String
 			},
 			ratingMethod: {
 				attribute: 'rating-method',
@@ -170,7 +175,7 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	_getUnscoredPostsCount() {
 		// if the posts aren't individually scored return 'NaN'
-		if (this._discussionPostList !== undefined && this._discussionPostList[0] !== undefined && !('properties' in this._discussionPostList[0])) {
+		if (this.displayedDiscussionPostObjects !== undefined && this.displayedDiscussionPostObjects[0] !== undefined && !('properties' in this.displayedDiscussionPostObjects[0].discussionPostEvaluationEntity)) {
 			return 'NaN';
 		}
 
@@ -248,7 +253,8 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 	}
 	_renderTableBody() {
 		if (typeof this.displayedDiscussionPostObjects === 'undefined' || (this.displayedDiscussionPostObjects && this.displayedDiscussionPostObjects.length === 0)) {
-			return html`<tr><td>${this._renderNoPostsInFilteredRange()}</td></tr>`;
+			return html`<tr><td>${this._renderNoPostsInFilteredRange()}</td></tr>
+						<d2l-offscreen role="alert">${this.filteringStatus}</d2l-offscreen>`;
 		}
 
 		const itemTemplate = [];
@@ -305,7 +311,8 @@ export class ConsistentEvaluationDiscussionPostPage extends SkeletonMixin(RtlMix
 				}
 			}
 		}
-		return html`${itemTemplate}`;
+		return html`${itemTemplate}
+					<d2l-offscreen role="alert">${this.filteringStatus}</d2l-offscreen>`;
 	}
 	_renderTableHeader() {
 		if (this.displayedDiscussionPostObjects && this.displayedDiscussionPostObjects.length > 0) {

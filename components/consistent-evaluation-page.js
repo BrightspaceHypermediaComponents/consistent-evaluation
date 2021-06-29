@@ -10,6 +10,7 @@ import '@brightspace-ui/core/components/inputs/input-text.js';
 import '@brightspace-ui/core/templates/primary-secondary/primary-secondary.js';
 import '@brightspace-ui/core/components/dialog/dialog-confirm.js';
 import '@brightspace-ui/core/components/button/button.js';
+import '@brightspace-ui/core/components/offscreen/offscreen.js';
 import { assignmentActivity, draftState, evidenceRel, postClass, publishActionName, publishedState, retractActionName, saveActionName, saveGradeActionName, toggleIsReadActionName, updateActionName } from './controllers/constants.js';
 import { css, html, LitElement } from 'lit-element/lit-element.js';
 import { Grade, GradeType } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
@@ -162,6 +163,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'use-inline-grading-revamp',
 				type: Boolean
 			},
+			useInlineOverallScore: {
+				attribute: 'use-inline-overall-score',
+				type: Boolean
+			},
+			useNewInlineRubricTile: {
+				attribute: 'use-new-inline-rubric-tile',
+				type: Boolean
+			},
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
 				type: Boolean
@@ -172,6 +181,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			},
 			outcomeTerm: {
 				attribute: 'outcome-term',
+				type: String
+			},
+			pageTitle: {
+				attribute: false,
 				type: String
 			},
 			_isValidGrade: {
@@ -359,6 +372,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?is-group-activity="${this.groupHref}"
 						@d2l-consistent-evaluation-navigate=${this._showUnsavedChangesDialog}
 					></d2l-consistent-evaluation-nav-bar>
+					<d2l-offscreen role="alert">${this.pageTitle}</d2l-offscreen>
 					${this._renderLearnerContextBar()}
 				</div>
 				<div slot="primary" class="d2l-consistent-evaluation-page-primary-slot">
@@ -419,6 +433,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?skeleton=${this.skeleton}
 						?use-new-html-editor=${this.useNewHtmlEditor}
 						?use-inline-grading-revamp=${this.useInlineGradingRevamp}
+						?use-inline-overall-score=${this.useInlineOverallScore}
+						?use-new-inline-rubric-tile=${this.useNewInlineRubricTile}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
 						@on-d2l-consistent-eval-feedback-attachments-add=${this._transientAddAttachment}
 						@on-d2l-consistent-eval-feedback-attachments-add-link=${this._transientAddAttachmentLink}
