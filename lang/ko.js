@@ -35,6 +35,7 @@ export default {
 	"fileMarkedAsRead": "{filename}이(가) 읽음으로 표시됨",
 	"fileMarkedAsUnread": "{filename}이(가) 읽지 않음으로 표시됨",
 	"fileSubmission": "파일 제출",
+	"filteringComplete": "Filtering is complete",
 	"fiveStarRatings": "{numStars} of five stars from {numRatings} {numRatings, plural, =1 {rating} other {ratings}}",
 	"flag": "플래그",
 	"flagged": "플래그 지정됨",

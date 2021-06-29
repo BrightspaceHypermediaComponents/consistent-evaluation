@@ -35,6 +35,7 @@ export default {
 	"fileMarkedAsRead": "{fileName} は既読とマークされています",
 	"fileMarkedAsUnread": "{fileName} は未読としてマークされています",
 	"fileSubmission": "ファイル送信",
+	"filteringComplete": "Filtering is complete",
 	"fiveStarRatings": "{numStars} of five stars from {numRatings} {numRatings, plural, =1 {rating} other {ratings}}",
 	"flag": "フラグ",
 	"flagged": "フラグ付き",

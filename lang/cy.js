@@ -35,6 +35,7 @@ export default {
 	"fileMarkedAsRead": "Nodwyd {fileName} fel wedi’i darllen",
 	"fileMarkedAsUnread": "Nodwyd {fileName} fel heb ei darllen",
 	"fileSubmission": "Cyflwyno Ffeil",
+	"filteringComplete": "Filtering is complete",
 	"fiveStarRatings": "{numStars} of five stars from {numRatings} {numRatings, plural, =1 {rating} other {ratings}}",
 	"flag": "Fflagio",
 	"flagged": "Wedi Fflagio",

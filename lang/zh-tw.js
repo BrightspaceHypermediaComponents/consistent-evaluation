@@ -35,6 +35,7 @@ export default {
 	"fileMarkedAsRead": "{fileName} 標記為已讀取",
 	"fileMarkedAsUnread": "{fileName} 標記為未讀取",
 	"fileSubmission": "檔案提交項目",
+	"filteringComplete": "Filtering is complete",
 	"fiveStarRatings": "{numStars} of five stars from {numRatings} {numRatings, plural, =1 {rating} other {ratings}}",
 	"flag": "旗標",
 	"flagged": "已標示旗標",
