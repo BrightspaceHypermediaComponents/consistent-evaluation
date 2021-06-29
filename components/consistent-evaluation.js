@@ -47,6 +47,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				attribute: 'use-new-inline-rubric-tile',
 				type: Boolean
 			},
+			useNewBrightspaceEditor: {
+				attribute: 'use-new-brightspace-editor',
+				type: Boolean
+			},
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
 				type: Boolean
@@ -160,6 +164,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				?hide-learner-context-bar=${this._shouldHideLearnerContextBar()}
 				?use-new-html-editor=${this.useNewHtmlEditor}
 				?use-inline-grading-revamp=${this.useInlineGradingRevamp}
+				?use-new-brightspace-editor=${this.useNewBrightspaceEditor}
 				?use-inline-overall-score=${this.useInlineOverallScore}
 				?use-new-inline-rubric-tile=${this.useNewInlineRubricTile}
 				?display-conversion-warning=${this.displayConversionWarning}

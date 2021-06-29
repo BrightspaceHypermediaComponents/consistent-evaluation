@@ -123,6 +123,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				attribute: 'use-new-inline-rubric-tile',
 				type: Boolean
 			},
+			useNewBrightspaceEditor: {
+				attribute: 'use-new-brightspace-editor',
+				type: Boolean
+			},
 			discussionCalulationType: {
 				attribute: 'discussion-calculation-type',
 				type: String
@@ -420,6 +424,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 					?use-inline-grading-revamp=${this.useInlineGradingRevamp}
 					?use-inline-overall-score=${this.useInlineOverallScore}
 					?new-inline-tile=${this.useNewInlineRubricTile}
+					?use-new-brightspace-editor=${this.useNewBrightspaceEditor}
 					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
 					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
 					@d2l-rubric-compact-expanded-changed=${this._updateRubricOpenState}

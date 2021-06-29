@@ -175,6 +175,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'display-conversion-warning',
 				type: Boolean
 			},
+			useNewBrightspaceEditor: {
+				attribute: 'use-new-brightspace-editor',
+				type: Boolean
+			},
 			activityType: {
 				attribute: 'activity-type',
 				type: String
@@ -432,6 +436,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?use-inline-grading-revamp=${this.useInlineGradingRevamp}
 						?use-inline-overall-score=${this.useInlineOverallScore}
 						?use-new-inline-rubric-tile=${this.useNewInlineRubricTile}
+						?use-new-brightspace-editor=${this.useNewBrightspaceEditor}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
 						@on-d2l-consistent-eval-feedback-attachments-add=${this._transientAddAttachment}
 						@on-d2l-consistent-eval-feedback-attachments-add-link=${this._transientAddAttachmentLink}
