@@ -115,19 +115,16 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	}
 
 	render() {
-		if (this.discussionPostList && this.discussionPostList.length === 0 && !this.skeleton) {
-			this._finishedLoading();
-			return html`${this._renderNoAssessablePosts()}`;
-		}
 
 		if (this.discussionPostList && typeof this._displayedDiscussionPostObjects === 'undefined') {
-			this._getDiscussionPostEntities().then(() => this.requestUpdate());
+			this._getDiscussionPostEntities().then(() => {
+				this.requestUpdate();
+				return this._renderDiscussionPosts();
+			});
+		} else {
+			return this._renderDiscussionPosts();
 		}
 
-		return html`
-			${this._renderListModifiers()}
-			${this._renderDiscussionPost()}
-		`;
 	}
 
 	async updated(changedProperties) {
@@ -291,7 +288,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		}
 	}
 
-	_renderDiscussionPost() {
+	_renderDiscussionPostPage() {
 		return html`
 			<d2l-consistent-evaluation-discussion-post-page
 				?skeleton=${this.skeleton}
@@ -300,6 +297,17 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 				.token=${this.token}
 				.filteringStatus=${this._filteringStatus}
 			></d2l-consistent-evaluation-discussion-post-page>
+		`;
+	}
+	_renderDiscussionPosts() {
+		if (this.discussionPostList && this.discussionPostList.length === 0 && !this.skeleton) {
+			this._finishedLoading();
+			return html`${this._renderNoAssessablePosts()}`;
+		}
+
+		return html`
+			${this._renderListModifiers()}
+			${this._renderDiscussionPostPage()}
 		`;
 	}
 	_renderFilterDropDownList() {
