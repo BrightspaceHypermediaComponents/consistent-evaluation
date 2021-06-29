@@ -266,6 +266,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			canAddFeedbackFile: false,
 			canRecordFeedbackVideo: false,
 			canRecordFeedbackAudio: false,
+			canAddFeedbackLink: false,
 			canAddFeedbackGoogleDriveLink: false,
 			canAddFeedbackOneDriveLink: false,
 			attachments: []
@@ -336,6 +337,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		const canAddFeedbackFile = this._attachmentsInfo.canAddFeedbackFile;
 		const canRecordFeedbackVideo = this._attachmentsInfo.canRecordFeedbackVideo;
 		const canRecordFeedbackAudio = this._attachmentsInfo.canRecordFeedbackAudio;
+		const canAddFeedbackLink = this._attachmentsInfo.canAddFeedbackLink;
 		const canAddFeedbackGoogleDriveLink = this._attachmentsInfo.canAddFeedbackGoogleDriveLink;
 		const canAddFeedbackOneDriveLink = this._attachmentsInfo.canAddFeedbackOneDriveLink;
 		const attachments = this._attachmentsInfo.attachments;
@@ -411,6 +413,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?allow-add-file=${canAddFeedbackFile}
 						?allow-record-video=${canRecordFeedbackVideo}
 						?allow-record-audio=${canRecordFeedbackAudio}
+						?allow-add-link=${canAddFeedbackLink}
 						?allow-add-link-google-drive=${canAddFeedbackGoogleDriveLink}
 						?allow-add-link-one-drive=${canAddFeedbackOneDriveLink}
 						?skeleton=${this.skeleton}
@@ -905,6 +908,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
 	}
 	async _transientAddAttachmentLink(e) {
+		console.log(e.detail);
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);
