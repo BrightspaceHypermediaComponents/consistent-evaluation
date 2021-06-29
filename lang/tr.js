@@ -35,6 +35,7 @@ export default {
 	"fileMarkedAsRead": "{fileName} okundu olarak işaretlendi",
 	"fileMarkedAsUnread": "{fileName} okunmadı olarak işaretlendi",
 	"fileSubmission": "Dosya Gönderimi",
+	"filteringComplete": "Filtering is complete",
 	"fiveStarRatings": "{numStars} of five stars from {numRatings} {numRatings, plural, =1 {rating} other {ratings}}",
 	"flag": "Bayrak İşareti Ekle",
 	"flagged": "Bayrak İşaretli",

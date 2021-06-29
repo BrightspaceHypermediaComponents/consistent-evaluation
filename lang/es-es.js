@@ -35,6 +35,7 @@ export default {
 	"fileMarkedAsRead": "{fileName} marcado como leído",
 	"fileMarkedAsUnread": "{fileName} marcado como no leído",
 	"fileSubmission": "Entrega de archivos",
+	"filteringComplete": "Filtering is complete",
 	"fiveStarRatings": "{numStars} of five stars from {numRatings} {numRatings, plural, =1 {rating} other {ratings}}",
 	"flag": "Marcar",
 	"flagged": "Marcado",
