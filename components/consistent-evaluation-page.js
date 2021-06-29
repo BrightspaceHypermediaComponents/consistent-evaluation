@@ -924,7 +924,6 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		this._attachmentsInfo = await this._controller.fetchAttachments(this.evaluationEntity);
 	}
 	async _transientAddAttachmentLink(e) {
-		console.log(e.detail);
 		await this._mutex.dispatch(
 			async() => {
 				const entity = await this._controller.fetchEvaluationEntity(false);

@@ -89,32 +89,6 @@ class ConsistentEvaluationAttachmentsEditor extends MobxLitElement {
 		`;
 	}
 
-	async _getQuickLink(e) {
-		if (e.m_typeKey === this._sources.url) {
-			return e.m_url;
-		}
-
-		const isRemotePlugin = Boolean(
-			e.m_url &&
-			e.m_url.length > 0 &&
-			!Object.values(this._sources).includes(e.m_typeKey)
-		);
-
-		if (isRemotePlugin) {
-			if (/^(http|https|ftp):\/\//i.test(e.m_url)) {
-				return e.m_url;
-			} else {
-				return decodeURIComponent(e.m_url);
-			}
-		}
-
-		const orgUnitId = JSON.parse(document.documentElement.getAttribute('data-he-context')).orgUnitId;
-		const quicklinkUrl = `/d2l/api/lp/unstable/${orgUnitId}/quickLinks/${e.m_typeKey}/${e.m_id}`;
-		const response = await fetch(quicklinkUrl);
-		const json = await response.json();
-		return json.QuickLink;
-	}
-
 	_dispatchAddAttachmentEvent(e) {
 		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-attachments-add', {
 			composed: true,
@@ -157,6 +131,32 @@ class ConsistentEvaluationAttachmentsEditor extends MobxLitElement {
 				file: e.detail
 			}
 		}));
+	}
+
+	async _getQuickLink(e) {
+		if (e.m_typeKey === this._sources.url) {
+			return e.m_url;
+		}
+
+		const isRemotePlugin = Boolean(
+			e.m_url &&
+			e.m_url.length > 0 &&
+			!Object.values(this._sources).includes(e.m_typeKey)
+		);
+
+		if (isRemotePlugin) {
+			if (/^(http|https|ftp):\/\//i.test(e.m_url)) {
+				return e.m_url;
+			} else {
+				return decodeURIComponent(e.m_url);
+			}
+		}
+
+		const orgUnitId = JSON.parse(document.documentElement.getAttribute('data-he-context')).orgUnitId;
+		const quicklinkUrl = `/d2l/api/lp/unstable/${orgUnitId}/quickLinks/${e.m_typeKey}/${e.m_id}`;
+		const response = await fetch(quicklinkUrl);
+		const json = await response.json();
+		return json.QuickLink;
 	}
 
 	get _sources() {
