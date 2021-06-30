@@ -345,6 +345,7 @@ export class ConsistentEvaluationHrefController {
 					if (assessmentEntity && assessmentEntity.entity) {
 						const rubricHref = this._getHref(assessmentEntity.entity, Rels.rubric);
 						const rubricEntity = await this._getEntityFromHref(rubricHref, false);
+						const rubricScore = assessmentEntity.entity.properties.score;
 						const rubricTitle = rubricEntity.entity.properties.name;
 						const rubricId = rubricEntity.entity.properties.rubricId.toString();
 						const rubricOutOf = rubricEntity.entity.properties.outOf;
@@ -367,6 +368,7 @@ export class ConsistentEvaluationHrefController {
 							rubricHref,
 							rubricAssessmentHref,
 							rubricTitle,
+							rubricScore,
 							rubricId,
 							rubricOutOf,
 							rubricScoringMethod,

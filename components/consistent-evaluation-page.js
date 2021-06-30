@@ -623,6 +623,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		return undefined;
 	}
 	get _grade() {
+		if (this._gradeEntity && this._gradeEntity.properties.score === null && this.rubricInfos.length !== 0) {
+			this._gradeEntity.properties.score = this.rubricInfos[0].rubricScore;
+			return this._controller.parseGrade(this._gradeEntity);
+		}
 		if (this._gradeEntity) {
 			return this._controller.parseGrade(this._gradeEntity);
 		}
