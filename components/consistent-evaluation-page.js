@@ -163,12 +163,20 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: 'use-inline-grading-revamp',
 				type: Boolean
 			},
+			useInlineOverallScore: {
+				attribute: 'use-inline-overall-score',
+				type: Boolean
+			},
 			useNewInlineRubricTile: {
 				attribute: 'use-new-inline-rubric-tile',
 				type: Boolean
 			},
 			displayConversionWarning: {
 				attribute: 'display-conversion-warning',
+				type: Boolean
+			},
+			useNewBrightspaceEditor: {
+				attribute: 'use-new-brightspace-editor',
 				type: Boolean
 			},
 			activityType: {
@@ -275,6 +283,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 			canAddFeedbackFile: false,
 			canRecordFeedbackVideo: false,
 			canRecordFeedbackAudio: false,
+			canAddFeedbackLink: false,
 			canAddFeedbackGoogleDriveLink: false,
 			canAddFeedbackOneDriveLink: false,
 			attachments: []
@@ -345,6 +354,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		const canAddFeedbackFile = this._attachmentsInfo.canAddFeedbackFile;
 		const canRecordFeedbackVideo = this._attachmentsInfo.canRecordFeedbackVideo;
 		const canRecordFeedbackAudio = this._attachmentsInfo.canRecordFeedbackAudio;
+		const canAddFeedbackLink = this._attachmentsInfo.canAddFeedbackLink;
 		const canAddFeedbackGoogleDriveLink = this._attachmentsInfo.canAddFeedbackGoogleDriveLink;
 		const canAddFeedbackOneDriveLink = this._attachmentsInfo.canAddFeedbackOneDriveLink;
 		const attachments = this._attachmentsInfo.attachments;
@@ -421,12 +431,15 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						?allow-add-file=${canAddFeedbackFile}
 						?allow-record-video=${canRecordFeedbackVideo}
 						?allow-record-audio=${canRecordFeedbackAudio}
+						?allow-add-link=${canAddFeedbackLink}
 						?allow-add-link-google-drive=${canAddFeedbackGoogleDriveLink}
 						?allow-add-link-one-drive=${canAddFeedbackOneDriveLink}
 						?skeleton=${this.skeleton}
 						?use-new-html-editor=${this.useNewHtmlEditor}
 						?use-inline-grading-revamp=${this.useInlineGradingRevamp}
+						?use-inline-overall-score=${this.useInlineOverallScore}
 						?use-new-inline-rubric-tile=${this.useNewInlineRubricTile}
+						?use-new-brightspace-editor=${this.useNewBrightspaceEditor}
 						@on-d2l-consistent-eval-feedback-edit=${this._transientSaveFeedback}
 						@on-d2l-consistent-eval-feedback-attachments-add=${this._transientAddAttachment}
 						@on-d2l-consistent-eval-feedback-attachments-add-link=${this._transientAddAttachmentLink}

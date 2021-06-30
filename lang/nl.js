@@ -35,6 +35,7 @@ export default {
 	"fileMarkedAsRead": "{fileName} gemarkeerd als gelezen",
 	"fileMarkedAsUnread": "{fileName} gemarkeerd als niet gelezen",
 	"fileSubmission": "Bestanden indienen",
+	"filteringComplete": "Filtering is complete",
 	"fiveStarRatings": "{numStars} of five stars from {numRatings} {numRatings, plural, =1 {rating} other {ratings}}",
 	"flag": "Markeren",
 	"flagged": "Gemarkeerd",

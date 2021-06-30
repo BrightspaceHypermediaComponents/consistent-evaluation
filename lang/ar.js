@@ -35,6 +35,7 @@ export default {
 	"fileMarkedAsRead": "تم وضع علامة مقروء على {fileName}",
 	"fileMarkedAsUnread": "تم وضع علامة غير مقروء على {fileName}",
 	"fileSubmission": "إرسال الملف",
+	"filteringComplete": "Filtering is complete",
 	"fiveStarRatings": "{numStars} of five stars from {numRatings} {numRatings, plural, =1 {rating} other {ratings}}",
 	"flag": "وضع إشارة على",
 	"flagged": "تم وضع إشارة",

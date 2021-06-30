@@ -28,6 +28,10 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				attribute: 'can-record-audio',
 				type: Boolean
 			},
+			canAddFeedbackLink: {
+				attribute: 'allow-add-link',
+				type: Boolean
+			},
 			canAddFeedbackGoogleDriveLink: {
 				attribute: 'allow-add-link-google-drive',
 				type: Boolean
@@ -74,6 +78,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		this.canAddFile = false;
 		this.canRecordVideo = false;
 		this.canRecordAudio = false;
+		this.canAddFeedbackLink = false;
 		this.canAddFeedbackGoogleDriveLink = false;
 		this.canAddFeedbackOneDriveLink = false;
 		this.useNewHtmlEditor = false;
@@ -102,6 +107,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 							.canAddFile="${this.canAddFile}"
 							.canRecordVideo="${this.canRecordVideo}"
 							.canRecordAudio="${this.canRecordAudio}"
+							.canAddFeedbackLink="${this.canAddFeedbackLink}"
 							.canAddFeedbackGoogleDriveLink="${this.canAddFeedbackGoogleDriveLink}"
 							.canAddFeedbackOneDriveLink="${this.canAddFeedbackOneDriveLink}">
 						</d2l-consistent-evaluation-attachments-editor>

@@ -33,6 +33,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				attribute: 'allow-record-audio',
 				type: Boolean
 			},
+			canAddFeedbackLink: {
+				attribute: 'allow-add-link',
+				type: Boolean
+			},
 			canAddFeedbackGoogleDriveLink: {
 				attribute: 'allow-add-link-google-drive',
 				type: Boolean
@@ -115,8 +119,16 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				attribute: 'use-inline-grading-revamp',
 				type: Boolean
 			},
+			useInlineOverallScore: {
+				attribute: 'use-inline-overall-score',
+				type: Boolean
+			},
 			useNewInlineRubricTile: {
 				attribute: 'use-new-inline-rubric-tile',
+				type: Boolean
+			},
+			useNewBrightspaceEditor: {
+				attribute: 'use-new-brightspace-editor',
 				type: Boolean
 			},
 			discussionCalulationType: {
@@ -227,6 +239,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 		this.canAddFeedbackFile = false;
 		this.canRecordFeedbackVideo = false;
 		this.canRecordFeedbackAudio = false;
+		this.canAddFeedbackLink = false;
 		this.canAddFeedbackGoogleDriveLink = false;
 		this.canAddFeedbackOneDriveLink = false;
 		this.canSaveOverallGrade = false;
@@ -324,6 +337,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 					?can-add-file=${this.canAddFeedbackFile}
 					?can-record-video=${this.canRecordFeedbackVideo}
 					?can-record-audio=${this.canRecordFeedbackAudio}
+					?allow-add-link=${this.canAddFeedbackLink}
 					?allow-add-link-google-drive=${this.canAddFeedbackGoogleDriveLink}
 					?allow-add-link-one-drive=${this.canAddFeedbackOneDriveLink}
 					?use-new-html-editor=${this.useNewHtmlEditor}
@@ -414,7 +428,9 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 					?read-only=${this.rubricReadOnly}
 					?can-save-overall-grade=${this.canSaveOverallGrade}
 					?use-inline-grading-revamp=${this.useInlineGradingRevamp}
+					?use-inline-overall-score=${this.useInlineOverallScore}
 					?new-inline-tile=${this.useNewInlineRubricTile}
+					?use-new-brightspace-editor=${this.useNewBrightspaceEditor}
 					@d2l-consistent-eval-rubric-total-score-changed=${this._syncGradeToRubricScore}
 					@d2l-consistent-eval-active-scoring-rubric-change=${this._updateScoreWithActiveScoringRubric}
 					@d2l-rubric-compact-expanded-changed=${this._updateRubricOpenState}

@@ -35,6 +35,7 @@ export default {
 	"fileMarkedAsRead": "{fileName} 标记为已读",
 	"fileMarkedAsUnread": "{fileName} 标记为未读",
 	"fileSubmission": "文件提交",
+	"filteringComplete": "Filtering is complete",
 	"fiveStarRatings": "{numStars} of five stars from {numRatings} {numRatings, plural, =1 {rating} other {ratings}}",
 	"flag": "标记",
 	"flagged": "已标记",

@@ -140,16 +140,20 @@ export class ConsistentEvaluationEvidenceFile extends LocalizeConsistentEvaluati
 		this._displayToast = false;
 	}
 	_postOriginalFileUrl(e, url) {
-		e.source.postMessage({
-			type: 'original-file',
-			fileUrl: url
-		}, 'https://s.brightspace.com');
+		if (e.source) {
+			e.source.postMessage({
+				type: 'original-file',
+				fileUrl: url
+			}, 'https://s.brightspace.com');
+		}
 	}
 	_postTokenResponse(e, token) {
-		e.source.postMessage({
-			type: 'token-response',
-			token: token
-		}, 'https://s.brightspace.com');
+		if (e.source) {
+			e.source.postMessage({
+				type: 'token-response',
+				token: token
+			}, 'https://s.brightspace.com');
+		}
 	}
 
 	_renderToast() {

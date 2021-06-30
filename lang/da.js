@@ -35,6 +35,7 @@ export default {
 	"fileMarkedAsRead": "{fileName} markeret som læst",
 	"fileMarkedAsUnread": "{fileName} markeret som ulæst",
 	"fileSubmission": "Filaflevering",
+	"filteringComplete": "Filtering is complete",
 	"fiveStarRatings": "{numStars} of five stars from {numRatings} {numRatings, plural, =1 {rating} other {ratings}}",
 	"flag": "Mærk med flag",
 	"flagged": "Flagmærket",
