@@ -45,6 +45,7 @@ export class ConsistentEvaluationController {
 		const canAddFeedbackFile = attachmentsEntity.hasActionByName('add-file');
 		const canRecordFeedbackVideo = attachmentsEntity.hasActionByName('add-video-note');
 		const canRecordFeedbackAudio = attachmentsEntity.hasActionByName('add-audio-note');
+		const canAddFeedbackLink = attachmentsEntity.hasActionByName('add-link');
 		const canAddFeedbackGoogleDriveLink = attachmentsEntity.hasActionByName('add-link-google-drive');
 		const canAddFeedbackOneDriveLink = attachmentsEntity.hasActionByName('add-link-one-drive');
 		const attachments = [];
@@ -69,6 +70,7 @@ export class ConsistentEvaluationController {
 			canAddFeedbackFile,
 			canRecordFeedbackVideo,
 			canRecordFeedbackAudio,
+			canAddFeedbackLink,
 			canAddFeedbackGoogleDriveLink,
 			canAddFeedbackOneDriveLink,
 			attachments
