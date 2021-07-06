@@ -5,6 +5,7 @@ import 'd2l-polymer-siren-behaviors/store/entity-store.js';
 import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/list/list-item.js';
 import '@brightspace-ui/core/components/list/list-item-content.js';
+import '@brightspace-ui/core/components/inputs/input-search.js';
 import { html, LitElement } from 'lit-element';
 import { convertToken } from '../helpers/converterHelpers.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
@@ -93,14 +94,14 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		this.flush = this.flush.bind(this);
 	}
 
-	static get styles() {
-		return [tableStyles];
-	}
-
 	connectedCallback() {
 		super.connectedCallback();
 		this.addEventListener('d2l-request-provider', this.htmlEditorEnabled);
 		window.addEventListener('d2l-flush', this.flush);
+		window.addEventListener('d2l-input-search-searched', (e) => {
+			// e.detail.value contains the search value
+			console.log(e.detail.value);
+		});
 	}
 	disconnectedCallback() {
 		this.removeEventListener('d2l-request-provider', this.htmlEditorEnabled);
@@ -204,9 +205,19 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			?opened=${this.commentBankOpen}
 			width=1000
 			@d2l-dialog-close=${this._onCommentBankClose}>
+				${this._renderCommentBankSearch()}
 				${this._renderCommentBank()}
 		</d2l-dialog>`;
 	}
+
+	_renderCommentBankSearch() {
+		return html`<d2l-input-search
+				label="Search"
+				placeholder="Search comments"
+				@d2l-input-search-searched=${this._onCommentBankSearch}>
+			</d2l-input-search>`
+	}
+
 	_saveOnFeedbackChange(e) {
 		const feedback = e.detail.content;
 		this._emitFeedbackTextEditorChangeEvent();
@@ -223,6 +234,11 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 	_onCommentBankOpen() {
 		this.commentBankOpen = true;
+	}
+
+	_onCommentBankSearch(e) {
+		const searchTerm = e.detail.value;
+		console.log(searchTerm)
 	}
 
 	_renderCommentBank() {
