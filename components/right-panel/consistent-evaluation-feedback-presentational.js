@@ -2,6 +2,9 @@ import 'd2l-activities/components/d2l-activity-editor/d2l-activity-text-editor.j
 import './consistent-evaluation-right-panel-block';
 import './consistent-evaluation-attachments-editor.js';
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
+import '@brightspace-ui/core/components/list/list.js';
+import '@brightspace-ui/core/components/list/list-item.js';
+import '@brightspace-ui/core/components/list/list-item-content.js';
 import { html, LitElement } from 'lit-element';
 import { convertToken } from '../helpers/converterHelpers.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
@@ -46,6 +49,9 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			attachments: {
 				attribute: false
 			},
+			commentBankOpen: {
+				attribute: false
+			},
 			href: {
 				type: String
 			},
@@ -82,8 +88,13 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		this.canAddFeedbackGoogleDriveLink = false;
 		this.canAddFeedbackOneDriveLink = false;
 		this.useNewHtmlEditor = false;
+		this.commentBankOpen = false;
 		this._debounceJobs = {};
 		this.flush = this.flush.bind(this);
+	}
+
+	static get styles() {
+		return [tableStyles];
 	}
 
 	connectedCallback() {
@@ -120,6 +131,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 					supportingInfo=${ifDefined(this._feedbackSummaryInfo)}
 					title="${this.localize('overallFeedback')}">
 						${this._getHtmlEditor()}
+						${this._getCommentBank()}
 						${attachmentsComponent}
 				</d2l-consistent-evaluation-right-panel-block>
 			`;
@@ -144,6 +156,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			e.detail.provider = true;
 		}
 	}
+
 
 	_emitFeedbackEditEvent(feedback) {
 		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-edit', {
@@ -170,6 +183,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 					height="15rem"
 					@d2l-htmleditor-blur="${this._saveOnFeedbackChangeNewEditor}">
 				</d2l-htmleditor>
+				<d2l-button class="d2l-desktop" primary @click="${this._onCommentBankOpen}">OPEN BANK!</d2l-button>
 			`;
 		} else {
 			return html `
@@ -183,6 +197,16 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			`;
 		}
 	}
+
+	_getCommentBank() {
+	return html`<d2l-dialog
+			title-text='Comment BANK!'
+			?opened=${this.commentBankOpen}
+			width=1000
+			@d2l-dialog-close=${this._onCommentBankClose}>
+				${this._renderCommentBank()}
+		</d2l-dialog>`;
+	}
 	_saveOnFeedbackChange(e) {
 		const feedback = e.detail.content;
 		this._emitFeedbackTextEditorChangeEvent();
@@ -191,6 +215,41 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			timeOut.after(800),
 			() => this._emitFeedbackEditEvent(feedback)
 		);
+	}
+
+	_onCommentBankClose() {
+		this.commentBankOpen = false;
+	}
+
+	_onCommentBankOpen() {
+		this.commentBankOpen = true;
+	}
+
+	_renderCommentBank() {
+		var testing = ['HELLO', 'GOOD BYE', 'HELLO AND GOODBYE! '];
+		const itemTemplate = testing.map(text => {
+
+			let onClickHandler = () => this._addFeedbackFromBank(text)
+
+			return html`
+				<d2l-list-item class="d2l-list-item"
+					@click=${onClickHandler}>
+					<d2l-list-item-content class="d2l-list-item-content">
+						<div>Testing + ${text}</div>
+					</d2l-list-item-content>
+				</d2l-list-item>
+			`;
+		});
+
+		return html`
+			<d2l-list>
+				${itemTemplate}
+			</d2l-list>`
+	}
+
+	_addFeedbackFromBank(text) {
+		this.feedbackText += ' ' + text;
+		this.commentBankOpen = false;
 	}
 
 	_saveOnFeedbackChangeNewEditor() {
