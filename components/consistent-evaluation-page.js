@@ -636,11 +636,13 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 		return undefined;
 	}
 	get _grade() {
-		if (this._gradeEntity && this._gradeEntity.properties.score === null && this.rubricInfos.length !== 0) {
-			this._gradeEntity.properties.score = this.rubricInfos[0].rubricScore;
+		if (this._gradeEntity && this._gradeEntity.properties.score === null && this.rubricInfos.length === 1) {
+			this._gradeEntity.properties.score = this.rubricInfos[0].rubricScore || 0;
 			return this._controller.parseGrade(this._gradeEntity);
-		}
-		if (this._gradeEntity) {
+		} else if (this._gradeEntity && this._gradeEntity.properties.score === null && this._activeScoringRubric) {
+			this._gradeEntity.properties.score = this.rubricInfos.find(({ rubricId }) => rubricId === this._activeScoringRubric).rubricScore || 0;
+			return this._controller.parseGrade(this._gradeEntity);
+		} else if (this._gradeEntity) {
 			return this._controller.parseGrade(this._gradeEntity);
 		}
 		return new Grade(GradeType.Number, 0, 0, null, null, this._gradeEntity);
