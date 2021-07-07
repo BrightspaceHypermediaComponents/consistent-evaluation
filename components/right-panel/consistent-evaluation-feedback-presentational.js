@@ -105,6 +105,9 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			#comment-bank-button {
 				float: right
 			}
+			.d2l-list-item:hover {
+				cursor: pointer;
+			}
 		`];
 	}
 	connectedCallback() {
@@ -313,7 +316,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		});
 
 		return html`
-			<d2l-list>
+			<d2l-list separators="between">
 				${itemTemplate}
 			</d2l-list>`
 	}
