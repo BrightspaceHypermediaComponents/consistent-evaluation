@@ -117,7 +117,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 	render() {
 
 		if (this.discussionPostList && typeof this._displayedDiscussionPostObjects === 'undefined') {
-			this._getDiscussionPostEntities().then(() => {
+			this._getDiscussionPostEntities(true).then(() => {
 				this.requestUpdate();
 				return this._renderDiscussionPosts();
 			});
@@ -131,6 +131,11 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		super.updated(changedProperties);
 		if (changedProperties.has('discussionTopicLink')) {
 			this._clearFilters();
+		}
+		if (changedProperties.has('discussionPostList')) {
+			if (this._displayedDiscussionPostObjects && this._token) {
+				this._getDiscussionPostEntities(false).then(() => this.requestUpdate());
+			}
 		}
 		if (changedProperties.has('skeleton')) {
 			// on student change or page reload, reset variable to prompt refiltering/sorting of posts
@@ -162,7 +167,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		}
 		this._selectedFilters = newFilters;
 		this._filteringStatus = '';
-		this._getDiscussionPostEntities().then(() => {
+		this._getDiscussionPostEntities(true).then(() => {
 			if (this._displayedDiscussionPostObjects.length > 0) {
 				this._filteringStatus = this.localize('filteringComplete');
 			} else {
@@ -243,8 +248,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 		return {};
 	}
 
-	async _getDiscussionPostEntities() {
-		this._displayedDiscussionPostObjects = [];
+	async _getDiscussionPostEntities(applyFilter) {
 		if (typeof this.discussionPostList !== 'undefined') {
 			this._displayedDiscussionPostObjects = await Promise.all(this.discussionPostList.map(async discussionPostEvaluationEntity => {
 				if (discussionPostEvaluationEntity.links && discussionPostEvaluationEntity.links[0].href) {
@@ -255,7 +259,9 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 					}
 				}
 			}));
-			this._displayedDiscussionPostObjects = filterDiscussionPosts(this._displayedDiscussionPostObjects, this._selectedFilters);
+			if (applyFilter) {
+				this._displayedDiscussionPostObjects = filterDiscussionPosts(this._displayedDiscussionPostObjects, this._selectedFilters);
+			}
 			sortDiscussionPosts(this._displayedDiscussionPostObjects, this._sortingMethod);
 			this._finishedLoading();
 		}
@@ -398,7 +404,7 @@ export class ConsistentEvaluationEvidenceDiscussion extends SkeletonMixin(RtlMix
 
 	_sortPosts(e) {
 		this._sortingMethod = e.detail.value;
-		this._getDiscussionPostEntities().then(() => this.requestUpdate());
+		this._getDiscussionPostEntities(true).then(() => this.requestUpdate());
 	}
 
 }
