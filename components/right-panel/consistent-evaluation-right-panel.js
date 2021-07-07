@@ -91,6 +91,10 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 				attribute: false,
 				type: Array
 			},
+			mySavedFeedback: {
+				attribute: false,
+				type: Array
+			},
 			activeScoringRubric: {
 				attribute: 'active-scoring-rubric',
 				type: String
@@ -344,6 +348,7 @@ export class ConsistentEvaluationRightPanel extends SkeletonMixin(LocalizeConsis
 					.feedbackText=${this.feedbackText}
 					.attachments=${this.feedbackAttachments}
 					.richTextEditorConfig=${this.richTextEditorConfig}
+					.mySavedFeedback=${this.mySavedFeedback}
 				></d2l-consistent-evaluation-feedback-presentational>
 			`;
 		}

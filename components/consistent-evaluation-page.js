@@ -64,6 +64,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 				attribute: false,
 				type: Array
 			},
+			mySavedFeedback: {
+				attribute: false,
+				type: Array
+			},
 			rubricReadOnly: {
 				attribute: 'rubric-read-only',
 				type: Boolean
@@ -407,6 +411,7 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 						evaluation-href=${ifDefined(this.evaluationHref)}
 						.feedbackText=${this._feedbackText}
 						.rubricInfos=${this.rubricInfos}
+						.mySavedFeedback=${this.mySavedFeedback}
 						active-scoring-rubric=${ifDefined(this._activeScoringRubric)}
 						edit-activity-path=${ifDefined(this.editActivityPath)}
 						.feedbackAttachments=${attachments}

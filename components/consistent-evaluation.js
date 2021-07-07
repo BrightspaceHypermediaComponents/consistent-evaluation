@@ -59,6 +59,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				attribute: 'outcome-term',
 				type: String
 			},
+			mySavedFeedbackHref: {
+				attribute: 'my-saved-feedback-href',
+				type: String
+			},
 			_rubricReadOnly: { type: Boolean },
 			_childHrefs: { type: Object },
 			_rubricInfos: { type: Array },
@@ -73,6 +77,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			_activityType: { type: String },
 			_discussionPostList: { type: Object },
 			_pageTitle: { type: String },
+			_mySavedFeedback: { type: Array },
 			fileId: {
 				attribute: 'file-id',
 				type: String
@@ -104,6 +109,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._richTextEditorDisabled = false;
 		this._childHrefs = undefined;
 		this._rubricInfos = undefined;
+		this._mySavedFeedback = undefined;
 		this._submissionInfo = undefined;
 		this._gradeItemInfo = undefined;
 		this._groupInfo = undefined;
@@ -148,6 +154,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				discussion-topic-link=${ifDefined(this._discussionTopicInfo && this._discussionTopicInfo.topicLink)}
 				.currentFileId=${this.currentFileId}
 				.rubricInfos=${this._rubricInfos}
+				.mySavedFeedback=${this._mySavedFeedback}
 				.submissionInfo=${this._submissionInfo}
 				.gradeItemInfo=${this._gradeItemInfo}
 				.navTitleInfo=${this._navTitleInfo}
@@ -173,6 +180,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}
 				@d2l-consistent-eval-rubric-popup-closed=${this._refreshRubrics}
 				@d2l-consistent-eval-on-evaluation-save=${this._refreshInfos}
+				@on-d2l-consistent-evaluation-get-my-saved-feedback=${this._getMySavedFeedback}
 			></d2l-consistent-evaluation-page>
 		`;
 	}
@@ -371,6 +379,13 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 	async _refreshRubrics() {
 		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
 		this._rubricInfos = await controller.getRubricInfos(true);
+	}
+
+
+	async _getMySavedFeedback(e) {
+		console.log(e);
+		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
+		this._mySavedFeedback = await controller.getMySavedFeedback(this.mySavedFeedbackHref, e.detail)
 	}
 	_setLoading() {
 		for (const component in this._loadingComponents) {

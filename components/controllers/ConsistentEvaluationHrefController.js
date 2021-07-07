@@ -463,4 +463,16 @@ export class ConsistentEvaluationHrefController {
 			});
 		}
 	}
+
+	async getMySavedFeedback(mySavedFeedbackHref, search) {
+		let bypassCache = false;
+
+		if(search) {
+			bypassCache = true;
+			mySavedFeedbackHref = mySavedFeedbackHref + "?search=" + search;
+		}
+
+		const mySavedFeedback = await this._getEntityFromHref(mySavedFeedbackHref, bypassCache);
+		return mySavedFeedback.entity.getSubEntitiesByClass('feedback');
+	}
 }
