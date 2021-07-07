@@ -247,17 +247,20 @@ export class ConsistentEvaluationController {
 	}
 	async transientSaveFeedback(evaluationEntity, feedbackValue) {
 		if (!evaluationEntity) {
-			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);
-		}
-		if (typeof feedbackValue !== 'string') {
-			throw new Error(ConsistentEvaluationControllerErrors.INVALID_FEEDBACK_TEXT);
-		}
+			throw new Error(ConsistentEvaluationControllerErrors.INVALID_EVALUATION_ENTITY);		}
+
 		const targetEntity = evaluationEntity.getSubEntityByRel('feedback');
 		if (!targetEntity) {
 			throw new Error(ConsistentEvaluationControllerErrors.FEEDBACK_ENTITY_NOT_FOUND);
 		}
 
-		return await this._performAction(targetEntity, saveFeedbackActionName, saveFeedbackFieldName, feedbackValue);
+		console.log(feedbackValue);
+		return await this._performAction(
+			targetEntity,
+			saveFeedbackActionName,
+			saveFeedbackFieldName,
+			JSON.stringify(feedbackValue)
+		);
 	}
 	async transientSaveGrade(evaluationEntity, gradeValue) {
 		if (!evaluationEntity) {

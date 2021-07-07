@@ -11,6 +11,7 @@ import { convertToken } from '../helpers/converterHelpers.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
+import { radioStyles } from '@brightspace-ui/core/components/inputs/input-radio-styles.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 
@@ -85,7 +86,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 	constructor() {
 		super();
-
+		this.commentBankOption = 0;
 		this.canEditFeedback = false;
 		this.canAddFile = false;
 		this.canRecordVideo = false;
@@ -100,7 +101,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 	}
 
 	static get styles() {
-		return [css`
+		return [radioStyles, css`
 			#comment-bank-button {
 				float: right
 			}
@@ -136,6 +137,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			this._setFeedbackSummaryInfo();
 			return html`
 			<d2l-button id="comment-bank-button" class="d2l-desktop" @click="${this._onCommentBankOpen}">Comment Bank</d2l-button>
+				${this._renderCommentBankOptions()}
 				<d2l-consistent-evaluation-right-panel-block
 					class="d2l-consistent-evaluation-feedback-block"
 					supportingInfo=${ifDefined(this._feedbackSummaryInfo)}
@@ -178,10 +180,14 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 	}
 
 	_emitFeedbackEditEvent(feedback) {
+		let commentBankOption = this.commentBankOption;
 		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-feedback-edit', {
 			composed: true,
 			bubbles: true,
-			detail: feedback
+			detail: {
+				comment: feedback,
+				storageSetting: commentBankOption
+			}
 		}));
 	}
 	_emitFeedbackTextEditorChangeEvent() {
@@ -236,6 +242,23 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			</d2l-input-search>`
 	}
 
+	_renderCommentBankOptions() {
+		return html`
+		  <label class="d2l-input-radio-label">
+			<input type="radio" name="commentBankGroup" checked value=0  @change="${this._onCommentBankOptionChange}">
+			Do not store comment
+		  </label>
+		  <label class="d2l-input-radio-label">
+			<input type="radio" name="commentBankGroup" value=1 @change="${this._onCommentBankOptionChange}">
+			Store comment in personal bank
+		  </label>
+		  <label class="d2l-input-radio-label">
+			<input type="radio" name="commentBankGroup" value=2 @change="${this._onCommentBankOptionChange}">
+			Store comment in public bank
+		  </label>
+		`;
+	  }
+
 	_saveOnFeedbackChange(e) {
 		const feedback = e.detail.content;
 		this._emitFeedbackTextEditorChangeEvent();
@@ -266,6 +289,10 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 	_onCommentBankSearch(e) {
 		const searchTerm = e.detail.value;
 		this._emitGetMySavedFeedbackEvent(searchTerm);
+	}
+
+	_onCommentBankOptionChange(e) {
+		this.commentBankOption = e.target.value
 	}
 
 	_renderCommentBank() {
