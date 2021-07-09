@@ -305,12 +305,21 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 		const itemTemplate = this.mySavedFeedback.map(feedback => {
 			let onClickHandler = () => this._addFeedbackFromBank(feedback.properties.text);
+			let onDeleteHandler = () => this._deleteFeedbackFromBank(feedback.properties.text);
 			return html`
-				<d2l-list-item class="d2l-list-item"
-					@click=${onClickHandler}>
+				<d2l-list-item
+					class="d2l-list-item"
+					@click=${onClickHandler}
 					<d2l-list-item-content class="d2l-list-item-content">
 						<div>${unsafeHTML(feedback.properties.text)}</div>
 					</d2l-list-item-content>
+					<div slot="actions">
+						<d2l-button-icon
+							text="TRASHHHH"
+							icon="tier1:delete"
+							@click=${onDeleteHandler}
+						></d2l-button-icon>
+					</div>
 				</d2l-list-item>
 			`;
 		});
@@ -324,6 +333,19 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 	_addFeedbackFromBank(text) {
 		this.feedbackText += ' ' + text;
 		this.commentBankOpen = false;
+	}
+
+	_deleteFeedbackFromBank(text) {
+		console.log('DELETE ME!!!');
+		console.log(text);
+
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-comment-delete', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				comment: feedback
+			}
+		}));
 	}
 
 	_saveOnFeedbackChangeNewEditor() {

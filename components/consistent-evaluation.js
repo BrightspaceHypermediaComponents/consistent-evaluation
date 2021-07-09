@@ -121,6 +121,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._mutex = new Awaiter();
 		this._loading = true;
 		this._pageTitle = '';
+		this._refreshCommentBank = false; 
 		this._loadingComponents = {
 			discussions: true,
 			main : true,
@@ -341,6 +342,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 	}
 
 	async _onNextStudentClick() {
+		this._refreshCommentBank = true;
 		await this._mutex.dispatch(
 			async() => {
 				const nextStudentHref = this._childHrefs?.nextHref;
@@ -353,6 +355,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		);
 	}
 	async _onPreviousStudentClick() {
+		this._refreshCommentBank = true;
 		await this._mutex.dispatch(
 			async() => {
 				const previousStudentHref = this._childHrefs?.previousHref;
@@ -385,7 +388,8 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 	async _getMySavedFeedback(e) {
 		console.log(e);
 		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
-		this._mySavedFeedback = await controller.getMySavedFeedback(this.mySavedFeedbackHref, e.detail)
+		this._mySavedFeedback = await controller.getMySavedFeedback(this.mySavedFeedbackHref, e.detail, this._refreshCommentBank);
+		this._refreshCommentBank = false;
 	}
 	_setLoading() {
 		for (const component in this._loadingComponents) {
