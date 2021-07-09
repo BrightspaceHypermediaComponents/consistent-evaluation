@@ -2,10 +2,11 @@ import 'd2l-activities/components/d2l-activity-editor/d2l-activity-text-editor.j
 import './consistent-evaluation-right-panel-block';
 import './consistent-evaluation-attachments-editor.js';
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
+import '@brightspace-ui/core/components/html-block/html-block.js';
+import '@brightspace-ui/core/components/inputs/input-search.js';
 import '@brightspace-ui/core/components/list/list.js';
 import '@brightspace-ui/core/components/list/list-item.js';
 import '@brightspace-ui/core/components/list/list-item-content.js';
-import '@brightspace-ui/core/components/inputs/input-search.js';
 import { css, html, LitElement } from 'lit-element';
 import { convertToken } from '../helpers/converterHelpers.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
@@ -311,7 +312,9 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 					class="d2l-list-item"
 					@click=${onClickHandler}
 					<d2l-list-item-content class="d2l-list-item-content">
-						<div>${unsafeHTML(feedback.properties.text)}</div>
+						<d2l-html-block>
+							<template>${unsafeHTML(feedback.properties.text)}</template>
+						</d2l-html-block>
 					</d2l-list-item-content>
 					<div slot="actions">
 						<d2l-button-icon
@@ -339,11 +342,11 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		console.log('DELETE ME!!!');
 		console.log(text);
 
-		this.dispatchEvent(new CustomEvent('on-d2l-consistent-eval-comment-delete', {
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-evaluation-delete-my-saved-feedback', {
 			composed: true,
 			bubbles: true,
 			detail: {
-				comment: feedback
+				comment: text
 			}
 		}));
 	}
