@@ -290,6 +290,16 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		}));
 	}
 
+	_emitDeleteSavedFeedbackEvent(commentId) {
+		this.dispatchEvent(new CustomEvent('on-d2l-consistent-evaluation-delete-saved-feedback', {
+			composed: true,
+			bubbles: true,
+			detail: {
+				commentIdToDelete: commentId
+			}
+		}));
+	}
+
 	_onCommentBankSearch(e) {
 		const searchTerm = e.detail.value;
 		this._emitGetMySavedFeedbackEvent(searchTerm);
@@ -306,7 +316,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 		const itemTemplate = this.mySavedFeedback.map(feedback => {
 			let onClickHandler = () => this._addFeedbackFromBank(feedback.properties.text);
-			let onDeleteHandler = () => this._deleteFeedbackFromBank(feedback.properties.text);
+			let onDeleteHandler = () => this._deleteFeedbackFromBank(feedback.properties.commentId);
 			return html`
 				<d2l-list-item
 					class="d2l-list-item"
@@ -338,17 +348,11 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		this.commentBankOpen = false;
 	}
 
-	_deleteFeedbackFromBank(text) {
-		console.log('DELETE ME!!!');
-		console.log(text);
-
-		this.dispatchEvent(new CustomEvent('on-d2l-consistent-evaluation-delete-my-saved-feedback', {
-			composed: true,
-			bubbles: true,
-			detail: {
-				comment: text
-			}
-		}));
+	_deleteFeedbackFromBank(commentId) {
+		console.log('DELETE ME! ' + commentId);
+		this._emitDeleteSavedFeedbackEvent(commentId);
+		// refresh after delete to update UI... could depend on property with response of delete?
+		// this._emitGetMySavedFeedbackEvent(null);
 	}
 
 	_saveOnFeedbackChangeNewEditor() {

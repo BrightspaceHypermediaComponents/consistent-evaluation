@@ -3,6 +3,7 @@ import { assignmentActivity, attachmentClassName, coaActivity, discussionActivit
 import { css, html, LitElement } from 'lit-element';
 import { Awaiter } from './awaiter.js';
 import { ConsistentEvalTelemetry } from './helpers/consistent-eval-telemetry.js';
+import { ConsistentEvaluationController } from './controllers/ConsistentEvaluationController.js';
 import { ConsistentEvaluationHrefController } from './controllers/ConsistentEvaluationHrefController.js';
 import { getSubmissions } from './helpers/submissionsAndFilesHelpers.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
@@ -121,7 +122,8 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._mutex = new Awaiter();
 		this._loading = true;
 		this._pageTitle = '';
-		this._refreshCommentBank = false; 
+		this._refreshCommentBank = false;
+		this._deleteSavedFeedbackResponse = undefined;
 		this._loadingComponents = {
 			discussions: true,
 			main : true,
@@ -182,6 +184,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				@d2l-consistent-eval-rubric-popup-closed=${this._refreshRubrics}
 				@d2l-consistent-eval-on-evaluation-save=${this._refreshInfos}
 				@on-d2l-consistent-evaluation-get-my-saved-feedback=${this._getMySavedFeedback}
+				@on-d2l-consistent-evaluation-delete-saved-feedback=${this._deleteSavedFeedback}
 			></d2l-consistent-evaluation-page>
 		`;
 	}
@@ -391,6 +394,28 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._mySavedFeedback = await controller.getMySavedFeedback(this.mySavedFeedbackHref, e.detail, this._refreshCommentBank);
 		this._refreshCommentBank = false;
 	}
+
+	async _deleteSavedFeedback(e) {
+		console.log(e);
+		const controller = new ConsistentEvaluationController(this.href, this.token);
+		let entityToDelete = undefined;
+		this._mySavedFeedback.forEach(commentEntity => {
+			if (commentEntity.properties.commentId === e.detail.commentIdToDelete) {
+				console.log('found match!')
+				entityToDelete = commentEntity
+			}
+		});
+		if(typeof entityToDelete !== undefined) {
+			await this._mutex.dispatch(
+				async () => {
+					console.log('YOYOYO')
+					const response = await controller.deleteCommentBankComment(entityToDelete);
+					console.log(response)
+				}
+			);
+		}
+	}
+
 	_setLoading() {
 		for (const component in this._loadingComponents) {
 			this._loadingComponents[component] = true;

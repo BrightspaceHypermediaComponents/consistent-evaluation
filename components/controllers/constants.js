@@ -3,6 +3,7 @@ export const publishActionName = 'publish';
 export const retractActionName = 'retract';
 export const saveActionName = 'save-draft';
 export const updateActionName = 'update';
+export const deleteCommentActionName = 'delete-saved-feedback';
 export const saveFeedbackActionName = 'SaveFeedback';
 export const saveFeedbackAttachmentFileActionName = 'add-file';
 export const saveFeedbackAttachmentLinkActionName = 'add-link';

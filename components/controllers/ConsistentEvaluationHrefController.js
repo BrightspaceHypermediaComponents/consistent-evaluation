@@ -465,7 +465,6 @@ export class ConsistentEvaluationHrefController {
 	}
 
 	async getMySavedFeedback(mySavedFeedbackHref, search, bypassCache) {
-
 		if(search) {
 			bypassCache = true;
 			mySavedFeedbackHref = mySavedFeedbackHref + "?search=" + search;

@@ -1,5 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentAFieldName, saveFeedbackAttachmentFileActionName, saveFeedbackAttachmentLinkActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, saveScoreActionName, updateActionName } from './constants.js';
+import { publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentAFieldName, saveFeedbackAttachmentFileActionName, saveFeedbackAttachmentLinkActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, saveScoreActionName, updateActionName, deleteCommentActionName } from './constants.js';
 import { Grade } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 
@@ -35,6 +35,11 @@ export class ConsistentEvaluationController {
 
 	async update(evaluationEntity) {
 		return this._performActionHelper(evaluationEntity, updateActionName);
+	}
+	async deleteCommentBankComment(commentEntity) {
+		console.log('commentEntity')
+		console.log(commentEntity)
+		return this._performActionHelper(commentEntity, deleteCommentActionName);
 	}
 	async fetchAttachments(evaluationEntity) {
 		const attachmentsEntity = await this.fetchAttachmentsEntity(evaluationEntity);
@@ -254,7 +259,6 @@ export class ConsistentEvaluationController {
 			throw new Error(ConsistentEvaluationControllerErrors.FEEDBACK_ENTITY_NOT_FOUND);
 		}
 
-		console.log(feedbackValue);
 		return await this._performAction(
 			targetEntity,
 			saveFeedbackActionName,
