@@ -345,6 +345,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 	}
 
 	async _onNextStudentClick() {
+		this._mySavedFeedback = undefined;
 		this._refreshCommentBank = true;
 		await this._mutex.dispatch(
 			async() => {
@@ -358,6 +359,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		);
 	}
 	async _onPreviousStudentClick() {
+		this._mySavedFeedback = undefined;
 		this._refreshCommentBank = true;
 		await this._mutex.dispatch(
 			async() => {

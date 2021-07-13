@@ -228,7 +228,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 	}
 
 	_getCommentBank() {
-	return html`
+		return html`
 			<d2l-dialog
 				title-text='Comment BANK!'
 				?opened=${this.commentBankOpen}
@@ -242,28 +242,28 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 	_renderCommentBankSearch() {
 		return html`
-				<d2l-input-search
-					label="Search"
-					placeholder="Search comments"
-					@d2l-input-search-searched=${this._onCommentBankSearch}>
-				</d2l-input-search>
+			<d2l-input-search
+				label="Search"
+				placeholder="Search comments"
+				@d2l-input-search-searched=${this._onCommentBankSearch}>
+			</d2l-input-search>
 		`;
 	}
 
 	_renderCommentBankOptions() {
 		return html`
-		  <label class="d2l-input-radio-label">
-			<input type="radio" name="commentBankGroup" checked value=0  @change="${this._onCommentBankOptionChange}">
-			Do not store comment
-		  </label>
-		  <label class="d2l-input-radio-label">
-			<input type="radio" name="commentBankGroup" value=1 @change="${this._onCommentBankOptionChange}">
-			Store comment in personal bank
-		  </label>
-		  <label class="d2l-input-radio-label">
-			<input type="radio" name="commentBankGroup" value=2 @change="${this._onCommentBankOptionChange}">
-			Store comment in public bank
-		  </label>
+			<label class="d2l-input-radio-label">
+				<input type="radio" name="commentBankGroup" checked value=0  @change="${this._onCommentBankOptionChange}">
+				Do not store comment
+			</label>
+			<label class="d2l-input-radio-label">
+				<input type="radio" name="commentBankGroup" value=1 @change="${this._onCommentBankOptionChange}">
+				Store comment in personal bank
+			</label>
+			<label class="d2l-input-radio-label">
+				<input type="radio" name="commentBankGroup" value=2 @change="${this._onCommentBankOptionChange}">
+				Store comment in public bank
+			</label>
 		`;
 	  }
 
@@ -371,7 +371,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 	_deleteFeedbackFromBank(commentId) {
 		this._emitDeleteSavedFeedbackEvent(commentId);
 		// refresh after delete to update UI... could depend on property with response of delete?
-		// this._emitGetMySavedFeedbackEvent(null);
+		this._emitGetMySavedFeedbackEvent(null);
 	}
 
 	_saveOnFeedbackChangeNewEditor() {
