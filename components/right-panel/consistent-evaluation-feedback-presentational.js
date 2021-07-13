@@ -234,7 +234,6 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				?opened=${this.commentBankOpen}
 				width=1000
 				@d2l-dialog-close=${this._onCommentBankClose}>
-					<div></div>
 					${this._renderCommentBankSearch()}
 					${this._renderCommentBank()}
 			</d2l-dialog>
@@ -341,7 +340,9 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 					@click=${onClickHandler}
 					<d2l-list-item-content class="d2l-list-item-content">
 						<d2l-html-block>
-							<template>${unsafeHTML(feedback.properties.text)}</template>
+							<template>
+							<d2l-more-less>${unsafeHTML(feedback.properties.text)}</d2l-more-less>
+							</template>
 						</d2l-html-block>
 					</d2l-list-item-content>
 					<div slot="actions">
