@@ -37,8 +37,6 @@ export class ConsistentEvaluationController {
 		return this._performActionHelper(evaluationEntity, updateActionName);
 	}
 	async deleteCommentBankComment(commentEntity) {
-		console.log('commentEntity')
-		console.log(commentEntity)
 		return this._performActionHelper(commentEntity, deleteCommentActionName);
 	}
 	async fetchAttachments(evaluationEntity) {

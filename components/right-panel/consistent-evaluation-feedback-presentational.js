@@ -228,22 +228,27 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 	}
 
 	_getCommentBank() {
-	return html`<d2l-dialog
-			title-text='Comment BANK!'
-			?opened=${this.commentBankOpen}
-			width=1000
-			@d2l-dialog-close=${this._onCommentBankClose}>
-				${this._renderCommentBankSearch()}
-				${this._renderCommentBank()}
-		</d2l-dialog>`;
+	return html`
+			<d2l-dialog
+				title-text='Comment BANK!'
+				?opened=${this.commentBankOpen}
+				width=1000
+				@d2l-dialog-close=${this._onCommentBankClose}>
+					<div></div>
+					${this._renderCommentBankSearch()}
+					${this._renderCommentBank()}
+			</d2l-dialog>
+		`;
 	}
 
 	_renderCommentBankSearch() {
-		return html`<d2l-input-search
-				label="Search"
-				placeholder="Search comments"
-				@d2l-input-search-searched=${this._onCommentBankSearch}>
-			</d2l-input-search>`
+		return html`
+				<d2l-input-search
+					label="Search"
+					placeholder="Search comments"
+					@d2l-input-search-searched=${this._onCommentBankSearch}>
+				</d2l-input-search>
+		`;
 	}
 
 	_renderCommentBankOptions() {
@@ -314,6 +319,19 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			return html``
 		}
 
+		if (this.mySavedFeedback.length === 0) {
+			return html`
+				<d2l-list separators="between">
+					<d2l-list-item
+						class="d2l-list-item"
+						<d2l-list-item-content class="d2l-list-item-content">
+							No saved comments to display.
+						</d2l-list-item-content>
+					</d2l-list-item>
+				</d2l-list>
+			`;
+		}
+
 		const itemTemplate = this.mySavedFeedback.map(feedback => {
 			let onClickHandler = () => this._addFeedbackFromBank(feedback.properties.text);
 			let onDeleteHandler = () => this._deleteFeedbackFromBank(feedback.properties.commentId);
@@ -328,7 +346,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 					</d2l-list-item-content>
 					<div slot="actions">
 						<d2l-button-icon
-							text="TRASHHHH"
+							text="Delete comment"
 							icon="tier1:delete"
 							@click=${onDeleteHandler}
 						></d2l-button-icon>
@@ -340,7 +358,8 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		return html`
 			<d2l-list separators="between">
 				${itemTemplate}
-			</d2l-list>`
+			</d2l-list>
+		`;
 	}
 
 	_addFeedbackFromBank(text) {
@@ -349,7 +368,6 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 	}
 
 	_deleteFeedbackFromBank(commentId) {
-		console.log('DELETE ME! ' + commentId);
 		this._emitDeleteSavedFeedbackEvent(commentId);
 		// refresh after delete to update UI... could depend on property with response of delete?
 		// this._emitGetMySavedFeedbackEvent(null);
