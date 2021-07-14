@@ -109,6 +109,9 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			.d2l-list-item:hover {
 				cursor: pointer;
 			}
+			.d2l-consistent-evaluation-right-panel-clearfix {
+				height: 1rem;
+			}
 		`];
 	}
 	connectedCallback() {
@@ -140,15 +143,15 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				: null;
 			this._setFeedbackSummaryInfo();
 			return html`
-			<d2l-button id="comment-bank-button" class="d2l-desktop" @click="${this._onCommentBankOpen}">Comment Bank</d2l-button>
-				${this._renderCommentBankOptions()}
+				<d2l-button id="comment-bank-button" class="d2l-desktop" @click="${this._onCommentBankOpen}">Comment Bank</d2l-button>
 				<d2l-consistent-evaluation-right-panel-block
 					class="d2l-consistent-evaluation-feedback-block"
 					supportingInfo=${ifDefined(this._feedbackSummaryInfo)}
 					title="${this.localize('overallFeedback')}">
-
 						${this._getHtmlEditor()}
 						${this._getCommentBank()}
+						<div class="d2l-consistent-evaluation-right-panel-clearfix"></div>
+						${this._renderCommentBankOptions()}
 						${attachmentsComponent}
 				</d2l-consistent-evaluation-right-panel-block>
 			`;
