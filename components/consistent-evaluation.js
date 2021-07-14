@@ -306,12 +306,12 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		let entityToDelete = undefined;
 		this._mySavedFeedback.forEach(commentEntity => {
 			if (commentEntity.properties.commentId === e.detail.commentIdToDelete) {
-				entityToDelete = commentEntity
+				entityToDelete = commentEntity;
 			}
 		});
 		if (typeof entityToDelete !== 'undefined') {
 			await this._mutex.dispatch(
-				async () => {
+				async() => {
 					await controller.deleteCommentBankComment(entityToDelete);
 				}
 			);

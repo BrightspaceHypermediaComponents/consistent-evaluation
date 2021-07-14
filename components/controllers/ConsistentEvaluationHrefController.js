@@ -331,6 +331,17 @@ export class ConsistentEvaluationHrefController {
 		}
 		return undefined;
 	}
+
+	async getMySavedFeedback(mySavedFeedbackHref, search, bypassCache) {
+		if (search) {
+			bypassCache = true;
+			mySavedFeedbackHref = mySavedFeedbackHref + '?search=' + search;
+		}
+
+		const mySavedFeedback = await this._getEntityFromHref(mySavedFeedbackHref, bypassCache);
+		return mySavedFeedback.entity.getSubEntitiesByClass('feedback');
+	}
+
 	async getRubricInfos(refreshRubric) {
 		let rubricInfos = [];
 		const root = await this._getRootEntity(false);
@@ -462,15 +473,5 @@ export class ConsistentEvaluationHrefController {
 				}
 			});
 		}
-	}
-
-	async getMySavedFeedback(mySavedFeedbackHref, search, bypassCache) {
-		if(search) {
-			bypassCache = true;
-			mySavedFeedbackHref = mySavedFeedbackHref + "?search=" + search;
-		}
-
-		const mySavedFeedback = await this._getEntityFromHref(mySavedFeedbackHref, bypassCache);
-		return mySavedFeedback.entity.getSubEntitiesByClass('feedback');
 	}
 }

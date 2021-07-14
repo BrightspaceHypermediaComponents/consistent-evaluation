@@ -1,5 +1,5 @@
 import 'd2l-polymer-siren-behaviors/store/entity-store.js';
-import { publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentAFieldName, saveFeedbackAttachmentFileActionName, saveFeedbackAttachmentLinkActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, saveScoreActionName, updateActionName, deleteCommentActionName } from './constants.js';
+import { deleteCommentActionName, publishActionName, removeFeedbackAttachmentActionName, retractActionName, saveActionName, saveFeedbackActionName, saveFeedbackAttachmentAFieldName, saveFeedbackAttachmentFileActionName, saveFeedbackAttachmentLinkActionName, saveFeedbackFieldName, saveGradeActionName, saveGradeFieldName, saveScoreActionName, updateActionName } from './constants.js';
 import { Grade } from '@brightspace-ui-labs/grade-result/src/controller/Grade';
 import { performSirenAction } from 'siren-sdk/src/es6/SirenAction.js';
 
@@ -37,7 +37,6 @@ export class ConsistentEvaluationController {
 		return this._performActionHelper(evaluationEntity, updateActionName);
 	}
 	async deleteCommentBankComment(commentEntity) {
-		console.log('deleteCommentBankComment')
 		return this._performActionHelper(commentEntity, deleteCommentActionName);
 	}
 	async fetchAttachments(evaluationEntity) {
