@@ -107,11 +107,18 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			#comment-bank-button {
 				float: right
 			}
-			.d2l-clickable-list-item:hover {
-				cursor: pointer;
-			}
 			.d2l-consistent-evaluation-right-panel-clearfix {
 				height: 1rem;
+			}
+			#comment-bank-button {
+				float: right
+			}
+			.d2l-clickable-list-item {
+				width: 100%;
+				cursor: pointer;
+			}
+			.d2l-dialog-outer {
+				min-height: 500px !important;
 			}
 		`];
 	}
@@ -167,7 +174,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			this._key = this.href;
 		}
 
-		if( changedProperties.has('mySavedFeedback')) {
+		if (changedProperties.has('mySavedFeedback')) {
 			this._resizeDialog();
 		}
 	}
@@ -237,6 +244,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				title-text='Comment BANK!'
 				?opened=${this.commentBankOpen}
 				width=1000
+				id="comment-bank-dialog"
 				@d2l-dialog-close=${this._onCommentBankClose}>
 					${this._renderCommentBankSearch()}
 					${this._renderCommentBank()}
@@ -339,17 +347,17 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			let onClickHandler = () => this._addFeedbackFromBank(feedback.properties.text);
 
 			return html`
-				<d2l-list-item class="d2l-clickable-list-item" @click=${ onClickHandler }>
-					<d2l-list-item-content>
-						<div>
-							<d2l-html-block>
-								<template>
-									<d2l-more-less>${unsafeHTML(feedback.properties.text)}</d2l-more-less>
-								</template>
-							</d2l-html-block>
-						</div>
-						<div slot="secondary">Times Used: ${feedback.properties.timesUsed}</div>
-					</d2l-list-item-content>
+				<d2l-list-item>
+						<d2l-list-item-content @click=${onClickHandler} class="d2l-clickable-list-item">
+							<div>
+								<d2l-html-block>
+									<template>
+										<d2l-more-less>${unsafeHTML(feedback.properties.text)}</d2l-more-less>
+									</template>
+								</d2l-html-block>
+							</div>
+							<div slot="secondary">Times Used: ${feedback.properties.timesUsed}</div>
+						</d2l-list-item-content>
 					<div slot="actions">
 						${this._renderDeleteButton(feedback)}
 					</div>
@@ -370,7 +378,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			let onDeleteHandler = () => this._deleteFeedbackFromBank(feedback.properties.commentId);
 			return html`
 				<d2l-button-icon
-					id="delete-button"
+					id="delete-comment-button"
 					text="Delete comment"
 					icon="tier1:delete"
 					@click=${onDeleteHandler}
@@ -387,8 +395,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 	_deleteFeedbackFromBank(commentId) {
 		this._emitDeleteSavedFeedbackEvent(commentId);
-		// refresh after delete to update UI... could depend on property with response of delete?
-		this._emitGetMySavedFeedbackEvent(null);
+		console.log(this.mySavedFeedback)
 	}
 
 	_saveOnFeedbackChangeNewEditor() {

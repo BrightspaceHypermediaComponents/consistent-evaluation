@@ -301,6 +301,25 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		}
 	}
 
+	async _deleteSavedFeedback(e) {
+		const controller = new ConsistentEvaluationController(this.href, this.token);
+		let entityToDelete = undefined;
+		this._mySavedFeedback.forEach(commentEntity => {
+			if (commentEntity.properties.commentId === e.detail.commentIdToDelete) {
+				entityToDelete = commentEntity
+			}
+		});
+		if (typeof entityToDelete !== 'undefined') {
+			await this._mutex.dispatch(
+				async () => {
+					await controller.deleteCommentBankComment(entityToDelete);
+				}
+			);
+			this._refreshCommentBank = true;
+			this._searchMySavedFeedback('');
+		}
+	}
+
 	_finishedLoading(e) {
 		if (e) {
 			this._loadingComponents[e.detail.component] = false;
@@ -319,6 +338,11 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			this._telemetry.logLoadEvent('consistentEvalMain', discussionActivity, undefined);
 		}
 	}
+
+	async _getMySavedFeedback(e) {
+		this._searchMySavedFeedback(e.detail);
+	}
+
 	async _hasOneFileAndOneSubmission() {
 		if (this._submissionInfo && this._submissionInfo.submissionList && this._submissionInfo.submissionList.length === 1) {
 			const submissions = await getSubmissions(this._submissionInfo, this.token);
@@ -389,31 +413,10 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		this._rubricInfos = await controller.getRubricInfos(true);
 	}
 
-
-	async _getMySavedFeedback(e) {
-		console.log(e);
+	async _searchMySavedFeedback(search) {
 		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
-		this._mySavedFeedback = await controller.getMySavedFeedback(this.mySavedFeedbackHref, e.detail, this._refreshCommentBank);
+		this._mySavedFeedback = await controller.getMySavedFeedback(this.mySavedFeedbackHref, search, this._refreshCommentBank);
 		this._refreshCommentBank = false;
-	}
-
-	async _deleteSavedFeedback(e) {
-		console.log(e);
-		const controller = new ConsistentEvaluationController(this.href, this.token);
-		let entityToDelete = undefined;
-		this._mySavedFeedback.forEach(commentEntity => {
-			if (commentEntity.properties.commentId === e.detail.commentIdToDelete) {
-				console.log('found match!')
-				entityToDelete = commentEntity
-			}
-		});
-		if(typeof entityToDelete !== undefined) {
-			await this._mutex.dispatch(
-				async () => {
-					await controller.deleteCommentBankComment(entityToDelete);
-				}
-			);
-		}
 	}
 
 	_setLoading() {
