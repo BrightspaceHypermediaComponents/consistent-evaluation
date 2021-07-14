@@ -9,6 +9,7 @@ import '@brightspace-ui/core/components/list/list-item.js';
 import '@brightspace-ui/core/components/list/list-item-content.js';
 import { css, html, LitElement } from 'lit-element';
 import { convertToken } from '../helpers/converterHelpers.js';
+import { deleteCommentActionName } from '../controllers/constants.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { ifDefined } from 'lit-html/directives/if-defined.js';
 import { LocalizeConsistentEvaluation } from '../../localize-consistent-evaluation.js';
@@ -106,7 +107,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			#comment-bank-button {
 				float: right
 			}
-			.d2l-list-item:hover {
+			.d2l-clickable-list-item:hover {
 				cursor: pointer;
 			}
 			.d2l-consistent-evaluation-right-panel-clearfix {
@@ -324,8 +325,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 		if (this.mySavedFeedback.length === 0) {
 			return html`
 				<d2l-list separators="between">
-					<d2l-list-item
-						class="d2l-list-item"
+					<d2l-list-item>
 						<d2l-list-item-content class="d2l-list-item-content">
 							No saved comments to display.
 						</d2l-list-item-content>
@@ -336,34 +336,46 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 
 		const itemTemplate = this.mySavedFeedback.map(feedback => {
 			let onClickHandler = () => this._addFeedbackFromBank(feedback.properties.text);
-			let onDeleteHandler = () => this._deleteFeedbackFromBank(feedback.properties.commentId);
+
 			return html`
-				<d2l-list-item
-					class="d2l-list-item"
-					@click=${onClickHandler}
-					<d2l-list-item-content class="d2l-list-item-content">
-						<d2l-html-block>
-							<template>
-							<d2l-more-less>${unsafeHTML(feedback.properties.text)}</d2l-more-less>
-							</template>
-						</d2l-html-block>
+				<d2l-list-item class="d2l-clickable-list-item" @click=${ onClickHandler }>
+					<d2l-list-item-content>
+						<div>
+							<d2l-html-block>
+								<template>
+									<d2l-more-less>${unsafeHTML(feedback.properties.text)}</d2l-more-less>
+								</template>
+							</d2l-html-block>
+						</div>
+						<div slot="secondary">Times Used: ${feedback.properties.timesUsed}</div>
 					</d2l-list-item-content>
 					<div slot="actions">
-						<d2l-button-icon
-							text="Delete comment"
-							icon="tier1:delete"
-							@click=${onDeleteHandler}
-						></d2l-button-icon>
+						${this._renderDeleteButton(feedback)}
 					</div>
 				</d2l-list-item>
 			`;
 		});
-
+                        
 		return html`
 			<d2l-list separators="between">
 				${itemTemplate}
 			</d2l-list>
 		`;
+	}
+
+	_renderDeleteButton(feedback) {
+		if (feedback.hasActionByName(deleteCommentActionName)) {
+			let onDeleteHandler = () => this._deleteFeedbackFromBank(feedback.properties.commentId);
+			return html`
+				<d2l-button-icon
+					id="delete-button"
+					text="Delete comment"
+					icon="tier1:delete"
+					@click=${onDeleteHandler}
+				></d2l-button-icon>
+			`;
+		}
+		return ``;
 	}
 
 	_addFeedbackFromBank(text) {

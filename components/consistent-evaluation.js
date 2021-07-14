@@ -410,9 +410,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		if(typeof entityToDelete !== undefined) {
 			await this._mutex.dispatch(
 				async () => {
-					console.log('YOYOYO')
-					const response = await controller.deleteCommentBankComment(entityToDelete);
-					console.log(response)
+					await controller.deleteCommentBankComment(entityToDelete);
 				}
 			);
 		}
