@@ -251,6 +251,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 				placeholder="Search comments"
 				@d2l-input-search-searched=${this._onCommentBankSearch}>
 			</d2l-input-search>
+			<div class="d2l-consistent-evaluation-right-panel-clearfix"></div>
 		`;
 	}
 
@@ -360,6 +361,7 @@ class ConsistentEvaluationFeedbackPresentational extends LocalizeConsistentEvalu
 			<d2l-list separators="between">
 				${itemTemplate}
 			</d2l-list>
+			<div class="d2l-consistent-evaluation-right-panel-clearfix"></div>
 		`;
 	}
 
