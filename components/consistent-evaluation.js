@@ -172,7 +172,8 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				@d2l-consistent-evaluation-next-student-click=${this._onNextStudentClick}
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}
 				@d2l-consistent-eval-rubric-popup-closed=${this._refreshRubrics}
-				@d2l-consistent-eval-on-evaluation-save=${this._refreshInfos}
+				@d2l-consistent-eval-on-evaluation-save=${this._refreshRubrics}
+				@d2l-consistent-eval-on-post-score-transient-save=${this._updateDiscussionPostList}
 			></d2l-consistent-evaluation-page>
 		`;
 	}
@@ -356,17 +357,6 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 			}
 		);
 	}
-	async _refreshDiscussionPosts() {
-		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
-		this._discussionPostList = await controller.getDiscussionPostsInfo();
-	}
-
-	async _refreshInfos() {
-		if (this._activityType === discussionActivity) {
-			this._refreshDiscussionPosts();
-		}
-		this._refreshRubrics();
-	}
 
 	async _refreshRubrics() {
 		const controller = new ConsistentEvaluationHrefController(this.href, this.token);
@@ -425,6 +415,12 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 
 				window.history.replaceState(null, null, currentUrl.toString());
 			}
+		}
+	}
+
+	_updateDiscussionPostList(e) {
+		if (e.detail && e.detail.discussionPostList) {
+			this._discussionPostList = e.detail.discussionPostList;
 		}
 	}
 }

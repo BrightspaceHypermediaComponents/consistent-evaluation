@@ -1009,6 +1009,14 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					const discussionPostsEntity = this.evaluationEntity.getSubEntityByRel(evidenceRel);
 					if (discussionPostsEntity) {
 						this.discussionPostList = discussionPostsEntity.getSubEntitiesByClass(postClass);
+
+						this.dispatchEvent(new CustomEvent('d2l-consistent-eval-on-post-score-transient-save', {
+							composed: true,
+							bubbles: true,
+							detail: {
+								discussionPostList: this.discussionPostList
+							}
+						}));
 					}
 				}
 			}
