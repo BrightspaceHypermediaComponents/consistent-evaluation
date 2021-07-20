@@ -2,6 +2,7 @@ import './consistent-evaluation-evidence-top-bar.js';
 import '@brightspace-ui/core/components/html-block/html-block.js';
 import { bodyStandardStyles, heading2Styles } from '@brightspace-ui/core/components/typography/styles.js';
 import { css, html, LitElement } from 'lit-element';
+import { formatDateTime } from '../../helpers/submissionsAndFilesHelpers.js';
 import { LocalizeConsistentEvaluation } from '../../../localize-consistent-evaluation.js';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 
@@ -52,7 +53,7 @@ export class ConsistentEvaluationEvidenceText extends LocalizeConsistentEvaluati
 
 			<div class="d2l-consistent-eval-text-evidence">
 				<h2 class="heading-2 d2l-consistent-eval-text-evidence-title">${this.title}</h2>
-				<span class="d2l-consistent-eval-text-evidence-submitted-date">${this.localize('submitted')}: ${this.date}</span>
+				<span class="d2l-consistent-eval-text-evidence-submitted-date">${this.localize('submitted')}: ${formatDateTime(this.date, 'full')}</span>
 				<d2l-html-block>
 					<template>${unsafeHTML(this.content)}</template>
 				</d2l-html-block>
