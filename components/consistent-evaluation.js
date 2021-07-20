@@ -173,7 +173,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 				@d2l-consistent-evaluation-loading-finished=${this._finishedLoading}
 				@d2l-consistent-eval-rubric-popup-closed=${this._refreshRubrics}
 				@d2l-consistent-eval-on-evaluation-save=${this._refreshRubrics}
-				@d2l-consistent-eval-on-post-score-transient-save=${this._updatePostScores}
+				@d2l-consistent-eval-on-post-score-transient-save=${this._updateDiscussionPostList}
 			></d2l-consistent-evaluation-page>
 		`;
 	}
@@ -418,7 +418,7 @@ export class ConsistentEvaluation extends LocalizeConsistentEvaluation(LitElemen
 		}
 	}
 
-	_updatePostScores(e) {
+	_updateDiscussionPostList(e) {
 		if (e.detail && e.detail.discussionPostList) {
 			this._discussionPostList = e.detail.discussionPostList;
 		}
