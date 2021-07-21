@@ -165,11 +165,11 @@ export class ConsistentEvaluationDiscussionEvidenceBody extends RtlMixin(Localiz
 	_renderAttachments() {
 		if (this.attachmentsList) {
 			return html`${this.attachmentsList.map((attachment) => {
-				const { name, size, extension, href } = attachment.properties;
-				const onClickHandler = () => this._downloadAttachment(href);
+				const { name, size, extension, href, downloadHref } = attachment.properties;
+				const onClickHandler = () => this._downloadAttachment(downloadHref);
 				const onKeydownHandler = (e) => {
 					if (e.key === 'Enter' || e.key === ' ') {
-						this._downloadAttachment(href);
+						this._downloadAttachment(downloadHref);
 					}
 				};
 

@@ -337,7 +337,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 
 	_renderAttachments() {
 		return html`${this.attachments.map((attachment) => {
-			const { id, name, size, extension, flagged, read, href } = attachment.properties;
+			const { id, name, size, extension, flagged, read, href, downloadHref } = attachment.properties;
 
 			const isLinkAttachment = getAttachmentType(attachment) === AttachmentTypes.LINK;
 
@@ -379,7 +379,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 					</d2l-list-item-content>
 					${this._renderTii(id, name, attachment)}
 				</div>
-				${this._addMenuOptions(read, flagged, href, extension, id)}
+				${this._addMenuOptions(read, flagged, downloadHref, extension, id)}
 			</d2l-list-item>`;
 		})}`;
 	}
@@ -482,7 +482,7 @@ export class ConsistentEvaluationSubmissionItem extends RtlMixin(LocalizeConsist
 		const file = this.attachments[0];
 		const flagged = file.properties.flagged;
 		const read = file.properties.read;
-		const href = file.properties.href;
+		const href = file.properties.downloadHref;
 		const extension = file.properties.extension;
 		const id = file.properties.id;
 		return html`

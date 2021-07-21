@@ -200,7 +200,7 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 			if (currentFile.properties.fileViewer) {
 				// file is viewable
 				this.fileEvidenceUrl = currentFile.properties.fileViewer;
-				this.originalFileUrl = currentFile.properties.href;
+				this.originalFileUrl = currentFile.properties.downloadHref;
 				this.fileNonViewable = undefined;
 				this.fileExtension = currentFile.properties.extension;
 			} else {
@@ -209,7 +209,7 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 				this.originalFileUrl = undefined;
 				this.fileNonViewable = {
 					title: currentFile.properties.name,
-					downloadUrl: currentFile.properties.href
+					downloadUrl: currentFile.properties.downloadHref
 				};
 			}
 		} else if (this.submissionInfo.submissionType === textSubmission) {
@@ -218,7 +218,7 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 			this.textEvidence = {
 				title: `${this.localize('textSubmission')} ${currentFile.properties.displayNumber}`,
 				date: currentFile.properties.date,
-				downloadUrl: currentFile.properties.href,
+				downloadUrl: currentFile.properties.downloadHref,
 				content: currentFile.properties.comment
 			};
 			this.fileNonViewable = undefined;
