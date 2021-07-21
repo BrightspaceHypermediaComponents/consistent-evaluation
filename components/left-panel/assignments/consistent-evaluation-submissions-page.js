@@ -25,6 +25,10 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				attribute: 'submission-type',
 				type: String
 			},
+			evaluationState: {
+				attribute: false,
+				type: String
+			},
 			downloadAllSubmissionLink: {
 				attribute: 'download-all-submissions-location',
 				type: String
@@ -396,7 +400,7 @@ export class ConsistentEvaluationSubmissionsPage extends SkeletonMixin(RtlMixin(
 				const submissionEntity = this._submissionEntities[i].entity;
 				if (submissionEntity.getSubEntityByClass(Classes.assignments.submissionDate)) {
 					const submissionDate = submissionEntity.getSubEntityByClass(Classes.assignments.submissionDate).properties.date;
-					const evaluationState = submissionEntity.properties.evaluationStatus;
+					const evaluationState = this.evaluationState || submissionEntity.properties.evaluationStatus;
 					const latenessTimespan = submissionEntity.properties.lateTimeSpan;
 					const submissionNumber = submissionEntity.properties.submissionNumber;
 					itemTemplate.push(html`

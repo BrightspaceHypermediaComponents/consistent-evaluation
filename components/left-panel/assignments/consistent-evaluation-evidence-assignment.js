@@ -279,6 +279,7 @@ export class ConsistentEvaluationEvidenceAssignment extends SkeletonMixin(Locali
 		<d2l-consistent-evaluation-submissions-page
 			submission-type=${this.submissionInfo && this.submissionInfo.submissionType}
 			.submissionList=${this.submissionInfo && this.submissionInfo.submissionList}
+			.evaluationState=${this.submissionInfo && this.submissionInfo.evaluationState}
 			.token=${this.token}
 			data-telemetry-endpoint=${this.dataTelemetryEndpoint}
 			download-all-submissions-location=${ifDefined(this.downloadAllSubmissionLink)}

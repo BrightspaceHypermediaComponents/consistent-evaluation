@@ -791,7 +791,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 					this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'publishError', 'published');
 					if (this.submissionInfo) {
-						this.submissionInfo.evaluationState = publishedState;
+						const updatedSubmissionInfo = { ...this.submissionInfo, evaluationState:publishedState };
+						this.submissionInfo = updatedSubmissionInfo;
 					}
 				}
 				this._currentlySaving = false;
