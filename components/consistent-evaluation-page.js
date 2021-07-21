@@ -850,7 +850,8 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 
 				this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'retractError', 'retracted');
 				if (this.submissionInfo) {
-					this.submissionInfo.evaluationState = draftState;
+					const updatedSubmissionInfo = { ...this.submissionInfo, evaluationState:draftState };
+					this.submissionInfo = updatedSubmissionInfo;
 				}
 			}
 		);
@@ -871,6 +872,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					const newEvaluationEntity = await this._controller.save(entity);
 
 					this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'saveError', 'saved');
+					if (this.submissionInfo) {
+						const updatedSubmissionInfo = { ...this.submissionInfo, evaluationState:draftState };
+						this.submissionInfo = updatedSubmissionInfo;
+					}
 				}
 				this._currentlySaving = false;
 			}
@@ -1069,6 +1074,10 @@ export default class ConsistentEvaluationPage extends SkeletonMixin(LocalizeCons
 					const newEvaluationEntity = await this._controller.update(entity);
 
 					this._checkAndUpdateEvaluationEntityAndDisplayToast(newEvaluationEntity, 'updatedError', 'updated');
+					if (this.submissionInfo) {
+						const updatedSubmissionInfo = { ...this.submissionInfo, evaluationState:publishedState };
+						this.submissionInfo = updatedSubmissionInfo;
+					}
 				}
 				this._currentlySaving = false;
 			}
